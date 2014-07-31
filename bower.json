@@ -1,0 +1,34 @@
+{
+  "name": "form-for",
+  "version": "1.0.0",
+  "homepage": "https://github.com/bvaughn/form-for",
+  "authors": [
+    "Brian Vaughn <brian.david.vaughn@gmail.com>"
+  ],
+  "description": "Set of Angular directives to simplify creating and validating HTML forms.",
+  "keywords": [
+    "angular",
+    "form",
+    "forms",
+    "crud",
+    "validation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "lodash": "~2.4.1",
+    "angular": "~1.2.21"
+  },
+  "devDependencies": {
+    "jasmine-object-matchers": "~0.0.3",
+    "jasmine-promise-matchers": "~0.0.3",
+    "angular-mocks": "~1.2.21"
+  }
+}
