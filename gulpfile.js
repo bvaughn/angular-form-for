@@ -44,7 +44,7 @@ gulp.task('compileCss', function() {
     .pipe(gulp.dest(CONFIG.distDir));
 });
 
-gulp.task('compileJs', function() {
+gulp.task('concatJs', function() {
   return jsSources
     .pipe(concat('form-for.js'))
     .pipe(gulp.dest(CONFIG.distDir));
@@ -57,17 +57,14 @@ gulp.task('lintJs', function() {
     .pipe(jshint());
 });
 
-gulp.task('runTests', function() {
+gulp.task('test', function(done) {
   var karma = require('gulp-karma');
 
-  return gulp.src(CONFIG.testDir)
+  return gulp.src('noop') // See http://stackoverflow.com/questions/22413767/angular-testing-with-karma-module-is-not-defined
     .pipe(karma({
       configFile: 'karma.conf.js',
       action: 'run'
     }))
-    .on(function(error) {
-      console.warn(error.message);
-    });
 });
 
-gulp.task('build', ['clean', 'lintJs', 'compileJs', 'compileCss', 'cacheTemplates']);
+gulp.task('build', ['clean', 'lintJs', 'test', 'concatJs', 'compileCss', 'cacheTemplates']);

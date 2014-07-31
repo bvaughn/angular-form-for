@@ -44,6 +44,11 @@ angular.module('formFor')
             $scope.validatableModel = $injector.get($scope.validateAs);
           }
 
+          // Watch for async-loaded date and make sure to update our bindable $scope copy.
+          $scope.$watch('formFor', function(newValue, oldValue) {
+            angular.copy($scope.formFor, $scope.instance);
+          }, true);
+
           /**
            * Setup a debounce validator on a registered form field.
            * This validator will update error messages inline as the user progresses through the form.

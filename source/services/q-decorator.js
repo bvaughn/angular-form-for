@@ -1,5 +1,8 @@
 /**
- * Decorates the $q utility with additional methods.
+ * Decorates the $q utility with additional methods used by formFor.
+ *
+ * @private
+ * This set of helper methods, small though they are, might be worth breaking apart into their own library?
  */
 var qDecorator = function($delegate) {
 
