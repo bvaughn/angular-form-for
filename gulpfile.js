@@ -14,17 +14,6 @@ var jsSources = es.merge(
   gulp.src(CONFIG.sourceDir + '/**/module.js'), // Defines the formFor module; must be loaded first
   gulp.src([CONFIG.sourceDir + '/**/*.js', '!' + CONFIG.sourceDir + '/**/module.js']));
 
-gulp.task('cacheTemplates', function () {
-  var templateCache = require('gulp-angular-templatecache');
-
-  return gulp.src('templates/**/*.html')
-    .pipe(templateCache('templates.js', {
-      module: 'formFor.templates',
-      standalone: true
-    }))
-    .pipe(gulp.dest(CONFIG.distDir));
-});
-
 gulp.task('clean', function() {
   var rm = require('gulp-rimraf');
 
@@ -45,7 +34,24 @@ gulp.task('compileCss', function() {
 });
 
 gulp.task('concatJs', function() {
-  return jsSources
+  var order = require('gulp-order');
+  var templateCache = require('gulp-angular-templatecache');
+
+  var sources =
+    es.merge(
+      gulp.src('templates/**/*.html')
+        .pipe(templateCache('templates.js', {
+          module: 'formFor.templates',
+          standalone: true,
+          root: 'form-for/templates/'
+        })),
+      jsSources.pipe(concat('form-for.js')));
+
+  return sources
+    .pipe(order([
+      'templates.js',
+      'form-for.js'
+    ]))
     .pipe(concat('form-for.js'))
     .pipe(gulp.dest(CONFIG.distDir));
 });
@@ -67,4 +73,4 @@ gulp.task('test', function(done) {
     }))
 });
 
-gulp.task('build', ['clean', 'lintJs', 'test', 'concatJs', 'compileCss', 'cacheTemplates']);
+gulp.task('build', ['clean', 'lintJs', 'test', 'concatJs', 'compileCss']);
