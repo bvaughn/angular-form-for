@@ -1,40 +1,19 @@
 /**
- * TODO Move this stuff into a README
- * Manages asynchronous form validation (local and remote) as configured by a ValidatableModel.
- * Auto-creates editable clone to be synced on submit or reverted on cancel.
- * Auto displays flashr notifications on success and inline validation errors on failure.
- *
- * <form form-for=scopeObject [validate-as=ValidatableModel submit-with=Function submitted=Function]>
- *   <!-- input fields go here -->
- * </form>
- *
- * Input fields within a formFor directive must register themselves with its controller using 'registerFormField'.
- * This function will return an object with a property 'bindable'.
- * The field should use this attribute to bind to fo reading/writing purposes.
- * We return an object in order to ensure we pass by reference and not value.
- *
- * Attributes:
- * • formFor: POJO object to be updated by a successfully-submitted form.
- * • validateAs: $injector-accessible model defining a validation rules and a submit() method.
- *               If your form does not require validation this property can be left blank.
- * • submitted: Optional override for handling a successful form submission.
- *              By default this is set to angular.noop (no interactions).
- * • submitWith: Optional override for calling submit on validateAs target.
- *               This function should accept a POJO (to be submitted) and should return a Promise.
+ * For documentation please refer to the project wiki:
+ * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
  */
-angular.module('formFor')
-  .directive('formFor',
+angular.module('formFor').directive('formFor',
     function($injector, $parse, $q, $sce, $timeout, flashr) {
       return {
         require: 'form',
         restrict: 'A',
         scope: {
           formFor: '=',
-          submitted: '&?',
-          submitWith:'&?',
-          validateAs:'@?'
+          saveComplete: '&?',
+          saveWith: '&?',
+          validateAs: '@?'
         },
-        controller:   function($scope) {
+        controller: function($scope) {
           $scope.instance = angular.copy($scope.formFor);
           $scope.formFieldScopes = {};
           $scope.bindable = {};
@@ -59,6 +38,7 @@ angular.module('formFor')
 
             return $scope.$watch('instance.' + fieldName,
               function(newValue, oldValue) {
+
                 // Scope watchers always trigger once when added.
                 // Don't validate a field until it's been modified or the form has been submitted.
                 if (!initialized) {
@@ -68,7 +48,7 @@ angular.module('formFor')
                 }
 
                 if ($scope.validatableModel) {
-                  $scope.validatableModel.validateField(newValue, fieldName).then(
+                  ModelValidator.validateField(newValue, fieldName, $scope.validatableModel.ruleSetMap).then(
                     function() {
                       formFieldScope.error = null;
                     },
@@ -142,9 +122,10 @@ angular.module('formFor')
 
               if ($scope.validatableModel) {
                 validationPromise =
-                  $scope.validatableModel.validateFields(
+                  ModelValidator.validateFields(
                     $scope.instance,
-                    _.keys($scope.formFieldScopes));
+                    _.keys($scope.formFieldScopes),
+                    $scope.validatableModel.ruleSetMap);
               } else {
                 validationPromise = $q.resolve();
               }
@@ -153,22 +134,22 @@ angular.module('formFor')
                 function(response) {
                   var promise;
 
-                  // $scope.submitWith is wrapped with a virtual function so we must check via attributes
-                  if ($attributes.submitWith) {
-                    promise = $scope.submitWith({value: $scope.instance});
+                  // $scope.saveWith is wrapped with a virtual function so we must check via attributes
+                  if ($attributes.saveWith) {
+                    promise = $scope.saveWith({value: $scope.instance});
                   } else if ($scope.validatableModel) {
-                    promise = $scope.validatableModel.submit($scope.instance);
+                    promise = $scope.validatableModel.save($scope.instance);
                   } else {
-                    promise = $q.reject('No submit implementation provided');
+                    promise = $q.reject('No save implementation provided');
                   }
 
                   promise.then(
                     function(response) {
-                      // $scope.submitted is wrapped with a virtual function so we must check via attributes
-                      if ($attributes.submitted) {
-                        $scope.submitted();
+                      // $scope.saveComplete is wrapped with a virtual function so we must check via attributes
+                      if ($attributes.saveComplete) {
+                        $scope.saveComplete();
                       } else {
-                        // TODO Check $provider default ???
+                        flashr.now.success('Saved!');
                       }
 
                       angular.copy($scope.instance, $scope.formFor);

@@ -1,4 +1,8 @@
-angular.module('formFor').service('ValidatableModel', function($parse, $q) {
+/**
+ * ModelValidator service used by formFor to determine if each field in the form-data passes validation rules.
+ * This service is not intended for use outside of the formFor module/library.
+ */
+angular.module('formFor').service('ModelValidator', function($parse, $q) {
 
   /**
    * Crawls a model and returns a flattened set of all attributed (using dot notation).
@@ -27,34 +31,11 @@ angular.module('formFor').service('ValidatableModel', function($parse, $q) {
   };
 
   /**
-   * Map of field-name to validation rules.
-   * This map must be overridden by sub-classes.
-   * The following validation criteria are supported:
-   * • required: Boolean (defaults to false)
-   * • minlength: Integer (defaults to 0)
-   * • maxlength: Integer (defaults to max value)
-   * • pattern: Regular expression OR an object containing 2 keys
-   *   • regExp: A regular expression to validate field value with
-   *   • message: Custom error message to reject with if validation fails
-   * • custom: A function accepting a paremeter (current field value) and returning a Promise.
-   *           If the value is invalid, the Promise should be rejected with an error message.
-   */
-  this.ruleSetMap = {};
-
-  /**
    * Returns the rulset associated with the specified field-name.
    * This function guards against dot notation for nested references (ex. 'foo.bar').
    */
-  this.getRuleSetForField = function(fieldName) {
-    return $parse(fieldName)(this.ruleSetMap);
-  };
-
-  /**
-   * Returns a promise to be resolved on successful update (or rejected on failure).
-   * This function must be overridden by sub-classes.
-   */
-  this.save = function() {
-    return $q.reject('This type of record does not support saving yet');
+  this.getRuleSetForField = function(fieldName, ruleSetMap) {
+    return $parse(fieldName)(ruleSetMap);
   };
 
   /**
@@ -64,10 +45,10 @@ angular.module('formFor').service('ValidatableModel', function($parse, $q) {
    *
    * @param model Model data to validate with any existing rules
    */
-  this.validateAll = function(model) {
-    var fields = flattenModelKeys(this.ruleSetMap);
+  this.validateAll = function(model, ruleSetMap) {
+    var fields = flattenModelKeys(ruleSetMap);
 
-    return this.validateFields(model, fields);
+    return this.validateFields(model, fields, ruleSetMap);
   };
 
   /**
@@ -78,19 +59,19 @@ angular.module('formFor').service('ValidatableModel', function($parse, $q) {
    * @param model Model data
    * @param fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
    */
-  this.validateFields = function(model, fieldNames) {
+  this.validateFields = function(model, fieldNames, ruleSetMap) {
     var deferred = $q.defer();
     var promises = [];
     var errorMap = {};
     var that = this;
 
     _.each(fieldNames, function(fieldName) {
-      var ruleSet = that.getRuleSetForField(fieldName);
+      var ruleSet = that.getRuleSetForField(fieldName, ruleSetMap);
 
       if (ruleSet) {
         var value = $parse(fieldName)(model);
 
-        var promise = that.validateField(value, fieldName);
+        var promise = that.validateField(value, fieldName, ruleSetMap);
 
         promise.then(
           angular.noop,
@@ -119,27 +100,48 @@ angular.module('formFor').service('ValidatableModel', function($parse, $q) {
    * @param value Value (typically a string) to evaluate against the rule-set specified for the assciated field
    * @param fieldName Name of field used to associate the rule-set map with a given value
    */
-  this.validateField = function(value, fieldName) {
-    var ruleSet = this.getRuleSetForField(fieldName);
+  this.validateField = function(value, fieldName, ruleSetMap) {
+    var ruleSet = this.getRuleSetForField(fieldName, ruleSetMap);
 
     if (ruleSet) {
       value = value || '';
 
-      if (ruleSet.required && !value) {
-        return $q.reject('Required field');
-      } else if (ruleSet.minlength && value.length < ruleSet.minlength) {
-        return $q.reject('Must be at least ' + ruleSet.minlength + ' characters');
-      } else if (ruleSet.maxlength && value.length > ruleSet.maxlength) {
-        return $q.reject('Must be fewer than ' + ruleSet.maxlength + ' characters');
+      if (ruleSet.required) {
+        var required = _.isObject(ruleSet.required) ? ruleSet.required.rule : ruleSet.required;
+
+        if (!!value !== required) {
+          var errorMessage = _.isObject(ruleSet.required) ? ruleSet.required.message : 'Required field';
+
+          return $q.reject(errorMessage);
+        }
+
+      } else if (ruleSet.minlength) {
+        var minlength = _.isObject(ruleSet.minlength) ? ruleSet.minlength.rule : ruleSet.minlength;
+
+        if (value.length < minlength) {
+          var errorMessage = _.isObject(ruleSet.minlength) ? ruleSet.minlength.message : 'Must be at least ' + minlength + ' characters';
+
+          return $q.reject(errorMessage);
+        }
+
+      } else if (ruleSet.maxlength) {
+        var maxlength = _.isObject(ruleSet.maxlength) ? ruleSet.maxlength.rule : ruleSet.maxlength;
+
+        if (value.length > maxlength) {
+          var errorMessage = _.isObject(ruleSet.maxlength) ? ruleSet.maxlength.message : 'Must be fewer than ' + maxlength + ' characters';
+
+          return $q.reject(errorMessage);
+        }
+
       } else if (ruleSet.pattern) {
-        // Patterns support custom error messages so handle them carefully.
-        var pattern = _.isRegExp(ruleSet.pattern) ? ruleSet.pattern : ruleSet.pattern.regExp;
+        var pattern = _.isRegExp(ruleSet.pattern) ? ruleSet.pattern : ruleSet.pattern.rule;
 
         if (!pattern.exec(value)) {
           var errorMessage = _.isRegExp(ruleSet.pattern) ? 'Invalid format' : ruleSet.pattern.message;
 
           return $q.reject(errorMessage);
         }
+
       } else if (ruleSet.custom) {
         return ruleSet.custom(value).then(
           function(reason) {
