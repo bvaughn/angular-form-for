@@ -1,7 +1,8 @@
 @import 'nib'
 
+@require '_variables';
+
 $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
-$border-radius = 6px
 
 .select-field {
   position: relative;
@@ -15,9 +16,9 @@ $border-radius = 6px
 
 .select-field-toggle-button {
   position: relative;
-  background: linear-gradient(top, white, $color-fill-2);
+  background: linear-gradient(top, white, #eff0f0);
   border-radius: $border-radius;
-  border: 1px $color-fill-3 solid;
+  border: $border;
   color: inherit;
   display: block;
   font-family: inherit;
@@ -32,7 +33,7 @@ $border-radius = 6px
   &:after {
     content: "\f0dc";
     font-family: FontAwesome;
-    color: $color-text-1;
+    color: $color-text-medium;
     position: absolute;
     right: 10px;
     top: 0;
@@ -44,7 +45,7 @@ $border-radius = 6px
   }
 
   &.blank-selected {
-    color: $color-text-1;
+    color: $color-text-medium;
   }
   &.has-error {
     border-color: red;
@@ -53,7 +54,7 @@ $border-radius = 6px
     background: white;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    border-bottom: 1px solid $color-fill-2;
+    border-bottom: 1px solid #eff0f0;
   }
 }
 
@@ -66,7 +67,7 @@ $border-radius = 6px
   overflow: scroll;
   z-index: 1000;
   background-color: white;
-  border: 1px $color-fill-3 solid;
+  border: $border;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   box-shadow: $select-field-box-shadow;
@@ -79,7 +80,7 @@ $border-radius = 6px
     padding: 6px 9px;
 
     &:hover {
-      background-color: color-tint(blue);
+      background-color: #d1efff;
     }
     &.selected {
       font-weight: bold;

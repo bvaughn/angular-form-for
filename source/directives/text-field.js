@@ -12,8 +12,7 @@ angular.module('formFor').directive('textField',
         attribute: '@',
         help: '@?',
         label: '@?',
-        placeholder: '@?',
-        type: '@?'
+        placeholder: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
         if (!$scope.attribute) {
@@ -22,7 +21,7 @@ angular.module('formFor').directive('textField',
           return;
         }
 
-        $scope.inputType = $scope.type || 'text';
+        $scope.type = $attributes.type || 'text';
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
       }

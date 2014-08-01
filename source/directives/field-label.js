@@ -6,7 +6,7 @@ angular.module('formFor').directive('fieldLabel',
     return {
       restrict: 'E',
       templateUrl: 'form-for/templates/field-label.html',
-      $scope: {
+      scope: {
         help: '@?',
         label: '@'
       }

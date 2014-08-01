@@ -1,8 +1,9 @@
 <label  class="field-label"
-        ng-bind="label"
         popover="{{help}}"
         popover-trigger="mouseenter"
         popover-placement="right">
+
+  <span ng-bind="label"></span>
 
   <span ng-if="help" class="help-icon-stack">
     <i class="fa fa-circle help-background-icon"></i>

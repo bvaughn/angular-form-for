@@ -32,10 +32,10 @@ angular.module('myAngularApp', ['formFor']);
 
 Check out the *formFor* wiki for lots of helpful information including:
 
-* [How to use formFor](https://github.com/bvaughn/angular-form-for/wiki/) |
-* [Input Types](https://github.com/bvaughn/angular-form-for/wiki/Input-Types) |
-* [Validation Types](https://github.com/bvaughn/angular-form-for/wiki/Validation-Types) |
-* [Templates](https://github.com/bvaughn/angular-form-for/wiki/Template-Overrides) |
+* [How to use formFor](https://github.com/bvaughn/angular-form-for/wiki/)
+* [Input Types](https://github.com/bvaughn/angular-form-for/wiki/Input-Types)
+* [Validation Types](https://github.com/bvaughn/angular-form-for/wiki/Validation-Types)
+* [Templates](https://github.com/bvaughn/angular-form-for/wiki/Template-Overrides)
 * [API Reference](https://github.com/bvaughn/angular-form-for/wiki/API-Reference)
 
 If you have any questions please feel free to create an issue or [contact me](https://github.com/bvaughn/) directly through Github.

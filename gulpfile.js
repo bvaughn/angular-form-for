@@ -29,7 +29,7 @@ gulp.task('compileCss', function() {
 
   return gulp.src(CONFIG.stylesDir + '/**/*.styl')
     .pipe(stylus({use: [nib(), autoprefixer()]}))
-    .pipe(concat('styles.css'))
+    .pipe(concat('form-for.css'))
     .pipe(gulp.dest(CONFIG.distDir));
 });
 

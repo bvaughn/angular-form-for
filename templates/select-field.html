@@ -1,5 +1,5 @@
-<div class="select-field">
-  <field-label label="label" help="help"></field-label>
+<div class="field select-field">
+  <field-label label="{{label}}" help="{{help}}"></field-label>
 
   <div  class="select-field-toggle-button"
         ng-class="{'has-error': !!error, open: isOpen, 'blank-selected': !selectedOptionLabel}"
@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <div class="select-field-dropdown-list-container" ng-show="isOpen">
+  <div  class="select-field-dropdown-list-container" ng-show="isOpen">
     <ul class="unstyled select-field-dropdown-list">
       <li ng-if="allowBlank" ng-click="selectOption()">&nbsp;</li>
 

@@ -1,0 +1,24 @@
+@require '_variables';
+
+.text-field-input {
+  border-radius: 4px;
+  border: $border;
+  box-shadow: inset 0 1px 4px rgba(0,0,0, 0.15);
+  color: inherit;
+  display: block;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  margin: 0;
+  outline: none;
+  padding: 6px 9px;
+  width: 100%;
+
+  &:focus {
+    border: $border-focused;
+  }
+
+  &.has-error {
+    border-color: red;
+  }
+}

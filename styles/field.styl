@@ -1,0 +1,37 @@
+@require '_variables';
+
+.field {
+  display: block;
+  position: relative;
+}
+
+.field-help {
+  display: block;
+  font-weight: 500;
+  padding-bottom: 7px;
+}
+
+.field-half {
+  float: left;
+  width: 48%;
+  margin-right: 4%;
+}
+
+.field-error {
+  border-radius: 4px;
+  background-color: red;
+  color: white;
+  padding: 7px 15px;
+  position: absolute;
+  right: 0;
+  z-index: 1000;
+
+  &::before {
+    content: '';
+    border: 7px solid transparent;
+    position: absolute;
+    right: 13px;
+    bottom: 100%;
+    border-bottom-color: red;
+  }
+}
