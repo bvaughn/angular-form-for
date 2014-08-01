@@ -114,8 +114,9 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
 
           return $q.reject(errorMessage);
         }
+      }
 
-      } else if (ruleSet.minlength) {
+      if (ruleSet.minlength) {
         var minlength = _.isObject(ruleSet.minlength) ? ruleSet.minlength.rule : ruleSet.minlength;
 
         if (value.length < minlength) {
@@ -123,8 +124,9 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
 
           return $q.reject(errorMessage);
         }
+      }
 
-      } else if (ruleSet.maxlength) {
+      if (ruleSet.maxlength) {
         var maxlength = _.isObject(ruleSet.maxlength) ? ruleSet.maxlength.rule : ruleSet.maxlength;
 
         if (value.length > maxlength) {
@@ -132,8 +134,9 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
 
           return $q.reject(errorMessage);
         }
+      }
 
-      } else if (ruleSet.pattern) {
+      if (ruleSet.pattern) {
         var pattern = _.isRegExp(ruleSet.pattern) ? ruleSet.pattern : ruleSet.pattern.rule;
 
         if (!pattern.exec(value)) {
@@ -141,8 +144,9 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
 
           return $q.reject(errorMessage);
         }
+      }
 
-      } else if (ruleSet.custom) {
+      if (ruleSet.custom) {
         return ruleSet.custom(value).then(
           function(reason) {
             return $q.resolve(reason);

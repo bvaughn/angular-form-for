@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
  */
 angular.module('formFor').directive('selectField',
-  function($log) {
+  function($log, $timeout) {
     return {
       require: '^formFor',
       restrict: 'E',

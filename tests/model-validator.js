@@ -60,6 +60,17 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField(undefined, 'foo.bar', model.ruleSetMap)).toBeRejected();
       expect(ModelValidator.validateField('', 'foo.bar', model.ruleSetMap)).toBeRejected();
     });
+
+    it('should reject a value that only passes some of the validations', function() {
+      model.ruleSetMap = {
+        foo: {
+          required: true,
+          minlength: 2
+        }
+      };
+
+      expect(ModelValidator.validateField('1', 'foo', model.ruleSetMap)).toBeRejected();
+    });
   });
 
   describe('validateField required', function() {
