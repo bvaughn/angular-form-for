@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
  */
 angular.module('formFor').directive('selectField',
-  function() {
+  function($log) {
     return {
       require: '^formFor',
       restrict: 'E',
@@ -12,10 +12,16 @@ angular.module('formFor').directive('selectField',
         attribute: '@',
         help: '@?',
         label: '@?',
-        placeholder: '@?',
-        type: '@?'
+        options: '=',
+        placeholder: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
+        if (!$scope.attribute || !$scope.options) {
+          $log.error('Missing required field(s) "attribute" or "options"');
+
+          return;
+        }
+
         $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
 
