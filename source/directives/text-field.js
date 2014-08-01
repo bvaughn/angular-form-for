@@ -18,7 +18,7 @@ angular.module('formFor').directive('textField',
       link: function($scope, $element, $attributes, formForController) {
         $scope.inputType = $scope.type || 'text';
 
-        $scope.model = formForController.registerFormField($scope, $scope.field);
+        $scope.model = formForController.registerFormField($scope, $scope.attribute);
       }
     };
   });
