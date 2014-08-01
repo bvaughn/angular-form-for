@@ -3,14 +3,15 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
  */
 angular.module('formFor').directive('formFor',
-  function($injector, $parse, $q, $sce, $timeout, flashr) {
+  function($injector, $parse, $q, $sce, $timeout, ModelValidator) {
     return {
       require: 'form',
       restrict: 'A',
       scope: {
         formFor: '=',
-        saveComplete: '&?',
-        saveWith: '&?',
+        submitComplete: '&?',
+        submitError: '&?',
+        submitWith: '&?',
         validateAs: '@?'
       },
       controller: function($scope) {
@@ -134,22 +135,22 @@ angular.module('formFor').directive('formFor',
               function(response) {
                 var promise;
 
-                // $scope.saveWith is wrapped with a virtual function so we must check via attributes
-                if ($attributes.saveWith) {
-                  promise = $scope.saveWith({value: $scope.instance});
+                // $scope.submitWith is wrapped with a virtual function so we must check via attributes
+                if ($attributes.submitWith) {
+                  promise = $scope.submitWith({value: $scope.instance});
                 } else if ($scope.validatableModel) {
-                  promise = $scope.validatableModel.save($scope.instance);
+                  promise = $scope.validatableModel.submit($scope.instance);
                 } else {
-                  promise = $q.reject('No save implementation provided');
+                  promise = $q.reject('No submit implementation provided');
                 }
 
                 promise.then(
                   function(response) {
-                    // $scope.saveComplete is wrapped with a virtual function so we must check via attributes
-                    if ($attributes.saveComplete) {
-                      $scope.saveComplete();
+                    // $scope.submitComplete is wrapped with a virtual function so we must check via attributes
+                    if ($attributes.submitComplete) {
+                      $scope.submitComplete(response);
                     } else {
-                      flashr.now.success('Saved!');
+                      // TODO Fall back to provider default submit complete
                     }
 
                     angular.copy($scope.instance, $scope.formFor);
@@ -157,9 +158,13 @@ angular.module('formFor').directive('formFor',
                   function(errorMessageOrErrorMap) {
                     if (_.isObject(errorMessageOrErrorMap)) {
                       updateErrors(errorMessageOrErrorMap);
+                    }
+
+                    // $scope.submitError is wrapped with a virtual function so we must check via attributes
+                    if ($attributes.submitError) {
+                      $scope.submitError(errorMessageOrErrorMap);
                     } else {
-                      // TODO Better message
-                      flashr.now.error(errorMessageOrErrorMap || 'Something went wrong. Please try again.');
+                      // TODO Fall back to provider default submit error
                     }
                   });
               },
