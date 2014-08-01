@@ -2,7 +2,7 @@
   <field-label label="{{label}}" help="{{help}}"></field-label>
 
   <input  type="{{type}}"
-          class="text-field-input" ng-class="{'has-error': !!error }"
+          class="text-field-input" ng-class="{'has-error': error }"
           placeholder="{{placeholder}}"
           ng-model="model.bindable" ng-debounce>
 

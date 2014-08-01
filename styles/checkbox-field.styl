@@ -1,0 +1,32 @@
+@require '_variables';
+
+.checkbox-field {
+  cursor: pointer;
+}
+
+.checkbox-field-input {
+  vertical-align: middle;
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  background-image: linear-gradient(to top, $color-fill-1, white);
+  border-radius: 4px;
+  border: 1px solid $color-fill-3;
+  position: relative;
+  margin-right: $padding-small;
+
+   &.is-checked {
+    &::before {
+      content: "\f00c";
+      font-family: FontAwesome;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      text-align: center;
+      line-height: 18px;
+    }
+  }
+}

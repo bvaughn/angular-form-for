@@ -29,11 +29,12 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   padding: 6px 9px;
   width: 100%;
   box-shadow: $select-field-box-shadow;
+  margin-top: $padding-small;
 
   &:after {
     content: "\f0dc";
     font-family: FontAwesome;
-    color: $color-text-medium;
+    color: $color-text-1;
     position: absolute;
     right: 10px;
     top: 0;
@@ -45,7 +46,7 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   }
 
   &.blank-selected {
-    color: $color-text-medium;
+    color: $color-text-1;
   }
   &.has-error {
     border-color: red;
