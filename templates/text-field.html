@@ -1,0 +1,10 @@
+<label>
+  <field-label label="label" help="help"></field-label>
+
+  <input  type="{{inputType}}"
+          class="field text-field" ng-class="{'has-error': !!error }"
+          placeholder="{{placeholder}}"
+          ng-model="model.bindable" ng-debounce>
+
+  <div class="field-error" ng-if="error" ng-bind-html="error" />
+</label>

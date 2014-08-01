@@ -1,0 +1,28 @@
+<div class="select-field">
+  <field-label label="label" help="help"></field-label>
+
+  <div  class="select-field-toggle-button"
+        ng-class="{'has-error': !!error, open: isOpen, 'blank-selected': !selectedOptionLabel}"
+        ng-click="toggleOpen()">
+
+    <div ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel" />
+
+    <div ng-if="!selectedOptionLabel">
+      <div ng-if="placeholder" ng-bind="placeholder" />
+      <div ng-if="!placeholder">Select</div>
+    </div>
+  </div>
+
+  <div class="select-field-dropdown-list-container" ng-show="isOpen">
+    <ul class="unstyled select-field-dropdown-list">
+      <li ng-if="allowBlank" ng-click="selectOption()">&nbsp;</li>
+
+      <li ng-repeat="option in options"
+          ng-click="selectOption(option)"
+          ng-bind="option.label"
+          ng-class="{selected: option === selectedOption}"></li>
+    </ul>
+  </div>
+
+  <div class="field-error" ng-if="error" ng-bind-html="error" />
+</div>
