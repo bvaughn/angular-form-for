@@ -34,7 +34,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * Returns the rulset associated with the specified field-name.
    * This function guards against dot notation for nested references (ex. 'foo.bar').
    */
-  this.getRuleSetForField = function(fieldName, validationRules) {
+  this.getRulesForField = function(fieldName, validationRules) {
     return $parse(fieldName)(validationRules);
   };
 
@@ -66,9 +66,9 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
     var that = this;
 
     _.each(fieldNames, function(fieldName) {
-      var ruleSet = that.getRuleSetForField(fieldName, validationRules);
+      var rules = that.getRulesForField(fieldName, validationRules);
 
-      if (ruleSet) {
+      if (rules) {
         var value = $parse(fieldName)(model);
 
         var promise = that.validateField(value, fieldName, validationRules);
@@ -101,53 +101,53 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * @param fieldName Name of field used to associate the rule-set map with a given value
    */
   this.validateField = function(value, fieldName, validationRules) {
-    var ruleSet = this.getRuleSetForField(fieldName, validationRules);
+    var rules = this.getRulesForField(fieldName, validationRules);
 
-    if (ruleSet) {
+    if (rules) {
       value = value || '';
 
-      if (ruleSet.required) {
-        var required = _.isObject(ruleSet.required) ? ruleSet.required.rule : ruleSet.required;
+      if (rules.required) {
+        var required = _.isObject(rules.required) ? rules.required.rule : rules.required;
 
         if (!!value !== required) {
-          var errorMessage = _.isObject(ruleSet.required) ? ruleSet.required.message : 'Required field';
+          var errorMessage = _.isObject(rules.required) ? rules.required.message : 'Required field';
 
           return $q.reject(errorMessage);
         }
       }
 
-      if (ruleSet.minlength) {
-        var minlength = _.isObject(ruleSet.minlength) ? ruleSet.minlength.rule : ruleSet.minlength;
+      if (rules.minlength) {
+        var minlength = _.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
 
         if (value.length < minlength) {
-          var errorMessage = _.isObject(ruleSet.minlength) ? ruleSet.minlength.message : 'Must be at least ' + minlength + ' characters';
+          var errorMessage = _.isObject(rules.minlength) ? rules.minlength.message : 'Must be at least ' + minlength + ' characters';
 
           return $q.reject(errorMessage);
         }
       }
 
-      if (ruleSet.maxlength) {
-        var maxlength = _.isObject(ruleSet.maxlength) ? ruleSet.maxlength.rule : ruleSet.maxlength;
+      if (rules.maxlength) {
+        var maxlength = _.isObject(rules.maxlength) ? rules.maxlength.rule : rules.maxlength;
 
         if (value.length > maxlength) {
-          var errorMessage = _.isObject(ruleSet.maxlength) ? ruleSet.maxlength.message : 'Must be fewer than ' + maxlength + ' characters';
+          var errorMessage = _.isObject(rules.maxlength) ? rules.maxlength.message : 'Must be fewer than ' + maxlength + ' characters';
 
           return $q.reject(errorMessage);
         }
       }
 
-      if (ruleSet.pattern) {
-        var pattern = _.isRegExp(ruleSet.pattern) ? ruleSet.pattern : ruleSet.pattern.rule;
+      if (rules.pattern) {
+        var pattern = _.isRegExp(rules.pattern) ? rules.pattern : rules.pattern.rule;
 
         if (!pattern.exec(value)) {
-          var errorMessage = _.isRegExp(ruleSet.pattern) ? 'Invalid format' : ruleSet.pattern.message;
+          var errorMessage = _.isRegExp(rules.pattern) ? 'Invalid format' : rules.pattern.message;
 
           return $q.reject(errorMessage);
         }
       }
 
-      if (ruleSet.custom) {
-        return ruleSet.custom(value).then(
+      if (rules.custom) {
+        return rules.custom(value).then(
           function(reason) {
             return $q.resolve(reason);
           },
