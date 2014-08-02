@@ -13,6 +13,7 @@ angular.module('formFor').directive('textField',
         debounce: '@?',
         disabled: '@',
         help: '@?',
+        icon: '@?',
         label: '@?',
         placeholder: '@?'
       },

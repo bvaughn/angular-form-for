@@ -297,3 +297,16 @@
 .text-field-input.has-error {
   border-color: #e35256;
 }
+.text-field-input.has-icon {
+  padding-right: 30px;
+}
+.text-field-input-icon-wrapper {
+  positive: relative;
+}
+.text-field-input-icon-wrapper .text-field-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  margin-top: 6px;
+  color: #848b88;
+}
