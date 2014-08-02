@@ -6,6 +6,7 @@ angular.module('formFor').directive('submitButton',
   function($log) {
     return {
       require: '^formFor',
+      replace: true,
       restrict: 'E',
       templateUrl: 'form-for/templates/submit-button.html',
       scope: {

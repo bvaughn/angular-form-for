@@ -18,9 +18,11 @@
   padding: 0 25px;
   white-space: nowrap;
 
-  &:hover, &:active {
-    background-color: $color-fill-3;
-    color: white;
+  &:not(.disabled):not(:disabled) {
+    &:hover, &:active {
+      background-color: $color-fill-3;
+      color: white;
+    }
   }
 
   &:active {
@@ -35,10 +37,6 @@
     opacity: .5;
     cursor: default;
     box-shadow: none;
-
-    &:hover, &:active {
-      background-color: $color-fill-4;
-    }
   }
 }
 
