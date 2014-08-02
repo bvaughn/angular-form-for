@@ -8,7 +8,7 @@ angular.module('formFor').directive('formFor',
       require: 'form',
       restrict: 'A',
       scope: {
-        disabled: '@',
+        disabled: '=?',
         formFor: '=',
         submitComplete: '&?',
         submitError: '&?',
@@ -20,6 +20,7 @@ angular.module('formFor').directive('formFor',
         $scope.formFieldScopes = {};
         $scope.bindable = {};
         $scope.scopeWatcherUnwatchFunctions = [];
+        $scope.submitButtonScopes = [];
 
         if ($scope.validateAs) {
           $scope.validatableModel = $injector.get($scope.validateAs);
@@ -33,6 +34,10 @@ angular.module('formFor').directive('formFor',
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disabled', function(value) {
           _.each($scope.formFieldScopes, function(scope) {
+            scope.disabled = value;
+          });
+
+          _.each($scope.submitButtonScopes, function(scope) {
             scope.disabled = value;
           });
         });
@@ -102,6 +107,13 @@ angular.module('formFor').directive('formFor',
           createScopeWatcher(fieldName);
 
           return $scope.bindable[safeFieldName];
+        };
+
+        /**
+         * All submitButton children must register with formFor using this function.
+         */
+        this.registerSubmitButton = function(submitButtonScope) {
+          $scope.submitButtonScopes.push(submitButtonScope);
         };
 
         // Clean up dangling watchers on destroy.
