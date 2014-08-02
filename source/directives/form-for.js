@@ -8,6 +8,7 @@ angular.module('formFor').directive('formFor',
       require: 'form',
       restrict: 'A',
       scope: {
+        disabled: '@',
         formFor: '=',
         submitComplete: '&?',
         submitError: '&?',
@@ -28,6 +29,13 @@ angular.module('formFor').directive('formFor',
         $scope.$watch('formFor', function(newValue, oldValue) {
           angular.copy($scope.formFor, $scope.instance);
         }, true);
+
+        // Disable all child inputs if the form becomes disabled.
+        $scope.$watch('disabled', function(value) {
+          _.each($scope.formFieldScopes, function(scope) {
+            scope.disabled = value;
+          });
+        });
 
         /**
          * Setup a debounce validator on a registered form field.
@@ -117,6 +125,8 @@ angular.module('formFor').directive('formFor',
         // Override form submit to trigger overall validation.
         $element.submit(
           function() {
+            $scope.disabled = true;
+
             updateErrors({});
 
             var validationPromise;
@@ -167,11 +177,17 @@ angular.module('formFor').directive('formFor',
                       // TODO Fall back to provider default submit error
                     }
                   });
+                promise['finally'](
+                  function() {
+                    $scope.disabled = false;
+                  });
               },
               function(errorMap) {
+                $scope.disabled = false;
+
                 updateErrors(errorMap);
               });
-          });
+        });
       }
     };
   });

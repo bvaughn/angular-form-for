@@ -1,16 +1,18 @@
-<label class="field text-field">
+<label class="field text-field" ng-class="{disabled: disabled}">
   <field-label label="{{label}}" help="{{help}}"></field-label>
 
   <input  ng-if="!multiline"
           type="{{type}}"
           class="text-field-input" ng-class="{'has-error': error }"
+          ng-disabled="disabled"
           placeholder="{{placeholder}}"
-          ng-model="model.bindable" ng-debounce>
+          ng-model="model.bindable" ng-debounce />
 
   <textarea ng-if="multiline"
             class="text-field-input" ng-class="{'has-error': error }"
+            ng-disabled="disabled"
             placeholder="{{placeholder}}"
-            ng-model="model.bindable" ng-debounce>
+            ng-model="model.bindable" ng-debounce></textarea>
 
   <div class="field-error" ng-if="error" ng-bind-html="error" />
 </label>

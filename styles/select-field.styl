@@ -8,6 +8,10 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   position: relative;
   vertical-align: middle;
   cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+  }
 }
 
 .select-field-label {
@@ -30,6 +34,7 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   width: 100%;
   box-shadow: $select-field-box-shadow;
   margin-top: $padding-small;
+  text-align: left;
 
   &:after {
     content: "\f0dc";
@@ -41,7 +46,7 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
     line-height: 2.3em;
   }
 
-  &:hover {
+  &:not(:disabled):hover {
     background: white;
   }
 
@@ -56,6 +61,10 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom: 1px solid #eff0f0;
+  }
+
+  &:disabled {
+    opacity: $opacity-disabled;
   }
 }
 

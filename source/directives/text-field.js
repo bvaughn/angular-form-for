@@ -10,6 +10,7 @@ angular.module('formFor').directive('textField',
       templateUrl: 'form-for/templates/text-field.html',
       scope: {
         attribute: '@',
+        disabled: '@',
         help: '@?',
         label: '@?',
         placeholder: '@?'

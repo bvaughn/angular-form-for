@@ -1,6 +1,7 @@
-<label class="field radio-field" ng-click="click()">
+<label class="field radio-field" ng-class="{disabled: disabled}" ng-click="click()">
   <input  class="radio-field-input" ng-class="{'has-error': error, 'is-selected': model.bindable === value}"
           name="{{attribute}}"
+          ng-disabled="disabled"
           type="radio" />
 
   <field-label label="{{label}}" help="{{help}}"></field-label>

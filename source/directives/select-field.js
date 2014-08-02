@@ -10,6 +10,7 @@ angular.module('formFor').directive('selectField',
       templateUrl: 'form-for/templates/select-field.html',
       scope: {
         attribute: '@',
+        disabled: '@',
         help: '@?',
         label: '@?',
         options: '=',
@@ -42,12 +43,19 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = false;
         };
 
-        var clickWatcher = function() {
+        var clickWatcher = function(event) {
           $scope.isOpen = false;
           $scope.$apply();
         };
 
-        $scope.toggleOpen = function() {
+        $scope.toggleOpen = function(event) {
+          event.stopPropagation();
+          event.preventDefault();
+
+          if ($scope.disabled) {
+            return;
+          }
+
           $scope.isOpen = !$scope.isOpen;
 
           if ($scope.isOpen) {
