@@ -20,6 +20,7 @@
   position: relative;
   margin-right: 5px;
   cursor: inherit;
+  vertical-align: middle;
 }
 .checkbox-field-input.is-checked::before {
   content: "\f00c";
@@ -32,6 +33,9 @@
   line-height: 18px;
   text-align: center;
   color: #848b88;
+}
+.checkbox-field-input.has-error {
+  border-color: #e35256;
 }
 
 .field-label {
@@ -76,16 +80,26 @@
   color: #fff;
   padding: 7px 15px;
   position: absolute;
-  right: 0;
   z-index: 1000;
 }
 .field-error::before {
   content: '';
   border: 7px solid transparent;
   position: absolute;
-  right: 13px;
   bottom: 100%;
   border-bottom-color: #e35256;
+}
+.field-error:not(.left-aligned) {
+  right: 0;
+}
+.field-error:not(.left-aligned)::before {
+  right: 13px;
+}
+.field-error.left-aligned {
+  left: 0;
+}
+.field-error.left-aligned::before {
+  left: 4px;
 }
 
 
@@ -109,6 +123,7 @@
   border: 1px solid #bfc8c7;
   position: relative;
   margin-right: 5px;
+  vertical-align: middle;
 }
 .radio-field-input.is-selected::before {
   content: " ";
@@ -120,6 +135,9 @@
   bottom: 5px;
   border-radius: 5px;
   background-color: #848b88;
+}
+.radio-field-input.has-error {
+  border-color: #e35256;
 }
 
 .select-field {

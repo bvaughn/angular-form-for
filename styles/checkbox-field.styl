@@ -23,19 +23,24 @@
   position: relative;
   margin-right: $padding-small;
   cursor: inherit;
+  vertical-align: middle;
 
   &.is-checked {
-   &::before {
-     content: "\f00c";
-     font-family: FontAwesome;
-     display: inline-block;
-     position: absolute;
-     top: 0;
-     left: 0;
-     width: 19px;
-     line-height: 18px;
-     text-align: center;
-     color: $color-text-1;
-   }
- }
+    &::before {
+      content: "\f00c";
+      font-family: FontAwesome;
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 19px;
+      line-height: 18px;
+      text-align: center;
+      color: $color-text-1;
+    }
+  }
+
+  &.has-error {
+    border-color: red;
+  }
 }

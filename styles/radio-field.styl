@@ -21,6 +21,7 @@
   border: 1px solid $color-fill-3;
   position: relative;
   margin-right: $padding-small;
+  vertical-align: middle;
 
    &.is-selected {
     &::before {
@@ -34,5 +35,9 @@
       border-radius: 5px;
       background-color: $color-text-1;
     }
+  }
+
+  &.has-error {
+    border-color: red;
   }
 }

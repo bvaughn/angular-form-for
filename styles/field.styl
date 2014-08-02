@@ -23,15 +23,29 @@
   color: white;
   padding: 7px 15px;
   position: absolute;
-  right: 0;
   z-index: 1000;
 
   &::before {
     content: '';
     border: 7px solid transparent;
     position: absolute;
-    right: 13px;
     bottom: 100%;
     border-bottom-color: red;
+  }
+
+  &:not(.left-aligned) {
+    right: 0;
+
+    &::before {
+    right: 13px;
+    }
+  }
+
+  &.left-aligned {
+    left: 0;
+
+    &::before {
+      left: 4px;
+    }
   }
 }
