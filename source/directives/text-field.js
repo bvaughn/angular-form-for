@@ -22,6 +22,7 @@ angular.module('formFor').directive('textField',
           return;
         }
 
+        $scope.debounce = parseInt($attributes.debounce) || 1000;
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
 

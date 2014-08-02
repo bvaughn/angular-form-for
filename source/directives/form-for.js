@@ -208,14 +208,15 @@ angular.module('formFor').directive('formFor',
 
                 promise.then(
                   function(response) {
+                    // Update the original object now that the cloned object has successfully submitted.
+                    angular.copy($scope.instance, $scope.formFor);
+
                     // $scope.submitComplete is wrapped with a virtual function so we must check via attributes
                     if ($attributes.submitComplete) {
                       $scope.submitComplete({data: response});
                     } else {
                       FormForConfiguration.defaultSubmitComplete(response);
                     }
-
-                    angular.copy($scope.instance, $scope.formFor);
                   },
                   function(errorMessageOrErrorMap) {
                     // If the remote response returned inline-errors update our error map.

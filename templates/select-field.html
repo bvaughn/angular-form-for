@@ -1,5 +1,5 @@
 <div class="field select-field" ng-class="{disabled: disabled}">
-  <field-label label="{{label}}" help="{{help}}"></field-label>
+  <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
 
   <button class="select-field-toggle-button"
           ng-class="{'has-error': error, open: isOpen, 'blank-selected': !selectedOptionLabel}"

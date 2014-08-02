@@ -1,9 +1,9 @@
-angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<label class=\"field checkbox-field\" ng-class=\"{disabled: disabled}\" ng-click=\"toggle()\">\n  <div class=\"checkbox-field-input\" ng-class=\"{\'has-error\': error, \'is-checked\': model.bindable}\"></div>\n\n  <field-label label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
+angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<label class=\"field checkbox-field\" ng-class=\"{disabled: disabled}\" ng-click=\"toggle()\">\n  <div class=\"checkbox-field-input\" ng-class=\"{\'has-error\': error, \'is-checked\': model.bindable}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
 $templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind=\"label\"></span>\n\n  <span ng-if=\"help\" class=\"help-icon-stack\">\n    <i class=\"fa fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-question help-foreground-icon\"></i>\n  </span>\n</label>\n");
-$templateCache.put("form-for/templates/radio-field.html","<label class=\"field radio-field\" ng-class=\"{disabled: disabled}\" ng-click=\"click()\">\n  <div class=\"radio-field-input\" ng-class=\"{\'has-error\': error, \'is-selected\': model.bindable === value}\"></div>\n\n  <field-label label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
-$templateCache.put("form-for/templates/select-field.html","<div class=\"field select-field\" ng-class=\"{disabled: disabled}\">\n  <field-label label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <button class=\"select-field-toggle-button\"\n          ng-class=\"{\'has-error\': error, open: isOpen, \'blank-selected\': !selectedOptionLabel}\"\n          ng-disabled=\"disabled\"\n          ng-click=\"toggleOpen($event)\">\n\n    <div ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\" />\n\n    <div ng-if=\"!selectedOptionLabel\">\n      <div ng-if=\"placeholder\" ng-bind=\"placeholder\" />\n      <div ng-if=\"!placeholder\">Select</div>\n    </div>\n  </button>\n\n  <div  class=\"select-field-dropdown-list-container\" ng-show=\"isOpen\">\n    <ul class=\"unstyled select-field-dropdown-list\">\n      <li ng-if=\"allowBlank\" ng-click=\"selectOption()\">&nbsp;</li>\n\n      <li ng-repeat=\"option in options\"\n          ng-click=\"selectOption(option)\"\n          ng-bind=\"option.label\"\n          ng-class=\"{selected: option === selectedOption}\"></li>\n    </ul>\n  </div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</div>\n");
+$templateCache.put("form-for/templates/radio-field.html","<label class=\"field radio-field\" ng-class=\"{disabled: disabled}\" ng-click=\"click()\">\n  <div class=\"radio-field-input\" ng-class=\"{\'has-error\': error, \'is-selected\': model.bindable === value}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
+$templateCache.put("form-for/templates/select-field.html","<div class=\"field select-field\" ng-class=\"{disabled: disabled}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <button class=\"select-field-toggle-button\"\n          ng-class=\"{\'has-error\': error, open: isOpen, \'blank-selected\': !selectedOptionLabel}\"\n          ng-disabled=\"disabled\"\n          ng-click=\"toggleOpen($event)\">\n\n    <div ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\" />\n\n    <div ng-if=\"!selectedOptionLabel\">\n      <div ng-if=\"placeholder\" ng-bind=\"placeholder\" />\n      <div ng-if=\"!placeholder\">Select</div>\n    </div>\n  </button>\n\n  <div  class=\"select-field-dropdown-list-container\" ng-show=\"isOpen\">\n    <ul class=\"unstyled select-field-dropdown-list\">\n      <li ng-if=\"allowBlank\" ng-click=\"selectOption()\">&nbsp;</li>\n\n      <li ng-repeat=\"option in options\"\n          ng-click=\"selectOption(option)\"\n          ng-bind=\"option.label\"\n          ng-class=\"{selected: option === selectedOption}\"></li>\n    </ul>\n  </div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</div>\n");
 $templateCache.put("form-for/templates/submit-button.html","<button class=\"submit-button\" ng-class=\"class\" ng-disabled=\"disabled\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind=\"label\"></span>\n</button>\n");
-$templateCache.put("form-for/templates/text-field.html","<label class=\"field text-field\" ng-class=\"{disabled: disabled}\">\n  <field-label label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <input  ng-if=\"!multiline\"\n          type=\"{{type}}\"\n          class=\"text-field-input\" ng-class=\"{\'has-error\': error }\"\n          ng-disabled=\"disabled\"\n          placeholder=\"{{placeholder}}\"\n          ng-model=\"model.bindable\" ng-debounce />\n\n  <textarea ng-if=\"multiline\"\n            class=\"text-field-input\" ng-class=\"{\'has-error\': error }\"\n            ng-disabled=\"disabled\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\" ng-debounce></textarea>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</label>\n");}]);
+$templateCache.put("form-for/templates/text-field.html","<label class=\"field text-field\" ng-class=\"{disabled: disabled}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <input  ng-if=\"!multiline\"\n          type=\"{{type}}\"\n          class=\"text-field-input\" ng-class=\"{\'has-error\': error }\"\n          ng-disabled=\"disabled\"\n          placeholder=\"{{placeholder}}\"\n          ng-model=\"model.bindable\"\n          form-for-debounce=\"{{debounce}}\" />\n\n  <textarea ng-if=\"multiline\"\n            class=\"text-field-input\" ng-class=\"{\'has-error\': error }\"\n            ng-disabled=\"disabled\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\">\n  </textarea>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</label>\n");}]);
 angular.module('formFor', ['formFor.templates']);
 
 /**
@@ -258,7 +258,7 @@ angular.module('formFor').directive('formFor',
 
                 // $scope.submitWith is wrapped with a virtual function so we must check via attributes
                 if ($attributes.submitWith) {
-                  promise = $scope.submitWith({value: $scope.instance});
+                  promise = $scope.submitWith({data: $scope.instance});
                 } else if ($scope.validatableModel && $scope.validatableModel.submit) {
                   promise = $scope.validatableModel.submit($scope.instance);
                 } else {
@@ -267,14 +267,15 @@ angular.module('formFor').directive('formFor',
 
                 promise.then(
                   function(response) {
+                    // Update the original object now that the cloned object has successfully submitted.
+                    angular.copy($scope.instance, $scope.formFor);
+
                     // $scope.submitComplete is wrapped with a virtual function so we must check via attributes
                     if ($attributes.submitComplete) {
                       $scope.submitComplete({data: response});
                     } else {
                       FormForConfiguration.defaultSubmitComplete(response);
                     }
-
-                    angular.copy($scope.instance, $scope.formFor);
                   },
                   function(errorMessageOrErrorMap) {
                     // If the remote response returned inline-errors update our error map.
@@ -499,6 +500,7 @@ angular.module('formFor').directive('textField',
           return;
         }
 
+        $scope.debounce = parseInt($attributes.debounce) || 1000;
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
 
@@ -524,6 +526,45 @@ angular.module('formFor').service('FormForConfiguration',
       }
     };
   });
+
+/**
+ * Angular introduced debouncing (via ngModelOptions) in version 1.3.
+ * As of the time of this writing, that version is still in beta.
+ * This component adds debouncing behavior for Angular 1.2.x.
+ * It is primarily intended for use with <input type=text> elements.
+ */
+angular.module('formFor').directive('formForDebounce', function($timeout) {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    priority: 99,
+    link: function(scope, element, attributes, ngModelController) {
+      if (attributes.type === 'radio' || attributes.type === 'checkbox') {
+        return;
+      }
+
+      element.unbind('input');
+
+      var debounce;
+
+      element.bind('input', function() {
+        $timeout.cancel(debounce);
+
+        debounce = $timeout(function() {
+          scope.$apply(function() {
+            ngModelController.$setViewValue(element.val());
+          });
+        }, attributes.formForDebounce || 1000);
+      });
+
+      element.bind('blur', function() {
+        scope.$apply(function() {
+          ngModelController.$setViewValue(element.val());
+        });
+      });
+    }
+  };
+});
 
 /**
  * Organizes state management for form-submission and field validity.
