@@ -13,10 +13,10 @@
 
 ```html
 <form form-for="user" validate-as="UserSignUp">
-  <text-field label="Username" attribute="username"></text-field>
-  <text-field label="Password" attribute="password" type="password"></text-field>
   <text-field label="Email" attribute="email"></text-field>
-  <button>Sign Up!</button>
+  <text-field label="Password" attribute="password" type="password"></text-field>
+  <checkbox-field label="I agree to the TOS" attribute="agreed"></checkbox-field>
+  <submit-button label="Sign Up"></submit-button>
 </form>
 ```
 

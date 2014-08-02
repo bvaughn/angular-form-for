@@ -12,8 +12,7 @@ angular.module('formFor').directive('checkboxField',
         attribute: '@',
         disabled: '@',
         help: '@?',
-        label: '@?',
-        placeholder: '@?'
+        label: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
         if (!$scope.attribute) {
