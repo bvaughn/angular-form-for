@@ -1,9 +1,5 @@
 # Angular formFor
 
-> Set of Angular directives and services to simplify creating and validating HTML forms.
-
-
----
 **Navigation**:
 [Overview](https://github.com/bvaughn/angular-form-for/wiki/) |
 [Input Types](https://github.com/bvaughn/angular-form-for/wiki/Input-Types) |
@@ -12,6 +8,19 @@
 [API Reference](https://github.com/bvaughn/angular-form-for/wiki/API-Reference)
 
 ---
+
+*formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations. Using *formFor* a sign-up form may look like this:
+
+```html
+<form form-for="user" validate-as="UserSignUp">
+  <text-field label="Username" attribute="username"></text-field>
+  <text-field label="Password" attribute="password" type="password"></text-field>
+  <text-field label="Email" attribute="email"></text-field>
+  <button>Sign Up!</button>
+</form>
+```
+
+But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options. Check out [the wiki](https://github.com/bvaughn/angular-form-for/wiki/) to learn more!
 
 ## Installation
 
@@ -28,7 +37,7 @@ Then just include the *formFor* module in your Angular application like so:
 angular.module('myAngularApp', ['formFor']);
 ```
 
-## Usage instructions
+## More information
 
 Check out the *formFor* wiki for lots of helpful information including:
 
