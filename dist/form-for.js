@@ -488,6 +488,7 @@ angular.module('formFor').directive('textField',
       templateUrl: 'form-for/templates/text-field.html',
       scope: {
         attribute: '@',
+        debounce: '@?',
         disabled: '@',
         help: '@?',
         label: '@?',
@@ -500,7 +501,6 @@ angular.module('formFor').directive('textField',
           return;
         }
 
-        $scope.debounce = parseInt($attributes.debounce) || 1000;
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
 
@@ -543,6 +543,8 @@ angular.module('formFor').directive('formForDebounce', function($timeout) {
         return;
       }
 
+      var duration = attributes.formForDebounce ? parseInt(attributes.formForDebounce) : 1000;
+
       element.unbind('input');
 
       var debounce;
@@ -554,7 +556,7 @@ angular.module('formFor').directive('formForDebounce', function($timeout) {
           scope.$apply(function() {
             ngModelController.$setViewValue(element.val());
           });
-        }, attributes.formForDebounce || 1000);
+        }, duration);
       });
 
       element.bind('blur', function() {

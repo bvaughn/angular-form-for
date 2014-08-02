@@ -14,6 +14,8 @@ angular.module('formFor').directive('formForDebounce', function($timeout) {
         return;
       }
 
+      var duration = attributes.formForDebounce ? parseInt(attributes.formForDebounce) : 1000;
+
       element.unbind('input');
 
       var debounce;
@@ -25,7 +27,7 @@ angular.module('formFor').directive('formForDebounce', function($timeout) {
           scope.$apply(function() {
             ngModelController.$setViewValue(element.val());
           });
-        }, attributes.formForDebounce || 1000);
+        }, duration);
       });
 
       element.bind('blur', function() {
