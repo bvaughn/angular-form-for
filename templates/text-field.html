@@ -1,10 +1,16 @@
 <label class="field text-field">
   <field-label label="{{label}}" help="{{help}}"></field-label>
 
-  <input  type="{{type}}"
+  <input  ng-if="!multiline"
+          type="{{type}}"
           class="text-field-input" ng-class="{'has-error': error }"
           placeholder="{{placeholder}}"
           ng-model="model.bindable" ng-debounce>
+
+  <textarea ng-if="multiline"
+            class="text-field-input" ng-class="{'has-error': error }"
+            placeholder="{{placeholder}}"
+            ng-model="model.bindable" ng-debounce>
 
   <div class="field-error" ng-if="error" ng-bind-html="error" />
 </label>

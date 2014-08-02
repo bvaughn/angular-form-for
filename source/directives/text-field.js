@@ -22,6 +22,7 @@ angular.module('formFor').directive('textField',
         }
 
         $scope.type = $attributes.type || 'text';
+        $scope.multiline = $attributes.hasOwnProperty('multiline');
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
       }
