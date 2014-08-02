@@ -44,7 +44,8 @@ angular.module('formFor').directive('radioField',
 
         $scope.$watch('model.bindable', function(newValue, oldValue) {
           var radio = $element.find('input');
-          if (newValue !== $scope.value) {
+
+          if (newValue === $scope.value) {
             radio.attr('checked', true);
           } else {
             radio.removeAttr('checked');
