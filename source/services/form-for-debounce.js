@@ -4,36 +4,59 @@
  * This component adds debouncing behavior for Angular 1.2.x.
  * It is primarily intended for use with <input type=text> elements.
  */
-angular.module('formFor').directive('formForDebounce', function($timeout) {
+angular.module('formFor').directive('formForDebounce', function($log, $timeout, FormForConfiguration) {
   return {
     restrict: 'A',
     require: 'ngModel',
     priority: 99,
-    link: function(scope, element, attributes, ngModelController) {
+    link: function($scope, $element, attributes, ngModelController) {
       if (attributes.type === 'radio' || attributes.type === 'checkbox') {
+        $log.warn('formForDebounce should only be used with <input type=text> and <textarea> elements');
+
         return;
       }
 
-      var duration = attributes.formForDebounce ? parseInt(attributes.formForDebounce) : 1000;
-
-      element.unbind('input');
-
+      var durationAttribute = attributes.formForDebounce;
+      var duration = FormForConfiguration.defaultDebounceDuration;
       var debounce;
 
-      element.bind('input', function() {
-        $timeout.cancel(debounce);
+      // Debounce can be configured for blur-only by passing a value of 'false'.
+      if (durationAttribute !== undefined) {
+        if (durationAttribute.toString() === 'false') {
+          duration = false;
+        } else {
+          durationAttribute = parseInt(durationAttribute);
 
-        debounce = $timeout(function() {
-          scope.$apply(function() {
-            ngModelController.$setViewValue(element.val());
-          });
-        }, duration);
+          if (!_.isNaN(durationAttribute)) {
+            duration = durationAttribute;
+          }
+        }
+      }
+
+      $element.unbind('input');
+
+      if (duration !== false) {
+        $element.bind('input', function() {
+          $timeout.cancel(debounce);
+
+          debounce = $timeout(function() {
+            $scope.$apply(function() {
+              ngModelController.$setViewValue($element.val());
+            });
+          }, duration);
+        });
+      }
+
+      $element.bind('blur', function() {
+        $scope.$apply(function() {
+          ngModelController.$setViewValue($element.val());
+        });
       });
 
-      element.bind('blur', function() {
-        scope.$apply(function() {
-          ngModelController.$setViewValue(element.val());
-        });
+      $scope.$on('$destroy', function() {
+        if (debounce) {
+          $timeout.cancel(debounce);
+        }
       });
     }
   };
