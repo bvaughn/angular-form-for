@@ -77,7 +77,6 @@ angular.module('formFor').directive('formFor',
         validateAs: '@?'
       },
       controller: function($scope) {
-        $scope.instance = angular.copy($scope.formFor);
         $scope.formFieldScopes = {};
         $scope.bindable = {};
         $scope.scopeWatcherUnwatchFunctions = [];
@@ -109,12 +108,12 @@ angular.module('formFor').directive('formFor',
 
           $scope.$watch('bindable.' + safeFieldName + '.bindable', function(newValue, oldValue) {
             if (newValue !== oldValue) {
-              setter($scope.instance, newValue);
+              setter($scope.formFor, newValue);
             }
           });
 
-          $scope.$watch('instance.' + fieldName, function(newValue, oldValue) {
-            $scope.bindable[safeFieldName].bindable = getter($scope.instance);
+          $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
+            $scope.bindable[safeFieldName].bindable = getter($scope.formFor);
           });
 
           // Also run validations on-change as necessary.
@@ -129,15 +128,6 @@ angular.module('formFor').directive('formFor',
         this.registerSubmitButton = function(submitButtonScope) {
           $scope.submitButtonScopes.push(submitButtonScope);
         };
-
-        // Watch for async-loaded date and make sure to update our bindable $scope copy.
-        $scope.$watch('formFor', function(newValue, oldValue) {
-          angular.copy($scope.formFor, $scope.instance);
-
-          // We won't display error messages until/unless a form-field has been modified,
-          // But for our $scope.valid attribute to be correct we need to validate immediately.
-          $scope.validateAll();
-        }, true);
 
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disabled', function(value) {
@@ -161,19 +151,15 @@ angular.module('formFor').directive('formFor',
           var formFieldScope = $scope.formFieldScopes[fieldName];
           var initialized;
 
-          return $scope.$watch('instance.' + fieldName,
+          return $scope.$watch('formFor.' + fieldName,
             function(newValue, oldValue) {
-
               // Scope watchers always trigger once when added.
-              // Don't validate a field until it's been modified or the form has been submitted.
-              if (!initialized) {
-                initialized = true;
-
-                return;
+              // Only mark our field dirty the second time this watch is triggered.
+              if (initialized) {
+                $scope.formForStateHelper.markFieldBeenModified(fieldName);
               }
 
-              // Flag this field as modified so we'll know to render any validation errors.
-              $scope.formForStateHelper.markFieldBeenModified(fieldName);
+              initialized = true;
 
               if ($scope.validatableModel) {
                 ModelValidator.validateField(newValue, fieldName, $scope.validatableModel.validationRules).then(
@@ -226,7 +212,7 @@ angular.module('formFor').directive('formFor',
           if ($scope.validatableModel) {
             validationPromise =
               ModelValidator.validateFields(
-                $scope.instance,
+                $scope.formFor,
                 _.keys($scope.formFieldScopes),
                 $scope.validatableModel.validationRules);
           } else {
@@ -258,18 +244,15 @@ angular.module('formFor').directive('formFor',
 
                 // $scope.submitWith is wrapped with a virtual function so we must check via attributes
                 if ($attributes.submitWith) {
-                  promise = $scope.submitWith({data: $scope.instance});
+                  promise = $scope.submitWith({data: $scope.formFor});
                 } else if ($scope.validatableModel && $scope.validatableModel.submit) {
-                  promise = $scope.validatableModel.submit($scope.instance);
+                  promise = $scope.validatableModel.submit($scope.formFor);
                 } else {
                   promise = $q.reject('No submit implementation provided');
                 }
 
                 promise.then(
                   function(response) {
-                    // Update the original object now that the cloned object has successfully submitted.
-                    angular.copy($scope.instance, $scope.formFor);
-
                     // $scope.submitComplete is wrapped with a virtual function so we must check via attributes
                     if ($attributes.submitComplete) {
                       $scope.submitComplete({data: response});
