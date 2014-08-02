@@ -34,44 +34,44 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * Returns the rulset associated with the specified field-name.
    * This function guards against dot notation for nested references (ex. 'foo.bar').
    */
-  this.getRuleSetForField = function(fieldName, ruleSetMap) {
-    return $parse(fieldName)(ruleSetMap);
+  this.getRuleSetForField = function(fieldName, validationRules) {
+    return $parse(fieldName)(validationRules);
   };
 
   /**
-   * Validates the model against all rules in the ruleSetMap.
+   * Validates the model against all rules in the validationRules.
    * This method returns a promise to be resolved on successful validation,
    * Or rejected with a map of field-name to error-message.
    *
    * @param model Model data to validate with any existing rules
    */
-  this.validateAll = function(model, ruleSetMap) {
-    var fields = flattenModelKeys(ruleSetMap);
+  this.validateAll = function(model, validationRules) {
+    var fields = flattenModelKeys(validationRules);
 
-    return this.validateFields(model, fields, ruleSetMap);
+    return this.validateFields(model, fields, validationRules);
   };
 
   /**
-   * Validates the values in model with the rules defined in the current ruleSetMap.
+   * Validates the values in model with the rules defined in the current validationRules.
    * This method returns a promise to be resolved on successful validation,
    * Or rejected with a map of field-name to error-message.
    *
    * @param model Model data
    * @param fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
    */
-  this.validateFields = function(model, fieldNames, ruleSetMap) {
+  this.validateFields = function(model, fieldNames, validationRules) {
     var deferred = $q.defer();
     var promises = [];
     var errorMap = {};
     var that = this;
 
     _.each(fieldNames, function(fieldName) {
-      var ruleSet = that.getRuleSetForField(fieldName, ruleSetMap);
+      var ruleSet = that.getRuleSetForField(fieldName, validationRules);
 
       if (ruleSet) {
         var value = $parse(fieldName)(model);
 
-        var promise = that.validateField(value, fieldName, ruleSetMap);
+        var promise = that.validateField(value, fieldName, validationRules);
 
         promise.then(
           angular.noop,
@@ -93,15 +93,15 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
   };
 
   /**
-   * Validates a value against the related rule-set (within ruleSetMap).
+   * Validates a value against the related rule-set (within validationRules).
    * This method returns a promise to be resolved on successful validation.
    * If validation fails the promise will be rejected with an error message.
    *
    * @param value Value (typically a string) to evaluate against the rule-set specified for the assciated field
    * @param fieldName Name of field used to associate the rule-set map with a given value
    */
-  this.validateField = function(value, fieldName, ruleSetMap) {
-    var ruleSet = this.getRuleSetForField(fieldName, ruleSetMap);
+  this.validateField = function(value, fieldName, validationRules) {
+    var ruleSet = this.getRuleSetForField(fieldName, validationRules);
 
     if (ruleSet) {
       value = value || '';

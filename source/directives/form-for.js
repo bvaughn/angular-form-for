@@ -62,7 +62,7 @@ angular.module('formFor').directive('formFor',
               }
 
               if ($scope.validatableModel) {
-                ModelValidator.validateField(newValue, fieldName, $scope.validatableModel.ruleSetMap).then(
+                ModelValidator.validateField(newValue, fieldName, $scope.validatableModel.validationRules).then(
                   function() {
                     formFieldScope.error = null;
                   },
@@ -148,7 +148,7 @@ angular.module('formFor').directive('formFor',
                 ModelValidator.validateFields(
                   $scope.instance,
                   _.keys($scope.formFieldScopes),
-                  $scope.validatableModel.ruleSetMap);
+                  $scope.validatableModel.validationRules);
             } else {
               validationPromise = $q.resolve();
             }
