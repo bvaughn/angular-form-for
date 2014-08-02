@@ -34,7 +34,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * Returns the rulset associated with the specified field-name.
    * This function guards against dot notation for nested references (ex. 'foo.bar').
    */
-  this.getRulesForField = function(fieldName, validationRules) {
+  var getRulesForField = function(fieldName, validationRules) {
     return $parse(fieldName)(validationRules);
   };
 
@@ -66,7 +66,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
     var that = this;
 
     _.each(fieldNames, function(fieldName) {
-      var rules = that.getRulesForField(fieldName, validationRules);
+      var rules = getRulesForField(fieldName, validationRules);
 
       if (rules) {
         var value = $parse(fieldName)(model);
@@ -101,7 +101,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * @param fieldName Name of field used to associate the rule-set map with a given value
    */
   this.validateField = function(value, fieldName, validationRules) {
-    var rules = this.getRulesForField(fieldName, validationRules);
+    var rules = getRulesForField(fieldName, validationRules);
 
     if (rules) {
       value = value || '';
