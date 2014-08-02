@@ -5,36 +5,34 @@
 
   &.disabled {
     cursor: default;
+
+    .radio-field-input {
+      opacity: $opacity-disabled;
+    }
   }
 }
 
 .radio-field-input {
-  vertical-align: middle;
   display: inline-block;
-  height: 18px;
-  width: 18px;
+  height: 20px;
+  width: 20px;
   background-image: linear-gradient(to top, $color-fill-1, white);
-  border-radius: 4px;
+  border-radius: 10px;
   border: 1px solid $color-fill-3;
   position: relative;
   margin-right: $padding-small;
-  cursor: inherit;
 
    &.is-selected {
     &::before {
-      content: "\f111";
-      font-family: FontAwesome;
-      display: block;
+      content: " ";
+      display: inline-block;
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      text-align: center;
-      line-height: 18px;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border-radius: 5px;
+      background-color: $color-text-1;
     }
-  }
-  &:disabled {
-    opacity: $opacity-disabled;
   }
 }
