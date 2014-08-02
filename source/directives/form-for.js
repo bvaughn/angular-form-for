@@ -199,7 +199,7 @@ angular.module('formFor').directive('formFor',
 
                 // $scope.submitWith is wrapped with a virtual function so we must check via attributes
                 if ($attributes.submitWith) {
-                  promise = $scope.submitWith({value: $scope.instance});
+                  promise = $scope.submitWith({data: $scope.instance});
                 } else if ($scope.validatableModel && $scope.validatableModel.submit) {
                   promise = $scope.validatableModel.submit($scope.instance);
                 } else {
