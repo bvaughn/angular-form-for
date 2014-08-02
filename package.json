@@ -1,5 +1,5 @@
 {
-  "name": "form-for",
+  "name": "angular-form-for",
   "version": "1.0.0",
   "description": "form-for ========",
   "main": "gulpfile.js",
@@ -29,16 +29,16 @@
     "nib": "^1.0.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bvaughn/form-for.git"
+    "url": "https://github.com/bvaughn/angular-form-for.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bvaughn/form-for/issues"
+    "url": "https://github.com/bvaughn/angular-form-for/issues"
   },
-  "homepage": "https://github.com/bvaughn/form-for"
+  "homepage": "https://github.com/bvaughn/angular-form-for"
 }
