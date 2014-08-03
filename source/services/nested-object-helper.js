@@ -4,8 +4,8 @@
 angular.module('formFor').service('NestedObjectHelper', function($parse) {
   return {
 
-    flattenFieldName: function(fieldName) {
-      return fieldName.replace(/\./g, '___');
+    flattenAttribute: function(attribute) {
+      return attribute.replace(/\./g, '___');
     },
 
     /**

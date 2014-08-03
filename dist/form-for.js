@@ -170,7 +170,7 @@ angular.module('formFor').directive('formFor',
          * @param fieldName Unique identifier of field within model; used to map errors back to input fields
          */
         this.registerFormField = function(formFieldScope, fieldName) {
-          var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
+          var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
           $scope.formFieldScopes[fieldName] = formFieldScope;
           $scope.bindable[safeFieldName] = {bindable: null};
@@ -652,7 +652,7 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
   };
 
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {
-    var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
+    var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
     NestedObjectHelper.writeAttribute(this.formScope.errorMap, fieldName, error);
 
@@ -808,8 +808,8 @@ angular.module('formFor').service('ModelValidator', function($parse, $q, NestedO
 angular.module('formFor').service('NestedObjectHelper', function($parse) {
   return {
 
-    flattenFieldName: function(fieldName) {
-      return fieldName.replace(/\./g, '___');
+    flattenAttribute: function(attribute) {
+      return attribute.replace(/\./g, '___');
     },
 
     /**

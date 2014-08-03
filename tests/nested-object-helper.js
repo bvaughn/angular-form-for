@@ -9,13 +9,13 @@ describe('NestedObjectHelper', function() {
     NestedObjectHelper = $injector.get('NestedObjectHelper');
   }));
 
-  describe('flattenFieldName', function() {
+  describe('flattenAttribute', function() {
     it('should strip dot notation syntax from a string containing it', function() {
-      expect(NestedObjectHelper.flattenFieldName('foo.bar.baz')).not.toMatch(/\./);
+      expect(NestedObjectHelper.flattenAttribute('foo.bar.baz')).not.toMatch(/\./);
     });
 
     it('should not correct a string without dot notation', function() {
-      expect(NestedObjectHelper.flattenFieldName('foo')).toMatch('foo');
+      expect(NestedObjectHelper.flattenAttribute('foo')).toMatch('foo');
     });
   });
 

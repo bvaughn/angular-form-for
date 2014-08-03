@@ -51,7 +51,7 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
   };
 
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {
-    var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
+    var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
     NestedObjectHelper.writeAttribute(this.formScope.errorMap, fieldName, error);
 

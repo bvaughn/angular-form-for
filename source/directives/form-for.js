@@ -42,7 +42,7 @@ angular.module('formFor').directive('formFor',
          * @param fieldName Unique identifier of field within model; used to map errors back to input fields
          */
         this.registerFormField = function(formFieldScope, fieldName) {
-          var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
+          var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
           $scope.formFieldScopes[fieldName] = formFieldScope;
           $scope.bindable[safeFieldName] = {bindable: null};
