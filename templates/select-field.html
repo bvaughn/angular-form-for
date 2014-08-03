@@ -1,11 +1,6 @@
 <div class="field select-field" ng-class="{disabled: disable || disabledByForm}">
   <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
 
-  <!--
-  <select ng-model="model.bindable"
-          ng-options="option.value as option.label for option in options">
-  </select>
-  -->
   <div  class="select-field-toggle-button"
         ng-class="{'has-error': error, open: isOpen, 'blank-selected': !selectedOptionLabel, disabled: disable || disabledByForm}">
 

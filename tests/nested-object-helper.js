@@ -43,7 +43,6 @@ describe('NestedObjectHelper', function() {
         }
       });
 
-      console.log(keys);
       expect(keys).toContain('foo');
       expect(keys).toContain('deep.bar');
       expect(keys).toContain('deep.deeper.baz');
