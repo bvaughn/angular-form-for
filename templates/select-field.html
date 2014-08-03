@@ -1,10 +1,9 @@
 <div class="field select-field" ng-class="{disabled: disable || disabledByForm}">
   <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
 
-  <button class="select-field-toggle-button"
-          ng-class="{'has-error': error, open: isOpen, 'blank-selected': !selectedOptionLabel}"
-          ng-disabled="disable || disabledByForm"
-          ng-click="toggleOpen($event)">
+  <div  class="select-field-toggle-button"
+        ng-class="{'has-error': error, open: isOpen, 'blank-selected': !selectedOptionLabel, disabled: disable || disabledByForm}"
+        ng-click="toggleOpen()">
 
     <div ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel" />
 
@@ -12,7 +11,7 @@
       <div ng-if="placeholder" ng-bind="placeholder" />
       <div ng-if="!placeholder">Select</div>
     </div>
-  </button>
+  </div>
 
   <div  class="select-field-dropdown-list-container" ng-show="isOpen">
     <ul class="unstyled select-field-dropdown-list">

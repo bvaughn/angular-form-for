@@ -49,10 +49,7 @@ angular.module('formFor').directive('selectField',
         };
 
         $scope.toggleOpen = function(event) {
-          event.stopPropagation();
-          event.preventDefault();
-
-          if ($scope.disable) {
+          if ($scope.disable || $scope.disabledByForm) {
             return;
           }
 

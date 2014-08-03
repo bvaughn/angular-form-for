@@ -181,7 +181,7 @@
   top: 0;
   line-height: 2.3em;
 }
-.select-field-toggle-button:not(:disabled):hover {
+.select-field-toggle-button:not(.disabled):hover {
   background: #fff;
 }
 .select-field-toggle-button.blank-selected {
@@ -196,7 +196,7 @@
   border-bottom-right-radius: 0;
   border-bottom: 1px solid #eff0f0;
 }
-.select-field-toggle-button:disabled {
+.select-field-toggle-button.disabled {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
