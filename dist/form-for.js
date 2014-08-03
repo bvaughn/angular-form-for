@@ -71,10 +71,11 @@ angular.module('formFor').directive('formFor',
         errorMap: '=?',
         formFor: '=',
         valid: '=?',
+        service: '@',
         submitComplete: '&?',
         submitError: '&?',
         submitWith: '&?',
-        validateAs: '@?'
+        validationRules: '=?'
       },
       controller: function($scope) {
         $scope.formFieldScopes = {};
@@ -82,8 +83,16 @@ angular.module('formFor').directive('formFor',
         $scope.scopeWatcherUnwatchFunctions = [];
         $scope.submitButtonScopes = [];
 
-        if ($scope.validateAs) {
-          $scope.validatableModel = $injector.get($scope.validateAs);
+        if ($scope.service) {
+          $scope.$service = $injector.get($scope.service);
+        }
+
+        // Validation rules can come through 2 ways:
+        // As part of the validation service or as a direct binding.
+        if ($scope.$service) {
+          $scope.$validationRules = $scope.$service.validationRules;
+        } else {
+          $scope.$validationRules = $scope.validationRules;
         }
 
         /**
@@ -161,8 +170,8 @@ angular.module('formFor').directive('formFor',
 
               initialized = true;
 
-              if ($scope.validatableModel) {
-                ModelValidator.validateField(newValue, fieldName, $scope.validatableModel.validationRules).then(
+              if ($scope.$validationRules) {
+                ModelValidator.validateField(newValue, fieldName, $scope.$validationRules).then(
                   function() {
                     $scope.formForStateHelper.setFieldError(fieldName);
                   },
@@ -209,12 +218,12 @@ angular.module('formFor').directive('formFor',
 
           var validationPromise;
 
-          if ($scope.validatableModel) {
+          if ($scope.$validationRules) {
             validationPromise =
               ModelValidator.validateFields(
                 $scope.formFor,
                 _.keys($scope.formFieldScopes),
-                $scope.validatableModel.validationRules);
+                $scope.$validationRules);
           } else {
             validationPromise = $q.resolve();
           }
@@ -245,8 +254,8 @@ angular.module('formFor').directive('formFor',
                 // $scope.submitWith is wrapped with a virtual function so we must check via attributes
                 if ($attributes.submitWith) {
                   promise = $scope.submitWith({data: $scope.formFor});
-                } else if ($scope.validatableModel && $scope.validatableModel.submit) {
-                  promise = $scope.validatableModel.submit($scope.formFor);
+                } else if ($scope.$service && $scope.$service.submit) {
+                  promise = $scope.$service.submit($scope.formFor);
                 } else {
                   promise = $q.reject('No submit implementation provided');
                 }

@@ -12,7 +12,7 @@
 *formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations. Using *formFor* a sign-up form may look like this:
 
 ```html
-<form form-for="user" validate-as="UserSignUp">
+<form form-for="user" service="UserSignUp">
   <text-field label="Email" attribute="email"></text-field>
   <text-field label="Password" attribute="password" type="password"></text-field>
   <checkbox-field label="I agree to the TOS" attribute="agreed"></checkbox-field>
