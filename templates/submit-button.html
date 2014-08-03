@@ -1,5 +1,5 @@
 <button class="submit-button" ng-class="class" ng-disabled="disable || disabledByForm">
   <i ng-if="icon" class="submit-button-icon" ng-class="icon"></i>
 
-  <span ng-bind="label"></span>
+  <span ng-bind-html="bindableLabel"></span>
 </button>

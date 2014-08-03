@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#submitbutton
  */
 angular.module('formFor').directive('submitButton',
-  function($log) {
+  function($log, $sce) {
     return {
       require: '^formFor',
       replace: true,
@@ -16,6 +16,10 @@ angular.module('formFor').directive('submitButton',
       },
       link: function($scope, $element, $attributes, formForController) {
         $scope.class = $attributes.class;
+
+        $scope.$watch('label', function(value) {
+          $scope.bindableLabel = $sce.trustAsHtml(value);
+        });
 
         formForController.registerSubmitButton($scope);
       }
