@@ -588,7 +588,7 @@ angular.module('formFor').directive('submitButton',
         label: '@'
       },
       link: function($scope, $element, $attributes, formForController) {
-        $scope.class = $attributes.class;
+        $scope['class'] = $attributes['class'];
 
         $scope.$watch('label', function(value) {
           $scope.bindableLabel = $sce.trustAsHtml(value);
