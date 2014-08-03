@@ -10,7 +10,7 @@ angular.module('formFor').directive('submitButton',
       restrict: 'E',
       templateUrl: 'form-for/templates/submit-button.html',
       scope: {
-        disabled: '@',
+        disable: '@',
         icon: '@',
         label: '@'
       },

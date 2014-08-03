@@ -8,7 +8,7 @@ angular.module('formFor').directive('formFor',
       require: 'form',
       restrict: 'A',
       scope: {
-        disabled: '=?',
+        disable: '=?',
         errorMap: '=?',
         formFor: '=',
         valid: '=?',
@@ -80,13 +80,13 @@ angular.module('formFor').directive('formFor',
         };
 
         // Disable all child inputs if the form becomes disabled.
-        $scope.$watch('disabled', function(value) {
+        $scope.$watch('disable', function(value) {
           _.each($scope.formFieldScopes, function(scope) {
-            scope.disabled = value;
+            scope.disabledByForm = value;
           });
 
           _.each($scope.submitButtonScopes, function(scope) {
-            scope.disabled = value;
+            scope.disabledByForm = value;
           });
         });
 
@@ -186,7 +186,7 @@ angular.module('formFor').directive('formFor',
         $element.submit(
           function() {
             $scope.formForStateHelper.markFormSubmitted();
-            $scope.disabled = true;
+            $scope.disable = true;
 
             $scope.validateAll().then(
               function(response) {
@@ -226,11 +226,11 @@ angular.module('formFor').directive('formFor',
                   });
                 promise['finally'](
                   function() {
-                    $scope.disabled = false;
+                    $scope.disable = false;
                   });
               },
               function() {
-                $scope.disabled = false;
+                $scope.disable = false;
               });
         });
       }

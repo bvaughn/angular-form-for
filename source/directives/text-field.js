@@ -11,7 +11,7 @@ angular.module('formFor').directive('textField',
       scope: {
         attribute: '@',
         debounce: '@?',
-        disabled: '@',
+        disable: '@',
         help: '@?',
         icon: '@?',
         label: '@?',

@@ -10,7 +10,7 @@ angular.module('formFor').directive('checkboxField',
       templateUrl: 'form-for/templates/checkbox-field.html',
       scope: {
         attribute: '@',
-        disabled: '@',
+        disable: '@',
         help: '@?',
         label: '@?'
       },
@@ -26,7 +26,7 @@ angular.module('formFor').directive('checkboxField',
         var $input = $element.find('input');
 
         $scope.toggle = function toggle() {
-          if (!$scope.disabled) {
+          if (!$scope.disable && !$scope.disabledByForm) {
             $scope.model.bindable = !$scope.model.bindable;
           }
         };

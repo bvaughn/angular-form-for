@@ -1,4 +1,4 @@
-<label class="field checkbox-field" ng-class="{disabled: disabled}" ng-click="toggle()">
+<label class="field checkbox-field" ng-class="{disabled: disable || disabledByForm}" ng-click="toggle()">
   <div class="checkbox-field-input" ng-class="{'has-error': error, 'is-checked': model.bindable}"></div>
 
   <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>

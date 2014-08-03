@@ -10,7 +10,7 @@ angular.module('formFor').directive('selectField',
       templateUrl: 'form-for/templates/select-field.html',
       scope: {
         attribute: '@',
-        disabled: '@',
+        disable: '@',
         help: '@?',
         label: '@?',
         options: '=',
@@ -52,7 +52,7 @@ angular.module('formFor').directive('selectField',
           event.stopPropagation();
           event.preventDefault();
 
-          if ($scope.disabled) {
+          if ($scope.disable) {
             return;
           }
 

@@ -12,7 +12,7 @@ angular.module('formFor').directive('radioField',
       templateUrl: 'form-for/templates/radio-field.html',
       scope: {
         attribute: '@',
-        disabled: '@',
+        disable: '@',
         help: '@?',
         label: '@?',
         value: '@'
@@ -43,13 +43,16 @@ angular.module('formFor').directive('radioField',
         var $input = $element.find('input');
 
         $scope.click = function() {
-          if (!$scope.disabled) {
+          if (!$scope.disable && !$scope.disabledByForm) {
             $scope.model.bindable = $scope.value;
           }
         };
 
-        activeRadio.defaultScope.$watch('disabled', function(value) {
-          $scope.disabled = value;
+        activeRadio.defaultScope.$watch('disable', function(value) {
+          $scope.disable = value;
+        });
+        activeRadio.defaultScope.$watch('disabledByForm', function(value) {
+          $scope.disabledByForm = value;
         });
 
         $scope.$watch('model.bindable', function(newValue, oldValue) {
