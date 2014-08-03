@@ -11,11 +11,11 @@ angular.module('formFor').directive('submitButton',
       templateUrl: 'form-for/templates/submit-button.html',
       scope: {
         disabled: '@',
-        icon: '@'
+        icon: '@',
+        label: '@'
       },
       link: function($scope, $element, $attributes, formForController) {
         $scope.class = $attributes.class;
-        $scope.label = $attributes.label || 'Submit';
 
         formForController.registerSubmitButton($scope);
       }
