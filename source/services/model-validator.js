@@ -2,44 +2,7 @@
  * ModelValidator service used by formFor to determine if each field in the form-data passes validation rules.
  * This service is not intended for use outside of the formFor module/library.
  */
-angular.module('formFor').service('ModelValidator', function($parse, $q) {
-
-  /**
-   * Crawls a model and returns a flattened set of all attributed (using dot notation).
-   * This converts an Object like: {foo: {bar: true}, baz: true}
-   * Into an Array like ['foo', 'foo.bar', 'baz']
-   */
-  var flattenModelKeys = function(model) {
-    var internalCrawler = function(model, path, array) {
-      array = array || [];
-
-      var prefix = path ? path + '.' : '';
-
-      _.forIn(model,
-        function(value, relativeKey) {
-          var fullKey = prefix + relativeKey;
-
-          array.push(fullKey);
-
-          internalCrawler(value, fullKey, array);
-        });
-
-      return array;
-    };
-
-    return internalCrawler(model);
-  };
-
-  /**
-   * Returns the rulset associated with the specified field-name.
-   * This function guards against dot notation for nested references (ex. 'foo.bar').
-   *
-   * @param fieldName Uniquely identifies the field (dot notation supported*)
-   * @param validationRules Set of named validation rules
-   */
-  var getRulesForField = function(fieldName, validationRules) {
-    return $parse(fieldName)(validationRules);
-  };
+angular.module('formFor').service('ModelValidator', function($parse, $q, NestedObjectHelper) {
 
   /**
    * Validates the model against all rules in the validationRules.
@@ -50,7 +13,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * @param validationRules Set of named validation rules
    */
   this.validateAll = function(model, validationRules) {
-    var fields = flattenModelKeys(validationRules);
+    var fields = NestedObjectHelper.flattenObjectKeys(validationRules);
 
     return this.validateFields(model, fields, validationRules);
   };
@@ -71,7 +34,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
     var that = this;
 
     _.each(fieldNames, function(fieldName) {
-      var rules = getRulesForField(fieldName, validationRules);
+      var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
 
       if (rules) {
         var promise = that.validateField(model, fieldName, validationRules);
@@ -105,7 +68,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * @param validationRules Set of named validation rules
    */
   this.validateField = function(model, fieldName, validationRules) {
-    var rules = getRulesForField(fieldName, validationRules);
+    var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
     var value = $parse(fieldName)(model);
 
     if (rules) {

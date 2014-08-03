@@ -67,7 +67,7 @@ angular.module('formFor').directive('fieldLabel',
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
  */
 angular.module('formFor').directive('formFor',
-  function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, ModelValidator) {
+  function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
     return {
       require: 'form',
       restrict: 'A',
@@ -106,7 +106,7 @@ angular.module('formFor').directive('formFor',
          * @param fieldName Unique identifier of field within model; used to map errors back to input fields
          */
         this.registerFormField = function(formFieldScope, fieldName) {
-          var safeFieldName = fieldName.replace(/\./g, '___');
+          var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
 
           $scope.formFieldScopes[fieldName] = formFieldScope;
           $scope.bindable[safeFieldName] = {bindable: null};
@@ -210,7 +210,9 @@ angular.module('formFor').directive('formFor',
          */
         $scope.updateErrors = function(errorMap) {
           _.each($scope.formFieldScopes, function(scope, fieldName) {
-            $scope.formForStateHelper.setFieldError(fieldName, errorMap[fieldName]);
+            var error = NestedObjectHelper.readAttribute(errorMap, fieldName);
+
+            $scope.formForStateHelper.setFieldError(fieldName, error);
           });
         };
 
@@ -601,7 +603,7 @@ angular.module('formFor').directive('formForDebounce', function($log, $timeout, 
  * Organizes state management for form-submission and field validity.
  * Intended for use only by formFor directive.
  */
-angular.module('formFor').factory('$FormForStateHelper', function() {
+angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHelper) {
   var FormForStateHelper = function($scope) {
     $scope.errorMap = $scope.errorMap || {};
     $scope.valid = true;
@@ -609,16 +611,17 @@ angular.module('formFor').factory('$FormForStateHelper', function() {
     this.formScope = $scope;
     this.fieldNameToModificationMap = {};
     this.formSubmitted = false;
+    this.shallowErrorMap = {};
 
     this.watchable = 0;
   };
 
   FormForStateHelper.prototype.getFieldError = function(fieldName) {
-    return this.formScope.errorMap[fieldName];
+    return NestedObjectHelper.readAttribute(this.formScope.errorMap, fieldName);
   };
 
   FormForStateHelper.prototype.hasFieldBeenModified = function(fieldName) {
-    return this.fieldNameToModificationMap[fieldName];
+    return NestedObjectHelper.readAttribute(this.fieldNameToModificationMap, fieldName);
   };
 
   FormForStateHelper.prototype.hasFormBeenSubmitted = function() {
@@ -634,11 +637,12 @@ angular.module('formFor').factory('$FormForStateHelper', function() {
   };
 
   FormForStateHelper.prototype.isFormValid = function() {
-    return _.isEmpty(this.formScope.errorMap);
+    return _.isEmpty(this.shallowErrorMap);
   };
 
   FormForStateHelper.prototype.markFieldBeenModified = function(fieldName) {
-    this.fieldNameToModificationMap[fieldName] = true;
+    NestedObjectHelper.writeAttribute(this.fieldNameToModificationMap, fieldName, true);
+
     this.watchable++;
   };
 
@@ -648,10 +652,14 @@ angular.module('formFor').factory('$FormForStateHelper', function() {
   };
 
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {
+    var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
+
+    NestedObjectHelper.writeAttribute(this.formScope.errorMap, fieldName, error);
+
     if (error) {
-      this.formScope.errorMap[fieldName] = error
+      this.shallowErrorMap[safeFieldName] = error;
     } else {
-      delete this.formScope.errorMap[fieldName];
+      delete this.shallowErrorMap[safeFieldName];
     }
 
     this.formScope.valid = this.isFormValid();
@@ -665,44 +673,7 @@ angular.module('formFor').factory('$FormForStateHelper', function() {
  * ModelValidator service used by formFor to determine if each field in the form-data passes validation rules.
  * This service is not intended for use outside of the formFor module/library.
  */
-angular.module('formFor').service('ModelValidator', function($parse, $q) {
-
-  /**
-   * Crawls a model and returns a flattened set of all attributed (using dot notation).
-   * This converts an Object like: {foo: {bar: true}, baz: true}
-   * Into an Array like ['foo', 'foo.bar', 'baz']
-   */
-  var flattenModelKeys = function(model) {
-    var internalCrawler = function(model, path, array) {
-      array = array || [];
-
-      var prefix = path ? path + '.' : '';
-
-      _.forIn(model,
-        function(value, relativeKey) {
-          var fullKey = prefix + relativeKey;
-
-          array.push(fullKey);
-
-          internalCrawler(value, fullKey, array);
-        });
-
-      return array;
-    };
-
-    return internalCrawler(model);
-  };
-
-  /**
-   * Returns the rulset associated with the specified field-name.
-   * This function guards against dot notation for nested references (ex. 'foo.bar').
-   *
-   * @param fieldName Uniquely identifies the field (dot notation supported*)
-   * @param validationRules Set of named validation rules
-   */
-  var getRulesForField = function(fieldName, validationRules) {
-    return $parse(fieldName)(validationRules);
-  };
+angular.module('formFor').service('ModelValidator', function($parse, $q, NestedObjectHelper) {
 
   /**
    * Validates the model against all rules in the validationRules.
@@ -713,7 +684,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * @param validationRules Set of named validation rules
    */
   this.validateAll = function(model, validationRules) {
-    var fields = flattenModelKeys(validationRules);
+    var fields = NestedObjectHelper.flattenObjectKeys(validationRules);
 
     return this.validateFields(model, fields, validationRules);
   };
@@ -734,7 +705,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
     var that = this;
 
     _.each(fieldNames, function(fieldName) {
-      var rules = getRulesForField(fieldName, validationRules);
+      var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
 
       if (rules) {
         var promise = that.validateField(model, fieldName, validationRules);
@@ -768,7 +739,7 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
    * @param validationRules Set of named validation rules
    */
   this.validateField = function(model, fieldName, validationRules) {
-    var rules = getRulesForField(fieldName, validationRules);
+    var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
     var value = $parse(fieldName)(model);
 
     if (rules) {
@@ -829,6 +800,67 @@ angular.module('formFor').service('ModelValidator', function($parse, $q) {
   };
 
   return this;
+});
+
+/**
+ * Helper utility to simplify working with nested objects.
+ */
+angular.module('formFor').service('NestedObjectHelper', function($parse) {
+  return {
+
+    flattenFieldName: function(fieldName) {
+      return fieldName.replace(/\./g, '___');
+    },
+
+    /**
+     * Crawls an object and returns a flattened set of all attributes using dot notation.
+     * This converts an Object like: {foo: {bar: true}, baz: true}
+     * Into an Array like ['foo', 'foo.bar', 'baz']
+     */
+    flattenObjectKeys: function(object) {
+      var internalCrawler = function(object, path, array) {
+        array = array || [];
+
+        var prefix = path ? path + '.' : '';
+
+        _.forIn(object,
+          function(value, relativeKey) {
+            var fullKey = prefix + relativeKey;
+
+            array.push(fullKey);
+
+            internalCrawler(value, fullKey, array);
+          });
+
+        return array;
+      };
+
+      return internalCrawler(object);
+    },
+
+    /**
+     * Returns the value defined by the specified attribute.
+     * This function guards against dot notation for nested references (ex. 'foo.bar').
+     *
+     * @param object Object
+     * @param attribute Attribute (or dot-notation path)
+     */
+    readAttribute: function(object, attribute) {
+      return $parse(attribute)(object);
+    },
+
+    /**
+     * Writes the specified value to the specified attribute.
+     * This function guards against dot notation for nested references (ex. 'foo.bar').
+     *
+     * @param object Object
+     * @param attribute Attribute (or dot-notation path)
+     * @param value Value to be written
+     */
+    writeAttribute: function(object, attribute, value) {
+      $parse(attribute).assign(object, value);
+    }
+  };
 });
 
 /**

@@ -2,7 +2,7 @@
  * Organizes state management for form-submission and field validity.
  * Intended for use only by formFor directive.
  */
-angular.module('formFor').factory('$FormForStateHelper', function() {
+angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHelper) {
   var FormForStateHelper = function($scope) {
     $scope.errorMap = $scope.errorMap || {};
     $scope.valid = true;
@@ -10,16 +10,17 @@ angular.module('formFor').factory('$FormForStateHelper', function() {
     this.formScope = $scope;
     this.fieldNameToModificationMap = {};
     this.formSubmitted = false;
+    this.shallowErrorMap = {};
 
     this.watchable = 0;
   };
 
   FormForStateHelper.prototype.getFieldError = function(fieldName) {
-    return this.formScope.errorMap[fieldName];
+    return NestedObjectHelper.readAttribute(this.formScope.errorMap, fieldName);
   };
 
   FormForStateHelper.prototype.hasFieldBeenModified = function(fieldName) {
-    return this.fieldNameToModificationMap[fieldName];
+    return NestedObjectHelper.readAttribute(this.fieldNameToModificationMap, fieldName);
   };
 
   FormForStateHelper.prototype.hasFormBeenSubmitted = function() {
@@ -35,11 +36,12 @@ angular.module('formFor').factory('$FormForStateHelper', function() {
   };
 
   FormForStateHelper.prototype.isFormValid = function() {
-    return _.isEmpty(this.formScope.errorMap);
+    return _.isEmpty(this.shallowErrorMap);
   };
 
   FormForStateHelper.prototype.markFieldBeenModified = function(fieldName) {
-    this.fieldNameToModificationMap[fieldName] = true;
+    NestedObjectHelper.writeAttribute(this.fieldNameToModificationMap, fieldName, true);
+
     this.watchable++;
   };
 
@@ -49,10 +51,14 @@ angular.module('formFor').factory('$FormForStateHelper', function() {
   };
 
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {
+    var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
+
+    NestedObjectHelper.writeAttribute(this.formScope.errorMap, fieldName, error);
+
     if (error) {
-      this.formScope.errorMap[fieldName] = error
+      this.shallowErrorMap[safeFieldName] = error;
     } else {
-      delete this.formScope.errorMap[fieldName];
+      delete this.shallowErrorMap[safeFieldName];
     }
 
     this.formScope.valid = this.isFormValid();

@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
  */
 angular.module('formFor').directive('formFor',
-  function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, ModelValidator) {
+  function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
     return {
       require: 'form',
       restrict: 'A',
@@ -42,7 +42,7 @@ angular.module('formFor').directive('formFor',
          * @param fieldName Unique identifier of field within model; used to map errors back to input fields
          */
         this.registerFormField = function(formFieldScope, fieldName) {
-          var safeFieldName = fieldName.replace(/\./g, '___');
+          var safeFieldName = NestedObjectHelper.flattenFieldName(fieldName);
 
           $scope.formFieldScopes[fieldName] = formFieldScope;
           $scope.bindable[safeFieldName] = {bindable: null};
@@ -146,7 +146,9 @@ angular.module('formFor').directive('formFor',
          */
         $scope.updateErrors = function(errorMap) {
           _.each($scope.formFieldScopes, function(scope, fieldName) {
-            $scope.formForStateHelper.setFieldError(fieldName, errorMap[fieldName]);
+            var error = NestedObjectHelper.readAttribute(errorMap, fieldName);
+
+            $scope.formForStateHelper.setFieldError(fieldName, error);
           });
         };
 
