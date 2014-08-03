@@ -112,7 +112,7 @@ angular.module('formFor').directive('formFor',
               initialized = true;
 
               if ($scope.$validationRules) {
-                ModelValidator.validateField(newValue, $scope.formFor, fieldName, $scope.$validationRules).then(
+                ModelValidator.validateField($scope.formFor, fieldName, $scope.$validationRules).then(
                   function() {
                     $scope.formForStateHelper.setFieldError(fieldName);
                   },

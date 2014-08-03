@@ -42,9 +42,9 @@ describe('ModelValidator', function() {
     it('should allow a value without a rule-set', function() {
       model.validationRules = {};
 
-      expect(ModelValidator.validateField(null, {}, 'undefined', model.validationRules)).toBeResolved();
-      expect(ModelValidator.validateField(undefined, {}, 'undefined', model.validationRules)).toBeResolved();
-      expect(ModelValidator.validateField('', {}, 'undefined', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({foo: null}, 'foo', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({foo: undefined}, 'foo', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({foo: ''}, 'foo', model.validationRules)).toBeResolved();
     });
 
     it('should handle dot notation', function() {
@@ -56,9 +56,9 @@ describe('ModelValidator', function() {
         }
       };
 
-      expect(ModelValidator.validateField(null, {}, 'foo.bar', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField(undefined, {}, 'foo.bar', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField('', {}, 'foo.bar', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({foo: { bar: null}}, 'foo.bar', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({foo: { bar: undefined}}, 'foo.bar', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({foo: { bar: ''}}, 'foo.bar', model.validationRules)).toBeRejected();
     });
 
     it('should reject a value that only passes some of the validations', function() {
@@ -69,7 +69,7 @@ describe('ModelValidator', function() {
         }
       };
 
-      expect(ModelValidator.validateField('1', {}, 'foo', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({foo: '1'}, 'foo', model.validationRules)).toBeRejected();
     });
   });
 
@@ -83,17 +83,17 @@ describe('ModelValidator', function() {
     });
 
     it('should reject null or undefined value', function() {
-      expect(ModelValidator.validateField(null, {}, 'required', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField(undefined, {}, 'required', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({required: null}, 'required', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({required: undefined}, 'required', model.validationRules)).toBeRejected();
     });
 
     it('should reject an empty value', function() {
-      expect(ModelValidator.validateField('', {}, 'required', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({required: ''}, 'required', model.validationRules)).toBeRejected();
     });
 
     it('should allow a non-empty value', function() {
-      expect(ModelValidator.validateField('1', {}, 'required', model.validationRules)).toBeResolved();
-      expect(ModelValidator.validateField(true, {}, 'required', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({required: '1'}, 'required', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({required: true}, 'required', model.validationRules)).toBeResolved();
     });
 
     it('should allow custom error messages for failed validations', function() {
@@ -107,7 +107,7 @@ describe('ModelValidator', function() {
       };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField(null, {}, 'requiredField', model.validationRules),
+        ModelValidator.validateField({requiredField: null}, 'requiredField', model.validationRules),
         'foobar');
     });
   });
@@ -122,21 +122,21 @@ describe('ModelValidator', function() {
     });
 
     it('should reject null or undefined value', function() {
-      expect(ModelValidator.validateField(null, {}, 'minlengthField', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField(undefined, {}, 'minlengthField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({minlengthField: null}, 'minlengthField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({minlengthField: undefined}, 'minlengthField', model.validationRules)).toBeRejected();
     });
 
     it('should reject an empty string', function() {
-      expect(ModelValidator.validateField('', {}, 'minlengthField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({minlengthField: ''}, 'minlengthField', model.validationRules)).toBeRejected();
     });
 
     it('should reject a string less than the required minimum length', function() {
-      expect(ModelValidator.validateField('1', {}, 'minlengthField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({minlengthField: '1'}, 'minlengthField', model.validationRules)).toBeRejected();
     });
 
     it('should allow a string greater than or equal to the required minimum length', function() {
-      expect(ModelValidator.validateField('12', {}, 'minlengthField', model.validationRules)).toBeResolved();
-      expect(ModelValidator.validateField('123', {}, 'minlengthField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({minlengthField: '12'}, 'minlengthField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({minlengthField: '123'}, 'minlengthField', model.validationRules)).toBeResolved();
     });
 
     it('should allow custom error messages for failed validations', function() {
@@ -150,7 +150,7 @@ describe('ModelValidator', function() {
       };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField('1', {}, 'minlengthField', model.validationRules),
+        ModelValidator.validateField({minlengthField: '1'}, 'minlengthField', model.validationRules),
         'foobar');
     });
   });
@@ -165,21 +165,21 @@ describe('ModelValidator', function() {
     });
 
     it('should allow a null or undefined value', function() {
-      expect(ModelValidator.validateField(null, {}, 'maxlengthField', model.validationRules)).toBeResolved();
-      expect(ModelValidator.validateField(undefined, {}, 'maxlengthField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({maxlengthField: null}, 'maxlengthField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({maxlengthField: undefined}, 'maxlengthField', model.validationRules)).toBeResolved();
     });
 
     it('should allow an empty string', function() {
-      expect(ModelValidator.validateField('', {}, 'maxlengthField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({maxlengthField: ''}, 'maxlengthField', model.validationRules)).toBeResolved();
     });
 
     it('should allow a string less or equal to than the maximum length', function() {
-      expect(ModelValidator.validateField('1', {}, 'maxlengthField', model.validationRules)).toBeResolved();
-      expect(ModelValidator.validateField('12', {}, 'maxlengthField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({maxlengthField: '1'}, 'maxlengthField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({maxlengthField: '12'}, 'maxlengthField', model.validationRules)).toBeResolved();
     });
 
     it('should reject a string greater than the required maximum length', function() {
-      expect(ModelValidator.validateField('123', {}, 'maxlengthField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({maxlengthField: '123'}, 'maxlengthField', model.validationRules)).toBeRejected();
     });
 
     it('should allow custom error messages for failed validations', function() {
@@ -193,7 +193,7 @@ describe('ModelValidator', function() {
       };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField('123', {}, 'maxlengthField', model.validationRules),
+        ModelValidator.validateField({maxlengthField: '123'}, 'maxlengthField', model.validationRules),
         'foobar');
     });
   });
@@ -208,16 +208,16 @@ describe('ModelValidator', function() {
     });
 
     it('should reject a null or undefined value', function() {
-      expect(ModelValidator.validateField(null, {}, 'patternField', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField(undefined, {}, 'patternField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({patternField: null}, 'patternField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({patternField: undefined}, 'patternField', model.validationRules)).toBeRejected();
     });
 
     it('should reject strings not matching the specified pattern', function() {
-      expect(ModelValidator.validateField('abc', {}, 'patternField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({patternField: 'abc'}, 'patternField', model.validationRules)).toBeRejected();
     });
 
     it('should allow strings matching the specified pattern', function() {
-      expect(ModelValidator.validateField('123', {}, 'patternField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({patternField: '123'}, 'patternField', model.validationRules)).toBeResolved();
     });
 
     it('should allow custom error messages for failed validations', function() {
@@ -231,7 +231,7 @@ describe('ModelValidator', function() {
       };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField('abc', {}, 'patternField', model.validationRules),
+        ModelValidator.validateField({patternField: 'abc'}, 'patternField', model.validationRules),
         'foobar');
     });
   });
@@ -248,14 +248,14 @@ describe('ModelValidator', function() {
     });
 
     it('should reject values rejected by the custom validator', function() {
-      expect(ModelValidator.validateField('allowed', {}, 'customField', model.validationRules)).toBeResolved();
+      expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.validationRules)).toBeResolved();
     });
 
     it('should allow values accepted by the custom validator', function() {
-      expect(ModelValidator.validateField(null, {}, 'customField', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField(undefined, {}, 'customField', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField('', {}, 'customField', model.validationRules)).toBeRejected();
-      expect(ModelValidator.validateField('not-alllowed', {}, 'customField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({customField: null}, 'customField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({customField: undefined}, 'customField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({customField: ''}, 'customField', model.validationRules)).toBeRejected();
+      expect(ModelValidator.validateField({customField: 'not-alllowed'}, 'customField', model.validationRules)).toBeRejected();
     });
 
     it('should pass a field value as the first parameter and the full form-data object as the second', function() {
@@ -275,7 +275,7 @@ describe('ModelValidator', function() {
       var value = 'foobar';
       var formData = {customField: value}
 
-      ModelValidator.validateField(value, formData, 'customField', model.validationRules);
+      ModelValidator.validateField(formData, 'customField', model.validationRules);
 
       expect(valueParameter).toEqual(value);
       expect(formDataParameter).toEqual(formData);
