@@ -29,7 +29,7 @@ describe('$FormForStateHelper', function() {
     it('should read and write to shallow objects', function() {
       expect(formForStateHelper.hasFieldBeenModified('shallow')).toBeFalsy();
 
-      formForStateHelper.markFieldBeenModified('shallow');
+      formForStateHelper.setFieldHasBeenModified('shallow', true);
 
       expect(formForStateHelper.hasFieldBeenModified('shallow')).toBeTruthy();
     });
@@ -37,9 +37,19 @@ describe('$FormForStateHelper', function() {
     it('should read and write to deep objects', function() {
       expect(formForStateHelper.hasFieldBeenModified('nested.path')).toBeFalsy();
 
-      formForStateHelper.markFieldBeenModified('nested.path');
+      formForStateHelper.setFieldHasBeenModified('nested.path', true);
 
       expect(formForStateHelper.hasFieldBeenModified('nested.path')).toBeTruthy();
+    });
+
+    it('should reset when pristine', function() {
+      formForStateHelper.setFieldHasBeenModified('shallow', true);
+
+      expect(formForStateHelper.hasFieldBeenModified('shallow')).toBeTruthy();
+
+      formForStateHelper.setFieldHasBeenModified('shallow', false);
+
+      expect(formForStateHelper.hasFieldBeenModified('shallow')).toBeFalsy();
     });
   });
 
@@ -47,9 +57,19 @@ describe('$FormForStateHelper', function() {
     it('should read and write to shallow objects', function() {
       expect(formForStateHelper.hasFormBeenSubmitted()).toBeFalsy();
 
-      formForStateHelper.markFormSubmitted();
+      formForStateHelper.setFormSubmitted(true);
 
       expect(formForStateHelper.hasFormBeenSubmitted()).toBeTruthy();
+    });
+
+    it('should reset when pristine', function() {
+      formForStateHelper.setFormSubmitted(true);
+
+      expect(formForStateHelper.hasFormBeenSubmitted()).toBeTruthy();
+
+      formForStateHelper.setFormSubmitted(false);
+
+      expect(formForStateHelper.hasFormBeenSubmitted()).toBeFalsy();
     });
   });
 

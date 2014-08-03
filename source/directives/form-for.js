@@ -8,14 +8,15 @@ angular.module('formFor').directive('formFor',
       require: 'form',
       restrict: 'A',
       scope: {
+        controller: '=?',
         disable: '=?',
         errorMap: '=?',
         formFor: '=',
-        valid: '=?',
         service: '@',
         submitComplete: '&?',
         submitError: '&?',
         submitWith: '&?',
+        valid: '=?',
         validationRules: '=?'
       },
       controller: function($scope) {
@@ -23,6 +24,7 @@ angular.module('formFor').directive('formFor',
         $scope.bindable = {};
         $scope.scopeWatcherUnwatchFunctions = [];
         $scope.submitButtonScopes = [];
+
 
         if ($scope.service) {
           $scope.$service = $injector.get($scope.service);
@@ -79,6 +81,25 @@ angular.module('formFor').directive('formFor',
           $scope.submitButtonScopes.push(submitButtonScope);
         };
 
+        /**
+         * Resets errors displayed on the <form> without resetting the form data values.
+         */
+        this.resetErrors = function() {
+          $scope.formForStateHelper.setFormSubmitted(false);
+
+          var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
+
+          _.each(keys, function(fieldName) {
+            $scope.formForStateHelper.setFieldHasBeenModified(fieldName, false);
+          });
+        };
+
+        // Expose controller methods to the $scope.controller interface
+        $scope.controller = $scope.controller || {};
+        $scope.controller.registerFormField = this.registerFormField;
+        $scope.controller.registerSubmitButton = this.registerSubmitButton;
+        $scope.controller.resetErrors = this.resetErrors;
+
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disable', function(value) {
           _.each($scope.formFieldScopes, function(scope) {
@@ -106,7 +127,7 @@ angular.module('formFor').directive('formFor',
               // Scope watchers always trigger once when added.
               // Only mark our field dirty the second time this watch is triggered.
               if (initialized) {
-                $scope.formForStateHelper.markFieldBeenModified(fieldName);
+                $scope.formForStateHelper.setFieldHasBeenModified(fieldName, true);
               }
 
               initialized = true;
@@ -114,7 +135,7 @@ angular.module('formFor').directive('formFor',
               if ($scope.$validationRules) {
                 ModelValidator.validateField($scope.formFor, fieldName, $scope.$validationRules).then(
                   function() {
-                    $scope.formForStateHelper.setFieldError(fieldName);
+                    $scope.formForStateHelper.setFieldError(fieldName, null);
                   },
                   function(error) {
                     $scope.formForStateHelper.setFieldError(fieldName, error);
@@ -134,6 +155,9 @@ angular.module('formFor').directive('formFor',
               var error = formForStateHelper.getFieldError(fieldName);
 
               scope.error = error ? $sce.trustAsHtml(error) : null;
+            } else {
+              // Clear out field errors in the event that the form has been reset.
+              scope.error = null;
             }
           });
         });
@@ -187,7 +211,7 @@ angular.module('formFor').directive('formFor',
         // Override form submit to trigger overall validation.
         $element.submit(
           function() {
-            $scope.formForStateHelper.markFormSubmitted();
+            $scope.formForStateHelper.setFormSubmitted(true);
             $scope.disable = true;
 
             $scope.validateAll().then(

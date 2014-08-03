@@ -1,7 +1,7 @@
 angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<label class=\"field checkbox-field\" ng-class=\"{disabled: disable || disabledByForm}\" ng-click=\"toggle()\">\n  <div class=\"checkbox-field-input\" ng-class=\"{\'has-error\': error, \'is-checked\': model.bindable}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
 $templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n\n  <span ng-if=\"help\" class=\"help-icon-stack\">\n    <i class=\"fa fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-question help-foreground-icon\"></i>\n  </span>\n</label>\n");
 $templateCache.put("form-for/templates/radio-field.html","<label class=\"field radio-field\" ng-class=\"{disabled: disable || disabledByForm}\" ng-click=\"click()\">\n  <div class=\"radio-field-input\" ng-class=\"{\'has-error\': error, \'is-selected\': model.bindable === value}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
-$templateCache.put("form-for/templates/select-field.html","<div class=\"field select-field\" ng-class=\"{disabled: disable || disabledByForm}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <!--\n  <select ng-model=\"model.bindable\"\n          ng-options=\"option.value as option.label for option in options\">\n  </select>\n  -->\n  <div  class=\"select-field-toggle-button\"\n        ng-class=\"{\'has-error\': error, open: isOpen, \'blank-selected\': !selectedOptionLabel, disabled: disable || disabledByForm}\">\n\n    <div ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\" />\n\n    <div ng-if=\"!selectedOptionLabel\">\n      <div ng-if=\"placeholder\" ng-bind=\"placeholder\" />\n      <div ng-if=\"!placeholder\">Select</div>\n    </div>\n  </div>\n\n  <div class=\"select-field-dropdown-list-container\" ng-show=\"isOpen\">\n    <ul class=\"unstyled select-field-dropdown-list\">\n      <li ng-if=\"allowBlank\" ng-click=\"selectOption()\">&nbsp;</li>\n\n      <li ng-repeat=\"option in options\"\n          ng-value=\"option.value\"\n          ng-click=\"selectOption(option)\"\n          ng-bind=\"option.label\"\n          ng-class=\"{selected: option === selectedOption}\"></li>\n    </ul>\n  </div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</div>\n");
+$templateCache.put("form-for/templates/select-field.html","<div class=\"field select-field\" ng-class=\"{disabled: disable || disabledByForm}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div  class=\"select-field-toggle-button\"\n        ng-class=\"{\'has-error\': error, open: isOpen, \'blank-selected\': !selectedOptionLabel, disabled: disable || disabledByForm}\">\n\n    <div ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\" />\n\n    <div ng-if=\"!selectedOptionLabel\">\n      <div ng-if=\"placeholder\" ng-bind=\"placeholder\" />\n      <div ng-if=\"!placeholder\">Select</div>\n    </div>\n  </div>\n\n  <div class=\"select-field-dropdown-list-container\" ng-show=\"isOpen\">\n    <ul class=\"unstyled select-field-dropdown-list\">\n      <li ng-if=\"allowBlank\" ng-click=\"selectOption()\">&nbsp;</li>\n\n      <li ng-repeat=\"option in options\"\n          ng-value=\"option.value\"\n          ng-click=\"selectOption(option)\"\n          ng-bind=\"option.label\"\n          ng-class=\"{selected: option === selectedOption}\"></li>\n    </ul>\n  </div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</div>\n");
 $templateCache.put("form-for/templates/submit-button.html","<button class=\"submit-button\" ng-class=\"class\" ng-disabled=\"disable || disabledByForm\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n</button>\n");
 $templateCache.put("form-for/templates/text-field.html","<label class=\"field text-field\" ng-class=\"{disabled: disable || disabledByForm}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"text-field-input-icon-wrapper\">\n    <input  ng-if=\"!multiline\"\n            type=\"{{type}}\"\n            class=\"text-field-input\" ng-class=\"{\'has-error\': error, \'has-icon\': icon}\"\n            ng-disabled=\"disable || disabledByForm\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\" />\n\n    <textarea ng-if=\"multiline\"\n              class=\"text-field-input\" ng-class=\"{\'has-error\': error, \'has-icon\': icon}\"\n              ng-disabled=\"disable || disabledByForm\"\n              placeholder=\"{{placeholder}}\"\n              ng-model=\"model.bindable\"\n              form-for-debounce=\"{{debounce}}\">\n    </textarea>\n\n    <i ng-if=\"icon\" class=\"text-field-icon\" ng-class=\"icon\"></i>\n  <div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</label>\n");}]);
 angular.module('formFor', ['formFor.templates']);
@@ -136,14 +136,15 @@ angular.module('formFor').directive('formFor',
       require: 'form',
       restrict: 'A',
       scope: {
+        controller: '=?',
         disable: '=?',
         errorMap: '=?',
         formFor: '=',
-        valid: '=?',
         service: '@',
         submitComplete: '&?',
         submitError: '&?',
         submitWith: '&?',
+        valid: '=?',
         validationRules: '=?'
       },
       controller: function($scope) {
@@ -151,6 +152,7 @@ angular.module('formFor').directive('formFor',
         $scope.bindable = {};
         $scope.scopeWatcherUnwatchFunctions = [];
         $scope.submitButtonScopes = [];
+
 
         if ($scope.service) {
           $scope.$service = $injector.get($scope.service);
@@ -207,6 +209,25 @@ angular.module('formFor').directive('formFor',
           $scope.submitButtonScopes.push(submitButtonScope);
         };
 
+        /**
+         * Resets errors displayed on the <form> without resetting the form data values.
+         */
+        this.resetErrors = function() {
+          $scope.formForStateHelper.setFormSubmitted(false);
+
+          var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
+
+          _.each(keys, function(fieldName) {
+            $scope.formForStateHelper.setFieldHasBeenModified(fieldName, false);
+          });
+        };
+
+        // Expose controller methods to the $scope.controller interface
+        $scope.controller = $scope.controller || {};
+        $scope.controller.registerFormField = this.registerFormField;
+        $scope.controller.registerSubmitButton = this.registerSubmitButton;
+        $scope.controller.resetErrors = this.resetErrors;
+
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disable', function(value) {
           _.each($scope.formFieldScopes, function(scope) {
@@ -234,7 +255,7 @@ angular.module('formFor').directive('formFor',
               // Scope watchers always trigger once when added.
               // Only mark our field dirty the second time this watch is triggered.
               if (initialized) {
-                $scope.formForStateHelper.markFieldBeenModified(fieldName);
+                $scope.formForStateHelper.setFieldHasBeenModified(fieldName, true);
               }
 
               initialized = true;
@@ -242,7 +263,7 @@ angular.module('formFor').directive('formFor',
               if ($scope.$validationRules) {
                 ModelValidator.validateField($scope.formFor, fieldName, $scope.$validationRules).then(
                   function() {
-                    $scope.formForStateHelper.setFieldError(fieldName);
+                    $scope.formForStateHelper.setFieldError(fieldName, null);
                   },
                   function(error) {
                     $scope.formForStateHelper.setFieldError(fieldName, error);
@@ -262,6 +283,9 @@ angular.module('formFor').directive('formFor',
               var error = formForStateHelper.getFieldError(fieldName);
 
               scope.error = error ? $sce.trustAsHtml(error) : null;
+            } else {
+              // Clear out field errors in the event that the form has been reset.
+              scope.error = null;
             }
           });
         });
@@ -315,7 +339,7 @@ angular.module('formFor').directive('formFor',
         // Override form submit to trigger overall validation.
         $element.submit(
           function() {
-            $scope.formForStateHelper.markFormSubmitted();
+            $scope.formForStateHelper.setFormSubmitted(true);
             $scope.disable = true;
 
             $scope.validateAll().then(
@@ -672,17 +696,6 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
     return _.isEmpty(this.shallowErrorMap);
   };
 
-  FormForStateHelper.prototype.markFieldBeenModified = function(fieldName) {
-    NestedObjectHelper.writeAttribute(this.fieldNameToModificationMap, fieldName, true);
-
-    this.watchable++;
-  };
-
-  FormForStateHelper.prototype.markFormSubmitted = function() {
-    this.formSubmitted = true;
-    this.watchable++;
-  };
-
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {
     var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
@@ -695,6 +708,17 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
     }
 
     this.formScope.valid = this.isFormValid();
+    this.watchable++;
+  };
+
+  FormForStateHelper.prototype.setFieldHasBeenModified = function(fieldName, value) {
+    NestedObjectHelper.writeAttribute(this.fieldNameToModificationMap, fieldName, value);
+
+    this.watchable++;
+  };
+
+  FormForStateHelper.prototype.setFormSubmitted = function(value) {
+    this.formSubmitted = value;
     this.watchable++;
   };
 

@@ -39,17 +39,6 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
     return _.isEmpty(this.shallowErrorMap);
   };
 
-  FormForStateHelper.prototype.markFieldBeenModified = function(fieldName) {
-    NestedObjectHelper.writeAttribute(this.fieldNameToModificationMap, fieldName, true);
-
-    this.watchable++;
-  };
-
-  FormForStateHelper.prototype.markFormSubmitted = function() {
-    this.formSubmitted = true;
-    this.watchable++;
-  };
-
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {
     var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
@@ -62,6 +51,17 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
     }
 
     this.formScope.valid = this.isFormValid();
+    this.watchable++;
+  };
+
+  FormForStateHelper.prototype.setFieldHasBeenModified = function(fieldName, value) {
+    NestedObjectHelper.writeAttribute(this.fieldNameToModificationMap, fieldName, value);
+
+    this.watchable++;
+  };
+
+  FormForStateHelper.prototype.setFormSubmitted = function(value) {
+    this.formSubmitted = value;
     this.watchable++;
   };
 
