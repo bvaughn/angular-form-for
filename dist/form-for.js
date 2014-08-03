@@ -1,5 +1,5 @@
 angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<label class=\"field checkbox-field\" ng-class=\"{disabled: disable || disabledByForm}\" ng-click=\"toggle()\">\n  <div class=\"checkbox-field-input\" ng-class=\"{\'has-error\': error, \'is-checked\': model.bindable}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
-$templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind=\"label\"></span>\n\n  <span ng-if=\"help\" class=\"help-icon-stack\">\n    <i class=\"fa fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-question help-foreground-icon\"></i>\n  </span>\n</label>\n");
+$templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n\n  <span ng-if=\"help\" class=\"help-icon-stack\">\n    <i class=\"fa fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-question help-foreground-icon\"></i>\n  </span>\n</label>\n");
 $templateCache.put("form-for/templates/radio-field.html","<label class=\"field radio-field\" ng-class=\"{disabled: disable || disabledByForm}\" ng-click=\"click()\">\n  <div class=\"radio-field-input\" ng-class=\"{\'has-error\': error, \'is-selected\': model.bindable === value}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
 $templateCache.put("form-for/templates/select-field.html","<div class=\"field select-field\" ng-class=\"{disabled: disable || disabledByForm}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <button class=\"select-field-toggle-button\"\n          ng-class=\"{\'has-error\': error, open: isOpen, \'blank-selected\': !selectedOptionLabel}\"\n          ng-disabled=\"disable || disabledByForm\"\n          ng-click=\"toggleOpen($event)\">\n\n    <div ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\" />\n\n    <div ng-if=\"!selectedOptionLabel\">\n      <div ng-if=\"placeholder\" ng-bind=\"placeholder\" />\n      <div ng-if=\"!placeholder\">Select</div>\n    </div>\n  </button>\n\n  <div  class=\"select-field-dropdown-list-container\" ng-show=\"isOpen\">\n    <ul class=\"unstyled select-field-dropdown-list\">\n      <li ng-if=\"allowBlank\" ng-click=\"selectOption()\">&nbsp;</li>\n\n      <li ng-repeat=\"option in options\"\n          ng-click=\"selectOption(option)\"\n          ng-bind=\"option.label\"\n          ng-class=\"{selected: option === selectedOption}\"></li>\n    </ul>\n  </div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</div>\n");
 $templateCache.put("form-for/templates/submit-button.html","<button class=\"submit-button\" ng-class=\"class\" ng-disabled=\"disable || disabledByForm\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind=\"label\"></span>\n</button>\n");
@@ -46,13 +46,18 @@ angular.module('formFor').directive('checkboxField',
  * This component is only intended for internal use by the formFor module.
  */
 angular.module('formFor').directive('fieldLabel',
-  function( $state ) {
+  function( $state, $sce ) {
     return {
       restrict: 'E',
       templateUrl: 'form-for/templates/field-label.html',
       scope: {
         help: '@?',
         label: '@'
+      },
+      controller: function($scope) {
+        $scope.$watch('label', function(value) {
+          $scope.bindableLabel = $sce.trustAsHtml(value);
+        });
       }
     };
   });
