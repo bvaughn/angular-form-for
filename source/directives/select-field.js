@@ -38,17 +38,32 @@ angular.module('formFor').directive('selectField',
           $scope.selectedOptionLabel = option && option.label;
         });
 
+        var oneClick = function(target, handler) {
+          $timeout(function() { // Delay to avoid processing the same click event that trigger the toggle-open
+            target.one('click', handler);
+          }, 1);
+        }
+
         $scope.selectOption = function(option) {
           $scope.model.bindable = option && option.value;
           $scope.isOpen = false;
+
+          $(window).off('click', clickWatcher);
+
+          oneClick($element, clickToOpen);
         };
 
         var clickWatcher = function(event) {
           $scope.isOpen = false;
           $scope.$apply();
+
+          oneClick($element, clickToOpen);
         };
 
-        $scope.toggleOpen = function(event) {
+        var scroller = $element.find('.select-field-dropdown-list-container');
+        var list = $element.find('ul');
+
+        var clickToOpen = function() {
           if ($scope.disable || $scope.disabledByForm) {
             return;
           }
@@ -56,11 +71,28 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = !$scope.isOpen;
 
           if ($scope.isOpen) {
-            $timeout(function() { // Delay to avoid processing the same click event that trigger the toggle-open
-              $(window).one('click', clickWatcher);
-            }, 1);
+            oneClick($(window), clickWatcher);
+
+            var value = $scope.model.bindable;
+
+            $timeout(function() {
+              var listItem =
+                _.find(list.find('li'),
+                  function(listItem) {
+                    var option = $(listItem).scope().option;
+
+                    return option && option.value === value;
+                  });
+
+              if (listItem) {
+                scroller.scrollTop(
+                  $(listItem).offset().top - $(listItem).parent().offset().top);
+              }
+            }.bind(this), 1);
           }
         };
+
+        oneClick($element, clickToOpen);
 
         $scope.$on('$destroy', function() {
           $(window).off('click', clickWatcher);

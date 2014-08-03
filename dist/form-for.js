@@ -1,7 +1,7 @@
 angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<label class=\"field checkbox-field\" ng-class=\"{disabled: disable || disabledByForm}\" ng-click=\"toggle()\">\n  <div class=\"checkbox-field-input\" ng-class=\"{\'has-error\': error, \'is-checked\': model.bindable}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
 $templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n\n  <span ng-if=\"help\" class=\"help-icon-stack\">\n    <i class=\"fa fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-question help-foreground-icon\"></i>\n  </span>\n</label>\n");
 $templateCache.put("form-for/templates/radio-field.html","<label class=\"field radio-field\" ng-class=\"{disabled: disable || disabledByForm}\" ng-click=\"click()\">\n  <div class=\"radio-field-input\" ng-class=\"{\'has-error\': error, \'is-selected\': model.bindable === value}\"></div>\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"field-error left-aligned\" ng-if=\"error\" ng-bind-html=\"error\"></div>\n</label>\n");
-$templateCache.put("form-for/templates/select-field.html","<div class=\"field select-field\" ng-class=\"{disabled: disable || disabledByForm}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div  class=\"select-field-toggle-button\"\n        ng-class=\"{\'has-error\': error, open: isOpen, \'blank-selected\': !selectedOptionLabel, disabled: disable || disabledByForm}\"\n        ng-click=\"toggleOpen()\">\n\n    <div ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\" />\n\n    <div ng-if=\"!selectedOptionLabel\">\n      <div ng-if=\"placeholder\" ng-bind=\"placeholder\" />\n      <div ng-if=\"!placeholder\">Select</div>\n    </div>\n  </div>\n\n  <div  class=\"select-field-dropdown-list-container\" ng-show=\"isOpen\">\n    <ul class=\"unstyled select-field-dropdown-list\">\n      <li ng-if=\"allowBlank\" ng-click=\"selectOption()\">&nbsp;</li>\n\n      <li ng-repeat=\"option in options\"\n          ng-click=\"selectOption(option)\"\n          ng-bind=\"option.label\"\n          ng-class=\"{selected: option === selectedOption}\"></li>\n    </ul>\n  </div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</div>\n");
+$templateCache.put("form-for/templates/select-field.html","<div class=\"field select-field\" ng-class=\"{disabled: disable || disabledByForm}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <!--\n  <select ng-model=\"model.bindable\"\n          ng-options=\"option.value as option.label for option in options\">\n  </select>\n  -->\n  <div  class=\"select-field-toggle-button\"\n        ng-class=\"{\'has-error\': error, open: isOpen, \'blank-selected\': !selectedOptionLabel, disabled: disable || disabledByForm}\">\n\n    <div ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\" />\n\n    <div ng-if=\"!selectedOptionLabel\">\n      <div ng-if=\"placeholder\" ng-bind=\"placeholder\" />\n      <div ng-if=\"!placeholder\">Select</div>\n    </div>\n  </div>\n\n  <div class=\"select-field-dropdown-list-container\" ng-show=\"isOpen\">\n    <ul class=\"unstyled select-field-dropdown-list\">\n      <li ng-if=\"allowBlank\" ng-click=\"selectOption()\">&nbsp;</li>\n\n      <li ng-repeat=\"option in options\"\n          ng-value=\"option.value\"\n          ng-click=\"selectOption(option)\"\n          ng-bind=\"option.label\"\n          ng-class=\"{selected: option === selectedOption}\"></li>\n    </ul>\n  </div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</div>\n");
 $templateCache.put("form-for/templates/submit-button.html","<button class=\"submit-button\" ng-class=\"class\" ng-disabled=\"disable || disabledByForm\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n</button>\n");
 $templateCache.put("form-for/templates/text-field.html","<label class=\"field text-field\" ng-class=\"{disabled: disable || disabledByForm}\">\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <div class=\"text-field-input-icon-wrapper\">\n    <input  ng-if=\"!multiline\"\n            type=\"{{type}}\"\n            class=\"text-field-input\" ng-class=\"{\'has-error\': error, \'has-icon\': icon}\"\n            ng-disabled=\"disable || disabledByForm\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\" />\n\n    <textarea ng-if=\"multiline\"\n              class=\"text-field-input\" ng-class=\"{\'has-error\': error, \'has-icon\': icon}\"\n              ng-disabled=\"disable || disabledByForm\"\n              placeholder=\"{{placeholder}}\"\n              ng-model=\"model.bindable\"\n              form-for-debounce=\"{{debounce}}\">\n    </textarea>\n\n    <i ng-if=\"icon\" class=\"text-field-icon\" ng-class=\"icon\"></i>\n  <div>\n\n  <div class=\"field-error\" ng-if=\"error\" ng-bind-html=\"error\" />\n</label>\n");}]);
 angular.module('formFor', ['formFor.templates']);
@@ -484,17 +484,32 @@ angular.module('formFor').directive('selectField',
           $scope.selectedOptionLabel = option && option.label;
         });
 
+        var oneClick = function(target, handler) {
+          $timeout(function() { // Delay to avoid processing the same click event that trigger the toggle-open
+            target.one('click', handler);
+          }, 1);
+        }
+
         $scope.selectOption = function(option) {
           $scope.model.bindable = option && option.value;
           $scope.isOpen = false;
+
+          $(window).off('click', clickWatcher);
+
+          oneClick($element, clickToOpen);
         };
 
         var clickWatcher = function(event) {
           $scope.isOpen = false;
           $scope.$apply();
+
+          oneClick($element, clickToOpen);
         };
 
-        $scope.toggleOpen = function(event) {
+        var scroller = $element.find('.select-field-dropdown-list-container');
+        var list = $element.find('ul');
+
+        var clickToOpen = function() {
           if ($scope.disable || $scope.disabledByForm) {
             return;
           }
@@ -502,11 +517,28 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = !$scope.isOpen;
 
           if ($scope.isOpen) {
-            $timeout(function() { // Delay to avoid processing the same click event that trigger the toggle-open
-              $(window).one('click', clickWatcher);
-            }, 1);
+            oneClick($(window), clickWatcher);
+
+            var value = $scope.model.bindable;
+
+            $timeout(function() {
+              var listItem =
+                _.find(list.find('li'),
+                  function(listItem) {
+                    var option = $(listItem).scope().option;
+
+                    return option && option.value === value;
+                  });
+
+              if (listItem) {
+                scroller.scrollTop(
+                  $(listItem).offset().top - $(listItem).parent().offset().top);
+              }
+            }.bind(this), 1);
           }
         };
+
+        oneClick($element, clickToOpen);
 
         $scope.$on('$destroy', function() {
           $(window).off('click', clickWatcher);
