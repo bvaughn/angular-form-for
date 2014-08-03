@@ -9,6 +9,7 @@ angular.module('formFor').directive('radioField',
     return {
       require: '^formFor',
       restrict: 'E',
+      replace: true,
       templateUrl: 'form-for/templates/radio-field.html',
       scope: {
         attribute: '@',

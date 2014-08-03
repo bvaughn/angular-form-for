@@ -1,5 +1,5 @@
 <label class="field text-field" ng-class="{disabled: disable || disabledByForm}">
-  <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
+  <div field-label ng-if="label" label="{{label}}" help="{{help}}"></div>
 
   <div class="text-field-input-icon-wrapper">
     <input  ng-if="!multiline"
@@ -19,7 +19,7 @@
     </textarea>
 
     <i ng-if="icon" class="text-field-icon" ng-class="icon"></i>
-  <div>
+  </div>
 
-  <div class="field-error" ng-if="error" ng-bind-html="error" />
+  <div class="field-error" ng-if="error" ng-bind-html="error"></div>
 </label>

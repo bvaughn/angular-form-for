@@ -7,6 +7,7 @@ angular.module('formFor').directive('textField',
     return {
       require: '^formFor',
       restrict: 'E',
+      replace: true,
       templateUrl: 'form-for/templates/text-field.html',
       scope: {
         attribute: '@',
