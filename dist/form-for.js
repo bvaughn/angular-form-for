@@ -338,7 +338,7 @@ angular.module('formFor').directive('formFor',
       },
       link: function($scope, $element, $attributes, controller) {
         // Override form submit to trigger overall validation.
-        $element.submit(
+        $element.on('submit',
           function() {
             $scope.formForStateHelper.setFormSubmitted(true);
             $scope.disable = true;
