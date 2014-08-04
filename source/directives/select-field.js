@@ -49,7 +49,7 @@ angular.module('formFor').directive('selectField',
           $scope.model.bindable = option && option.value;
           $scope.isOpen = false;
 
-          $(window).off('click', clickWatcher);
+          $(document).off('click', clickWatcher);
 
           oneClick($element, clickToOpen);
         };
@@ -72,7 +72,7 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = !$scope.isOpen;
 
           if ($scope.isOpen) {
-            oneClick($(window), clickWatcher);
+            oneClick($(document), clickWatcher);
 
             var value = $scope.model.bindable;
 
@@ -96,7 +96,7 @@ angular.module('formFor').directive('selectField',
         oneClick($element, clickToOpen);
 
         $scope.$on('$destroy', function() {
-          $(window).off('click', clickWatcher);
+          $(document).off('click', clickWatcher);
         });
       }
     };
