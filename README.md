@@ -46,6 +46,7 @@ Check out the *formFor* wiki for lots of helpful information including:
 * [Validation Types](https://github.com/bvaughn/angular-form-for/wiki/Validation-Types)
 * [Templates](https://github.com/bvaughn/angular-form-for/wiki/Template-Overrides)
 * [API Reference](https://github.com/bvaughn/angular-form-for/wiki/API-Reference)
+* [IE8 Support](https://github.com/bvaughn/angular-form-for/wiki/IE8-Support)
 
 If you have any questions please feel free to create an issue or [contact me](https://github.com/bvaughn/) directly through Github.
 
