@@ -1,7 +1,14 @@
 {
   "name": "angular-form-for",
   "version": "1.0.0",
-  "description": "form-for ========",
+  "description": "Set of Angular directives to simplify creating and validating HTML forms.",
+  "keywords": [
+    "angular",
+    "form",
+    "forms",
+    "crud",
+    "validation"
+  ],
   "main": "gulpfile.js",
   "directories": {
     "test": "tests"
@@ -35,8 +42,8 @@
     "type": "git",
     "url": "https://github.com/bvaughn/angular-form-for.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bvaughn/angular-form-for/issues"
   },
