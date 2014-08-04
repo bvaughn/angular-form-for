@@ -1,7 +1,7 @@
 <label class="field checkbox-field" ng-class="{disabled: disable || disabledByForm}" ng-click="toggle()">
   <div class="checkbox-field-input" ng-class="{'has-error': error, 'is-checked': model.bindable}"></div>
 
-  <div field-label ng-if="label" label="{{label}}" help="{{help}}"></div>
+  <span field-label ng-if="label" label="{{label}}" help="{{help}}"></span>
 
   <div class="field-error left-aligned" ng-if="error" ng-bind-html="error"></div>
 </label>
