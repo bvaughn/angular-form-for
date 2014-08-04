@@ -258,6 +258,8 @@ angular.module('formFor').directive('formFor',
               function() {
                 $scope.disable = false;
               });
+
+          return false;
         });
       }
     };
