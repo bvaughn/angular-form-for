@@ -254,12 +254,16 @@ angular.module('formFor').directive('formFor',
           return $scope.$watch('formFor.' + fieldName,
             function(newValue, oldValue) {
               // Scope watchers always trigger once when added.
-              // Only mark our field dirty the second time this watch is triggered.
-              if (initialized) {
+              // Only mark our field dirty when a user-edit actually triggers the watcher.
+              if (!initialized) {
+                initialized = true;
+
+              // If formFor was binded with an empty object, ngModel will auto-initialize keys on blur.
+              // We shouldn't treat this as a user-edit though unless the user actually typed something.
+              // It's possible they typed and then erased, but that seems less likely...
+              } else if (oldValue !== undefined || newValue !== '') {
                 $scope.formForStateHelper.setFieldHasBeenModified(fieldName, true);
               }
-
-              initialized = true;
 
               if ($scope.$validationRules) {
                 ModelValidator.validateField($scope.formFor, fieldName, $scope.$validationRules).then(
