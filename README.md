@@ -20,7 +20,15 @@
 </form>
 ```
 
-But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options. Check out [the wiki](https://github.com/bvaughn/angular-form-for/wiki/) to learn more!
+But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options. Check out [the wiki](https://github.com/bvaughn/angular-form-for/wiki/) to learn more! You can also check out some demos on Plunkr!
+
+#### Simple sign-up form demo
+
+http://plnkr.co/edit/p1cKIYdBYAJ9NYUZ2Jst?p=preview
+
+#### More verbose sign-up form demo
+
+http://plnkr.co/edit/lJEeXRcgqFbp3c7pxvbU?p=preview
 
 ## Installation
 

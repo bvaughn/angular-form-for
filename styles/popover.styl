@@ -1,0 +1,122 @@
+@require '_variables';
+
+/* Popover styles copied from Bootstrap verbatim; customize if necessary */
+.popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1060;
+  display: none;
+  max-width: 276px;
+  padding: 1px;
+  text-align: left;
+  font-weight: normal;
+  white-space: normal;
+  background-color: $color-blue-hover;
+  color: $color-text-3;
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
+
+  border-radius: $border-radius;
+}
+.popover.top {
+  margin-top: -15px;
+}
+.popover.right {
+  margin-left: 15px;
+}
+.popover.bottom {
+  margin-top: 15px;
+}
+.popover.left {
+  margin-left: -15px;
+}
+.popover-title {
+  padding: 10px 20px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 18px;
+  background-color: $color-blue-hover;
+  border-bottom: 1px solid transparent;
+  border-radius: 5px 5px 0 0;
+}
+.popover-content {
+  padding: 9px 14px;
+}
+.popover > .arrow,
+.popover > .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.popover > .arrow {
+  border-width: 11px;
+}
+.popover > .arrow:after {
+  content: "";
+  border-width: 10px;
+}
+.popover.top > .arrow {
+  bottom: -11px;
+  left: 50%;
+  margin-left: -11px;
+  border-top-color: transparent;
+  border-top-color: $color-blue-hover;
+  border-bottom-width: 0;
+}
+.popover.top > .arrow:after {
+  bottom: 1px;
+  margin-left: -10px;
+  content: " ";
+  border-top-color: $color-blue-hover;
+  border-bottom-width: 0;
+}
+.popover.right > .arrow {
+  top: 50%;
+  left: -11px;
+  margin-top: -11px;
+  border-right-color: transparent;
+  border-right-color: $color-blue-hover;
+  border-left-width: 0;
+}
+.popover.right > .arrow:after {
+  bottom: -10px;
+  left: 1px;
+  content: " ";
+  border-right-color: $color-blue-hover;
+  border-left-width: 0;
+}
+.popover.bottom > .arrow {
+  top: -11px;
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: transparent;
+  border-bottom-color: $color-blue-hover;
+}
+.popover.bottom > .arrow:after {
+  top: 1px;
+  margin-left: -10px;
+  content: " ";
+  border-top-width: 0;
+  border-bottom-color: $color-blue-hover;
+}
+.popover.left > .arrow {
+  top: 50%;
+  right: -11px;
+  margin-top: -11px;
+  border-right-width: 0;
+  border-left-color: transparent;
+  border-left-color: $color-blue-hover;
+}
+.popover.left > .arrow:after {
+  right: 1px;
+  bottom: -10px;
+  content: " ";
+  border-right-width: 0;
+  border-left-color: $color-blue-hover;
+}
