@@ -690,7 +690,7 @@ angular.module('formFor').service('FormForConfiguration',
       },
       setValidationFailedForRequiredMessage: function(value) {
         this.validationFailedForRequiredMessage = value;
-      },
+      }
     };
   });
 
