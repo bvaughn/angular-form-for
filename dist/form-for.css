@@ -355,11 +355,8 @@
   vertical-align: middle;
   cursor: pointer;
 }
-.select-field > .dropdown > .select-field-toggle-button > .caret {
+.select-field .select-field-toggle-button .select-field-toggle-caret {
   display: none;
-}
-.select-field > .dropdown > .dropdown-menu > .active {
-  color: #000;
 }
 .select-field.disabled {
   cursor: default;
