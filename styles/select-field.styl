@@ -9,6 +9,24 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   vertical-align: middle;
   cursor: pointer;
 
+  > .input-group {
+    width: 100%;
+
+    > .dropdown {
+      > .select-field-toggle-button {
+        > .caret {
+          display: none;
+        }
+      }
+
+      > .dropdown-menu {
+        > .selected {
+          color: black;
+        }
+      }
+    }
+  }
+
   &.disabled {
     cursor: default;
   }
@@ -42,7 +60,7 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
     font-family: FontAwesome;
     color: $color-text-1;
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 0;
     line-height: 2.3em;
   }
@@ -82,9 +100,7 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   box-shadow: $select-field-box-shadow;
-}
 
-.select-field-dropdown-list {
   list-style-type: none;
   margin: 0;
   padding: 0;

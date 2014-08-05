@@ -1,17 +1,5 @@
 @require '_variables';
 
-.checkbox-field {
-  cursor: pointer;
-
-  &.disabled {
-    cursor: default;
-
-    .checkbox-field-input {
-      opacity: $opacity-disabled;
-    }
-  }
-}
-
 .checkbox-field-input {
   vertical-align: middle;
   display: inline-block;
@@ -39,8 +27,30 @@
       color: $color-text-1;
     }
   }
+}
+
+.checkbox-field {
+  cursor: pointer;
+
+  label {
+    cursor: inherit;
+  }
+
+  &.disabled {
+    cursor: default;
+
+    .checkbox-field-input {
+      opacity: $opacity-disabled;
+    }
+  }
+
+  .field-input {
+    display: none;
+  }
 
   &.has-error {
-    border-color: red;
+    .checkbox-field-input {
+      border-color: red;
+    }
   }
 }

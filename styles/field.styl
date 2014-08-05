@@ -11,19 +11,15 @@
   padding-bottom: 7px;
 }
 
-.field-half {
-  float: left;
-  width: 48%;
-  margin-right: 4%;
-}
-
 .field-error {
+  position: absolute;
+  top: 100%;
   border-radius: 4px;
   background-color: red;
   color: white;
   padding: 7px 15px;
-  position: absolute;
   z-index: 1000;
+  margin: 0;
 
   &::before {
     content: '';
@@ -34,10 +30,10 @@
   }
 
   &:not(.left-aligned) {
-    right: 0;
+    right: 3px;
 
     &::before {
-    right: 10px;
+      right: 10px;
     }
   }
 

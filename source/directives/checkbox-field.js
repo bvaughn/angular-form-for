@@ -6,8 +6,7 @@ angular.module('formFor').directive('checkboxField',
   function($log) {
     return {
       require: '^formFor',
-      restrict: 'E',
-      replace: true,
+      restrict: 'EA',
       templateUrl: 'form-for/templates/checkbox-field.html',
       scope: {
         attribute: '@',

@@ -6,8 +6,7 @@ angular.module('formFor').directive('selectField',
   function($log, $timeout) {
     return {
       require: '^formFor',
-      restrict: 'E',
-      replace: true,
+      restrict: 'EA',
       templateUrl: 'form-for/templates/select-field.html',
       scope: {
         attribute: '@',

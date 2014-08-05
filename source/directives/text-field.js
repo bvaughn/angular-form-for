@@ -6,15 +6,15 @@ angular.module('formFor').directive('textField',
   function($log) {
     return {
       require: '^formFor',
-      restrict: 'E',
-      replace: true,
+      restrict: 'EA',
       templateUrl: 'form-for/templates/text-field.html',
       scope: {
         attribute: '@',
         debounce: '@?',
         disable: '@',
         help: '@?',
-        icon: '@?',
+        iconAfter: '@?',
+        iconBefore: '@?',
         label: '@?',
         placeholder: '@?'
       },

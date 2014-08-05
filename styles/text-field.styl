@@ -1,13 +1,5 @@
 @require '_variables';
 
-.text-field {
-  &.disabled {
-    .text-field-input {
-      opacity: $opacity-disabled;
-    }
-  }
-}
-
 .text-field-input {
   border-radius: 4px;
   border: $border;
@@ -28,23 +20,45 @@
     border: $border-focused;
   }
 
-  &.has-error {
-    border-color: red;
+  &.has-icon-before {
+    padding-left: 40px;
   }
-
-  &.has-icon {
-    padding-right: 30px;
+  &.has-icon-after {
+    padding-right: 40px;
   }
 }
 
-.text-field-input-icon-wrapper {
+.input-group {
   position: relative;
 
-  .text-field-icon {
+  .input-group-addon {
     position: absolute;
     top: 50%;
-    right: 12px;
+    width: 20px;
+    text-align: center;
     margin-top: -0.5em;
     color: $color-text-1;
+
+    &.input-group-addon-before {
+      left: 12px;
+    }
+
+    &.input-group-addon-after {
+      right: 12px;
+    }
+  }
+}
+
+.text-field {
+  &.disabled {
+    .text-field-input {
+      opacity: $opacity-disabled;
+    }
+  }
+
+  &.has-error {
+    .text-field-input {
+      border-color: red;
+    }
   }
 }

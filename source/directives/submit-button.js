@@ -6,8 +6,7 @@ angular.module('formFor').directive('submitButton',
   function($log, $sce) {
     return {
       require: '^formFor',
-      replace: true,
-      restrict: 'E',
+      restrict: 'EA',
       templateUrl: 'form-for/templates/submit-button.html',
       scope: {
         disable: '@',

@@ -1,17 +1,5 @@
 @require '_variables';
 
-.radio-field {
-  cursor: pointer;
-
-  &.disabled {
-    cursor: default;
-
-    .radio-field-input {
-      opacity: $opacity-disabled;
-    }
-  }
-}
-
 .radio-field-input {
   display: inline-block;
   height: 20px;
@@ -36,8 +24,30 @@
       background-color: $color-text-1;
     }
   }
+}
+
+.radio-field {
+  cursor: pointer;
+
+  label {
+    cursor: inherit;
+  }
+
+  &.disabled {
+    cursor: default;
+
+    .radio-field-input {
+      opacity: $opacity-disabled;
+    }
+  }
+
+  .field-input {
+    display: none;
+  }
 
   &.has-error {
-    border-color: red;
+    .radio-field-input {
+      border-color: red;
+    }
   }
 }

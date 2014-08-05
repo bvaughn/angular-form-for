@@ -1,28 +1,34 @@
-<div class="field select-field" ng-class="{disabled: disable || disabledByForm}">
-  <span field-label ng-if="label" label="{{label}}" help="{{help}}"></span>
+<div  class="form-group field select-field"
+      ng-class="{disabled: disable || disabledByForm, 'has-error': error}">
 
-  <div  class="select-field-toggle-button"
-        ng-class="{'has-error': error, open: isOpen, 'blank-selected': !selectedOptionLabel, disabled: disable || disabledByForm}">
+  <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
 
-    <div ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></div>
+  <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
 
-    <div ng-if="!selectedOptionLabel">
-      <div ng-if="placeholder" ng-bind="placeholder"></div>
-      <div ng-if="!placeholder">Select</div>
+  <div class="input-group">
+    <div class="dropdown">
+      <a class="btn btn-default select-field-toggle-button" role="button" data-toggle="dropdown">
+        <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
+        <span ng-if="!selectedOptionLabel">
+          <span ng-if="placeholder" ng-bind="placeholder"></span>
+          <span ng-if="!placeholder">Select</span>
+        </span>
+
+        <span class="caret"></span>
+      </a>
+
+      <ul class="dropdown-menu select-field-dropdown-list-container" role="menu">
+        <li ng-if="allowBlank" ng-click="selectOption()">&nbsp;</li>
+
+        <li ng-repeat="option in options"
+            ng-class="{'selected': option === selectedOption}">
+
+          <a ng-click="selectOption(option)">
+            <span ng-class="{'text-primary': option === selectedOption}"
+                  ng-bind="option.label"></span>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
-
-  <div class="select-field-dropdown-list-container" ng-show="isOpen">
-    <ul class="unstyled select-field-dropdown-list">
-      <li ng-if="allowBlank" ng-click="selectOption()">&nbsp;</li>
-
-      <li ng-repeat="option in options"
-          ng-value="option.value"
-          ng-click="selectOption(option)"
-          ng-bind="option.label"
-          ng-class="{selected: option === selectedOption}"></li>
-    </ul>
-  </div>
-
-  <div class="field-error" ng-if="error" ng-bind-html="error"></div>
 </div>

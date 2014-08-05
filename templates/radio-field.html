@@ -1,7 +1,17 @@
-<label class="field radio-field" ng-class="{disabled: disable || disabledByForm}" ng-click="click()">
-  <div class="radio-field-input" ng-class="{'has-error': error, 'is-selected': model.bindable === value}"></div>
+<div  class="field radio-field"
+      ng-class="{disabled: disable || disabledByForm, 'has-error': error}">
 
-  <span field-label ng-if="label" label="{{label}}" help="{{help}}"></span>
+  <p ng-if="error" class="text-danger field-error left-aligned" ng-bind="error"></p>
 
-  <div class="field-error left-aligned" ng-if="error" ng-bind-html="error"></div>
-</label>
+  <label>
+    <div  class="radio-field-input" ng-class="{'is-selected': model.bindable === value}"
+          ng-click="click()"></div>
+
+    <input  type="radio" ng-model="model.bindable" ng-value="value"
+            class="field-input"
+            ng-disabled="disable || disabledByForm">
+
+    <field-label  ng-if="label" label="{{label}}" help="{{help}}"
+                  ng-click="click()"></field-label>
+  </label>
+</div>

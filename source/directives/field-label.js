@@ -4,7 +4,7 @@
 angular.module('formFor').directive('fieldLabel',
   function( $sce ) {
     return {
-      restrict: 'AE',
+      restrict: 'EA',
       templateUrl: 'form-for/templates/field-label.html',
       scope: {
         help: '@?',
