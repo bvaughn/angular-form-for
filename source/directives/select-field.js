@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
  */
 angular.module('formFor').directive('selectField',
-  function($log, $timeout) {
+  function($document, $log, $timeout) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -42,20 +42,29 @@ angular.module('formFor').directive('selectField',
           $timeout(function() { // Delay to avoid processing the same click event that trigger the toggle-open
             target.one('click', handler);
           }, 1);
-        }
+        };
+
+        var removeClickWatch = function() {
+          $document.off('click', clickWatcher);
+          $element.off('click', clickWatcher);
+        };
 
         $scope.selectOption = function(option) {
+          console.log('selectOption:'); // TESTING
           $scope.model.bindable = option && option.value;
           $scope.isOpen = false;
 
-          $(document).off('click', clickWatcher);
+          removeClickWatch();
 
           oneClick($element, clickToOpen);
         };
 
         var clickWatcher = function(event) {
+          console.log('clickWatcher:'); // TESTING
           $scope.isOpen = false;
           $scope.$apply();
+
+          removeClickWatch();
 
           oneClick($element, clickToOpen);
         };
@@ -65,13 +74,17 @@ angular.module('formFor').directive('selectField',
 
         var clickToOpen = function() {
           if ($scope.disable || $scope.disabledByForm) {
+            oneClick($element, clickToOpen);
+
             return;
           }
 
           $scope.isOpen = !$scope.isOpen;
+          console.log('clickToOpen:',$scope.isOpen); // TESTING
 
           if ($scope.isOpen) {
-            oneClick($(document), clickWatcher);
+            oneClick($document, clickWatcher);
+            oneClick($element, clickWatcher);
 
             var value = $scope.model.bindable;
 
@@ -95,7 +108,7 @@ angular.module('formFor').directive('selectField',
         oneClick($element, clickToOpen);
 
         $scope.$on('$destroy', function() {
-          $(document).off('click', clickWatcher);
+          removeClickWatch();
         });
       }
     };

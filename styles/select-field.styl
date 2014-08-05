@@ -4,38 +4,6 @@
 
 $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
 
-.select-field {
-  position: relative;
-  vertical-align: middle;
-  cursor: pointer;
-
-  > .input-group {
-    width: 100%;
-
-    > .dropdown {
-      > .select-field-toggle-button {
-        > .caret {
-          display: none;
-        }
-      }
-
-      > .dropdown-menu {
-        > .selected {
-          color: black;
-        }
-      }
-    }
-  }
-
-  &.disabled {
-    cursor: default;
-  }
-}
-
-.select-field-label {
-  display: inline-block;
-}
-
 .select-field-toggle-button {
   position: relative;
   background: linear-gradient(top, white, $color-fill-2);
@@ -59,10 +27,12 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
     content: "\f0dc";
     font-family: FontAwesome;
     color: $color-text-1;
-    position: absolute;
-    right: 12px;
-    top: 0;
     line-height: 2.3em;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    width: 20px;
+    text-align: center;
   }
 
   &:not(.disabled):hover {
@@ -71,9 +41,6 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
 
   &.blank-selected {
     color: $color-text-1;
-  }
-  &.has-error {
-    border-color: red;
   }
   &.open {
     background: white;
@@ -100,7 +67,10 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   box-shadow: $select-field-box-shadow;
+  box-sizing: border-box;
+}
 
+.select-field-dropdown-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -113,6 +83,46 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
     }
     &.selected {
       font-weight: bold;
+    }
+  }
+}
+
+.select-field {
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+
+  > .input-group {
+    width: 100%;
+
+    > .dropdown {
+      > .select-field-toggle-button {
+        > .caret {
+          display: none;
+        }
+      }
+
+      > .dropdown-menu {
+        > .selected {
+          color: black;
+        }
+      }
+    }
+  }
+
+  &.disabled {
+    cursor: default;
+  }
+
+  &.has-error {
+    .select-field-toggle-button {
+      border-color: red;
+    }
+
+    &.open {
+      .field-error {
+        display: none;
+      }
     }
   }
 }

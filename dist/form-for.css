@@ -270,26 +270,6 @@
   border-color: #e35256;
 }
 
-.select-field {
-  position: relative;
-  vertical-align: middle;
-  cursor: pointer;
-}
-.select-field > .input-group {
-  width: 100%;
-}
-.select-field > .input-group > .dropdown > .select-field-toggle-button > .caret {
-  display: none;
-}
-.select-field > .input-group > .dropdown > .dropdown-menu > .selected {
-  color: #000;
-}
-.select-field.disabled {
-  cursor: default;
-}
-.select-field-label {
-  display: inline-block;
-}
 .select-field-toggle-button {
   position: relative;
   background: -webkit-linear-gradient(top, #fff, #eff0f0);
@@ -318,19 +298,18 @@
   content: "\f0dc";
   font-family: FontAwesome;
   color: #848b88;
-  position: absolute;
-  right: 12px;
-  top: 0;
   line-height: 2.3em;
+  position: absolute;
+  right: 10px;
+  top: 0;
+  width: 20px;
+  text-align: center;
 }
 .select-field-toggle-button:not(.disabled):hover {
   background: #fff;
 }
 .select-field-toggle-button.blank-selected {
   color: #848b88;
-}
-.select-field-toggle-button.has-error {
-  border-color: #e35256;
 }
 .select-field-toggle-button.open {
   background: #fff;
@@ -357,18 +336,46 @@
   border-bottom-right-radius: 6px;
   -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.1);
   box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.select-field-dropdown-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-.select-field-dropdown-list-container li {
+.select-field-dropdown-list li {
   padding: 6px 9px;
 }
-.select-field-dropdown-list-container li:hover {
+.select-field-dropdown-list li:hover {
   background-color: #e3f3fc;
 }
-.select-field-dropdown-list-container li.selected {
+.select-field-dropdown-list li.selected {
   font-weight: bold;
+}
+.select-field {
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.select-field > .input-group {
+  width: 100%;
+}
+.select-field > .input-group > .dropdown > .select-field-toggle-button > .caret {
+  display: none;
+}
+.select-field > .input-group > .dropdown > .dropdown-menu > .selected {
+  color: #000;
+}
+.select-field.disabled {
+  cursor: default;
+}
+.select-field.has-error .select-field-toggle-button {
+  border-color: #e35256;
+}
+.select-field.has-error.open .field-error {
+  display: none;
 }
 
 .submit-button-icon {
