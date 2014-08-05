@@ -5,6 +5,7 @@ describe('ModelValidator', function() {
 
   var $q;
   var $rootScope;
+  var FormForConfiguration;
   var ModelValidator;
   var model;
 
@@ -12,6 +13,7 @@ describe('ModelValidator', function() {
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
 
+    FormForConfiguration = $injector.get('FormForConfiguration');
     ModelValidator = $injector.get('ModelValidator');
     model = {
       validationRules: {}
@@ -503,6 +505,67 @@ describe('ModelValidator', function() {
 
       expect(errorMap.foo.bar).toBeTruthy();
       expect(errorMap.foo.baz).toBeFalsy();
+    });
+  });
+
+  describe('FormForConfiguration', function() {
+    it('should configure a custom validation failed message for required', function() {
+      FormForConfiguration.setValidationFailedForRequiredMessage('required');
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField(
+          {foobar: null},
+          'foobar',
+          {foobar: {required: true}}),
+        'required');
+    });
+
+    it('should configure a custom validation failed message for minlength', function() {
+      FormForConfiguration.setValidationFailedForMinLengthMessage('minlength');
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField(
+          {foobar: '1'},
+          'foobar',
+          {foobar: {minlength: 2}}),
+        'minlength');
+    });
+
+    it('should configure a custom validation failed message for maxlength', function() {
+      FormForConfiguration.setValidationFailedForMaxLengthMessage('maxlength');
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField(
+          {foobar: '123'},
+          'foobar',
+          {foobar: {maxlength: 2}}),
+        'maxlength');
+    });
+
+    it('should configure a custom validation failed message for pattern', function() {
+      FormForConfiguration.setValidationFailedForPatternMessage('pattern');
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField(
+          {foobar: '123'},
+          'foobar',
+          {foobar: {pattern: /a/}}),
+        'pattern');
+    });
+
+    it('should configure a custom validation failed message for custom', function() {
+      FormForConfiguration.setValidationFailedForCustomMessage('custom');
+
+      var custom = function() {
+        return $q.reject();
+      };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField(
+          {foobar: null},
+          'foobar',
+          {foobar: {custom: custom}}),
+        'custom');
     });
   });
 });
