@@ -69,8 +69,8 @@ angular.module('formFor').directive('selectField',
           oneClick($element, clickToOpen);
         };
 
-        var scroller = $element.find('.select-field-dropdown-list-container');
-        var list = $element.find('ul');
+        var scroller = $element.find('.list-group-container');
+        var list = $element.find('.list-group');
 
         var clickToOpen = function() {
           if ($scope.disable || $scope.disabledByForm) {
@@ -90,7 +90,7 @@ angular.module('formFor').directive('selectField',
 
             $timeout(function() {
               var listItem =
-                _.find(list.find('li'),
+                _.find(list.find('.list-group-item'),
                   function(listItem) {
                     var option = $(listItem).scope().option;
 

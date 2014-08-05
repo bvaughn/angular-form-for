@@ -54,7 +54,7 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   }
 }
 
-.select-field-dropdown-list-container {
+.list-group-container {
   position: absolute;
   top: 100%;
   left: 0;
@@ -70,18 +70,15 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   box-sizing: border-box;
 }
 
-.select-field-dropdown-list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-
-  li {
+.list-group {
+  .list-group-item {
+    display: block;
     padding: 6px 9px;
 
     &:hover {
       background-color: $color-blue-hover;
     }
-    &.selected {
+    &.active {
       font-weight: bold;
     }
   }
@@ -92,20 +89,16 @@ $select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
   vertical-align: middle;
   cursor: pointer;
 
-  > .input-group {
-    width: 100%;
-
-    > .dropdown {
-      > .select-field-toggle-button {
-        > .caret {
-          display: none;
-        }
+  > .dropdown {
+    > .select-field-toggle-button {
+      > .caret {
+        display: none;
       }
+    }
 
-      > .dropdown-menu {
-        > .selected {
-          color: black;
-        }
+    > .dropdown-menu {
+      > .active {
+        color: black;
       }
     }
   }

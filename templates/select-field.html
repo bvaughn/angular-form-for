@@ -5,29 +5,28 @@
 
   <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
 
-  <div class="input-group">
-    <div  class="btn btn-default select-field-toggle-button" role="button" data-toggle="dropdown"
-          ng-class="{open: isOpen, disabled: disable || disabledByForm}">
-      <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
+  <div  class="form-control select-field-toggle-button" role="button" data-toggle="dropdown"
+        ng-class="{open: isOpen, disabled: disable || disabledByForm}">
+    <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
 
-      <span ng-if="!selectedOptionLabel">
-        <span ng-if="placeholder" ng-bind="placeholder"></span>
-        <span ng-if="!placeholder">Select</span>
-      </span>
+    <span ng-if="!selectedOptionLabel">
+      <span ng-if="placeholder" ng-bind="placeholder"></span>
+      <span ng-if="!placeholder">Select</span>
+    </span>
 
-      <span class="caret"></span>
-    </div>
+    <span class="fa fa-caret-down pull-right"></span>
   </div>
 
-  <div ng-show="isOpen" class="unstyled select-field-dropdown-list-container">
-    <ul class="unstyled select-field-dropdown-list" role="menu">
-      <li ng-if="allowBlank" ng-click="selectOption()">&nbsp;</li>
+  <div ng-show="isOpen" class="unstyled list-group-container">
+    <div class="list-group unstyled list-group" role="menu">
+      <a class="list-group-item" ng-if="allowBlank" ng-click="selectOption()">&nbsp;</a>
 
-      <li ng-repeat="option in options"
+      <a  class="list-group-item"
+          ng-repeat="option in options"
           ng-value="option.value"
           ng-click="selectOption(option)"
           ng-bind="option.label"
-          ng-class="{selected: option === selectedOption}"></li>
-    </ul>
+          ng-class="{active: option === selectedOption}"></a>
+    </div>
   </div>
 </div>
