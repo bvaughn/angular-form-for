@@ -5,7 +5,7 @@
 
   <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
 
-  <div class="input-group">
+  <div ng-class="{'input-group': iconBefore || iconAfter}">
     <span ng-if="iconBefore" class="input-group-addon input-group-addon-before">
       <i class="text-field-icon" ng-class="iconBefore"></i>
     </span>
