@@ -24,6 +24,9 @@ angular.module('formFor').directive('selectField',
         }
 
         $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
+        $scope.labelAttribute = $attributes.labelAttribute || 'label';
+        $scope.valueAttribute = $attributes.valueAttribute || 'value';
+
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
 
         // TODO Track scroll position and viewport height and expand upward if needed
@@ -31,11 +34,11 @@ angular.module('formFor').directive('selectField',
         $scope.$watch('model.bindable', function(value) {
           var option = _.find($scope.options,
             function(option) {
-              return value === option.value;
+              return value === option[$scope.valueAttribute];
             });
 
           $scope.selectedOption = option;
-          $scope.selectedOptionLabel = option && option.label;
+          $scope.selectedOptionLabel = option && option[$scope.labelAttribute];
         });
 
         var oneClick = function(target, handler) {
@@ -50,8 +53,7 @@ angular.module('formFor').directive('selectField',
         };
 
         $scope.selectOption = function(option) {
-          console.log('selectOption:'); // TESTING
-          $scope.model.bindable = option && option.value;
+          $scope.model.bindable = option && option[$scope.valueAttribute];
           $scope.isOpen = false;
 
           removeClickWatch();
@@ -60,7 +62,6 @@ angular.module('formFor').directive('selectField',
         };
 
         var clickWatcher = function(event) {
-          console.log('clickWatcher:'); // TESTING
           $scope.isOpen = false;
           $scope.$apply();
 
@@ -80,7 +81,6 @@ angular.module('formFor').directive('selectField',
           }
 
           $scope.isOpen = !$scope.isOpen;
-          console.log('clickToOpen:',$scope.isOpen); // TESTING
 
           if ($scope.isOpen) {
             oneClick($document, clickWatcher);
@@ -94,7 +94,7 @@ angular.module('formFor').directive('selectField',
                   function(listItem) {
                     var option = $(listItem).scope().option;
 
-                    return option && option.value === value;
+                    return option && option[$scope.valueAttribute] === value;
                   });
 
               if (listItem) {

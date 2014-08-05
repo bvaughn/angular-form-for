@@ -23,9 +23,9 @@
 
       <a  class="list-group-item"
           ng-repeat="option in options"
-          ng-value="option.value"
+          ng-value="option[valueAttribute]"
           ng-click="selectOption(option)"
-          ng-bind="option.label"
+          ng-bind="option[labelAttribute]"
           ng-class="{active: option === selectedOption}"></a>
     </div>
   </div>
