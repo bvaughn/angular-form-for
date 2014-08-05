@@ -354,6 +354,10 @@
   position: relative;
   vertical-align: middle;
   cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .select-field .select-field-toggle-button .select-field-toggle-caret {
   display: none;
