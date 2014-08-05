@@ -493,8 +493,8 @@ angular.module('formFor').directive('selectField',
         placeholder: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
-        if (!$scope.attribute || !$scope.options) {
-          $log.error('Missing required field(s) "attribute" or "options"');
+        if (!$scope.attribute) {
+          $log.error('Missing required field "attribute"');
 
           return;
         }
