@@ -39,7 +39,9 @@ bower install angular-form-for --save-dev
 npm install angular-form-for --save-dev
 ```
 
-Then just include the *formFor* module in your Angular application like so:
+This will download an `angular-form-for` folder into your bower/node components directory. Inside of that folder there will be a `dist` folder with the *formFor* JavaScript and CSS files. By default *formFor* is compatible with [Bootstrap](getbootstrap.com) 3.2.x styles. A separate, *formFor* only CSS stylehseet is included for those not using Bootstrap.
+
+Lastly just include the *formFor* module in your Angular application like so:
 
 ```js
 angular.module('myAngularApp', ['formFor']);
