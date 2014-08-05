@@ -24,11 +24,11 @@ But that's not all! *formFor* is incredibly flexible, offering a wide range of c
 
 #### Simple sign-up form demo
 
-http://plnkr.co/edit/p1cKIYdBYAJ9NYUZ2Jst?p=preview
+http://plnkr.co/edit/6X0ECbJJwCFAHlqe1OO0?p=preview
 
-#### More verbose sign-up form demo
+#### Advanced sign-up form demo
 
-http://plnkr.co/edit/lJEeXRcgqFbp3c7pxvbU?p=preview
+http://plnkr.co/edit/jY8TC8xbMdK5dBJMResL?p=preview
 
 ## Installation
 
