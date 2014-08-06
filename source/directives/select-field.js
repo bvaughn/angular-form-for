@@ -121,20 +121,23 @@ angular.module('formFor').directive('selectField',
 
             var value = $scope.model.bindable;
 
-            $timeout(function() {
-              var listItem =
-                _.find(list.find('.list-group-item'),
-                  function(listItem) {
-                    var option = $(listItem).scope().option;
+            $timeout(
+              angular.bind(
+                this,
+                function() {
+                  var listItem =
+                    _.find(list.find('.list-group-item'),
+                      function(listItem) {
+                        var option = $(listItem).scope().option;
 
-                    return option && option[$scope.valueAttribute] === value;
-                  });
+                        return option && option[$scope.valueAttribute] === value;
+                      });
 
-              if (listItem) {
-                scroller.scrollTop(
-                  $(listItem).offset().top - $(listItem).parent().offset().top);
-              }
-            }.bind(this), 1);
+                  if (listItem) {
+                    scroller.scrollTop(
+                      $(listItem).offset().top - $(listItem).parent().offset().top);
+                  }
+                }), 1);
           }
         };
 
