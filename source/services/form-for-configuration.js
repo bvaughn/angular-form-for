@@ -13,7 +13,11 @@ angular.module('formFor').service('FormForConfiguration',
       validationFailedForMaxLengthMessage: 'Must be fewer than {{num}} characters',
       validationFailedForMinLengthMessage: 'Must be at least {{num}} characters',
       validationFailedForRequiredMessage: 'Required field',
-      validationFailedForTypeMessage: 'Wront type',
+      validationFailedForEmailTypeMessage: 'Invalid email format',
+      validationFailedForIntegerTypeMessage: 'Must be an integer',
+      validationFailedForNegativeTypeMessage: 'Must be negative',
+      validationFailedForNumericTypeMessage: 'Must be numeric',
+      validationFailedForPositiveTypeMessage: 'Must be positive',
       setDefaultDebounceDuration: function(value) {
         this.defaultDebounceDuration = value;
       },
@@ -38,8 +42,20 @@ angular.module('formFor').service('FormForConfiguration',
       setValidationFailedForRequiredMessage: function(value) {
         this.validationFailedForRequiredMessage = value;
       },
-      setValidationFailedForTypeMessage: function(value) {
-        this.validationFailedForTypeMessage = value;
+      setValidationFailedForEmailTypeMessage: function(value) {
+        this.validationFailedForEmailTypeMessage = value;
+      },
+      setValidationFailedForIntegerTypeMessage: function(value) {
+        this.validationFailedForIntegerTypeMessage = value;
+      },
+      setValidationFailedForNegativeTypeMessage: function(value) {
+        this.validationFailedForNegativeTypeMessage = value;
+      },
+      setValidationFailedForNumericTypeMessage: function(value) {
+        this.validationFailedForNumericTypeMessage = value;
+      },
+      setValidationFailedForPositiveTypeMessage: function(value) {
+        this.validationFailedForPositiveTypeMessage = value;
       }
     };
   });

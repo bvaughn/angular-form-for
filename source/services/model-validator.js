@@ -110,38 +110,41 @@ angular.module('formFor').service('ModelValidator',
 
         if (rules.type) {
           var type = _.isObject(rules.type) ? rules.type.rule : rules.type;
-          var invalid = false;
           var stringValue = value.toString();
 
-          // TODO Better error messages
-
           if (type.indexOf('integer') >= 0 && !stringValue.match(/^\-*[0-9]+$/)) {
-            invalid = true;
+            return $q.reject(
+              _.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForIntegerTypeMessage);
           }
 
           if (type.indexOf('number') >= 0 && !stringValue.match(/^\-*[0-9\.]+$/)) {
-            invalid = true;
+            return $q.reject(
+              _.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForNumericTypeMessage);
           }
 
           if (type.indexOf('negative') >= 0 && !stringValue.match(/^\-[0-9\.]+$/)) {
-            invalid = true;
+            return $q.reject(
+              _.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForNegativeTypeMessage);
           }
 
           if (type.indexOf('positive') >= 0 && !stringValue.match(/^[0-9\.]+$/)) {
-            invalid = true;
+            return $q.reject(
+              _.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForPositiveTypeMessage);
           }
 
           if (type.indexOf('email') >= 0 && !stringValue.match(/^[\w\.\+]+@\w+\.\w+$/)) {
-            invalid = true;
-          }
-
-          if (invalid) {
-            var errorMessage =
+            return $q.reject(
               _.isObject(rules.type) ?
                 rules.type.message :
-                FormForConfiguration.validationFailedForTypeMessage;
-
-            return $q.reject(errorMessage);
+                FormForConfiguration.validationFailedForEmailTypeMessage);
           }
         }
 

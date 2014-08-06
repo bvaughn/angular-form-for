@@ -291,19 +291,44 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({email: 'abc.com'}, 'email', model.rules)).toBeRejected();
     });
 
-    it('should allow custom error messages for failed validations', function() {
-      model.rules = {
-        field: {
-          type: {
-            rule: 'integer',
-            message: 'foobar'
-          }
-        }
-      };
+    it('should allow custom error messages for failed email validations', function() {
+      model.rules = { email: { type: { rule: 'email', message: 'foobar email' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({field: 'abc'}, 'field', model.rules),
-        'foobar');
+        ModelValidator.validateField({email: null}, 'email', model.rules),
+        'foobar email');
+    });
+
+    it('should allow custom error messages for failed integer validations', function() {
+      model.rules = { integer: { type: { rule: 'integer', message: 'foobar integer' } } };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({integer: null}, 'integer', model.rules),
+        'foobar integer');
+    });
+
+    it('should allow custom error messages for failed negative validations', function() {
+      model.rules = { negative: { type: { rule: 'negative', message: 'foobar negative' } } };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({negative: null}, 'negative', model.rules),
+        'foobar negative');
+    });
+
+    it('should allow custom error messages for failed number validations', function() {
+      model.rules = { number: { type: { rule: 'number', message: 'foobar number' } } };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({number: null}, 'number', model.rules),
+        'foobar number');
+    });
+
+    it('should allow custom error messages for failed positive validations', function() {
+      model.rules = { positive: { type: { rule: 'positive', message: 'foobar positive' } } };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({positive: null}, 'positive', model.rules),
+        'foobar positive');
     });
   });
 
