@@ -13,6 +13,7 @@ angular.module('formFor').service('FormForConfiguration',
       validationFailedForMaxLengthMessage: 'Must be fewer than {{num}} characters',
       validationFailedForMinLengthMessage: 'Must be at least {{num}} characters',
       validationFailedForRequiredMessage: 'Required field',
+      validationFailedForTypeMessage: 'Wront type',
       setDefaultDebounceDuration: function(value) {
         this.defaultDebounceDuration = value;
       },
@@ -36,6 +37,9 @@ angular.module('formFor').service('FormForConfiguration',
       },
       setValidationFailedForRequiredMessage: function(value) {
         this.validationFailedForRequiredMessage = value;
+      },
+      setValidationFailedForTypeMessage: function(value) {
+        this.validationFailedForTypeMessage = value;
       }
     };
   });
