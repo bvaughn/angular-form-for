@@ -53,12 +53,9 @@
 }
 .help-icon-stack .help-background-icon,
 .help-icon-stack .help-foreground-icon {
-  line-height: 20px;
-  width: 20px;
   text-align: center;
 }
 .help-icon-stack .help-background-icon {
-  font-size: 20px;
   color: #899795;
 }
 .help-icon-stack .help-foreground-icon {
