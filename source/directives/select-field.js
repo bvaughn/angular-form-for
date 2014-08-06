@@ -43,20 +43,18 @@ angular.module('formFor').directive('selectField',
           return value && value.toLowerCase();
         };
 
-        if ($scope.enableFiltering) {
-          $scope.$watch('filter', function(value) {
-            if (!value) {
-              $scope.filteredOptions = $scope.options;
-            } else {
-              var filter = sanitize($scope.filter);
+        $scope.$watchCollection('[filter, options.length]', function() {
+          if (!$scope.enableFiltering || !$scope.filter) {
+            $scope.filteredOptions = $scope.options;
+          } else {
+            var filter = sanitize($scope.filter);
 
-              $scope.filteredOptions = _.filter($scope.options,
-                function(option) {
-                  return sanitize(option[$scope.labelAttribute]).indexOf(filter) >= 0;
-                });
-            }
-          });
-        };
+            $scope.filteredOptions = _.filter($scope.options,
+              function(option) {
+                return sanitize(option[$scope.labelAttribute]).indexOf(filter) >= 0;
+              });
+          }
+        });
 
         /*****************************************************************************************
          * The following code deals with toggling/collapsing the drop-down and selecting values.
@@ -109,7 +107,7 @@ angular.module('formFor').directive('selectField',
         var list = $element.find('.list-group');
 
         var clickToOpen = function() {
-          if (!$scope.options || $scope.disable || $scope.disabledByForm) {
+          if ($scope.disable || $scope.disabledByForm) {
             addClickToOpen();
 
             return;

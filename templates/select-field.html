@@ -8,21 +8,14 @@
   <div  class="form-control select-field-toggle-button" role="button" data-toggle="dropdown"
         ng-class="{open: isOpen, disabled: disable || disabledByForm}">
 
-    <span ng-if="options">
-      <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
+    <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
 
-      <span ng-if="!selectedOptionLabel">
-        <span ng-if="placeholder" ng-bind="placeholder"></span>
-        <span ng-if="!placeholder">Select</span>
-      </span>
-
-      <span class="fa fa-caret-down pull-right select-field-toggle-caret"></span>
+    <span ng-if="!selectedOptionLabel">
+      <span ng-if="placeholder" ng-bind="placeholder"></span>
+      <span ng-if="!placeholder">Select</span>
     </span>
 
-    <span ng-if="!options">
-      <i class="fa fa-circle-o-notch fa-spin"></i>
-      Loading...
-    </span>
+    <span class="fa fa-caret-down pull-right select-field-toggle-caret"></span>
   </div>
 
   <div ng-show="isOpen" class="unstyled list-group-container">
@@ -47,6 +40,11 @@
           ng-click="selectOption(option)"
           ng-bind="option[labelAttribute]"
           ng-class="{active: option === selectedOption}"></a>
+
+      <a ng-if="!options" class="list-group-item">
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        Loading...
+      </a>
     </div>
   </div>
 </div>
