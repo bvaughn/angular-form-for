@@ -11,6 +11,8 @@ angular.module('formFor').directive('selectField',
       scope: {
         attribute: '@',
         disable: '@',
+        filter: '=?',
+        filterDebounce: '@?',
         help: '@?',
         label: '@?',
         options: '=',
@@ -24,12 +26,41 @@ angular.module('formFor').directive('selectField',
         }
 
         $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
+        $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
+
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
 
         // TODO Track scroll position and viewport height and expand upward if needed
+
+        /*****************************************************************************************
+         * The following code pertains to filtering visible options.
+         *****************************************************************************************/
+
+        var sanitize = function(value) {
+          return value && value.toLowerCase();
+        };
+
+        if ($scope.enableFiltering) {
+          $scope.$watch('filter', function(value) {
+            if (!value) {
+              $scope.filteredOptions = $scope.options;
+            } else {
+              var filter = sanitize($scope.filter);
+
+              $scope.filteredOptions = _.filter($scope.options,
+                function(option) {
+                  return sanitize(option[$scope.labelAttribute]).indexOf(filter) >= 0;
+                });
+            }
+          });
+        };
+
+        /*****************************************************************************************
+         * The following code deals with toggling/collapsing the drop-down and selecting values.
+         *****************************************************************************************/
 
         $scope.$watch('model.bindable', function(value) {
           var option = _.find($scope.options,
@@ -78,7 +109,7 @@ angular.module('formFor').directive('selectField',
         var list = $element.find('.list-group');
 
         var clickToOpen = function() {
-          if ($scope.disable || $scope.disabledByForm) {
+          if (!$scope.options || $scope.disable || $scope.disabledByForm) {
             addClickToOpen();
 
             return;

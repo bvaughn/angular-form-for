@@ -347,6 +347,12 @@
 .list-group .list-group-item.active {
   font-weight: bold;
 }
+.filter-input-group {
+  padding: 5px;
+}
+.filter-input-group .filter-text-input {
+  margin-top: 0;
+}
 .select-field {
   position: relative;
   vertical-align: middle;

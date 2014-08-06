@@ -7,22 +7,42 @@
 
   <div  class="form-control select-field-toggle-button" role="button" data-toggle="dropdown"
         ng-class="{open: isOpen, disabled: disable || disabledByForm}">
-    <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
 
-    <span ng-if="!selectedOptionLabel">
-      <span ng-if="placeholder" ng-bind="placeholder"></span>
-      <span ng-if="!placeholder">Select</span>
+    <span ng-if="options">
+      <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
+
+      <span ng-if="!selectedOptionLabel">
+        <span ng-if="placeholder" ng-bind="placeholder"></span>
+        <span ng-if="!placeholder">Select</span>
+      </span>
+
+      <span class="fa fa-caret-down pull-right select-field-toggle-caret"></span>
     </span>
 
-    <span class="fa fa-caret-down pull-right select-field-toggle-caret"></span>
+    <span ng-if="!options">
+      <i class="fa fa-circle-o-notch fa-spin"></i>
+      Loading...
+    </span>
   </div>
 
   <div ng-show="isOpen" class="unstyled list-group-container">
     <div class="list-group unstyled list-group" role="menu">
-      <a class="list-group-item" ng-if="allowBlank" ng-click="selectOption()">&nbsp;</a>
+      <div  ng-show="enableFiltering" class="input-group filter-input-group"
+            ng-click="$event.stopPropagation()">
+        <input  type="text"
+                class="form-control text-field-input filter-text-input"
+                ng-model="filter"
+                form-for-debounce="{{filterDebounce}}" />
+
+        <span class="input-group-addon input-group-addon-after">
+          <i class="fa fa-search text-field-icon"></i>
+        </span>
+      </div>
+
+      <a class="list-group-item" ng-if="allowBlank && !filter" ng-click="selectOption()">&nbsp;</a>
 
       <a  class="list-group-item"
-          ng-repeat="option in options"
+          ng-repeat="option in filteredOptions"
           ng-value="option[valueAttribute]"
           ng-click="selectOption(option)"
           ng-bind="option[labelAttribute]"
