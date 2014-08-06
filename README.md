@@ -30,6 +30,10 @@ http://plnkr.co/edit/6X0ECbJJwCFAHlqe1OO0?p=preview
 
 http://plnkr.co/edit/jY8TC8xbMdK5dBJMResL?p=preview
 
+#### Filtered drop down demo
+
+http://plnkr.co/edit/AL7K9ZugRN40sJvDBIKL?p=preview
+
 ## Installation
 
 You can install this plugin with either [Bower](http://bower.io/) or [NPM](https://www.npmjs.org/):
