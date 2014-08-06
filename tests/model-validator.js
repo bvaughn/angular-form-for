@@ -663,63 +663,81 @@ describe('ModelValidator', function() {
   });
 
   describe('FormForConfiguration', function() {
-    it('should configure a custom validation failed message for required', function() {
-      FormForConfiguration.setValidationFailedForRequiredMessage('required');
+    var testCustomValidationFailureMessage = function(validationAttribute, validationValue, objectValue, expectedMessage) {
+      var rules = {};
+      rules.field = {};
+      rules.field[validationAttribute] = validationValue;
+
+      var object = {};
+      object.field = objectValue;
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField(
-          {foobar: null},
-          'foobar',
-          {foobar: {required: true}}),
-        'required');
+        ModelValidator.validateField(object, 'field', rules),
+        expectedMessage);
+    };
+
+    it('should configure a custom validation failed message for required', function() {
+      FormForConfiguration.setValidationFailedForRequiredMessage('custom required');
+
+      testCustomValidationFailureMessage('required', true, null, 'custom required');
     });
 
     it('should configure a custom validation failed message for minlength', function() {
-      FormForConfiguration.setValidationFailedForMinLengthMessage('minlength');
+      FormForConfiguration.setValidationFailedForMinLengthMessage('custom minlength');
 
-      verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField(
-          {foobar: '1'},
-          'foobar',
-          {foobar: {minlength: 2}}),
-        'minlength');
+      testCustomValidationFailureMessage('minlength', 2, '1', 'custom minlength');
     });
 
     it('should configure a custom validation failed message for maxlength', function() {
-      FormForConfiguration.setValidationFailedForMaxLengthMessage('maxlength');
+      FormForConfiguration.setValidationFailedForMaxLengthMessage('custom maxlength');
 
-      verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField(
-          {foobar: '123'},
-          'foobar',
-          {foobar: {maxlength: 2}}),
-        'maxlength');
+      testCustomValidationFailureMessage('maxlength', 2, '123', 'custom maxlength');
     });
 
     it('should configure a custom validation failed message for pattern', function() {
-      FormForConfiguration.setValidationFailedForPatternMessage('pattern');
+      FormForConfiguration.setValidationFailedForPatternMessage('custom pattern');
 
-      verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField(
-          {foobar: '123'},
-          'foobar',
-          {foobar: {pattern: /a/}}),
-        'pattern');
+      testCustomValidationFailureMessage('pattern', /a/, '123', 'custom pattern');
+    });
+
+    it('should configure a custom validation failed message for type integer', function() {
+      FormForConfiguration.setValidationFailedForIntegerTypeMessage('custom type integer');
+
+      testCustomValidationFailureMessage('type', 'integer', 'invalid', 'custom type integer');
+    });
+
+    it('should configure a custom validation failed message for type number', function() {
+      FormForConfiguration.setValidationFailedForNumericTypeMessage('custom type number');
+
+      testCustomValidationFailureMessage('type', 'number', 'invalid', 'custom type number');
+    });
+
+    it('should configure a custom validation failed message for type negative', function() {
+      FormForConfiguration.setValidationFailedForNegativeTypeMessage('custom type negative');
+
+      testCustomValidationFailureMessage('type', 'negative integer', '1', 'custom type negative');
+    });
+
+    it('should configure a custom validation failed message for type positive', function() {
+      FormForConfiguration.setValidationFailedForPositiveTypeMessage('custom type positive');
+
+      testCustomValidationFailureMessage('type', 'positive integer', '-1', 'custom type positive');
+    });
+
+    it('should configure a custom validation failed message for type email', function() {
+      FormForConfiguration.setValidationFailedForEmailTypeMessage('custom type email');
+
+      testCustomValidationFailureMessage('type', 'email', 'invalid', 'custom type email');
     });
 
     it('should configure a custom validation failed message for custom', function() {
-      FormForConfiguration.setValidationFailedForCustomMessage('custom');
+      FormForConfiguration.setValidationFailedForCustomMessage('custom custom');
 
       var custom = function() {
         return $q.reject();
       };
 
-      verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField(
-          {foobar: null},
-          'foobar',
-          {foobar: {custom: custom}}),
-        'custom');
+      testCustomValidationFailureMessage('custom', custom, null, 'custom custom');
     });
   });
 });
