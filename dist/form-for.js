@@ -622,7 +622,7 @@ angular.module('formFor').directive('submitButton',
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('textField',
-  function($log) {
+  function($log, $timeout) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -646,6 +646,12 @@ angular.module('formFor').directive('textField',
 
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
+
+        if ($attributes.hasOwnProperty('autofocus')) {
+          $timeout(function() {
+            $element.find( $scope.multiline ? 'textarea' : 'input' ).focus();
+          });
+        }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
       }
@@ -893,8 +899,9 @@ angular.module('formFor').service('ModelValidator',
           }
         }
 
-        if (rules.custom) {
-          return rules.custom(value, model).then(
+        if (rules.custom && _.isFunction(rules.custom)) {
+          return $q.when(
+            rules.custom(value, model),
             function(reason) {
               return $q.resolve(reason);
             },
