@@ -282,6 +282,28 @@ describe('ModelValidator', function() {
       expect(valueParameter).toEqual(value);
       expect(formDataParameter).toEqual(formData);
     });
+
+    it('should gracefully handle a custom validation that is not a function', function() {
+      model.validationRules = {
+        customField: {
+          custom: true
+        }
+      };
+
+      expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.validationRules)).toBeResolved();
+    });
+
+    it('should gracefully handle a custom validation that does not return a promise', function() {
+      model.validationRules = {
+        customField: {
+          custom: function() {
+            return true;
+          }
+        }
+      };
+
+      expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.validationRules)).toBeResolved();
+    });
   });
 
   describe('validateFields', function() {

@@ -127,8 +127,9 @@ angular.module('formFor').service('ModelValidator',
           }
         }
 
-        if (rules.custom) {
-          return rules.custom(value, model).then(
+        if (rules.custom && _.isFunction(rules.custom)) {
+          return $q.when(
+            rules.custom(value, model),
             function(reason) {
               return $q.resolve(reason);
             },
