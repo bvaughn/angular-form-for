@@ -425,7 +425,7 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.rules)).toBeResolved();
     });
 
-    it('should gracefully handle a custom validation that does not return a promise', function() {
+    it('should treat truthy values as successful validations', function() {
       model.rules = {
         customField: {
           custom: function() {
@@ -435,6 +435,18 @@ describe('ModelValidator', function() {
       };
 
       expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.rules)).toBeResolved();
+    });
+
+    it('should treat falsy values as failed validations', function() {
+      model.rules = {
+        customField: {
+          custom: function() {
+            return false;
+          }
+        }
+      };
+
+      expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.rules)).toBeRejected();
     });
   });
 
@@ -662,7 +674,7 @@ describe('ModelValidator', function() {
     });
   });
 
-  describe('FormForConfiguration', function() {
+  describe('FormForConfiguration custom validation error messages', function() {
     var testCustomValidationFailureMessage = function(validationAttribute, validationValue, objectValue, expectedMessage) {
       var rules = {};
       rules.field = {};
@@ -676,61 +688,61 @@ describe('ModelValidator', function() {
         expectedMessage);
     };
 
-    it('should configure a custom validation failed message for required', function() {
+    it('should allow overrides for required', function() {
       FormForConfiguration.setValidationFailedForRequiredMessage('custom required');
 
       testCustomValidationFailureMessage('required', true, null, 'custom required');
     });
 
-    it('should configure a custom validation failed message for minlength', function() {
+    it('should allow overrides for minlength', function() {
       FormForConfiguration.setValidationFailedForMinLengthMessage('custom minlength');
 
       testCustomValidationFailureMessage('minlength', 2, '1', 'custom minlength');
     });
 
-    it('should configure a custom validation failed message for maxlength', function() {
+    it('should allow overrides for maxlength', function() {
       FormForConfiguration.setValidationFailedForMaxLengthMessage('custom maxlength');
 
       testCustomValidationFailureMessage('maxlength', 2, '123', 'custom maxlength');
     });
 
-    it('should configure a custom validation failed message for pattern', function() {
+    it('should allow overrides for pattern', function() {
       FormForConfiguration.setValidationFailedForPatternMessage('custom pattern');
 
       testCustomValidationFailureMessage('pattern', /a/, '123', 'custom pattern');
     });
 
-    it('should configure a custom validation failed message for type integer', function() {
+    it('should allow overrides for type integer', function() {
       FormForConfiguration.setValidationFailedForIntegerTypeMessage('custom type integer');
 
       testCustomValidationFailureMessage('type', 'integer', 'invalid', 'custom type integer');
     });
 
-    it('should configure a custom validation failed message for type number', function() {
+    it('should allow overrides for type number', function() {
       FormForConfiguration.setValidationFailedForNumericTypeMessage('custom type number');
 
       testCustomValidationFailureMessage('type', 'number', 'invalid', 'custom type number');
     });
 
-    it('should configure a custom validation failed message for type negative', function() {
+    it('should allow overrides for type negative', function() {
       FormForConfiguration.setValidationFailedForNegativeTypeMessage('custom type negative');
 
       testCustomValidationFailureMessage('type', 'negative integer', '1', 'custom type negative');
     });
 
-    it('should configure a custom validation failed message for type positive', function() {
+    it('should allow overrides for type positive', function() {
       FormForConfiguration.setValidationFailedForPositiveTypeMessage('custom type positive');
 
       testCustomValidationFailureMessage('type', 'positive integer', '-1', 'custom type positive');
     });
 
-    it('should configure a custom validation failed message for type email', function() {
+    it('should allow overrides for type email', function() {
       FormForConfiguration.setValidationFailedForEmailTypeMessage('custom type email');
 
       testCustomValidationFailureMessage('type', 'email', 'invalid', 'custom type email');
     });
 
-    it('should configure a custom validation failed message for custom', function() {
+    it('should allow overrides for custom', function() {
       FormForConfiguration.setValidationFailedForCustomMessage('custom custom');
 
       var custom = function() {

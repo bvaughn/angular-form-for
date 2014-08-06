@@ -160,14 +160,21 @@ angular.module('formFor').service('ModelValidator',
         }
 
         if (rules.custom && _.isFunction(rules.custom)) {
-          return $q.when(
-            rules.custom(value, model),
-            function(reason) {
-              return $q.resolve(reason);
-            },
-            function(reason) {
-              return $q.reject(reason || FormForConfiguration.validationFailedForCustomMessage);
-            });
+          var returnValue = rules.custom(value, model);
+
+          if (_.isObject(returnValue) && _.isFunction(returnValue.then)) {
+            return returnValue.then(
+              function(reason) {
+                return $q.resolve(reason);
+              },
+              function(reason) {
+                return $q.reject(reason || FormForConfiguration.validationFailedForCustomMessage);
+              });
+          } else if (returnValue) {
+            return $q.resolve(returnValue);
+          } else {
+            return $q.reject(FormForConfiguration.validationFailedForCustomMessage);
+          }
         }
       }
 
