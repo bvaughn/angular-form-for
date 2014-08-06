@@ -32,7 +32,7 @@
         </span>
       </div>
 
-      <a class="list-group-item" ng-if="allowBlank && !filter" ng-click="selectOption()">&nbsp;</a>
+      <a ng-if="allowBlank && !filter && options" class="list-group-item" ng-click="selectOption()">&nbsp;</a>
 
       <a  class="list-group-item"
           ng-repeat="option in filteredOptions"
