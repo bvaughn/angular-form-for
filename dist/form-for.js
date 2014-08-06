@@ -528,13 +528,17 @@ angular.module('formFor').directive('selectField',
           $element.off('click', clickWatcher);
         };
 
+        var addClickToOpen = function() {
+          oneClick($element.find('.select-field-toggle-button'), clickToOpen);
+        };
+
         $scope.selectOption = function(option) {
           $scope.model.bindable = option && option[$scope.valueAttribute];
           $scope.isOpen = false;
 
           removeClickWatch();
 
-          oneClick($element, clickToOpen);
+          addClickToOpen();
         };
 
         var clickWatcher = function(event) {
@@ -543,7 +547,7 @@ angular.module('formFor').directive('selectField',
 
           removeClickWatch();
 
-          oneClick($element, clickToOpen);
+          addClickToOpen();
         };
 
         var scroller = $element.find('.list-group-container');
@@ -551,7 +555,7 @@ angular.module('formFor').directive('selectField',
 
         var clickToOpen = function() {
           if ($scope.disable || $scope.disabledByForm) {
-            oneClick($element, clickToOpen);
+            addClickToOpen();
 
             return;
           }
@@ -581,7 +585,7 @@ angular.module('formFor').directive('selectField',
           }
         };
 
-        oneClick($element, clickToOpen);
+        addClickToOpen();
 
         $scope.$on('$destroy', function() {
           removeClickWatch();
