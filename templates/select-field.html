@@ -19,7 +19,7 @@
   </div>
 
   <div ng-show="isOpen" class="unstyled list-group-container">
-    <div class="list-group unstyled list-group" role="menu">
+    <div class="unstyled list-group" role="menu">
       <div  ng-show="enableFiltering" class="input-group filter-input-group"
             ng-click="$event.stopPropagation()">
         <input  type="text"
@@ -32,19 +32,21 @@
         </span>
       </div>
 
-      <a ng-if="allowBlank && !filter && options" class="list-group-item" ng-click="selectOption()">&nbsp;</a>
+      <div class="list-group-scrollable">
+        <a ng-if="allowBlank && !filter && options" class="list-group-item" ng-click="selectOption()">&nbsp;</a>
 
-      <a  class="list-group-item"
-          ng-repeat="option in filteredOptions"
-          ng-value="option[valueAttribute]"
-          ng-click="selectOption(option)"
-          ng-bind="option[labelAttribute]"
-          ng-class="{active: option === selectedOption}"></a>
+        <a  class="list-group-item"
+            ng-repeat="option in filteredOptions"
+            ng-value="option[valueAttribute]"
+            ng-click="selectOption(option)"
+            ng-bind="option[labelAttribute]"
+            ng-class="{active: option === selectedOption}"></a>
 
-      <a ng-if="!options" class="list-group-item">
-        <i class="fa fa-circle-o-notch fa-spin"></i>
-        Loading...
-      </a>
+        <a ng-if="!options" class="list-group-item">
+          <i class="fa fa-circle-o-notch fa-spin"></i>
+          Loading...
+        </a>
+      </div>
     </div>
   </div>
 </div>
