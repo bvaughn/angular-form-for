@@ -33,28 +33,42 @@ angular.module('formFor').directive('selectField',
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
 
-        // TODO Track scroll position and viewport height and expand upward if needed
-
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
          *****************************************************************************************/
+
+        $scope.emptyOption = {};
+        $scope.filteredOptions = [];
 
         var sanitize = function(value) {
           return value && value.toLowerCase();
         };
 
-        $scope.$watchCollection('[filter, options.length]', function() {
+        var calculateFilteredOptions = function() {
+          var options = $scope.options || [];
+
+          $scope.filteredOptions.splice(0);
+
           if (!$scope.enableFiltering || !$scope.filter) {
-            $scope.filteredOptions = $scope.options;
+            angular.copy(options, $scope.filteredOptions);
           } else {
             var filter = sanitize($scope.filter);
 
-            $scope.filteredOptions = _.filter($scope.options,
-              function(option) {
-                return sanitize(option[$scope.labelAttribute]).indexOf(filter) >= 0;
-              });
+            angular.copy(
+              _.filter(options,
+                function(option) {
+                  return sanitize(option[$scope.labelAttribute]).indexOf(filter) >= 0;
+                }),
+              $scope.filteredOptions);
           }
-        });
+
+          if ($scope.allowBlank) {
+            $scope.filteredOptions.unshift($scope.emptyOption);
+          }
+        };
+
+        $scope.$watch('filter', calculateFilteredOptions);
+        $scope.$watch('options.length', calculateFilteredOptions);
 
         /*****************************************************************************************
          * The following code deals with toggling/collapsing the drop-down and selecting values.
@@ -78,7 +92,6 @@ angular.module('formFor').directive('selectField',
 
         var removeClickWatch = function() {
           $document.off('click', clickWatcher);
-          $element.off('click', clickWatcher);
         };
 
         var addClickToOpen = function() {
@@ -116,8 +129,10 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = !$scope.isOpen;
 
           if ($scope.isOpen) {
+            // TODO Determine whether to open downward or upward
+            // TODO Auto-focus input field if filterable
+
             oneClick($document, clickWatcher);
-            oneClick($element, clickWatcher);
 
             var value = $scope.model.bindable;
 
@@ -142,6 +157,42 @@ angular.module('formFor').directive('selectField',
         };
 
         addClickToOpen();
+
+        /*****************************************************************************************
+         * The following code responds to keyboard events when the drop-down is visible
+         *****************************************************************************************/
+
+        $scope.mouseOver = function(index) {
+          $scope.mouseOverIndex = index;
+          $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
+        };
+
+        // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
+        $scope.keyDown = function(event) {
+          switch (event.keyCode) {
+            case 27: // Escape key
+              $scope.isOpen = false;
+              break;
+            case 13: // Enter key
+              $scope.selectOption($scope.mouseOverOption);
+              $scope.isOpen = false;
+
+              // Don't bubble up and submit the parent form
+              event.preventDefault();
+              event.stopPropagation();
+              break;
+            case 38: // Up arrow
+              $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
+              break;
+            case 40: // Down arrow
+              $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
+              break;
+          }
+        };
+
+        $scope.$watchCollection('[isOpen, filteredOptions.length]', function() {
+          $scope.mouseOver(-1); // Reset hover anytime our list opens/closes or our collection is refreshed.
+        });
 
         $scope.$on('$destroy', function() {
           removeClickWatch();

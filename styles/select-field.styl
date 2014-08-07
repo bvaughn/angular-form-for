@@ -88,7 +88,12 @@ select-field {
     display: block;
     padding: 6px 9px;
 
-    &:hover {
+    strong {
+      font-weight: inherit;
+    }
+
+    &:hover,
+    &.hover {
       background-color: $color-blue-hover;
     }
     &.active {

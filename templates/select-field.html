@@ -5,7 +5,7 @@
 
   <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
 
-  <div  class="form-control select-field-toggle-button" role="button" data-toggle="dropdown"
+  <div  class="form-control select-field-toggle-button"
         ng-class="{open: isOpen, disabled: disable || disabledByForm}">
 
     <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
@@ -19,12 +19,13 @@
   </div>
 
   <div ng-show="isOpen" class="list-group-container">
-    <div class="list-group" role="menu">
+    <div class="list-group">
       <div  ng-show="enableFiltering" class="input-group filter-input-group"
             ng-click="$event.stopPropagation()">
         <input  type="text"
                 class="form-control text-field-input filter-text-input"
                 ng-model="filter"
+                ng-keydown="keyDown($event)"
                 form-for-debounce="{{filterDebounce}}" />
 
         <span class="input-group-addon input-group-addon-after">
@@ -33,14 +34,18 @@
       </div>
 
       <div class="list-group-scrollable">
-        <a ng-if="allowBlank && !filter && options" class="list-group-item" ng-click="selectOption()">&nbsp;</a>
-
         <a  class="list-group-item"
             ng-repeat="option in filteredOptions"
             ng-value="option[valueAttribute]"
             ng-click="selectOption(option)"
-            ng-bind="option[labelAttribute]"
-            ng-class="{active: option === selectedOption}"></a>
+            ng-mouseenter="mouseOver($index)"
+            ng-class="{active: option === selectedOption, hover: $index === mouseOverIndex}">
+
+          <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->
+          <strong ng-if="$index === mouseOverIndex" ng-bind="option[labelAttribute]"></strong>
+          <span ng-if="$index !== mouseOverIndex" ng-bind="option[labelAttribute]"></span>
+          <spgn ng-if="!option[labelAttribute]">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->
+        </a>
 
         <a ng-if="!options" class="list-group-item">
           <i class="fa fa-circle-o-notch fa-spin"></i>

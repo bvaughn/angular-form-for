@@ -364,7 +364,11 @@ select-field {
   display: block;
   padding: 6px 9px;
 }
-.list-group .list-group-item:hover {
+.list-group .list-group-item strong {
+  font-weight: inherit;
+}
+.list-group .list-group-item:hover,
+.list-group .list-group-item.hover {
   background-color: #e3f3fc;
 }
 .list-group .list-group-item.active {
