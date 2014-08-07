@@ -10,6 +10,6 @@
           placeholder="{{placeholder}}"
           ng-model="model.selectedOption"
           ng-change="changeHandler()"
-          typeahead="option as option[labelAttribute] for option in bindableOptions | filter:{label:$viewValue}"
+          typeahead="option as option[labelAttribute] for option in filteredOptions"
           typeahead-wait-ms="debounce || 1000">
 </div>

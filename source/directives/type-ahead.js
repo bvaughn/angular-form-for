@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('typeAheadField',
-  function($log, $rootScope, $timeout) {
+  function($log, $filter, $timeout) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -34,22 +34,29 @@ angular.module('formFor').directive('typeAheadField',
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
-        $scope.filterExpression = {};
-        $scope.filterExpression[$scope.labelAttribute] = 'model.bindable';
+        // Typeahead doesn't handle null values very well so we need to guard against that.
+        // See https://github.com/angular-ui/bootstrap/pull/2361
+        $scope.filteredOptions = $scope.options || [];
 
         // Watch filter text changes and notify external listener in case data is loaded remotely.
         $scope.changeHandler = function() {
           $scope.filter = $element.find('input').val();
         };
 
-        // Typeahead doesn't handle null values very well so we need to guard against that.
-        // See https://github.com/angular-ui/bootstrap/pull/2361
-        $scope.$watch('options', function(value) {
-          $scope.bindableOptions = value || [];
-        });
+        var updateFilteredOptions = function() {
+          var array = $scope.options || [];
+
+          var expression = {};
+          expression[$scope.labelAttribute] = $scope.filter;
+
+          $scope.filteredOptions = $filter('filter')(array, expression);
+        };
+
+        $scope.$watch('filter', updateFilteredOptions);
+        $scope.$watch('options', updateFilteredOptions);
 
         // Type-ahead directive doesn't support "option[valueAttribute] as option[labelAttribute]" syntax,
-        // So we have to massage the data into the correct format.
+        // So we have to massage the data into the correct format for our parent formFor.
         $scope.$watch('model.selectedOption', function(option) {
           $scope.model.bindable = option && option[$scope.valueAttribute];
         });
