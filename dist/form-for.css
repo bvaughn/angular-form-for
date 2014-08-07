@@ -50,12 +50,9 @@ checkbox-field {
 field-label {
   display: inline-block;
 }
-.field-label {
-  cursor: inherit;
-  font-weight: normal;
-}
 .help-icon-stack {
   position: relative;
+  font-size: 10px;
 }
 .help-icon-stack .help-background-icon,
 .help-icon-stack .help-foreground-icon {
@@ -68,6 +65,13 @@ field-label {
   color: #fff;
   position: absolute;
   left: 0;
+}
+.field-label {
+  cursor: inherit;
+  font-weight: normal;
+}
+.field-label:hover .help-icon-stack .help-background-icon {
+  color: #beccca;
 }
 
 .field {
@@ -84,6 +88,8 @@ field-label {
   top: 100%;
   border-radius: 4px;
   background-color: #e35256;
+  -webkit-box-shadow: inset 0 -1px #802e31;
+          box-shadow: inset 0 -1px #802e31;
   color: #fff;
   padding: 7px 15px;
   z-index: 1000;
@@ -123,6 +129,8 @@ field-label {
   font-weight: normal;
   white-space: normal;
   background-color: #e3f3fc;
+  -webkit-box-shadow: inset 0 -1px #a1bbc9;
+          box-shadow: inset 0 -1px #a1bbc9;
   color: #252726;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
@@ -295,8 +303,6 @@ select-field {
   outline: none;
   padding: 6px 9px;
   width: 100%;
-  -webkit-box-shadow: 0 2px 0 #bfc8c7;
-  box-shadow: 0 2px 0 #bfc8c7;
   margin-top: 5px;
   text-align: left;
   -webkit-box-sizing: border-box;
@@ -319,8 +325,6 @@ select-field {
   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f7f7f7));
   background: linear-gradient(to bottom, #fff, #f7f7f7);
   border-color: #cdd4d3;
-  -webkit-box-shadow: 0 2px 0 #cdd4d3;
-  box-shadow: 0 2px 0 #cdd4d3;
 }
 .select-field-toggle-button.blank-selected {
   color: #848b88;

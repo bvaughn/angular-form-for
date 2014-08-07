@@ -2,9 +2,6 @@
 
 @require '_variables';
 
-$select-field-box-shadow = 0 2px 0 $color-fill-3
-$select-field-box-shadow-hover = 0 2px 0 lighten($color-fill-3, 5)
-
 select-field {
   display: block;
 }
@@ -23,7 +20,6 @@ select-field {
   outline: none;
   padding: 6px 9px;
   width: 100%;
-  box-shadow: $select-field-box-shadow;
   margin-top: $padding-small;
   text-align: left;
   box-sizing: border-box;
@@ -43,7 +39,6 @@ select-field {
   &:not(.disabled):not(.open):hover {
     background: linear-gradient(top, white, lighten($color-fill-2, 3));
     border-color: lighten($color-fill-3, 5);
-    box-shadow: $select-field-box-shadow-hover;
   }
 
   &.blank-selected {
@@ -71,7 +66,7 @@ select-field {
   border: $border;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
-  box-shadow: $select-field-box-shadow;
+  box-shadow: 0 2px 0 $color-fill-3;
   box-sizing: border-box;
 }
 

@@ -4,13 +4,9 @@ field-label {
   display: inline-block;
 }
 
-.field-label {
-  cursor: inherit;
-  font-weight: normal;
-}
-
 .help-icon-stack {
   position: relative;
+  font-size: 10px;
 
   .help-background-icon,
   .help-foreground-icon {
@@ -24,5 +20,18 @@ field-label {
     color: white;
     position: absolute;
     left: 0;
+  }
+}
+
+.field-label {
+  cursor: inherit;
+  font-weight: normal;
+
+  &:hover {
+    .help-icon-stack {
+      .help-background-icon {
+        color: $color-fill-5-hover;
+      }
+    }
   }
 }
