@@ -295,8 +295,8 @@ select-field {
   outline: none;
   padding: 6px 9px;
   width: 100%;
-  -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.1);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 2px 0 #bfc8c7;
+  box-shadow: 0 2px 0 #bfc8c7;
   margin-top: 5px;
   text-align: left;
   -webkit-box-sizing: border-box;
@@ -314,8 +314,13 @@ select-field {
   width: 20px;
   text-align: center;
 }
-.select-field-toggle-button:not(.disabled):hover {
-  background: #fff;
+.select-field-toggle-button:not(.disabled):not(.open):hover {
+  background: -webkit-linear-gradient(top, #fff, #f7f7f7);
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f7f7f7));
+  background: linear-gradient(to bottom, #fff, #f7f7f7);
+  border-color: #cdd4d3;
+  -webkit-box-shadow: 0 2px 0 #cdd4d3;
+  box-shadow: 0 2px 0 #cdd4d3;
 }
 .select-field-toggle-button.blank-selected {
   color: #848b88;
@@ -324,7 +329,7 @@ select-field {
   background: #fff;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border-bottom: 1px solid #eff0f0;
+  border-bottom: none;
 }
 .select-field-toggle-button.disabled {
   opacity: 0.5;
@@ -341,8 +346,8 @@ select-field {
   border: 1px solid #bfc8c7;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-  -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.1);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 2px 0 #bfc8c7;
+  box-shadow: 0 2px 0 #bfc8c7;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -366,10 +371,9 @@ select-field {
   font-weight: bold;
 }
 .filter-input-group {
-  padding: 5px;
-}
-.filter-input-group .filter-text-input {
-  margin-top: 0;
+  line-height: 1em;
+  margin: 10px 10px 5px;
+  padding: 0;
 }
 .select-field {
   position: relative;

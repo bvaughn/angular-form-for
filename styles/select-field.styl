@@ -2,7 +2,8 @@
 
 @require '_variables';
 
-$select-field-box-shadow = 0 2px 0 rgba(0, 0, 0, .1)
+$select-field-box-shadow = 0 2px 0 $color-fill-3
+$select-field-box-shadow-hover = 0 2px 0 lighten($color-fill-3, 5)
 
 select-field {
   display: block;
@@ -39,8 +40,10 @@ select-field {
     text-align: center;
   }
 
-  &:not(.disabled):hover {
-    background: white;
+  &:not(.disabled):not(.open):hover {
+    background: linear-gradient(top, white, lighten($color-fill-2, 3));
+    border-color: lighten($color-fill-3, 5);
+    box-shadow: $select-field-box-shadow-hover;
   }
 
   &.blank-selected {
@@ -50,7 +53,7 @@ select-field {
     background: white;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    border-bottom: 1px solid $color-fill-2;
+    border-bottom: none;
   }
 
   &.disabled {
@@ -95,11 +98,9 @@ select-field {
 }
 
 .filter-input-group {
-  padding: 5px;
-
-  .filter-text-input {
-    margin-top: 0;
-  }
+  line-height: 1em;
+  margin: 10px 10px 5px;
+  padding: 0;
 }
 
 .select-field {
