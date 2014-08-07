@@ -751,14 +751,13 @@ angular.module('formFor').directive('textField',
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('typeAheadField',
-  function($log, $filter, $timeout) {
+  function($log, $filter, $timeout, FormForConfiguration) {
     return {
       require: '^formFor',
       restrict: 'EA',
       templateUrl: 'form-for/templates/type-ahead-field.html',
       scope: {
         attribute: '@',
-        debounce: '@?',
         disable: '@',
         filter: '=?',
         help: '@?',
@@ -779,6 +778,7 @@ angular.module('formFor').directive('typeAheadField',
           });
         }
 
+        $scope.debounce = $attributes.debounce || FormForConfiguration.defaultDebounceDuration;
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
