@@ -415,14 +415,14 @@ describe('ModelValidator', function() {
       expect(formDataParameter).toEqual(formData);
     });
 
-    it('should gracefully handle a custom validation that is not a function', function() {
+    it('should reject a custom validation that is not a function', function() {
       model.rules = {
         customField: {
           custom: true
         }
       };
 
-      expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.rules)).toBeRejected();
     });
 
     it('should treat truthy values as successful validations', function() {
@@ -447,6 +447,37 @@ describe('ModelValidator', function() {
       };
 
       expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.rules)).toBeRejected();
+    });
+
+    it('should support inline custom error messages for failed falsy validations', function() {
+      model.rules = {
+        customField: {
+          custom: {
+            rule: function() {
+              return false;
+            },
+            message: 'failed custom'
+          }
+        }
+      };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({customField: 'abc'}, 'customField', model.rules),
+        'failed custom');
+    });
+
+    it('should support custom validations that throw errors with custom error messages for failed validations', function() {
+      model.rules = {
+        customField: {
+          custom: function() {
+            throw Error('i am an error');
+          }
+        }
+      };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({customField: 'abc'}, 'customField', model.rules),
+        'i am an error');
     });
   });
 

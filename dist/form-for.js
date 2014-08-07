@@ -987,8 +987,20 @@ angular.module('formFor').service('ModelValidator',
           }
         }
 
-        if (rules.custom && _.isFunction(rules.custom)) {
-          var returnValue = rules.custom(value, model);
+        if (rules.custom) {
+          var defaultErrorMessage = _.isFunction(rules.custom) ? FormForConfiguration.validationFailedForCustomMessage : rules.custom.message;
+          var validationFunction = _.isFunction(rules.custom) ? rules.custom : rules.custom.rule;
+
+          // Validations can fail in 3 ways:
+          // A promise that gets rejected (potentially with an error message)
+          // An error that gets thrown (potentially with a message)
+          // A falsy value
+
+          try {
+            var returnValue = validationFunction(value, model);
+          } catch (error) {
+            return $q.reject(error.message || defaultErrorMessage);
+          }
 
           if (_.isObject(returnValue) && _.isFunction(returnValue.then)) {
             return returnValue.then(
@@ -996,12 +1008,12 @@ angular.module('formFor').service('ModelValidator',
                 return $q.resolve(reason);
               },
               function(reason) {
-                return $q.reject(reason || FormForConfiguration.validationFailedForCustomMessage);
+                return $q.reject(reason || defaultErrorMessage);
               });
           } else if (returnValue) {
             return $q.resolve(returnValue);
           } else {
-            return $q.reject(FormForConfiguration.validationFailedForCustomMessage);
+            return $q.reject(defaultErrorMessage);
           }
         }
       }
