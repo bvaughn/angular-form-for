@@ -1,9 +1,10 @@
 angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<div  class=\"field checkbox-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <p ng-if=\"error\" class=\"text-danger field-error left-aligned\" ng-bind=\"error\"></p>\n\n  <label>\n    <div class=\"checkbox-field-input\" ng-class=\"{\'is-checked\': model.bindable}\"></div>\n\n    <input  type=\"checkbox\" ng-model=\"model.bindable\"\n            class=\"field-input\"\n            ng-disabled=\"disable || disabledByForm\">\n\n    <field-label  ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"\n                  ng-click=\"toggle()\"></field-label>\n  </label>\n</div>\n");
 $templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n\n  <span ng-if=\"help\" class=\"fa-stack help-icon-stack\">\n    <i class=\"fa fa-stack-2x fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-stack-1x fa-inverse fa-question help-foreground-icon\"></i>\n  </span>\n</label>\n");
 $templateCache.put("form-for/templates/radio-field.html","<span class=\"field radio-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <p ng-if=\"error\" class=\"text-danger field-error left-aligned\" ng-bind=\"error\"></p>\n\n  <label>\n    <span  class=\"radio-field-input\" ng-class=\"{\'is-selected\': model.bindable === value}\"\n          ng-click=\"click()\"></span>\n\n    <input  type=\"radio\" ng-model=\"model.bindable\" ng-value=\"value\"\n            class=\"field-input\"\n            ng-disabled=\"disable || disabledByForm\">\n\n    <field-label  ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"\n                  ng-click=\"click()\"></field-label>\n  </label>\n</span>\n");
-$templateCache.put("form-for/templates/select-field.html","<div  class=\"form-group field select-field\"\n      ng-class=\"{disabled: disable || disabledByForm, open: isOpen, \'has-error\': error}\">\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <div  class=\"form-control select-field-toggle-button\" role=\"button\" data-toggle=\"dropdown\"\n        ng-class=\"{open: isOpen, disabled: disable || disabledByForm}\">\n\n    <span ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\"></span>\n\n    <span ng-if=\"!selectedOptionLabel\">\n      <span ng-if=\"placeholder\" ng-bind=\"placeholder\"></span>\n      <span ng-if=\"!placeholder\">Select</span>\n    </span>\n\n    <span class=\"fa fa-caret-down pull-right select-field-toggle-caret\"></span>\n  </div>\n\n  <div ng-show=\"isOpen\" class=\"unstyled list-group-container\">\n    <div class=\"unstyled list-group\" role=\"menu\">\n      <div  ng-show=\"enableFiltering\" class=\"input-group filter-input-group\"\n            ng-click=\"$event.stopPropagation()\">\n        <input  type=\"text\"\n                class=\"form-control text-field-input filter-text-input\"\n                ng-model=\"filter\"\n                form-for-debounce=\"{{filterDebounce}}\" />\n\n        <span class=\"input-group-addon input-group-addon-after\">\n          <i class=\"fa fa-search text-field-icon\"></i>\n        </span>\n      </div>\n\n      <div class=\"list-group-scrollable\">\n        <a ng-if=\"allowBlank && !filter && options\" class=\"list-group-item\" ng-click=\"selectOption()\">&nbsp;</a>\n\n        <a  class=\"list-group-item\"\n            ng-repeat=\"option in filteredOptions\"\n            ng-value=\"option[valueAttribute]\"\n            ng-click=\"selectOption(option)\"\n            ng-bind=\"option[labelAttribute]\"\n            ng-class=\"{active: option === selectedOption}\"></a>\n\n        <a ng-if=\"!options\" class=\"list-group-item\">\n          <i class=\"fa fa-circle-o-notch fa-spin\"></i>\n          Loading...\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("form-for/templates/select-field.html","<div  class=\"form-group field select-field\"\n      ng-class=\"{disabled: disable || disabledByForm, open: isOpen, \'has-error\': error}\">\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <div  class=\"form-control select-field-toggle-button\" role=\"button\" data-toggle=\"dropdown\"\n        ng-class=\"{open: isOpen, disabled: disable || disabledByForm}\">\n\n    <span ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\"></span>\n\n    <span ng-if=\"!selectedOptionLabel\">\n      <span ng-if=\"placeholder\" ng-bind=\"placeholder\"></span>\n      <span ng-if=\"!placeholder\">Select</span>\n    </span>\n\n    <span class=\"fa fa-caret-down pull-right select-field-toggle-caret\"></span>\n  </div>\n\n  <div ng-show=\"isOpen\" class=\"list-group-container\">\n    <div class=\"list-group\" role=\"menu\">\n      <div  ng-show=\"enableFiltering\" class=\"input-group filter-input-group\"\n            ng-click=\"$event.stopPropagation()\">\n        <input  type=\"text\"\n                class=\"form-control text-field-input filter-text-input\"\n                ng-model=\"filter\"\n                form-for-debounce=\"{{filterDebounce}}\" />\n\n        <span class=\"input-group-addon input-group-addon-after\">\n          <i class=\"fa fa-search text-field-icon\"></i>\n        </span>\n      </div>\n\n      <div class=\"list-group-scrollable\">\n        <a ng-if=\"allowBlank && !filter && options\" class=\"list-group-item\" ng-click=\"selectOption()\">&nbsp;</a>\n\n        <a  class=\"list-group-item\"\n            ng-repeat=\"option in filteredOptions\"\n            ng-value=\"option[valueAttribute]\"\n            ng-click=\"selectOption(option)\"\n            ng-bind=\"option[labelAttribute]\"\n            ng-class=\"{active: option === selectedOption}\"></a>\n\n        <a ng-if=\"!options\" class=\"list-group-item\">\n          <i class=\"fa fa-circle-o-notch fa-spin\"></i>\n          Loading...\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("form-for/templates/submit-button.html","<button class=\"btn btn-default submit-button\" ng-disabled=\"disable || disabledByForm\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n</button>\n");
-$templateCache.put("form-for/templates/text-field.html","<div  class=\"form-group field text-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <div ng-class=\"{\'input-group\': iconBefore || iconAfter}\">\n    <span ng-if=\"iconBefore\" class=\"input-group-addon input-group-addon-before\">\n      <i class=\"text-field-icon\" ng-class=\"iconBefore\"></i>\n    </span>\n\n    <input  ng-if=\"!multiline\"\n            type=\"{{type}}\"\n            class=\"form-control text-field-input\"\n            ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n            ng-disabled=\"disable || disabledByForm\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\" />\n\n\n    <textarea ng-if=\"multiline\"\n              class=\"form-control text-field-input\"\n              ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n              ng-disabled=\"disable || disabledByForm\"\n              placeholder=\"{{placeholder}}\"\n              ng-model=\"model.bindable\"\n              form-for-debounce=\"{{debounce}}\">\n    </textarea>\n\n    <span ng-if=\"iconAfter\" class=\"input-group-addon input-group-addon-after\">\n      <i class=\"text-field-icon\" ng-class=\"iconAfter\"></i>\n    </span>\n  </div>\n</div>\n");}]);
+$templateCache.put("form-for/templates/text-field.html","<div  class=\"form-group field text-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <div ng-class=\"{\'input-group\': iconBefore || iconAfter}\">\n    <span ng-if=\"iconBefore\" class=\"input-group-addon input-group-addon-before\">\n      <i class=\"text-field-icon\" ng-class=\"iconBefore\"></i>\n    </span>\n\n    <input  ng-if=\"!multiline\"\n            type=\"{{type}}\"\n            class=\"form-control text-field-input\"\n            ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n            ng-disabled=\"disable || disabledByForm\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\" />\n\n\n    <textarea ng-if=\"multiline\"\n              class=\"form-control text-field-input\"\n              ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n              ng-disabled=\"disable || disabledByForm\"\n              placeholder=\"{{placeholder}}\"\n              ng-model=\"model.bindable\"\n              form-for-debounce=\"{{debounce}}\">\n    </textarea>\n\n    <span ng-if=\"iconAfter\" class=\"input-group-addon input-group-addon-after\">\n      <i class=\"text-field-icon\" ng-class=\"iconAfter\"></i>\n    </span>\n  </div>\n</div>\n");
+$templateCache.put("form-for/templates/type-ahead-field.html","<div  class=\"form-group field type-ahead-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <field-label ng-if=\"label\" label=\"{{label}}\" help=\"{{help}}\"></field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <input  type=\"text\"\n          class=\"form-control type-ahead-field-input\"\n          placeholder=\"{{placeholder}}\"\n          ng-model=\"model.selectedOption\"\n          ng-change=\"changeHandler()\"\n          typeahead=\"option as option[labelAttribute] for option in bindableOptions | filter:{label:$viewValue}\"\n          typeahead-wait-ms=\"debounce || 1000\">\n</div>\n");}]);
 angular.module('formFor', ['formFor.templates']);
 
 /**
@@ -688,6 +689,67 @@ angular.module('formFor').directive('textField',
             $element.find( $scope.multiline ? 'textarea' : 'input' ).focus();
           });
         }
+
+        $scope.model = formForController.registerFormField($scope, $scope.attribute);
+      }
+    };
+  });
+
+/**
+ * For documentation please refer to the project wiki:
+ * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
+ */
+angular.module('formFor').directive('typeAheadField',
+  function($log, $rootScope, $timeout) {
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/type-ahead-field.html',
+      scope: {
+        attribute: '@',
+        debounce: '@?',
+        disable: '@',
+        filter: '=?',
+        help: '@?',
+        label: '@?',
+        options: '=',
+        placeholder: '@?'
+      },
+      link: function($scope, $element, $attributes, formForController) {
+        if (!$scope.attribute) {
+          $log.error('Missing required field "attribute"');
+
+          return;
+        }
+
+        if ($attributes.hasOwnProperty('autofocus')) {
+          $timeout(function() {
+            $element.find('input').focus();
+          });
+        }
+
+        $scope.labelAttribute = $attributes.labelAttribute || 'label';
+        $scope.valueAttribute = $attributes.valueAttribute || 'value';
+
+        $scope.filterExpression = {};
+        $scope.filterExpression[$scope.labelAttribute] = 'model.bindable';
+
+        // Watch filter text changes and notify external listener in case data is loaded remotely.
+        $scope.changeHandler = function() {
+          $scope.filter = $element.find('input').val();
+        };
+
+        // Typeahead doesn't handle null values very well so we need to guard against that.
+        // See https://github.com/angular-ui/bootstrap/pull/2361
+        $scope.$watch('options', function(value) {
+          $scope.bindableOptions = value || [];
+        });
+
+        // Type-ahead directive doesn't support "option[valueAttribute] as option[labelAttribute]" syntax,
+        // So we have to massage the data into the correct format.
+        $scope.$watch('model.selectedOption', function(option) {
+          $scope.model.bindable = option && option[$scope.valueAttribute];
+        });
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
       }

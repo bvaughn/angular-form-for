@@ -1,0 +1,15 @@
+<div  class="form-group field type-ahead-field"
+      ng-class="{disabled: disable || disabledByForm, 'has-error': error}">
+
+  <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
+
+  <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
+
+  <input  type="text"
+          class="form-control type-ahead-field-input"
+          placeholder="{{placeholder}}"
+          ng-model="model.selectedOption"
+          ng-change="changeHandler()"
+          typeahead="option as option[labelAttribute] for option in bindableOptions | filter:{label:$viewValue}"
+          typeahead-wait-ms="debounce || 1000">
+</div>
