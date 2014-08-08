@@ -14,24 +14,35 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * Into an Array like ['foo', 'foo.bar', 'baz']
      */
     flattenObjectKeys: function(object) {
-      var internalCrawler = function(object, path, array) {
-        array = array || [];
+      var keys = [];
+      var queue = [{
+        object: object,
+        prefix: null
+      }];
 
-        var prefix = path ? path + '.' : '';
+      while (true) {
+        if (queue.length === 0) {
+          break;
+        }
 
-        _.forIn(object,
-          function(value, relativeKey) {
-            var fullKey = prefix + relativeKey;
+        var data = queue.pop();
+        var prefix = data.prefix ? data.prefix + '.' : '';
 
-            array.push(fullKey);
+        if (typeof data.object === 'object') {
+          for (var prop in data.object) {
+            var path = prefix + prop;
 
-            internalCrawler(value, fullKey, array);
-          });
+            keys.push(path);
 
-        return array;
-      };
+            queue.push({
+              object: data.object[prop],
+              prefix: path
+            });
+          }
+        }
+      }
 
-      return internalCrawler(object);
+      return keys;
     },
 
     /**

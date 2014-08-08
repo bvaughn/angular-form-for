@@ -36,7 +36,11 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
   };
 
   FormForStateHelper.prototype.isFormValid = function() {
-    return _.isEmpty(this.shallowErrorMap);
+    for (var prop in this.shallowErrorMap) {
+      return false;
+    }
+
+    return true;
   };
 
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {

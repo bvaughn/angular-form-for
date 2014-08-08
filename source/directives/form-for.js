@@ -89,7 +89,7 @@ angular.module('formFor').directive('formFor',
 
           var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
 
-          _.each(keys, function(fieldName) {
+          angular.forEach(keys, function(fieldName) {
             $scope.formForStateHelper.setFieldHasBeenModified(fieldName, false);
           });
         };
@@ -102,11 +102,11 @@ angular.module('formFor').directive('formFor',
 
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disable', function(value) {
-          _.each($scope.formFieldScopes, function(scope) {
+          angular.forEach($scope.formFieldScopes, function(scope) {
             scope.disabledByForm = value;
           });
 
-          _.each($scope.submitButtonScopes, function(scope) {
+          angular.forEach($scope.submitButtonScopes, function(scope) {
             scope.disabledByForm = value;
           });
         });
@@ -154,7 +154,7 @@ angular.module('formFor').directive('formFor',
         $scope.$watch('formForStateHelper.watchable', function() {
           var formForStateHelper = $scope.formForStateHelper;
 
-          _.each($scope.formFieldScopes, function(scope, fieldName) {
+          angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
             if (formForStateHelper.hasFormBeenSubmitted() || formForStateHelper.hasFieldBeenModified(fieldName)) {
               var error = formForStateHelper.getFieldError(fieldName);
 
@@ -173,7 +173,7 @@ angular.module('formFor').directive('formFor',
          * @param errorMap Map of field names (or paths) to errors
          */
         $scope.updateErrors = function(errorMap) {
-          _.each($scope.formFieldScopes, function(scope, fieldName) {
+          angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
             var error = NestedObjectHelper.readAttribute(errorMap, fieldName);
 
             $scope.formForStateHelper.setFieldError(fieldName, error);
@@ -193,7 +193,7 @@ angular.module('formFor').directive('formFor',
             validationPromise =
               ModelValidator.validateFields(
                 $scope.formFor,
-                _.keys($scope.formFieldScopes),
+                $scope.formFieldScopes.keys,
                 $scope.$validationRules);
           } else {
             validationPromise = $q.resolve();
@@ -206,7 +206,7 @@ angular.module('formFor').directive('formFor',
 
         // Clean up dangling watchers on destroy.
         $scope.$on('$destroy', function() {
-          _.each($scope.scopeWatcherUnwatchFunctions, function(unwatch) {
+          angular.forEach($scope.scopeWatcherUnwatchFunctions, function(unwatch) {
             unwatch();
           });
         });
@@ -243,7 +243,7 @@ angular.module('formFor').directive('formFor',
                   function(errorMessageOrErrorMap) {
                     // If the remote response returned inline-errors update our error map.
                     // This is unecessary if a string was returned.
-                    if (_.isObject(errorMessageOrErrorMap)) {
+                    if (angular.isObject(errorMessageOrErrorMap)) {
                       $scope.updateErrors(errorMessageOrErrorMap);
                     }
 

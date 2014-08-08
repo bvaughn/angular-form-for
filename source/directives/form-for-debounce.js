@@ -27,7 +27,7 @@ angular.module('formFor').directive('formForDebounce', function($log, $timeout, 
         } else {
           durationAttribute = parseInt(durationAttribute);
 
-          if (!_.isNaN(durationAttribute)) {
+          if (angular.isNumber(durationAttribute) && !isNaN(durationAttribute)) {
             duration = durationAttribute;
           }
         }

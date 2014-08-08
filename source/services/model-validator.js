@@ -34,7 +34,7 @@ angular.module('formFor').service('ModelValidator',
       var errorMap = {};
       var that = this;
 
-      _.each(fieldNames, function(fieldName) {
+      angular.forEach(fieldNames, function(fieldName) {
         var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
 
         if (rules) {
@@ -76,92 +76,93 @@ angular.module('formFor').service('ModelValidator',
         value = value || '';
 
         if (rules.required) {
-          var required = _.isObject(rules.required) ? rules.required.rule : rules.required;
+          var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
 
           if (!!value !== required) {
             return $q.reject(
-              _.isObject(rules.required) ?
+              angular.isObject(rules.required) ?
                 rules.required.message :
                 FormForConfiguration.validationFailedForRequiredMessage);
           }
         }
 
         if (rules.minlength) {
-          var minlength = _.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
+          var minlength = angular.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
 
           if (value.length < minlength) {
             return $q.reject(
-              _.isObject(rules.minlength) ?
+              angular.isObject(rules.minlength) ?
                 rules.minlength.message :
                 $interpolate(FormForConfiguration.validationFailedForMinLengthMessage)({num: minlength}));
           }
         }
 
         if (rules.maxlength) {
-          var maxlength = _.isObject(rules.maxlength) ? rules.maxlength.rule : rules.maxlength;
+          var maxlength = angular.isObject(rules.maxlength) ? rules.maxlength.rule : rules.maxlength;
 
           if (value.length > maxlength) {
             return $q.reject(
-              _.isObject(rules.maxlength) ?
+              angular.isObject(rules.maxlength) ?
                 rules.maxlength.message :
                 $interpolate(FormForConfiguration.validationFailedForMaxLengthMessage)({num: maxlength}));
           }
         }
 
         if (rules.type) {
-          var type = _.isObject(rules.type) ? rules.type.rule : rules.type;
+          var type = angular.isObject(rules.type) ? rules.type.rule : rules.type;
           var stringValue = value.toString();
 
           if (type.indexOf('integer') >= 0 && !stringValue.match(/^\-*[0-9]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForIntegerTypeMessage);
           }
 
           if (type.indexOf('number') >= 0 && !stringValue.match(/^\-*[0-9\.]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForNumericTypeMessage);
           }
 
           if (type.indexOf('negative') >= 0 && !stringValue.match(/^\-[0-9\.]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForNegativeTypeMessage);
           }
 
           if (type.indexOf('positive') >= 0 && !stringValue.match(/^[0-9\.]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForPositiveTypeMessage);
           }
 
           if (type.indexOf('email') >= 0 && !stringValue.match(/^[\w\.\+]+@\w+\.\w+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForEmailTypeMessage);
           }
         }
 
         if (rules.pattern) {
-          var pattern = _.isRegExp(rules.pattern) ? rules.pattern : rules.pattern.rule;
+          var isRegExp = rules.pattern instanceof RegExp;
+          var pattern = isRegExp ? rules.pattern : rules.pattern.rule;
 
           if (!pattern.exec(value)) {
             return $q.reject(
-              _.isRegExp(rules.pattern) ?
+              isRegExp ?
                 FormForConfiguration.validationFailedForPatternMessage :
                 rules.pattern.message);
           }
         }
 
         if (rules.custom) {
-          var defaultErrorMessage = _.isFunction(rules.custom) ? FormForConfiguration.validationFailedForCustomMessage : rules.custom.message;
-          var validationFunction = _.isFunction(rules.custom) ? rules.custom : rules.custom.rule;
+          var defaultErrorMessage = angular.isFunction(rules.custom) ? FormForConfiguration.validationFailedForCustomMessage : rules.custom.message;
+          var validationFunction = angular.isFunction(rules.custom) ? rules.custom : rules.custom.rule;
 
           // Validations can fail in 3 ways:
           // A promise that gets rejected (potentially with an error message)
@@ -174,7 +175,7 @@ angular.module('formFor').service('ModelValidator',
             return $q.reject(error.message || defaultErrorMessage);
           }
 
-          if (_.isObject(returnValue) && _.isFunction(returnValue.then)) {
+          if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
             return returnValue.then(
               function(reason) {
                 return $q.resolve(reason);

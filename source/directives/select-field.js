@@ -54,12 +54,13 @@ angular.module('formFor').directive('selectField',
           } else {
             var filter = sanitize($scope.filter);
 
-            angular.copy(
-              _.filter(options,
-                function(option) {
-                  return sanitize(option[$scope.labelAttribute]).indexOf(filter) >= 0;
-                }),
-              $scope.filteredOptions);
+            angular.forEach(options, function(option) {
+              var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
+
+              if (index >= 0) {
+                $scope.filteredOptions.push(option);
+              }
+            });
           }
 
           if ($scope.allowBlank) {
@@ -75,13 +76,20 @@ angular.module('formFor').directive('selectField',
          *****************************************************************************************/
 
         $scope.$watch('model.bindable', function(value) {
-          var option = _.find($scope.options,
-            function(option) {
-              return value === option[$scope.valueAttribute];
-            });
+          var matchingOption;
 
-          $scope.selectedOption = option;
-          $scope.selectedOptionLabel = option && option[$scope.labelAttribute];
+          for (var index = 0; index < $scope.filteredOptions.length; index++) {
+            var option = $scope.filteredOptions[index];
+
+            if (option[$scope.valueAttribute] === value) {
+              matchingOption = option;
+
+              break;
+            }
+          };
+
+          $scope.selectedOption = matchingOption;
+          $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
         });
 
         var oneClick = function(target, handler) {
@@ -140,17 +148,23 @@ angular.module('formFor').directive('selectField',
               angular.bind(
                 this,
                 function() {
-                  var listItem =
-                    _.find(list.find('.list-group-item'),
-                      function(listItem) {
-                        var option = $(listItem).scope().option;
+                  var listItems = list.find('.list-group-item');
+                  var matchingListItem;
 
-                        return option && option[$scope.valueAttribute] === value;
-                      });
+                  for (var index = 0; index < listItems.length; index++) {
+                    var listItem = listItems[index];
+                    var option = $(listItem).scope().option;
 
-                  if (listItem) {
+                    if (option && option[$scope.valueAttribute] === value) {
+                      matchingListItem = listItem;
+
+                      break;
+                    }
+                  }
+
+                  if (matchingListItem) {
                     scroller.scrollTop(
-                      $(listItem).offset().top - $(listItem).parent().offset().top);
+                      $(matchingListItem).offset().top - $(matchingListItem).parent().offset().top);
                   }
                 }), 1);
           }

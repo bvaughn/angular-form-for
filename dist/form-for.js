@@ -92,7 +92,7 @@ angular.module('formFor').directive('formForDebounce', function($log, $timeout, 
         } else {
           durationAttribute = parseInt(durationAttribute);
 
-          if (!_.isNaN(durationAttribute)) {
+          if (angular.isNumber(durationAttribute) && !isNaN(durationAttribute)) {
             duration = durationAttribute;
           }
         }
@@ -218,7 +218,7 @@ angular.module('formFor').directive('formFor',
 
           var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
 
-          _.each(keys, function(fieldName) {
+          angular.forEach(keys, function(fieldName) {
             $scope.formForStateHelper.setFieldHasBeenModified(fieldName, false);
           });
         };
@@ -231,11 +231,11 @@ angular.module('formFor').directive('formFor',
 
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disable', function(value) {
-          _.each($scope.formFieldScopes, function(scope) {
+          angular.forEach($scope.formFieldScopes, function(scope) {
             scope.disabledByForm = value;
           });
 
-          _.each($scope.submitButtonScopes, function(scope) {
+          angular.forEach($scope.submitButtonScopes, function(scope) {
             scope.disabledByForm = value;
           });
         });
@@ -283,7 +283,7 @@ angular.module('formFor').directive('formFor',
         $scope.$watch('formForStateHelper.watchable', function() {
           var formForStateHelper = $scope.formForStateHelper;
 
-          _.each($scope.formFieldScopes, function(scope, fieldName) {
+          angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
             if (formForStateHelper.hasFormBeenSubmitted() || formForStateHelper.hasFieldBeenModified(fieldName)) {
               var error = formForStateHelper.getFieldError(fieldName);
 
@@ -302,7 +302,7 @@ angular.module('formFor').directive('formFor',
          * @param errorMap Map of field names (or paths) to errors
          */
         $scope.updateErrors = function(errorMap) {
-          _.each($scope.formFieldScopes, function(scope, fieldName) {
+          angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
             var error = NestedObjectHelper.readAttribute(errorMap, fieldName);
 
             $scope.formForStateHelper.setFieldError(fieldName, error);
@@ -322,7 +322,7 @@ angular.module('formFor').directive('formFor',
             validationPromise =
               ModelValidator.validateFields(
                 $scope.formFor,
-                _.keys($scope.formFieldScopes),
+                $scope.formFieldScopes.keys,
                 $scope.$validationRules);
           } else {
             validationPromise = $q.resolve();
@@ -335,7 +335,7 @@ angular.module('formFor').directive('formFor',
 
         // Clean up dangling watchers on destroy.
         $scope.$on('$destroy', function() {
-          _.each($scope.scopeWatcherUnwatchFunctions, function(unwatch) {
+          angular.forEach($scope.scopeWatcherUnwatchFunctions, function(unwatch) {
             unwatch();
           });
         });
@@ -372,7 +372,7 @@ angular.module('formFor').directive('formFor',
                   function(errorMessageOrErrorMap) {
                     // If the remote response returned inline-errors update our error map.
                     // This is unecessary if a string was returned.
-                    if (_.isObject(errorMessageOrErrorMap)) {
+                    if (angular.isObject(errorMessageOrErrorMap)) {
                       $scope.updateErrors(errorMessageOrErrorMap);
                     }
 
@@ -531,12 +531,13 @@ angular.module('formFor').directive('selectField',
           } else {
             var filter = sanitize($scope.filter);
 
-            angular.copy(
-              _.filter(options,
-                function(option) {
-                  return sanitize(option[$scope.labelAttribute]).indexOf(filter) >= 0;
-                }),
-              $scope.filteredOptions);
+            angular.forEach(options, function(option) {
+              var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
+
+              if (index >= 0) {
+                $scope.filteredOptions.push(option);
+              }
+            });
           }
 
           if ($scope.allowBlank) {
@@ -552,13 +553,20 @@ angular.module('formFor').directive('selectField',
          *****************************************************************************************/
 
         $scope.$watch('model.bindable', function(value) {
-          var option = _.find($scope.options,
-            function(option) {
-              return value === option[$scope.valueAttribute];
-            });
+          var matchingOption;
 
-          $scope.selectedOption = option;
-          $scope.selectedOptionLabel = option && option[$scope.labelAttribute];
+          for (var index = 0; index < $scope.filteredOptions.length; index++) {
+            var option = $scope.filteredOptions[index];
+
+            if (option[$scope.valueAttribute] === value) {
+              matchingOption = option;
+
+              break;
+            }
+          };
+
+          $scope.selectedOption = matchingOption;
+          $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
         });
 
         var oneClick = function(target, handler) {
@@ -617,17 +625,23 @@ angular.module('formFor').directive('selectField',
               angular.bind(
                 this,
                 function() {
-                  var listItem =
-                    _.find(list.find('.list-group-item'),
-                      function(listItem) {
-                        var option = $(listItem).scope().option;
+                  var listItems = list.find('.list-group-item');
+                  var matchingListItem;
 
-                        return option && option[$scope.valueAttribute] === value;
-                      });
+                  for (var index = 0; index < listItems.length; index++) {
+                    var listItem = listItems[index];
+                    var option = $(listItem).scope().option;
 
-                  if (listItem) {
+                    if (option && option[$scope.valueAttribute] === value) {
+                      matchingListItem = listItem;
+
+                      break;
+                    }
+                  }
+
+                  if (matchingListItem) {
                     scroller.scrollTop(
-                      $(listItem).offset().top - $(listItem).parent().offset().top);
+                      $(matchingListItem).offset().top - $(matchingListItem).parent().offset().top);
                   }
                 }), 1);
           }
@@ -914,7 +928,11 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
   };
 
   FormForStateHelper.prototype.isFormValid = function() {
-    return _.isEmpty(this.shallowErrorMap);
+    for (var prop in this.shallowErrorMap) {
+      return false;
+    }
+
+    return true;
   };
 
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {
@@ -982,7 +1000,7 @@ angular.module('formFor').service('ModelValidator',
       var errorMap = {};
       var that = this;
 
-      _.each(fieldNames, function(fieldName) {
+      angular.forEach(fieldNames, function(fieldName) {
         var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
 
         if (rules) {
@@ -1024,92 +1042,93 @@ angular.module('formFor').service('ModelValidator',
         value = value || '';
 
         if (rules.required) {
-          var required = _.isObject(rules.required) ? rules.required.rule : rules.required;
+          var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
 
           if (!!value !== required) {
             return $q.reject(
-              _.isObject(rules.required) ?
+              angular.isObject(rules.required) ?
                 rules.required.message :
                 FormForConfiguration.validationFailedForRequiredMessage);
           }
         }
 
         if (rules.minlength) {
-          var minlength = _.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
+          var minlength = angular.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
 
           if (value.length < minlength) {
             return $q.reject(
-              _.isObject(rules.minlength) ?
+              angular.isObject(rules.minlength) ?
                 rules.minlength.message :
                 $interpolate(FormForConfiguration.validationFailedForMinLengthMessage)({num: minlength}));
           }
         }
 
         if (rules.maxlength) {
-          var maxlength = _.isObject(rules.maxlength) ? rules.maxlength.rule : rules.maxlength;
+          var maxlength = angular.isObject(rules.maxlength) ? rules.maxlength.rule : rules.maxlength;
 
           if (value.length > maxlength) {
             return $q.reject(
-              _.isObject(rules.maxlength) ?
+              angular.isObject(rules.maxlength) ?
                 rules.maxlength.message :
                 $interpolate(FormForConfiguration.validationFailedForMaxLengthMessage)({num: maxlength}));
           }
         }
 
         if (rules.type) {
-          var type = _.isObject(rules.type) ? rules.type.rule : rules.type;
+          var type = angular.isObject(rules.type) ? rules.type.rule : rules.type;
           var stringValue = value.toString();
 
           if (type.indexOf('integer') >= 0 && !stringValue.match(/^\-*[0-9]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForIntegerTypeMessage);
           }
 
           if (type.indexOf('number') >= 0 && !stringValue.match(/^\-*[0-9\.]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForNumericTypeMessage);
           }
 
           if (type.indexOf('negative') >= 0 && !stringValue.match(/^\-[0-9\.]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForNegativeTypeMessage);
           }
 
           if (type.indexOf('positive') >= 0 && !stringValue.match(/^[0-9\.]+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForPositiveTypeMessage);
           }
 
           if (type.indexOf('email') >= 0 && !stringValue.match(/^[\w\.\+]+@\w+\.\w+$/)) {
             return $q.reject(
-              _.isObject(rules.type) ?
+              angular.isObject(rules.type) ?
                 rules.type.message :
                 FormForConfiguration.validationFailedForEmailTypeMessage);
           }
         }
 
         if (rules.pattern) {
-          var pattern = _.isRegExp(rules.pattern) ? rules.pattern : rules.pattern.rule;
+          var isRegExp = rules.pattern instanceof RegExp;
+          var pattern = isRegExp ? rules.pattern : rules.pattern.rule;
 
           if (!pattern.exec(value)) {
             return $q.reject(
-              _.isRegExp(rules.pattern) ?
+              isRegExp ?
                 FormForConfiguration.validationFailedForPatternMessage :
                 rules.pattern.message);
           }
         }
 
         if (rules.custom) {
-          var defaultErrorMessage = _.isFunction(rules.custom) ? FormForConfiguration.validationFailedForCustomMessage : rules.custom.message;
-          var validationFunction = _.isFunction(rules.custom) ? rules.custom : rules.custom.rule;
+          var defaultErrorMessage = angular.isFunction(rules.custom) ? FormForConfiguration.validationFailedForCustomMessage : rules.custom.message;
+          var validationFunction = angular.isFunction(rules.custom) ? rules.custom : rules.custom.rule;
 
           // Validations can fail in 3 ways:
           // A promise that gets rejected (potentially with an error message)
@@ -1122,7 +1141,7 @@ angular.module('formFor').service('ModelValidator',
             return $q.reject(error.message || defaultErrorMessage);
           }
 
-          if (_.isObject(returnValue) && _.isFunction(returnValue.then)) {
+          if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
             return returnValue.then(
               function(reason) {
                 return $q.resolve(reason);
@@ -1160,24 +1179,35 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * Into an Array like ['foo', 'foo.bar', 'baz']
      */
     flattenObjectKeys: function(object) {
-      var internalCrawler = function(object, path, array) {
-        array = array || [];
+      var keys = [];
+      var queue = [{
+        object: object,
+        prefix: null
+      }];
 
-        var prefix = path ? path + '.' : '';
+      while (true) {
+        if (queue.length === 0) {
+          break;
+        }
 
-        _.forIn(object,
-          function(value, relativeKey) {
-            var fullKey = prefix + relativeKey;
+        var data = queue.pop();
+        var prefix = data.prefix ? data.prefix + '.' : '';
 
-            array.push(fullKey);
+        if (typeof data.object === 'object') {
+          for (var prop in data.object) {
+            var path = prefix + prop;
 
-            internalCrawler(value, fullKey, array);
-          });
+            keys.push(path);
 
-        return array;
-      };
+            queue.push({
+              object: data.object[prop],
+              prefix: path
+            });
+          }
+        }
+      }
 
-      return internalCrawler(object);
+      return keys;
     },
 
     /**
