@@ -193,7 +193,7 @@ angular.module('formFor').directive('formFor',
             validationPromise =
               ModelValidator.validateFields(
                 $scope.formFor,
-                $scope.formFieldScopes.keys,
+                Object.keys($scope.formFieldScopes),
                 $scope.$validationRules);
           } else {
             validationPromise = $q.resolve();
