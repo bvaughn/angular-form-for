@@ -1,6 +1,6 @@
 {
   "name": "angular-form-for",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "homepage": "https://github.com/bvaughn/angular-form-for",
   "authors": [
     "Brian Vaughn <brian.david.vaughn@gmail.com>"
@@ -23,7 +23,6 @@
   ],
   "dependencies": {
     "jquery": "~2.1.1",
-    "lodash": "~2.4.1",
     "angular": "~1.2.21"
   },
   "devDependencies": {
