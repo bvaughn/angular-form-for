@@ -55,13 +55,38 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('filter', updateFilteredOptions);
         $scope.$watch('options', updateFilteredOptions);
 
+        $scope.model = formForController.registerFormField($scope, $scope.attribute);
+
+        // Incomine model values should control the type-ahead field's default value.
+        // In this case we need to match the model *value* with the corresponding option (Object).
+        var updateDefaultOption = function() {
+          var selected = $scope.model.selectedOption && $scope.model.selectedOption[[$scope.valueAttribute]];
+          var matched;
+
+          if ($scope.model.bindable === selected) {
+            return;
+          }
+
+          angular.forEach($scope.options,
+            function(option) {
+              if (option[$scope.valueAttribute] === $scope.model.bindable) {
+                matched = option;
+              }
+            });
+
+          $scope.model.selectedOption = matched;
+        };
+
+        $scope.$watch('model.bindable', updateDefaultOption);
+        $scope.$watch('options', updateDefaultOption);
+
         // Type-ahead directive doesn't support "option[valueAttribute] as option[labelAttribute]" syntax,
         // So we have to massage the data into the correct format for our parent formFor.
         $scope.$watch('model.selectedOption', function(option) {
-          $scope.model.bindable = option && option[$scope.valueAttribute];
+          if (option && option[$scope.valueAttribute]) {
+            $scope.model.bindable = option && option[$scope.valueAttribute];
+          }
         });
-
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
       }
     };
   });
