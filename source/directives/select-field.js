@@ -72,6 +72,32 @@ angular.module('formFor').directive('selectField',
         $scope.$watch('options.length', calculateFilteredOptions);
 
         /*****************************************************************************************
+         * The following code manages setting the correct default value based on bindable model.
+         *****************************************************************************************/
+
+        var updateDefaultOption = function() {
+          var selected = $scope.selectedOption && $scope.selectedOption[[$scope.valueAttribute]];
+          var matchingOption;
+
+          if ($scope.model.bindable === selected) {
+            return;
+          }
+
+          angular.forEach($scope.options,
+            function(option) {
+              if (option[$scope.valueAttribute] === $scope.model.bindable) {
+                matchingOption = option;
+              }
+            });
+
+          $scope.selectedOption = matchingOption;
+          $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+        };
+
+        $scope.$watch('model.bindable', updateDefaultOption);
+        $scope.$watch('options', updateDefaultOption);
+
+        /*****************************************************************************************
          * The following code deals with toggling/collapsing the drop-down and selecting values.
          *****************************************************************************************/
 

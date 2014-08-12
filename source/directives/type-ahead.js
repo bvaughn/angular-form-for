@@ -57,7 +57,7 @@ angular.module('formFor').directive('typeAheadField',
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
 
-        // Incomine model values should control the type-ahead field's default value.
+        // Incoming model values should control the type-ahead field's default value.
         // In this case we need to match the model *value* with the corresponding option (Object).
         var updateDefaultOption = function() {
           var selected = $scope.model.selectedOption && $scope.model.selectedOption[[$scope.valueAttribute]];
