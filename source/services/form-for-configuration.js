@@ -8,6 +8,7 @@ angular.module('formFor').service('FormForConfiguration',
       defaultDebounceDuration: 1000,
       defaultSubmitComplete: angular.noop,
       defaultSubmitError: angular.noop,
+      requiredLabel: null,
       validationFailedForCustomMessage: 'Failed custom validation',
       validationFailedForPatternMessage: 'Invalid format',
       validationFailedForMaxLengthMessage: 'Must be fewer than {{num}} characters',
@@ -26,6 +27,9 @@ angular.module('formFor').service('FormForConfiguration',
       },
       setDefaultSubmitError: function(value) {
         this.defaultSubmitError = value;
+      },
+      setRequiredLabel: function(value) {
+        this.requiredLabel = value;
       },
       setValidationFailedForCustomMessage: function(value) {
         this.validationFailedForCustomMessage = value;
