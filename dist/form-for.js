@@ -896,12 +896,18 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('model.bindable', updateDefaultOption);
         $scope.$watch('options', updateDefaultOption);
 
+        var initialized;
+
         // Type-ahead directive doesn't support "option[valueAttribute] as option[labelAttribute]" syntax,
         // So we have to massage the data into the correct format for our parent formFor.
-        $scope.$watch('model.selectedOption', function(option) {
-          if (option && option[$scope.valueAttribute]) {
-            $scope.model.bindable = option && option[$scope.valueAttribute];
+        $scope.$watch('model.selectedOption', function(option, oldOption) {
+          if (!initialized) {
+            initialized = true;
+
+            return;
           }
+
+          $scope.model.bindable = option && option[$scope.valueAttribute];
         });
       }
     };
