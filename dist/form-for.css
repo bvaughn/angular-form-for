@@ -490,6 +490,7 @@ text-field {
   top: 50%;
   width: 20px;
   text-align: center;
+  line-height: 1em;
   margin-top: -0.5em;
   color: #848b88;
 }
