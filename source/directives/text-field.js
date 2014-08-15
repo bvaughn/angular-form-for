@@ -12,9 +12,12 @@ angular.module('formFor').directive('textField',
         attribute: '@',
         debounce: '@?',
         disable: '@',
+        focused: '&?',
         help: '@?',
         iconAfter: '@?',
+        iconAfterClicked: '&?',
         iconBefore: '@?',
+        iconBeforeClicked: '&?',
         label: '@?',
         placeholder: '@?'
       },
@@ -35,6 +38,22 @@ angular.module('formFor').directive('textField',
         }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
+
+        $scope.onIconAfterClick = function() {
+          if ($attributes.hasOwnProperty('iconAfterClicked')) {
+            $scope.iconAfterClicked();
+          }
+        };
+        $scope.onIconBeforeClick = function() {
+          if ($attributes.hasOwnProperty('iconBeforeClicked')) {
+            $scope.iconBeforeClicked();
+          }
+        };
+        $scope.onFocus = function() {
+          if ($attributes.hasOwnProperty('focused')) {
+            $scope.focused();
+          }
+        };
       }
     };
   });

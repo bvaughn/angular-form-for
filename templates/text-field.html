@@ -1,12 +1,17 @@
 <div  class="form-group field text-field"
       ng-class="{disabled: disable || disabledByForm, 'has-error': error}">
 
-  <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
+  <field-label  ng-if="label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
 
   <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
 
   <div ng-class="{'input-group': iconBefore || iconAfter}">
-    <span ng-if="iconBefore" class="input-group-addon input-group-addon-before">
+    <span ng-if="iconBefore" class="input-group-addon input-group-addon-before"
+          ng-click="onIconBeforeClick()">
       <i class="text-field-icon" ng-class="iconBefore"></i>
     </span>
 
@@ -17,7 +22,8 @@
             ng-disabled="disable || disabledByForm"
             placeholder="{{placeholder}}"
             ng-model="model.bindable"
-            form-for-debounce="{{debounce}}" />
+            form-for-debounce="{{debounce}}"
+            ng-click="onFocus()" />
 
 
     <textarea ng-if="multiline"
@@ -26,10 +32,12 @@
               ng-disabled="disable || disabledByForm"
               placeholder="{{placeholder}}"
               ng-model="model.bindable"
-              form-for-debounce="{{debounce}}">
+              form-for-debounce="{{debounce}}"
+              ng-click="onFocus()">
     </textarea>
 
-    <span ng-if="iconAfter" class="input-group-addon input-group-addon-after">
+    <span ng-if="iconAfter" class="input-group-addon input-group-addon-after"
+          ng-click="onIconAfterClick()">
       <i class="text-field-icon" ng-class="iconAfter"></i>
     </span>
   </div>

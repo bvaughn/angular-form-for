@@ -1,7 +1,11 @@
 <div  class="form-group field type-ahead-field"
       ng-class="{disabled: disable || disabledByForm, 'has-error': error}">
 
-  <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
+  <field-label  ng-if="label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
 
   <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
 

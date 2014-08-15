@@ -66,11 +66,17 @@ field-label {
   left: 0;
 }
 .field-label {
+  position: relative;
   cursor: inherit;
   font-weight: normal;
 }
 .field-label:hover .help-icon-stack .help-background-icon {
   color: #beccca;
+}
+.field-label-required-label {
+  color: #848b88;
+  font-style: italic;
+  font-size: 0.8em;
 }
 
 .field {
@@ -476,6 +482,7 @@ text-field {
   top: 50%;
   width: 20px;
   text-align: center;
+  line-height: 1em;
   margin-top: -0.5em;
   color: #848b88;
 }

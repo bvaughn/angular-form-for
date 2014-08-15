@@ -45,9 +45,13 @@ angular.module('formFor').directive('formFor',
          */
         this.registerFormField = function(formFieldScope, fieldName) {
           var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+          var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
 
           $scope.formFieldScopes[fieldName] = formFieldScope;
-          $scope.bindable[safeFieldName] = {bindable: null};
+          $scope.bindable[safeFieldName] = {
+            bindable: null,
+            required: rules && !!rules.required
+          };
 
           // TRICKY Why do we use $parse?
           // Dot notation (ex. 'foo.bar') causes trouble with the brackets accessor.

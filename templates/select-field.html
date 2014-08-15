@@ -1,7 +1,11 @@
 <div  class="form-group field select-field"
       ng-class="{disabled: disable || disabledByForm, open: isOpen, 'has-error': error}">
 
-  <field-label ng-if="label" label="{{label}}" help="{{help}}"></field-label>
+  <field-label  ng-if="label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
 
   <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
 
