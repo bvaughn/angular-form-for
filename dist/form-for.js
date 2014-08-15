@@ -366,7 +366,12 @@ angular.module('formFor').directive('formFor',
                 } else if ($scope.$service && $scope.$service.submit) {
                   promise = $scope.$service.submit($scope.formFor);
                 } else {
-                  promise = $q.reject('No submit implementation provided');
+                  promise = $q.reject('No submit function provided');
+                }
+
+                // Issue #18 Guard against submit functions that don't return a promise by warning rather than erroring.
+                if (!promise) {
+                  promise = $q.reject('Submit function did not return a promise');
                 }
 
                 promise.then(
