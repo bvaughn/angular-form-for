@@ -6,7 +6,6 @@ checkbox-field {
   display: inline-block;
   height: 20px;
   width: 20px;
-  background-image: -webkit-gradient(linear, left bottom, left top, from(#f9f9f9), to(#fff));
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border-radius: 4px;
@@ -88,8 +87,7 @@ field-label {
   top: 100%;
   border-radius: 4px;
   background-color: #e35256;
-  -webkit-box-shadow: inset 0 -1px #802e31;
-          box-shadow: inset 0 -1px #802e31;
+  box-shadow: inset 0 -1px #802e31;
   color: #fff;
   padding: 7px 15px;
   z-index: 1000;
@@ -129,10 +127,8 @@ field-label {
   font-weight: normal;
   white-space: normal;
   background-color: #e3f3fc;
-  -webkit-box-shadow: inset 0 -1px #a1bbc9;
-          box-shadow: inset 0 -1px #a1bbc9;
+  box-shadow: inset 0 -1px #a1bbc9;
   color: #252726;
-  -webkit-background-clip: padding-box;
   background-clip: padding-box;
   border-radius: 6px;
 }
@@ -245,7 +241,6 @@ radio-field {
   display: inline-block;
   height: 20px;
   width: 20px;
-  background-image: -webkit-gradient(linear, left bottom, left top, from(#f9f9f9), to(#fff));
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border-radius: 10px;
@@ -290,7 +285,6 @@ select-field {
 .select-field-toggle-button {
   position: relative;
   background: -webkit-linear-gradient(top, #fff, #eff0f0);
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eff0f0));
   background: linear-gradient(to bottom, #fff, #eff0f0);
   border-radius: 6px;
   border: 1px solid #bfc8c7;
@@ -305,7 +299,6 @@ select-field {
   width: 100%;
   margin-top: 5px;
   text-align: left;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -322,7 +315,6 @@ select-field {
 }
 .select-field-toggle-button:not(.disabled):not(.open):hover {
   background: -webkit-linear-gradient(top, #fff, #f7f7f7);
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f7f7f7));
   background: linear-gradient(to bottom, #fff, #f7f7f7);
   border-color: #cdd4d3;
 }
@@ -350,9 +342,7 @@ select-field {
   border: 1px solid #bfc8c7;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-  -webkit-box-shadow: 0 2px 0 #bfc8c7;
   box-shadow: 0 2px 0 #bfc8c7;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -437,15 +427,13 @@ submit-field {
   background-color: #899795;
   -webkit-transition: none;
           transition: none;
-  -webkit-box-shadow: inset 0 1px 0 rgba(0,0,0,0.25);
-          box-shadow: inset 0 1px 0 rgba(0,0,0,0.25);
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.25);
 }
 .submit-button.disabled,
 .submit-button:disabled {
   opacity: 0.5;
   cursor: default;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
 }
 .submit-button-icon {
   margin-right: 5px;
@@ -457,8 +445,7 @@ text-field {
 .text-field-input {
   border-radius: 4px;
   border: 1px solid #bfc8c7;
-  -webkit-box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
-          box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
   color: inherit;
   display: block;
   font-family: inherit;
@@ -469,9 +456,8 @@ text-field {
   padding: 6px 9px;
   width: 100%;
   margin-top: 5px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
 }
 .text-field-input:focus {
   border-color: #899795;
@@ -512,8 +498,7 @@ type-ahead-field {
 .type-ahead-field-input {
   border-radius: 4px;
   border: 1px solid #bfc8c7;
-  -webkit-box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
-          box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
   color: inherit;
   display: block;
   font-family: inherit;
@@ -524,9 +509,8 @@ type-ahead-field {
   padding: 6px 9px;
   width: 100%;
   margin-top: 5px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
 }
 .type-ahead-field-input:focus {
   border-color: #899795;
@@ -555,11 +539,9 @@ type-ahead-field {
   border: 1px solid #bfc8c7;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-  -webkit-box-shadow: $select-field-box-shadow;
-          box-shadow: $select-field-box-shadow;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  box-shadow: $select-field-box-shadow;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
   margin: 0;
   padding: 0;
   list-style: none;
