@@ -9,18 +9,21 @@
 
 ---
 
-*formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations. Using *formFor* a sign-up form may look like this:
+*formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations.
+Using *formFor* a sign-up form may look like this:
 
 ```html
 <form form-for="user" service="UserSignUp">
-  <text-field label="Email" attribute="email"></text-field>
-  <text-field label="Password" attribute="password" type="password"></text-field>
-  <checkbox-field label="I agree to the TOS" attribute="agreed"></checkbox-field>
+  <text-field attribute="email"></text-field>
+  <text-field attribute="password" type="password"></text-field>
+  <checkbox-field attribute="iAgreeToTheTerms"></checkbox-field>
   <submit-button label="Sign Up"></submit-button>
 </form>
 ```
 
-But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options. Check out [the wiki](https://github.com/bvaughn/angular-form-for/wiki/) to learn more! You can also check out some demos on Plunkr!
+But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options.
+Check out [the wiki](https://github.com/bvaughn/angular-form-for/wiki/) to learn more!
+You can also check out some demos on Plunkr!
 
 #### Simple sign-up form demo
 
