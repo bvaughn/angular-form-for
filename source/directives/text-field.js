@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('textField',
-  function($log, $timeout, FormForConfiguration, StringUtil) {
+  function($log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -37,11 +37,7 @@ angular.module('formFor').directive('textField',
         }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = $attributes.label;
-
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.attribute);
-        }
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {

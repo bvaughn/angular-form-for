@@ -5,7 +5,7 @@
 angular.module('formFor').service('FormForConfiguration',
   function() {
     return {
-      autoLabel: false,
+      autoGenerateLabels: false,
       defaultDebounceDuration: 1000,
       defaultSubmitComplete: angular.noop,
       defaultSubmitError: angular.noop,
@@ -21,9 +21,13 @@ angular.module('formFor').service('FormForConfiguration',
       validationFailedForNumericTypeMessage: 'Must be numeric',
       validationFailedForPositiveTypeMessage: 'Must be positive',
 
-      setAutoLabel: function(value) {
-        this.autoLabel = value;
+      disableAutoLabels: function() {
+        this.autoGenerateLabels = false;
       },
+      enableAutoLabels: function() {
+        this.autoGenerateLabels = true;
+      },
+
       setDefaultDebounceDuration: function(value) {
         this.defaultDebounceDuration = value;
       },

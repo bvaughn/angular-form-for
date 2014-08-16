@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
  */
 angular.module('formFor').directive('selectField',
-  function($document, $log, $timeout, FormForConfiguration, StringUtil) {
+  function($document, $log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -31,11 +31,8 @@ angular.module('formFor').directive('selectField',
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = $attributes.label;
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.attribute);
-        }
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
          *****************************************************************************************/

@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#checkboxfield
  */
 angular.module('formFor').directive('checkboxField',
-  function($log, FormForConfiguration, StringUtil) {
+  function($log, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -21,11 +21,7 @@ angular.module('formFor').directive('checkboxField',
         }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = $attributes.label;
-
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.attribute);
-        }
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
 

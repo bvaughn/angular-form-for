@@ -12,7 +12,7 @@ angular.module('formFor', ['formFor.templates']);
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#checkboxfield
  */
 angular.module('formFor').directive('checkboxField',
-  function($log, FormForConfiguration, StringUtil) {
+  function($log, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -30,11 +30,7 @@ angular.module('formFor').directive('checkboxField',
         }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = $attributes.label;
-
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.attribute);
-        }
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
 
@@ -421,7 +417,7 @@ angular.module('formFor').directive('formFor',
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#radiofield
  */
 angular.module('formFor').directive('radioField',
-  function($log, FormForConfiguration, StringUtil) {
+  function($log, FieldHelper) {
     var nameToActiveRadioMap = {};
 
     return {
@@ -456,11 +452,7 @@ angular.module('formFor').directive('radioField',
         activeRadio.scopes.push($scope);
 
         $scope.model = activeRadio.model;
-        $scope.label = $attributes.label;
-
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.value);
-        }
+        $scope.label = FieldHelper.getLabel($attributes, $scope.value);
 
         var $input = $element.find('input');
 
@@ -502,7 +494,7 @@ angular.module('formFor').directive('radioField',
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
  */
 angular.module('formFor').directive('selectField',
-  function($document, $log, $timeout, FormForConfiguration, StringUtil) {
+  function($document, $log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -530,11 +522,8 @@ angular.module('formFor').directive('selectField',
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = $attributes.label;
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.attribute);
-        }
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
          *****************************************************************************************/
@@ -775,7 +764,7 @@ angular.module('formFor').directive('submitButton',
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('textField',
-  function($log, $timeout, FormForConfiguration, StringUtil) {
+  function($log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -809,11 +798,7 @@ angular.module('formFor').directive('textField',
         }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = $attributes.label;
-
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.attribute);
-        }
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {
@@ -839,7 +824,7 @@ angular.module('formFor').directive('textField',
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('typeAheadField',
-  function($log, $filter, $timeout, FormForConfiguration, StringUtil) {
+  function($log, $filter, $timeout, FieldHelper, FormForConfiguration) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -891,11 +876,7 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('options', updateFilteredOptions);
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = $attributes.label;
-
-        if (!$scope.label && FormForConfiguration.autoLabel) {
-          $scope.label = StringUtil.humanize($scope.attribute);
-        }
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         // Incoming model values should control the type-ahead field's default value.
         // In this case we need to match the model *value* with the corresponding option (Object).
@@ -937,6 +918,19 @@ angular.module('formFor').directive('typeAheadField',
     };
   });
 
+angular.module('formFor').service('FieldHelper',
+  function(FormForConfiguration, StringUtil) {
+    this.getLabel = function($attributes, valueToHumanize) {
+      if ($attributes.hasOwnProperty('label')) {
+        return $attributes.label;
+      }
+
+      if (FormForConfiguration.autoGenerateLabels) {
+        return StringUtil.humanize(valueToHumanize);
+      }
+    }
+  });
+
 /**
  * For documentation please refer to the project wiki:
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
@@ -944,7 +938,7 @@ angular.module('formFor').directive('typeAheadField',
 angular.module('formFor').service('FormForConfiguration',
   function() {
     return {
-      autoLabel: false,
+      autoGenerateLabels: false,
       defaultDebounceDuration: 1000,
       defaultSubmitComplete: angular.noop,
       defaultSubmitError: angular.noop,
@@ -960,9 +954,13 @@ angular.module('formFor').service('FormForConfiguration',
       validationFailedForNumericTypeMessage: 'Must be numeric',
       validationFailedForPositiveTypeMessage: 'Must be positive',
 
-      setAutoLabel: function(value) {
-        this.autoLabel = value;
+      disableAutoLabels: function() {
+        this.autoGenerateLabels = false;
       },
+      enableAutoLabels: function() {
+        this.autoGenerateLabels = true;
+      },
+
       setDefaultDebounceDuration: function(value) {
         this.defaultDebounceDuration = value;
       },
