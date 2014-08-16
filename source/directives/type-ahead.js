@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('typeAheadField',
-  function($log, $filter, $timeout, FormForConfiguration) {
+  function($log, $filter, $timeout, FormForConfiguration, StringUtil) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -13,7 +13,6 @@ angular.module('formFor').directive('typeAheadField',
         disable: '@',
         filter: '=?',
         help: '@?',
-        label: '@?',
         options: '=',
         placeholder: '@?'
       },
@@ -56,6 +55,11 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('options', updateFilteredOptions);
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.label = $attributes.label;
+
+        if (!$scope.label && FormForConfiguration.autoLabel) {
+          $scope.label = StringUtil.humanize($scope.attribute);
+        }
 
         // Incoming model values should control the type-ahead field's default value.
         // In this case we need to match the model *value* with the corresponding option (Object).

@@ -3,7 +3,7 @@
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#radiofield
  */
 angular.module('formFor').directive('radioField',
-  function($log) {
+  function($log, FormForConfiguration, StringUtil) {
     var nameToActiveRadioMap = {};
 
     return {
@@ -14,7 +14,6 @@ angular.module('formFor').directive('radioField',
         attribute: '@',
         disable: '@',
         help: '@?',
-        label: '@?',
         value: '@'
       },
       link: function($scope, $element, $attributes, formForController) {
@@ -39,6 +38,11 @@ angular.module('formFor').directive('radioField',
         activeRadio.scopes.push($scope);
 
         $scope.model = activeRadio.model;
+        $scope.label = $attributes.label;
+
+        if (!$scope.label && FormForConfiguration.autoLabel) {
+          $scope.label = StringUtil.humanize($scope.value);
+        }
 
         var $input = $element.find('input');
 
