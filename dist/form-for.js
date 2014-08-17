@@ -12,7 +12,7 @@ angular.module('formFor', ['formFor.templates']);
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#checkboxfield
  */
 angular.module('formFor').directive('checkboxField',
-  function($log, FieldHelper) {
+  ["$log", "FieldHelper", function($log, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -41,13 +41,13 @@ angular.module('formFor').directive('checkboxField',
         };
       }
     };
-  });
+  }]);
 
 /**
  * This component is only intended for internal use by the formFor module.
  */
 angular.module('formFor').directive('fieldLabel',
-  function( $sce, FormForConfiguration ) {
+  ["$sce", "FormForConfiguration", function( $sce, FormForConfiguration ) {
     return {
       restrict: 'EA',
       templateUrl: 'form-for/templates/field-label.html',
@@ -56,7 +56,7 @@ angular.module('formFor').directive('fieldLabel',
         label: '@',
         required: '@?'
       },
-      controller: function($scope) {
+      controller: ["$scope", function($scope) {
         $scope.$watch('label', function(value) {
           $scope.bindableLabel = $sce.trustAsHtml(value);
         });
@@ -64,9 +64,9 @@ angular.module('formFor').directive('fieldLabel',
         if ($scope.required) {
           $scope.requiredLabel = FormForConfiguration.requiredLabel;
         }
-      }
+      }]
     };
-  });
+  }]);
 
 /**
  * Angular introduced debouncing (via ngModelOptions) in version 1.3.
@@ -74,7 +74,7 @@ angular.module('formFor').directive('fieldLabel',
  * This component adds debouncing behavior for Angular 1.2.x.
  * It is primarily intended for use with <input type=text> elements.
  */
-angular.module('formFor').directive('formForDebounce', function($log, $timeout, FormForConfiguration) {
+angular.module('formFor').directive('formForDebounce', ["$log", "$timeout", "FormForConfiguration", function($log, $timeout, FormForConfiguration) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -130,14 +130,14 @@ angular.module('formFor').directive('formForDebounce', function($log, $timeout, 
       });
     }
   };
-});
+}]);
 
 /**
  * For documentation please refer to the project wiki:
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
  */
 angular.module('formFor').directive('formFor',
-  function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
+  ["$injector", "$parse", "$q", "$sce", "FormForConfiguration", "$FormForStateHelper", "NestedObjectHelper", "ModelValidator", function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
     return {
       require: 'form',
       restrict: 'A',
@@ -153,7 +153,7 @@ angular.module('formFor').directive('formFor',
         valid: '=?',
         validationRules: '=?'
       },
-      controller: function($scope) {
+      controller: ["$scope", function($scope) {
         $scope.formFieldScopes = {};
         $scope.bindable = {};
         $scope.scopeWatcherUnwatchFunctions = [];
@@ -348,7 +348,7 @@ angular.module('formFor').directive('formFor',
             unwatch();
           });
         });
-      },
+      }],
       link: function($scope, $element, $attributes, controller) {
         // Override form submit to trigger overall validation.
         $element.on('submit',
@@ -410,14 +410,14 @@ angular.module('formFor').directive('formFor',
         });
       }
     };
-  });
+  }]);
 
 /**
  * For documentation please refer to the project wiki:
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#radiofield
  */
 angular.module('formFor').directive('radioField',
-  function($log, FieldHelper) {
+  ["$log", "FieldHelper", function($log, FieldHelper) {
     var nameToActiveRadioMap = {};
 
     return {
@@ -487,14 +487,14 @@ angular.module('formFor').directive('radioField',
         });
       }
     };
-  });
+  }]);
 
 /**
  * For documentation please refer to the project wiki:
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
  */
 angular.module('formFor').directive('selectField',
-  function($document, $log, $timeout, FieldHelper) {
+  ["$document", "$log", "$timeout", "FieldHelper", function($document, $log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -730,14 +730,14 @@ angular.module('formFor').directive('selectField',
         });
       }
     };
-  });
+  }]);
 
 /**
  * For documentation please refer to the project wiki:
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#submitbutton
  */
 angular.module('formFor').directive('submitButton',
-  function($log, $sce) {
+  ["$log", "$sce", function($log, $sce) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -757,14 +757,14 @@ angular.module('formFor').directive('submitButton',
         formForController.registerSubmitButton($scope);
       }
     };
-  });
+  }]);
 
 /**
  * For documentation please refer to the project wiki:
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('textField',
-  function($log, $timeout, FieldHelper) {
+  ["$log", "$timeout", "FieldHelper", function($log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -817,14 +817,14 @@ angular.module('formFor').directive('textField',
         };
       }
     };
-  });
+  }]);
 
 /**
  * For documentation please refer to the project wiki:
  * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
  */
 angular.module('formFor').directive('typeAheadField',
-  function($log, $filter, $timeout, FieldHelper, FormForConfiguration) {
+  ["$log", "$filter", "$timeout", "FieldHelper", "FormForConfiguration", function($log, $filter, $timeout, FieldHelper, FormForConfiguration) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -916,10 +916,10 @@ angular.module('formFor').directive('typeAheadField',
         });
       }
     };
-  });
+  }]);
 
 angular.module('formFor').service('FieldHelper',
-  function(FormForConfiguration, StringUtil) {
+  ["FormForConfiguration", "StringUtil", function(FormForConfiguration, StringUtil) {
     this.getLabel = function($attributes, valueToHumanize) {
       if ($attributes.hasOwnProperty('label')) {
         return $attributes.label;
@@ -929,7 +929,7 @@ angular.module('formFor').service('FieldHelper',
         return StringUtil.humanize(valueToHumanize);
       }
     }
-  });
+  }]);
 
 /**
  * For documentation please refer to the project wiki:
@@ -1010,7 +1010,7 @@ angular.module('formFor').service('FormForConfiguration',
  * Organizes state management for form-submission and field validity.
  * Intended for use only by formFor directive.
  */
-angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHelper) {
+angular.module('formFor').factory('$FormForStateHelper', ["NestedObjectHelper", function(NestedObjectHelper) {
   var FormForStateHelper = function($scope) {
     $scope.errorMap = $scope.errorMap || {};
     $scope.valid = true;
@@ -1078,14 +1078,14 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
   };
 
   return FormForStateHelper;
-});
+}]);
 
 /**
  * ModelValidator service used by formFor to determine if each field in the form-data passes validation rules.
  * This service is not intended for use outside of the formFor module/library.
  */
 angular.module('formFor').service('ModelValidator',
-  function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
+  ["$interpolate", "$parse", "$q", "FormForConfiguration", "NestedObjectHelper", function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
 
     /**
      * Validates the model against all rules in the validationRules.
@@ -1277,12 +1277,12 @@ angular.module('formFor').service('ModelValidator',
     };
 
     return this;
-  });
+  }]);
 
 /**
  * Helper utility to simplify working with nested objects.
  */
-angular.module('formFor').service('NestedObjectHelper', function($parse) {
+angular.module('formFor').service('NestedObjectHelper', ["$parse", function($parse) {
   return {
 
     flattenAttribute: function(attribute) {
@@ -1349,7 +1349,7 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
       $parse(attribute).assign(object, value);
     }
   };
-});
+}]);
 
 /**
  * Decorates the $q utility with additional methods used by formFor.
@@ -1357,7 +1357,7 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
  * @private
  * This set of helper methods, small though they are, might be worth breaking apart into their own library?
  */
-var qDecorator = function($delegate) {
+var qDecorator = ["$delegate", function($delegate) {
 
   /**
    * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
@@ -1418,12 +1418,12 @@ var qDecorator = function($delegate) {
   };
 
   return $delegate;
-};
+}];
 
 angular.module('formFor').config(
-  function($provide) {
+  ["$provide", function($provide) {
     $provide.decorator('$q', qDecorator);
-  });
+  }]);
 
 /**
  * Utility for working with strings.
