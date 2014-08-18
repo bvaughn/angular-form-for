@@ -1,8 +1,35 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: directives/select-field.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: directives/select-field.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @ngdoc Directives
  * @name select-field
  * @description
- * Renders a drop-down &lt;select&gt; menu along with an input label.
+ * Renders a drop-down &amp;lt;select&amp;gt; menu along with an input label.
  * This type of component works with large enumerations and can be configured to allow for a blank/empty selection by way of an allow-blank attribute.
  *
  * @param {attribute} allow-blank The presence of this attribute indicates that an empty/blank selection should be allowed.
@@ -36,17 +63,17 @@
  * ];
  *
  * // To render a drop-down input using the above options:
- * <select-field attribute="gender"
+ * &lt;select-field attribute="gender"
  *               label="Gender"
  *               options="genders">
- * </select-field>
+ * &lt;/select-field>
  *
  * // If you want to make this attribute optional you can use the allow-blank attribute as follows:
- * <select-field attribute="gender"
+ * &lt;select-field attribute="gender"
  *               label="Gender"
  *               options="genders"
  *               allow-blank>
- * </select-field>
+ * &lt;/select-field>
  */
 angular.module('formFor').directive('selectField',
   function($document, $log, $timeout, FieldHelper) {
@@ -87,7 +114,7 @@ angular.module('formFor').directive('selectField',
         $scope.filteredOptions = [];
 
         var sanitize = function(value) {
-          return value && value.toLowerCase();
+          return value &amp;&amp; value.toLowerCase();
         };
 
         var calculateFilteredOptions = function() {
@@ -122,7 +149,7 @@ angular.module('formFor').directive('selectField',
          *****************************************************************************************/
 
         var updateDefaultOption = function() {
-          var selected = $scope.selectedOption && $scope.selectedOption[[$scope.valueAttribute]];
+          var selected = $scope.selectedOption &amp;&amp; $scope.selectedOption[[$scope.valueAttribute]];
           var matchingOption;
 
           if ($scope.model.bindable === selected) {
@@ -137,7 +164,7 @@ angular.module('formFor').directive('selectField',
             });
 
           $scope.selectedOption = matchingOption;
-          $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+          $scope.selectedOptionLabel = matchingOption &amp;&amp; matchingOption[$scope.labelAttribute];
         };
 
         $scope.$watch('model.bindable', updateDefaultOption);
@@ -150,7 +177,7 @@ angular.module('formFor').directive('selectField',
         $scope.$watch('model.bindable', function(value) {
           var matchingOption;
 
-          for (var index = 0; index < $scope.filteredOptions.length; index++) {
+          for (var index = 0; index &lt; $scope.filteredOptions.length; index++) {
             var option = $scope.filteredOptions[index];
 
             if (option[$scope.valueAttribute] === value) {
@@ -161,7 +188,7 @@ angular.module('formFor').directive('selectField',
           };
 
           $scope.selectedOption = matchingOption;
-          $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+          $scope.selectedOptionLabel = matchingOption &amp;&amp; matchingOption[$scope.labelAttribute];
         });
 
         var oneClick = function(target, handler) {
@@ -179,7 +206,7 @@ angular.module('formFor').directive('selectField',
         };
 
         $scope.selectOption = function(option) {
-          $scope.model.bindable = option && option[$scope.valueAttribute];
+          $scope.model.bindable = option &amp;&amp; option[$scope.valueAttribute];
           $scope.isOpen = false;
 
           removeClickWatch();
@@ -223,11 +250,11 @@ angular.module('formFor').directive('selectField',
                   var listItems = list.find('.list-group-item');
                   var matchingListItem;
 
-                  for (var index = 0; index < listItems.length; index++) {
+                  for (var index = 0; index &lt; listItems.length; index++) {
                     var listItem = listItems[index];
                     var option = $(listItem).scope().option;
 
-                    if (option && option[$scope.valueAttribute] === value) {
+                    if (option &amp;&amp; option[$scope.valueAttribute] === value) {
                       matchingListItem = listItem;
 
                       break;
@@ -271,7 +298,7 @@ angular.module('formFor').directive('selectField',
               $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
               break;
             case 40: // Down arrow
-              $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
+              $scope.mouseOver( $scope.mouseOverIndex &lt; $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
               break;
           }
         };
@@ -286,3 +313,34 @@ angular.module('formFor').directive('selectField',
       }
     };
   });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#unregisterFormField">unregisterFormField</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> 
+    using <a href="https://github.com/allenhwkim/angularjs-google-maps/tree/master/config/jsdoc/template">custom template </a> and 
+    <a href="https://raw.githubusercontent.com/allenhwkim/angularjs-google-maps/master/config/jsdoc/plugins/angular.js">custom tag @ngdoc</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+<script>
+  var href=window.location.href.match(/\/([^\/]+$)/)[1];
+  document.querySelector("nav a[href='"+href+"']").scrollIntoView(true);
+  if (window.location.hash == "")
+    document.querySelector("body").scrollIntoView(true);
+</script>
+</body>
+</html>

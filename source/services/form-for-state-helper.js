@@ -1,4 +1,4 @@
-/**
+/*
  * Organizes state management for form-submission and field validity.
  * Intended for use only by formFor directive.
  */

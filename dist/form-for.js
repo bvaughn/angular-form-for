@@ -8,11 +8,31 @@ $templateCache.put("form-for/templates/type-ahead-field.html","<div  class=\"for
 angular.module('formFor', ['formFor.templates']);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#checkboxfield
+ * @ngdoc Directives
+ * @name checkbox-field
+ *
+ * @description
+ * Renders a checkbox &lt;input&gt; with optional label.
+ * This type of component is well-suited for boolean attributes.
+ *
+ * @param {String} attribute Name of the attribute within the parent form-for directive's model object.
+ * This attributes specifies the data-binding target for the input.
+ * Dot notation (ex "address.street") is supported.
+ * @param {Boolean} disable Disable input element.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Optional field label displayed after the checkbox input.
+ * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
+ *
+ * @example
+ * // To display a simple TOS checkbox you might use the following markup:
+ * <checkbox-field label="I agree with the TOS"
+ *                 attribute="accepted">
+ * </checkbox-field>
  */
 angular.module('formFor').directive('checkboxField',
-  function($log) {
+  ["$log", "FieldHelper", function($log, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -20,8 +40,7 @@ angular.module('formFor').directive('checkboxField',
       scope: {
         attribute: '@',
         disable: '@',
-        help: '@?',
-        label: '@?'
+        help: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
         if (!$scope.attribute) {
@@ -31,6 +50,7 @@ angular.module('formFor').directive('checkboxField',
         }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
 
@@ -41,13 +61,28 @@ angular.module('formFor').directive('checkboxField',
         };
       }
     };
-  });
+  }]);
 
 /**
+ * @ngdoc Directives
+ * @name field-label
+ * @description
  * This component is only intended for internal use by the formFor module.
+ *
+ * @param {String} help Field label string. This string can contain HTML markup.
+ * @param {String} label Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} required Optional attribute specifies that this field is a required field.
+ * If a required label has been provided via FormForConfiguration then field label will display that value for required fields.
+ *
+ * @example
+ * // To display a simple label with a help tooltip:
+ * <field-label label="Username"
+ *              help="This will be visible to other users">
+ * </field-label>
  */
 angular.module('formFor').directive('fieldLabel',
-  function( $sce, FormForConfiguration ) {
+  ["$sce", "FormForConfiguration", function( $sce, FormForConfiguration ) {
     return {
       restrict: 'EA',
       templateUrl: 'form-for/templates/field-label.html',
@@ -56,7 +91,7 @@ angular.module('formFor').directive('fieldLabel',
         label: '@',
         required: '@?'
       },
-      controller: function($scope) {
+      controller: ["$scope", function($scope) {
         $scope.$watch('label', function(value) {
           $scope.bindableLabel = $sce.trustAsHtml(value);
         });
@@ -64,17 +99,36 @@ angular.module('formFor').directive('fieldLabel',
         if ($scope.required) {
           $scope.requiredLabel = FormForConfiguration.requiredLabel;
         }
-      }
+      }]
     };
-  });
+  }]);
 
 /**
+ * @ngdoc Directives
+ * @name form-for-debounce
+ *
+ * @description
  * Angular introduced debouncing (via ngModelOptions) in version 1.3.
  * As of the time of this writing, that version is still in beta.
  * This component adds debouncing behavior for Angular 1.2.x.
- * It is primarily intended for use with <input type=text> elements.
+ * It is primarily intended for use with &lt;input type=text&gt; and &lt;textarea&gt; elements.
+ *
+ * @param {int} formForDebounce Debounce duration in milliseconds.
+ * By default this value is 1000ms.
+ * To disable the debounce interval (aka to update on blur only) a value of false should be specified.
+ *
+ * @example
+ * // To configure this component to debounce with a 2 second delay:
+ * <input type="text"
+ *        ng-model="username"
+ *        form-for-debounce="2000" />
+ *
+ * // To disable the debounce interval and configure an input to update only on blur:
+ * <input type="text"
+ *        ng-model="username"
+ *        form-for-debounce="false" />
  */
-angular.module('formFor').directive('formForDebounce', function($log, $timeout, FormForConfiguration) {
+angular.module('formFor').directive('formForDebounce', ["$log", "$timeout", "FormForConfiguration", function($log, $timeout, FormForConfiguration) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -130,14 +184,43 @@ angular.module('formFor').directive('formForDebounce', function($log, $timeout, 
       });
     }
   };
-});
+}]);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
+ * @ngdoc Directives
+ * @name form-for
+ * @description
+ * This directive should be paired with an Angular ngForm object and should contain at least one of the formFor field types described below.
+ * At a high level, it operates on a bindable form-data object and runs validations each time a change is detected.
+ *
+ * @param {Object} controller Two way bindable attribute exposing access to the formFor controller API.
+ * See below for an example of how to use this binding to access the controller.
+ * @param {Boolean} disable Form is disabled.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * This attribute is 2-way bindable.
+ * @param {Object} formFor An object on $scope that formFor should read and write data to.
+ * To prevent accidentally persisting changes to this object after a cancelled form, it is recommended that you bind to a copied object.
+ * For more information refer to angular.copy.
+ * @param {String} service Convenience mehtod for identifying an $injector-accessible model containing both the validation rules and submit function.
+ * Validation rules should be accessible via an attribute named validationRules and the submit function should be named submit.
+ * @param {Function} submitComplete Custom handler to be invoked upon a successful form submission.
+ * Use this to display custom messages or do custom routing after submit.
+ * This method should accept a "data" parameter.
+ * See below for an example.
+ * (To set a global, default submit-with handler see FormForConfiguration.)
+ * @param {Function} submitError Custom error handler function.
+ * This function should accept an "error" parameter.
+ * See below for an example.
+ * (To set a global, default submit-with handler see FormForConfiguration.)
+ * @param {Function} submitWith Function triggered on form-submit.
+ * This function should accept a named parameter data (the model object) and should return a promise to be resolved/rejected based on the result of the submission.
+ * In the event of a rejection, the promise can return an error string or a map of field-names to specific errors.
+ * See below for an example.
+ * @param {Object} validationRules Set of client-side validation rules (keyed by form field names) to apply to form-data before submitting.
+ * For more information refer to the Validation Types page.
  */
 angular.module('formFor').directive('formFor',
-  function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
+  ["$injector", "$parse", "$q", "$sce", "FormForConfiguration", "$FormForStateHelper", "NestedObjectHelper", "ModelValidator", function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
     return {
       require: 'form',
       restrict: 'A',
@@ -153,11 +236,12 @@ angular.module('formFor').directive('formFor',
         valid: '=?',
         validationRules: '=?'
       },
-      controller: function($scope) {
+      controller: ["$scope", function($scope) {
         $scope.formFieldScopes = {};
         $scope.formFieldData = {};
         $scope.submitButtonScopes = [];
 
+        var controller = this;
 
         if ($scope.service) {
           $scope.$service = $injector.get($scope.service);
@@ -173,10 +257,11 @@ angular.module('formFor').directive('formFor',
 
         /**
          * All form-input children of formFor must register using this function.
-         * @param formFieldScope $scope of input directive
-         * @param fieldName Unique identifier of field within model; used to map errors back to input fields
+         * @memberof form-for
+         * @param {$scope} formFieldScope $scope of input directive
+         * @param {String} fieldName Unique identifier of field within model; used to map errors back to input fields
          */
-        this.registerFormField = function(formFieldScope, fieldName) {
+        controller.registerFormField = function(formFieldScope, fieldName) {
           var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
           var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
 
@@ -261,15 +346,18 @@ angular.module('formFor').directive('formFor',
 
         /**
          * All submitButton children must register with formFor using this function.
+         * @memberof form-for
+         * @param {$scope} submitButtonScope $scope of submit button directive
          */
-        this.registerSubmitButton = function(submitButtonScope) {
+        controller.registerSubmitButton = function(submitButtonScope) {
           $scope.submitButtonScopes.push(submitButtonScope);
         };
 
         /**
          * Resets errors displayed on the <form> without resetting the form data values.
+         * @memberof form-for
          */
-        this.resetErrors = function() {
+        controller.resetErrors = function() {
           $scope.formForStateHelper.setFormSubmitted(false);
 
           var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
@@ -299,9 +387,10 @@ angular.module('formFor').directive('formFor',
         // Track field validity and dirty state.
         $scope.formForStateHelper = new $FormForStateHelper($scope);
 
-        /**
+        /*
          * Setup a debounce validator on a registered form field.
          * This validator will update error messages inline as the user progresses through the form.
+         * @param {String} fieldName Name of field within form-data
          */
         var createScopeWatcher = function(formFieldDatum) {
           var initialized;
@@ -352,11 +441,10 @@ angular.module('formFor').directive('formFor',
           });
         });
 
-        /**
+        /*
          * Update all registered form fields with the specified error messages.
          * Specified map should be keyed with fieldName and should container user-friendly error strings.
-         *
-         * @param errorMap Map of field names (or paths) to errors
+         * @param {Object} errorMap Map of field names (or paths) to errors
          */
         $scope.updateErrors = function(errorMap) {
           angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
@@ -366,7 +454,7 @@ angular.module('formFor').directive('formFor',
           });
         };
 
-        /**
+        /*
          * Validate all registered fields and update FormForStateHelper's error mapping.
          * This update indirectly triggers form validity check and inline error message display.
          */
@@ -389,7 +477,7 @@ angular.module('formFor').directive('formFor',
 
           return validationPromise;
         };
-      },
+      }],
       link: function($scope, $element, $attributes, controller) {
         // Override form submit to trigger overall validation.
         $element.on('submit',
@@ -451,14 +539,35 @@ angular.module('formFor').directive('formFor',
         });
       }
     };
-  });
+  }]);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#radiofield
+ * @ngdoc Directives
+ * @name radio-field
+ *
+ * @description
+ * Renders a radio &lt;input&gt; with optional label.
+ * This type of component is well-suited for small enumerations.
+ *
+ * @param {String} attribute Name of the attribute within the parent form-for directive's model object.
+ * This attributes specifies the data-binding target for the input.
+ * Dot notation (ex "address.street") is supported.
+ * @param {Boolean} disable Disable input element.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Optional field label displayed after the radio input.
+ * (Although not required, it is strongly suggested that you specify a value for this attribute.)
+ * HTML is allowed for this attribute
+ * @param {Object} Value to be assigned to model if this radio component is selected.
+ *
+ * @example
+ * // To render a radio group for gender selection you might use the following markup:
+ * <radio-field label="Female" attribute="gender" value="f"></radio-field>
+ * <radio-field label="Male" attribute="gender" value="m"></radio-field>
  */
 angular.module('formFor').directive('radioField',
-  function($log) {
+  ["$log", "FieldHelper", function($log, FieldHelper) {
     var nameToActiveRadioMap = {};
 
     return {
@@ -469,7 +578,6 @@ angular.module('formFor').directive('radioField',
         attribute: '@',
         disable: '@',
         help: '@?',
-        label: '@?',
         value: '@'
       },
       link: function($scope, $element, $attributes, formForController) {
@@ -494,6 +602,7 @@ angular.module('formFor').directive('radioField',
         activeRadio.scopes.push($scope);
 
         $scope.model = activeRadio.model;
+        $scope.label = FieldHelper.getLabel($attributes, $scope.value);
 
         var $input = $element.find('input');
 
@@ -528,14 +637,60 @@ angular.module('formFor').directive('radioField',
         });
       }
     };
-  });
+  }]);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
+ * @ngdoc Directives
+ * @name select-field
+ * @description
+ * Renders a drop-down &lt;select&gt; menu along with an input label.
+ * This type of component works with large enumerations and can be configured to allow for a blank/empty selection by way of an allow-blank attribute.
+ *
+ * @param {attribute} allow-blank The presence of this attribute indicates that an empty/blank selection should be allowed.
+ * @param {String} attribute Name of the attribute within the parent form-for directive's model object.
+ * This attributes specifies the data-binding target for the input.
+ * Dot notation (ex "address.street") is supported.
+ * @param {Boolean} disable Disable input element.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {Boolean} enableFiltering Enable filtering of list via a text input at the top of the dropdown.
+ * @param {String} filter Two-way bindable filter string.
+ * $watch this property to load remote options based on filter text.
+ * (Refer to this Plunker demo for an example.)
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Optional field label displayed before the drop-down.
+ * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
+ * @param {String} labelAttribute Optional override for label key in options array.
+ * Defaults to "label".
+ * @param {Array} options Set of options, each containing a label and value key.
+ * The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.
+ * @param {String} placeholder Optional placeholder text to display if no value has been selected.
+ * The text "Select" will be displayed if no placeholder is provided.
+ * @param {String} valueAttribute Optional override for value key in options array.
+ * Defaults to "value".
+ *
+ * @example
+ * // To use this component you'll first need to define a set of options. For instance:
+ * $scope.genders = [
+ *   { value: 'f', label: 'Female' },
+ *   { value: 'm', label: 'Male' }
+ * ];
+ *
+ * // To render a drop-down input using the above options:
+ * <select-field attribute="gender"
+ *               label="Gender"
+ *               options="genders">
+ * </select-field>
+ *
+ * // If you want to make this attribute optional you can use the allow-blank attribute as follows:
+ * <select-field attribute="gender"
+ *               label="Gender"
+ *               options="genders"
+ *               allow-blank>
+ * </select-field>
  */
 angular.module('formFor').directive('selectField',
-  function($document, $log, $timeout) {
+  ["$document", "$log", "$timeout", "FieldHelper", function($document, $log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -546,7 +701,6 @@ angular.module('formFor').directive('selectField',
         filter: '=?',
         filterDebounce: '@?',
         help: '@?',
-        label: '@?',
         options: '=',
         placeholder: '@?'
       },
@@ -564,6 +718,7 @@ angular.module('formFor').directive('selectField',
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
@@ -771,14 +926,34 @@ angular.module('formFor').directive('selectField',
         });
       }
     };
-  });
+  }]);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#submitbutton
+ * @ngdoc Directives
+ * @name submit-button
+ *
+ * @description
+ * Displays a submit &lt;button&gt; component that is automatically disabled when a form is invalid or in the process of submitting.
+ *
+ * @param {String} class Optional CSS class names to apply to button component.
+ * @param {Boolean} disable Disable button.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {String} icon Optional CSS class to display as a button icon.
+ * @param {String} label Button label.
+ * HTML is allowed for this attribute.
+ *
+ * @example
+ * // Here is a simple submit button with an icon:
+ * <submit-button label="Sign Up" icon="fa fa-user"></submit-button>
+ *
+ * // You can use your own <button> components within a formFor as well.
+ * // If you choose to, it is recommended that you bind your buttons disabled attribute to a disabledByForm scope property (managed by formFor) as follows:
+ * <form form-for="formData">
+ *   <button ng-disabled="disabledByForm">Submit</button>
+ * </form>
  */
 angular.module('formFor').directive('submitButton',
-  function($log, $sce) {
+  ["$log", "$sce", function($log, $sce) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -798,14 +973,54 @@ angular.module('formFor').directive('submitButton',
         formForController.registerSubmitButton($scope);
       }
     };
-  });
+  }]);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
+ * @ngdoc Directives
+ * @name text-field
+ * @description
+ * Displays a HTML &lt;input&gt; element along with an input label.
+ * This directive can be configured to optionally display an informational tooltip.
+ * In the event of a validation error, this directive will also render an inline error message.
+ *
+ * @param {String} attribute Name of the attribute within the parent form-for directive's model object.
+ * This attributes specifies the data-binding target for the input.
+ * Dot notation (ex "address.street") is supported.
+ * @param {attribute} autofocus The presence of this attribute will auto-focus the input field.
+ * @param {int} debounce Debounce duration (in ms) before input text is applied to model and evaluated.
+ * To disable debounce (update only on blur) specify a value of false.
+ * This value's default is determined by FormForConfiguration.
+ * @param {Boolean} disable Disable input element.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {Function} focused Optional function to be invoked on text input focus.
+ * @param {String} iconAfter Optional CSS class to display as an icon after the input field.
+ * @param {Function} iconAfterClicked Optional function to be invoked when the after-icon is clicked.
+ * @param {String} iconBefore Optional CSS class to display as a icon before the input field.
+ * @param {Function} iconBeforeClicked Optional function to be invoked when the before-icon is clicked.
+ * @param {String} label Optional field label displayed before the input.
+ * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
+ * @param {attribute} multiline The presence of this attribute enables multi-line input.
+ * @param {String} placeholder Optional placeholder text to display if input is empty.
+ * @param {String} type Optional HTML input-type (ex.
+ * text, password, etc.).
+ * Defaults to "text".
+ *
+ * @example
+ * // To create a password input you might use the following markup:
+ * <text-field attribute="password" label="Password" type="password"></text-field>
+ *
+ * // To create a more advanced input field, with placeholder text and help tooltip you might use the following markup:
+ * <text-field attribute="username" label="Username"
+ *             placeholder="Example brianvaughn"
+ *             help="Your username will be visible to others!"></text-field>
+ *
+ * // To render a multiline text input (or <textarea>):
+ * <text-field attribute="description" label="Description" multiline></text-field>
  */
 angular.module('formFor').directive('textField',
-  function($log, $timeout) {
+  ["$log", "$timeout", "FieldHelper", function($log, $timeout, FieldHelper) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -820,7 +1035,6 @@ angular.module('formFor').directive('textField',
         iconAfterClicked: '&?',
         iconBefore: '@?',
         iconBeforeClicked: '&?',
-        label: '@?',
         placeholder: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
@@ -840,6 +1054,7 @@ angular.module('formFor').directive('textField',
         }
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {
@@ -858,14 +1073,52 @@ angular.module('formFor').directive('textField',
         };
       }
     };
-  });
+  }]);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#textfield
+ * @ngdoc Directives
+ * @name checkbox-field
+ *
+ * @description
+ * Displays a HTML <input> element with type-ahead functionality.
+ * This component requires the Angular Bootstrap library as a dependency.
+ * This directive can be configured to optionally display an informational tooltip.
+ * In the event of a validation error, this directive will also render an inline error message.
+ *
+ * @param {String} attribute Name of the attribute within the parent form-for directive's model object. This attributes specifies the data-binding target for the input. Dot notation (ex "address.street") is supported.
+ * @param {attribute} autofocus The presence of this attribute will auto-focus the input field.
+ * @param {int} debounce Debounce duration (in ms) before input text is applied to model and evaluated. To disable debounce (update only on blur) specify a value of false. This value's default is determined by FormForConfiguration.
+ * @param {Boolean} disable Disable input element. (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {String} filter Two-way bindable filter string. $watch this property to load remote options based on filter text. (Refer to this Plunker demo for an example.)
+ * @param {String} help Optional help tooltip to display on hover. By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Optional field label displayed before the input. (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
+ * @param {String} labelAttribute Optional override for label key in options array. Defaults to "label".
+ * @param {Array} options Set of options, each containing a label and value key. The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.
+ * @param {String} placeholder Optional placeholder text to display if input is empty.
+ * @param {String} valueAttribute Optional override for value key in options array. Defaults to "value".
+ *
+ * @example
+ * // To render a type-ahead field that filters data specified via options:
+ * <type-ahead-field label="State"
+ *                   attribute="state"
+ *                   options="states"
+ *                   placeholder="Choose a state">
+ * </type-ahead-field>
+ *
+ * // To reload remote data based on filter text, bind to the filter attribute as follows:
+ * <type-ahead-field label="State"
+ *                   attribute="state"
+ *                   options="states"
+ *                   placeholder="Choose a state"
+ *                   filter="filterText">
+ * </type-ahead-field>
+ *
+ * $scope.$watch('filterText', function(value) {
+ *   // Load remote data and update $scope.states collection
+ * });
  */
 angular.module('formFor').directive('typeAheadField',
-  function($log, $filter, $timeout, FormForConfiguration) {
+  ["$log", "$filter", "$timeout", "FieldHelper", "FormForConfiguration", function($log, $filter, $timeout, FieldHelper, FormForConfiguration) {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -875,7 +1128,6 @@ angular.module('formFor').directive('typeAheadField',
         disable: '@',
         filter: '=?',
         help: '@?',
-        label: '@?',
         options: '=',
         placeholder: '@?'
       },
@@ -918,6 +1170,7 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('options', updateFilteredOptions);
 
         $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         // Incoming model values should control the type-ahead field's default value.
         // In this case we need to match the model *value* with the corresponding option (Object).
@@ -957,15 +1210,47 @@ angular.module('formFor').directive('typeAheadField',
         });
       }
     };
-  });
+  }]);
 
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
+ * @ngdoc Services
+ * @name FieldHelper
+ * @description
+ * Various helper methods for functionality shared between formFor field directives.
+ */
+angular.module('formFor').service('FieldHelper',
+  ["FormForConfiguration", "StringUtil", function(FormForConfiguration, StringUtil) {
+
+    /**
+     * Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
+     * @memberof FieldHelper
+     * @param {Hash} $attributes Directive link $attributes
+     * @param {Object} valueToHumanize Default value (if no override specified on $attributes)
+     * @returns {String} Label to display (or null if no label)
+     */
+    this.getLabel = function($attributes, valueToHumanize) {
+      if ($attributes.hasOwnProperty('label')) {
+        return $attributes.label;
+      }
+
+      if (FormForConfiguration.autoGenerateLabels) {
+        return StringUtil.humanize(valueToHumanize);
+      }
+    }
+  }]);
+
+/**
+ * @ngdoc Services
+ * @name FormForConfiguration
+ * @description
+ * This service can be used to configure default behavior for all instances of formFor within a project.
+ * Note that it is a service accessible to during the run loop and not a provider accessible during config.
  */
 angular.module('formFor').service('FormForConfiguration',
   function() {
     return {
+
+      autoGenerateLabels: false,
       defaultDebounceDuration: 1000,
       defaultSubmitComplete: angular.noop,
       defaultSubmitError: angular.noop,
@@ -980,56 +1265,176 @@ angular.module('formFor').service('FormForConfiguration',
       validationFailedForNegativeTypeMessage: 'Must be negative',
       validationFailedForNumericTypeMessage: 'Must be numeric',
       validationFailedForPositiveTypeMessage: 'Must be positive',
+
+      /**
+       * Use this method to disable auto-generated labels for formFor input fields.
+       * @memberof FormForConfiguration
+       */
+      disableAutoLabels: function() {
+        this.autoGenerateLabels = false;
+      },
+
+      /**
+       * Use this method to enable auto-generated labels for formFor input fields.
+       * Labels will be generated based on attribute-name for fields without a label attribute present.
+       * Radio fields are an exception to this rule.
+       * Their names are generated from their values.
+       * @memberof FormForConfiguration
+       */
+      enableAutoLabels: function() {
+        this.autoGenerateLabels = true;
+      },
+
+      /**
+       * Sets the default debounce interval for all textField inputs.
+       * This setting can be overridden on a per-input basis (see textField).
+       * @memberof FormForConfiguration
+       * @param {int} duration Debounce duration (in ms).
+       * Defaults to 1000ms.
+       * To disable debounce (update only on blur) pass false.
+       */
       setDefaultDebounceDuration: function(value) {
         this.defaultDebounceDuration = value;
       },
+
+      /**
+       * Sets the default submit-complete behavior for all formFor directives.
+       * This setting can be overridden on a per-form basis (see formFor).
+       * @memberof FormForConfiguration
+       * @param {Function} method Default handler function accepting a data parameter representing the server-response returned by the submitted form.
+       * This function should accept a single parameter, the response data from the form-submit method.
+       */
       setDefaultSubmitComplete: function(value) {
         this.defaultSubmitComplete = value;
       },
+
+      /**
+       * Sets the default submit-error behavior for all formFor directives.
+       * This setting can be overridden on a per-form basis (see formFor).
+       * @memberof FormForConfiguration
+       * @param {Function} method Default handler function accepting an error parameter representing the data passed to the rejected submit promise.
+       * This function should accept a single parameter, the error returned by the form-submit method.
+       */
       setDefaultSubmitError: function(value) {
         this.defaultSubmitError = value;
       },
+
+      /**
+       * Sets a default label to be displayed beside each text and select input for required attributes only.
+       * @memberof FormForConfiguration
+       * @param {String} value Message to be displayed next to the field label (ex. "*", "required")
+       */
       setRequiredLabel: function(value) {
         this.requiredLabel = value;
       },
+
+      /**
+       * Override the default error message for failed custom validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForCustomMessage: function(value) {
         this.validationFailedForCustomMessage = value;
       },
-      setValidationFailedForPatternMessage: function(value) {
-        this.validationFailedForPatternMessage = value;
-      },
+
+      /**
+       * Override the default error message for failed maxlength validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForMaxLengthMessage: function(value) {
         this.validationFailedForMaxLengthMessage = value;
       },
+
+      /**
+       * Override the default error message for failed minlength validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForMinLengthMessage: function(value) {
         this.validationFailedForMinLengthMessage = value;
       },
+
+      /**
+       * Override the default error message for failed pattern validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
+      setValidationFailedForPatternMessage: function(value) {
+        this.validationFailedForPatternMessage = value;
+      },
+
+      /**
+       * Override the default error message for failed required validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForRequiredMessage: function(value) {
         this.validationFailedForRequiredMessage = value;
       },
+
+      /**
+       * Override the default error message for failed type = 'email' validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForEmailTypeMessage: function(value) {
         this.validationFailedForEmailTypeMessage = value;
       },
+
+      /**
+       * Override the default error message for failed type = 'integer' validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForIntegerTypeMessage: function(value) {
         this.validationFailedForIntegerTypeMessage = value;
       },
+
+      /**
+       * Override the default error message for failed type = 'negative' validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForNegativeTypeMessage: function(value) {
         this.validationFailedForNegativeTypeMessage = value;
       },
+
+      /**
+       * Override the default error message for failed type = 'numeric' validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForNumericTypeMessage: function(value) {
         this.validationFailedForNumericTypeMessage = value;
       },
+
+      /**
+       * Override the default error message for failed type = 'positive' validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
       setValidationFailedForPositiveTypeMessage: function(value) {
         this.validationFailedForPositiveTypeMessage = value;
       }
     };
   });
 
-/**
+/*
  * Organizes state management for form-submission and field validity.
  * Intended for use only by formFor directive.
  */
-angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHelper) {
+angular.module('formFor').factory('$FormForStateHelper', ["NestedObjectHelper", function(NestedObjectHelper) {
   var FormForStateHelper = function($scope) {
     $scope.errorMap = $scope.errorMap || {};
     $scope.valid = true;
@@ -1097,22 +1502,26 @@ angular.module('formFor').factory('$FormForStateHelper', function(NestedObjectHe
   };
 
   return FormForStateHelper;
-});
+}]);
 
 /**
+ * @ngdoc Services
+ * @name ModelValidator
+ * @description
  * ModelValidator service used by formFor to determine if each field in the form-data passes validation rules.
  * This service is not intended for use outside of the formFor module/library.
  */
 angular.module('formFor').service('ModelValidator',
-  function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
+  ["$interpolate", "$parse", "$q", "FormForConfiguration", "NestedObjectHelper", function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
 
     /**
      * Validates the model against all rules in the validationRules.
      * This method returns a promise to be resolved on successful validation,
      * Or rejected with a map of field-name to error-message.
-     *
-     * @param model Model data to validate with any existing rules
-     * @param validationRules Set of named validation rules
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateAll = function(model, validationRules) {
       var fields = NestedObjectHelper.flattenObjectKeys(validationRules);
@@ -1124,10 +1533,11 @@ angular.module('formFor').service('ModelValidator',
      * Validates the values in model with the rules defined in the current validationRules.
      * This method returns a promise to be resolved on successful validation,
      * Or rejected with a map of field-name to error-message.
-     *
-     * @param model Model data
-     * @param fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
-     * @param validationRules Set of named validation rules
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Array} fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateFields = function(model, fieldNames, validationRules) {
       var deferred = $q.defer();
@@ -1164,10 +1574,11 @@ angular.module('formFor').service('ModelValidator',
      * Validates a value against the related rule-set (within validationRules).
      * This method returns a promise to be resolved on successful validation.
      * If validation fails the promise will be rejected with an error message.
-     *
-     * @param model Form-data object model is contained within
-     * @param fieldName Name of field used to associate the rule-set map with a given value
-     * @param validationRules Set of named validation rules
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {String} fieldName Name of field used to associate the rule-set map with a given value
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateField = function(model, fieldName, validationRules) {
       var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
@@ -1296,12 +1707,15 @@ angular.module('formFor').service('ModelValidator',
     };
 
     return this;
-  });
+  }]);
 
 /**
+ * @ngdoc Services
+ * @name NestedObjectHelper
+ * @description
  * Helper utility to simplify working with nested objects.
  */
-angular.module('formFor').service('NestedObjectHelper', function($parse) {
+angular.module('formFor').service('NestedObjectHelper', ["$parse", function($parse) {
   var sanitizeAttribute = function(attribute) {
     return attribute.replace('[]', '');
   }
@@ -1316,6 +1730,9 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * Crawls an object and returns a flattened set of all attributes using dot notation.
      * This converts an Object like: {foo: {bar: true}, baz: true}
      * Into an Array like ['foo', 'foo.bar', 'baz']
+     * @memberof NestedObjectHelper
+     * @param {Object} object Object to be flattened
+     * @returns {Array} Array of flattened keys (perhaps containing dot notation)
      */
     flattenObjectKeys: function(object) {
       var keys = [];
@@ -1352,9 +1769,10 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
     /**
      * Returns the value defined by the specified attribute.
      * This function guards against dot notation for nested references (ex. 'foo.bar').
-     *
-     * @param object Object
-     * @param attribute Attribute (or dot-notation path)
+     * @memberof NestedObjectHelper
+     * @param {Object} object Object ot be read
+     * @param {String} attribute Attribute (or dot-notation path) to read
+     * @returns {Object} Value defined at the specified key
      */
     readAttribute: function(object, attribute) {
       return $parse(sanitizeAttribute(attribute))(object);
@@ -1363,27 +1781,32 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
     /**
      * Writes the specified value to the specified attribute.
      * This function guards against dot notation for nested references (ex. 'foo.bar').
-     *
-     * @param object Object
-     * @param attribute Attribute (or dot-notation path)
-     * @param value Value to be written
+     * @memberof NestedObjectHelper
+     * @param {Object} object Object ot be updated
+     * @param {String} attribute Attribute (or dot-notation path) to update
+     * @param {Object} value Value to be written
      */
     writeAttribute: function(object, attribute, value) {
       $parse(sanitizeAttribute(attribute)).assign(object, value);
     }
   };
-});
+}]);
 
 /**
+ * @ngdoc Services
+ * @name $q
+ * @description
  * Decorates the $q utility with additional methods used by formFor.
- *
  * @private
  * This set of helper methods, small though they are, might be worth breaking apart into their own library?
  */
-var qDecorator = function($delegate) {
+var qDecorator = ["$delegate", function($delegate) {
 
   /**
    * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
+   * @memberof $q
+   * @param {Object} data Value to resolve the promise with
+   * @returns {Promise} A resolved promise
    */
   $delegate.resolve = function(data) {
     var deferred = this.defer();
@@ -1394,6 +1817,9 @@ var qDecorator = function($delegate) {
 
   /**
    * Similar to $q.all but waits for all promises to resolve/reject before resolving/rejecting.
+   * @memberof $q
+   * @param {Array} promises Array of promises
+   * @returns {Promise} A promise to be resolved or rejected once all of the observed promises complete
    */
   $delegate.waitForAll = function(promises) {
     var deferred = this.defer();
@@ -1441,9 +1867,44 @@ var qDecorator = function($delegate) {
   };
 
   return $delegate;
-};
+}];
 
 angular.module('formFor').config(
-  function($provide) {
+  ["$provide", function($provide) {
     $provide.decorator('$q', qDecorator);
-  });
+  }]);
+
+/**
+ * @ngdoc Services
+ * @name StringUtil
+ * @description
+ * Utility for working with strings.
+ */
+angular.module('formFor').service('StringUtil', function() {
+
+  /**
+   * Converts text in common variable formats to humanized form.
+   * @memberof StringUtil
+   * @param {String} text Name of variable to be humanized (ex. myVariable, my_variable)
+   * @returns {String} Humanized string (ex. 'My Variable')
+   */
+  this.humanize = function(text) {
+    if (!text) {
+      return '';
+    }
+
+    text = text.replace(/[A-Z]/g, function(match) {
+      return ' ' + match;
+    });
+
+    text = text.replace(/_([a-z])/g, function(match, $1) {
+      return ' ' + $1.toUpperCase();
+    });
+
+    text = text.replace(/\s+/g, ' ');
+    text = text.trim();
+    text = text.charAt(0).toUpperCase() + text.slice(1);
+
+    return text;
+  };
+});

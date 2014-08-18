@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Directives: text-field</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Directives: text-field</h1>
+
+    
+
+
+
+<section>
+
+<header>
+    <h2>
+    text-field
+    </h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+
+    
+    
+      <a href="text-field.js.html#line1" class="name-link"><h4 class="name" id="text-field"><span class="type-signature"></span>text-field<span class="signature">(attribute, autofocus, debounce, disable, help, focused, iconAfter, iconAfterClicked, iconBefore, iconBeforeClicked, label, multiline, placeholder, type)</span><span class="type-signature"></span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Displays a HTML &lt;input&gt; element along with an input label.
+This directive can be configured to optionally display an informational tooltip.
+In the event of a validation error, this directive will also render an inline error message.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>attribute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of the attribute within the parent form-for directive's model object.
+This attributes specifies the data-binding target for the input.
+Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>autofocus</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">attribute</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The presence of this attribute will auto-focus the input field.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>debounce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Debounce duration (in ms) before input text is applied to model and evaluated.
+To disable debounce (update only on blur) specify a value of false.
+This value's default is determined by FormForConfiguration.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>disable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Disable input element.
+(Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>help</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional help tooltip to display on hover.
+By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>focused</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional function to be invoked on text input focus.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iconAfter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional CSS class to display as an icon after the input field.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iconAfterClicked</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional function to be invoked when the after-icon is clicked.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iconBefore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional CSS class to display as a icon before the input field.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iconBeforeClicked</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional function to be invoked when the before-icon is clicked.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional field label displayed before the input.
+(Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>multiline</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">attribute</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The presence of this attribute enables multi-line input.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>placeholder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional placeholder text to display if input is empty.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional HTML input-type (ex.
+text, password, etc.).
+Defaults to &quot;text&quot;.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="text-field.js.html">directives/text-field.js</a>, <a href="text-field.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>// To create a password input you might use the following markup:
+&lt;text-field attribute="password" label="Password" type="password">&lt;/text-field>
+
+// To create a more advanced input field, with placeholder text and help tooltip you might use the following markup:
+&lt;text-field attribute="username" label="Username"
+            placeholder="Example brianvaughn"
+            help="Your username will be visible to others!">&lt;/text-field>
+
+// To render a multiline text input (or &lt;textarea>):
+&lt;text-field attribute="description" label="Description" multiline>&lt;/text-field></code></pre>
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#unregisterFormField">unregisterFormField</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> 
+    using <a href="https://github.com/allenhwkim/angularjs-google-maps/tree/master/config/jsdoc/template">custom template </a> and 
+    <a href="https://raw.githubusercontent.com/allenhwkim/angularjs-google-maps/master/config/jsdoc/plugins/angular.js">custom tag @ngdoc</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+<script>
+  var href=window.location.href.match(/\/([^\/]+$)/)[1];
+  document.querySelector("nav a[href='"+href+"']").scrollIntoView(true);
+  if (window.location.hash == "")
+    document.querySelector("body").scrollIntoView(true);
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "angular-form-for",
-  "version": "1.1.9",
+  "version": "1.1.11",
   "description": "Set of Angular directives to simplify creating and validating HTML forms.",
   "keywords": [
     "angular",
@@ -33,7 +33,12 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "lodash": "^2.4.1",
     "ng-html2js": "^1.1.0",
-    "nib": "^1.0.3"
+    "nib": "^1.0.3",
+    "gulp-ng-annotate": "~0.3.0",
+    "gulp-uglify": "~0.3.1",
+    "angular-jsdoc": "~0.1.1",
+    "gulp-shell": "~0.2.9",
+    "jsdoc": "~3.3.0-alpha9"
   },
   "scripts": {
     "test": "gulp test"

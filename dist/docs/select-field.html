@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Directives: select-field</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Directives: select-field</h1>
+
+    
+
+
+
+<section>
+
+<header>
+    <h2>
+    select-field
+    </h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+
+    
+    
+      <a href="select-field.js.html#line1" class="name-link"><h4 class="name" id="select-field"><span class="type-signature"></span>select-field<span class="signature">(allow-blank, attribute, disable, enableFiltering, filter, help, label, labelAttribute, options, placeholder, valueAttribute)</span><span class="type-signature"></span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Renders a drop-down &lt;select&gt; menu along with an input label.
+This type of component works with large enumerations and can be configured to allow for a blank/empty selection by way of an allow-blank attribute.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>allow-blank</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">attribute</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The presence of this attribute indicates that an empty/blank selection should be allowed.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>attribute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of the attribute within the parent form-for directive's model object.
+This attributes specifies the data-binding target for the input.
+Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>disable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Disable input element.
+(Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>enableFiltering</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Enable filtering of list via a text input at the top of the dropdown.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Two-way bindable filter string.
+$watch this property to load remote options based on filter text.
+(Refer to this Plunker demo for an example.)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>help</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional help tooltip to display on hover.
+By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional field label displayed before the drop-down.
+(Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>labelAttribute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional override for label key in options array.
+Defaults to &quot;label&quot;.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Set of options, each containing a label and value key.
+The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>placeholder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional placeholder text to display if no value has been selected.
+The text &quot;Select&quot; will be displayed if no placeholder is provided.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valueAttribute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional override for value key in options array.
+Defaults to &quot;value&quot;.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="select-field.js.html">directives/select-field.js</a>, <a href="select-field.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>// To use this component you'll first need to define a set of options. For instance:
+$scope.genders = [
+  { value: 'f', label: 'Female' },
+  { value: 'm', label: 'Male' }
+];
+
+// To render a drop-down input using the above options:
+&lt;select-field attribute="gender"
+              label="Gender"
+              options="genders">
+&lt;/select-field>
+
+// If you want to make this attribute optional you can use the allow-blank attribute as follows:
+&lt;select-field attribute="gender"
+              label="Gender"
+              options="genders"
+              allow-blank>
+&lt;/select-field></code></pre>
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#unregisterFormField">unregisterFormField</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> 
+    using <a href="https://github.com/allenhwkim/angularjs-google-maps/tree/master/config/jsdoc/template">custom template </a> and 
+    <a href="https://raw.githubusercontent.com/allenhwkim/angularjs-google-maps/master/config/jsdoc/plugins/angular.js">custom tag @ngdoc</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+<script>
+  var href=window.location.href.match(/\/([^\/]+$)/)[1];
+  document.querySelector("nav a[href='"+href+"']").scrollIntoView(true);
+  if (window.location.hash == "")
+    document.querySelector("body").scrollIntoView(true);
+</script>
+</body>
+</html>

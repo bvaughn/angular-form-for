@@ -1,8 +1,27 @@
 /**
+ * @ngdoc Directives
+ * @name form-for-debounce
+ *
+ * @description
  * Angular introduced debouncing (via ngModelOptions) in version 1.3.
  * As of the time of this writing, that version is still in beta.
  * This component adds debouncing behavior for Angular 1.2.x.
- * It is primarily intended for use with <input type=text> elements.
+ * It is primarily intended for use with &lt;input type=text&gt; and &lt;textarea&gt; elements.
+ *
+ * @param {int} formForDebounce Debounce duration in milliseconds.
+ * By default this value is 1000ms.
+ * To disable the debounce interval (aka to update on blur only) a value of false should be specified.
+ *
+ * @example
+ * // To configure this component to debounce with a 2 second delay:
+ * <input type="text"
+ *        ng-model="username"
+ *        form-for-debounce="2000" />
+ *
+ * // To disable the debounce interval and configure an input to update only on blur:
+ * <input type="text"
+ *        ng-model="username"
+ *        form-for-debounce="false" />
  */
 angular.module('formFor').directive('formForDebounce', function($log, $timeout, FormForConfiguration) {
   return {

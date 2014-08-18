@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var es = require('event-stream');
 var pipe = es.pipe.bind(es);
 var concat = require('gulp-concat');
+var shell = require('gulp-shell');
 
 var CONFIG = {
   distDir: 'dist',
@@ -33,9 +34,10 @@ gulp.task('compileCss', function() {
     .pipe(gulp.dest(CONFIG.distDir));
 });
 
-gulp.task('concatJs', function() {
+var concatJS = function() {
   var order = require('gulp-order');
   var templateCache = require('gulp-angular-templatecache');
+  var ngAnnotate = require('gulp-ng-annotate');
 
   var sources =
     es.merge(
@@ -52,7 +54,21 @@ gulp.task('concatJs', function() {
       'templates.js',
       'form-for.js'
     ]))
+    .pipe(ngAnnotate());
+};
+
+gulp.task('createUncompressedJs', function() {
+  return concatJS()
     .pipe(concat('form-for.js'))
+    .pipe(gulp.dest(CONFIG.distDir));
+});
+
+gulp.task('createCompressedJs', function() {
+  var uglify = require('gulp-uglify');
+
+  return concatJS()
+    .pipe(uglify())
+    .pipe(concat('form-for.min.js'))
     .pipe(gulp.dest(CONFIG.distDir));
 });
 
@@ -73,4 +89,12 @@ gulp.task('test', function(done) {
     }))
 });
 
-gulp.task('build', ['clean', 'lintJs', 'test', 'concatJs', 'compileCss']);
+gulp.task('docs', shell.task([
+  'node_modules/jsdoc/jsdoc.js '+
+    '-c node_modules/angular-jsdoc/conf.json '+ // config file
+    '-t node_modules/angular-jsdoc/template '+  // template file
+    '-d ' + CONFIG.distDir + '/docs '+          // output directory
+    '-r ' + CONFIG.sourceDir                    // source code directory
+]));
+
+gulp.task('build', ['clean', 'lintJs', 'test', 'createCompressedJs', 'createUncompressedJs', 'compileCss', 'docs']);
