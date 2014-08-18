@@ -1,5 +1,7 @@
 # Angular formFor
 
+![Angular formFor logo](http://bvaughn.github.io/angular-form-for/app/images/form-for-logo-small.png)
+
 *formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations.
 Using *formFor* a sign-up form may look like this:
 
@@ -13,7 +15,9 @@ Using *formFor* a sign-up form may look like this:
 ```
 
 But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options.
-Check out [the wiki](http://bvaughn.github.io/angular-form-for/) to learn more!
+Check out the website to learn more!
+
+[http://bvaughn.github.io/angular-form-for/](http://bvaughn.github.io/angular-form-for/)
 
 ## Installation
 
