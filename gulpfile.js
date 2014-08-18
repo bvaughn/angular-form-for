@@ -89,12 +89,12 @@ gulp.task('test', function(done) {
     }))
 });
 
-gulp.task('build', ['clean', 'lintJs', 'test', 'createCompressedJs', 'createUncompressedJs', 'compileCss']);
-
 gulp.task('docs', shell.task([
   'node_modules/jsdoc/jsdoc.js '+
-    '-c node_modules/angular-jsdoc/conf.json '+   // config file
-    '-t node_modules/angular-jsdoc/template '+    // template file
-    '-d build/docs '+                             // output directory
-    '-r source'                                   // source code directory
+    '-c node_modules/angular-jsdoc/conf.json '+ // config file
+    '-t node_modules/angular-jsdoc/template '+  // template file
+    '-d ' + CONFIG.distDir + '/docs '+          // output directory
+    '-r ' + CONFIG.sourceDir                    // source code directory
 ]));
+
+gulp.task('build', ['clean', 'lintJs', 'test', 'createCompressedJs', 'createUncompressedJs', 'compileCss', 'docs']);
