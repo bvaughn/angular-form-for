@@ -5,12 +5,14 @@ This is a advanced demo of the Angular formFor library version 1.1.11.
 This demo illustrates various drop-down menus with filtering.
 </p>
 
-<div class="btn-group btn-group-justified" ng-init="tabIndex = 0">
-  <a ng-class="{active: tabIndex === 0}" ng-click="tabIndex = 0" class="btn btn-default">Demo</a>
-  <a ng-class="{active: tabIndex === 1}" ng-click="tabIndex = 1" class="btn btn-default">HTML</a>
-  <a ng-class="{active: tabIndex === 2}" ng-click="tabIndex = 2" class="btn btn-default">JavaScript</a>
-</div>
-
-<div class="well" ng-if="tabIndex === 0" ng-include="'app/demos/dynamic-dropdowns.html'"></div>
-<div ng-if="tabIndex === 1"><prism source="app/demos/dynamic-dropdowns.html"></prism></div>
-<div ng-if="tabIndex === 2"><prism parser="javascript" source="app/demos/dynamic-dropdowns.js"></prism></div>
+<tabset justified="true">
+  <tab heading="Demo">
+    <div class="tab-content well" ng-include="'app/demos/dynamic-dropdowns.html'"></div>
+  </tab>
+  <tab heading="HTML">
+    <prism class="tab-content" source="app/demos/dynamic-dropdowns.html"></prism>
+  </tab>
+  <tab heading="JavaScript">
+    <prism class="tab-content" parser="javascript" source="app/demos/dynamic-dropdowns.js"></prism>
+  </tab>
+</tabset>

@@ -1,4 +1,4 @@
-angular.module('formForDocumentation', ['formFor', 'ngRoute']).
+angular.module('formForDocumentation', ['formFor', 'ngRoute', 'ui.bootstrap']).
   config(function($routeProvider) {
     $routeProvider.when('/index', {templateUrl: 'app/views/index.html', controller: 'IndexController'});
 
