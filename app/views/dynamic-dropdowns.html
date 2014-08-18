@@ -11,6 +11,6 @@ This demo illustrates various drop-down menus with filtering.
   <a ng-class="{active: tabIndex === 2}" ng-click="tabIndex = 2" class="btn btn-default">JavaScript</a>
 </div>
 
-<div class="well" ng-if="tabIndex === 0" ng-include="'demos/dynamic-dropdowns.html'"></div>
-<div ng-if="tabIndex === 1"><prism source="demos/dynamic-dropdowns.html"></prism></div>
-<div ng-if="tabIndex === 2"><prism parser="javascript" source="demos/dynamic-dropdowns.js"></prism></div>
+<div class="well" ng-if="tabIndex === 0" ng-include="'/app/demos/dynamic-dropdowns.html'"></div>
+<div ng-if="tabIndex === 1"><prism source="/app/demos/dynamic-dropdowns.html"></prism></div>
+<div ng-if="tabIndex === 2"><prism parser="javascript" source="/app/demos/dynamic-dropdowns.js"></prism></div>
