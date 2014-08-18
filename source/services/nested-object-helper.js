@@ -2,10 +2,14 @@
  * Helper utility to simplify working with nested objects.
  */
 angular.module('formFor').service('NestedObjectHelper', function($parse) {
+  var sanitizeAttribute = function(attribute) {
+    return attribute.replace('[]', '');
+  }
+
   return {
 
     flattenAttribute: function(attribute) {
-      return attribute.replace(/\./g, '___');
+      return sanitizeAttribute(attribute).replace(/\./g, '___');
     },
 
     /**
@@ -53,7 +57,7 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * @param attribute Attribute (or dot-notation path)
      */
     readAttribute: function(object, attribute) {
-      return $parse(attribute)(object);
+      return $parse(sanitizeAttribute(attribute))(object);
     },
 
     /**
@@ -65,7 +69,7 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * @param value Value to be written
      */
     writeAttribute: function(object, attribute, value) {
-      $parse(attribute).assign(object, value);
+      $parse(sanitizeAttribute(attribute)).assign(object, value);
     }
   };
 });

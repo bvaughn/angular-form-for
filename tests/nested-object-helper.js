@@ -14,8 +14,12 @@ describe('NestedObjectHelper', function() {
       expect(NestedObjectHelper.flattenAttribute('foo.bar.baz')).not.toMatch(/\./);
     });
 
-    it('should not correct a string without dot notation', function() {
+    it('should not adjust a string without dot notation', function() {
       expect(NestedObjectHelper.flattenAttribute('foo')).toMatch('foo');
+    });
+
+    it('should handle array notation by stripping it', function() {
+      expect(NestedObjectHelper.flattenAttribute('foo[]')).toMatch('foo');
     });
   });
 
@@ -68,6 +72,10 @@ describe('NestedObjectHelper', function() {
     it('should handle attributes that are missing', function() {
       expect(NestedObjectHelper.readAttribute(object, 'fake')).toBeFalsy();
     });
+
+    it('should handle array notation by stripping it', function() {
+      expect(NestedObjectHelper.readAttribute(object, 'foo[]')).toBe(123);
+    });
   });
 
   describe('writeAttribute', function() {
@@ -94,6 +102,12 @@ describe('NestedObjectHelper', function() {
       NestedObjectHelper.writeAttribute(object, 'nonexistent', 'brand new');
 
       expect(object.nonexistent).toMatch('brand new');
+    });
+
+    it('should handle array notation by stripping it', function() {
+      NestedObjectHelper.writeAttribute(object, 'collection[]', 'brand new');
+
+      expect(object.collection).toMatch('brand new');
     });
   });
 

@@ -21,8 +21,7 @@ angular.module('formFor').directive('formFor',
       },
       controller: function($scope) {
         $scope.formFieldScopes = {};
-        $scope.bindable = {};
-        $scope.scopeWatcherUnwatchFunctions = [];
+        $scope.formFieldData = {};
         $scope.submitButtonScopes = [];
 
 
@@ -47,11 +46,27 @@ angular.module('formFor').directive('formFor',
           var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
           var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
 
-          $scope.formFieldScopes[fieldName] = formFieldScope;
-          $scope.bindable[safeFieldName] = {
+          var formFieldDatum = {
             bindable: null,
-            required: rules && !!rules.required
+            required: rules && !!rules.required,
+            isCollection: fieldName.indexOf('[]') > 0,
+            fieldName: fieldName,
+            scope: formFieldScope
           };
+
+          if (formFieldDatum.isCollection) {
+            if (!$scope.formFieldData.hasOwnProperty(safeFieldName)) {
+              $scope.formFieldData[safeFieldName] = [];
+              $scope.formFieldScopes[safeFieldName] = [];
+            }
+
+            $scope.formFieldData[safeFieldName].push(formFieldDatum);
+            $scope.formFieldScopes[safeFieldName].push(formFieldScope);
+
+          } else {
+            $scope.formFieldData[safeFieldName] = formFieldDatum;
+            $scope.formFieldScopes[safeFieldName] = formFieldScope;
+          }
 
           // TRICKY Why do we use $parse?
           // Dot notation (ex. 'foo.bar') causes trouble with the brackets accessor.
@@ -59,23 +74,55 @@ angular.module('formFor').directive('formFor',
           // We need to manage 2-way binding to keep the original model and our wrapper in sync though.
           // Given a model {foo: {bar: 'baz'}} and a field-name 'foo.bar' $parse allows us to retrieve 'baz'.
 
-          var getter = $parse(fieldName);
+          if (formFieldDatum.isCollection) {
+            var index = $scope.formFieldData[safeFieldName].length - 1;
+
+            formFieldDatum.getterFieldName = fieldName.replace('[]', '[' + index + ']');
+          } else {
+            formFieldDatum.getterFieldName = fieldName;
+          }
+
+          console.log('fieldName:'+fieldName+' ~> getterFieldName:'+formFieldDatum.getterFieldName);
+          var getter = $parse(formFieldDatum.getterFieldName);
           var setter = getter.assign;
 
-          $scope.$watch('bindable.' + safeFieldName + '.bindable', function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              setter($scope.formFor, newValue);
-            }
-          });
+          console.log('• [registerFormField] watching: formFieldData.' + formFieldDatum.getterFieldName + '.bindable');
+          formFieldDatum.unwatchFormFieldDataForSync =
+            $scope.$watch('formFieldData.' + formFieldDatum.getterFieldName + '.bindable', function(newValue, oldValue) {
+              console.log('•• [registerFormField] formFieldData.' + formFieldDatum.getterFieldName + '.bindable ~> ' + newValue);
+              if (newValue !== oldValue) {
+                setter($scope.formFor, newValue);
+              }
+            });
 
-          $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
-            $scope.bindable[safeFieldName].bindable = getter($scope.formFor);
-          });
+          console.log('• [registerFormField] watching: formFor.' + formFieldDatum.getterFieldName);
+          formFieldDatum.unwatchFormDataForSync =
+            $scope.$watch('formFor.' + formFieldDatum.getterFieldName, function(newValue, oldValue) {
+              console.log('•• [registerFormField] formFor.' + formFieldDatum.getterFieldName + ' ~> ' + newValue);
+              formFieldDatum.bindable = getter($scope.formFor);
+            });
 
           // Also run validations on-change as necessary.
-          createScopeWatcher(fieldName);
+          formFieldDatum.unwatchScopeForValidations = createScopeWatcher(formFieldDatum);
 
-          return $scope.bindable[safeFieldName];
+          return formFieldDatum;
+        };
+
+        /**
+         * Form fields created within ngRepeat or ngIf directive should clean up themselves on removal.
+         */
+        this.unregisterFormField = function(formFieldScope, fieldName) {
+          var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+          var formFieldData = fieldName.indexOf('[]') > 0 ? $scope.formFieldData[safeFieldName] : [$scope.formFieldData[safeFieldName]];
+
+          angular.foreach(formFieldData,
+            function(formFieldDatum) {
+              if (formFieldDatum.scope === formFieldScope) {
+                formFieldDatum.unwatchFormFieldDataForSync();
+                formFieldDatum.unwatchFormDataForSync();
+                formFieldDatum.unwatchScopeForValidations();
+              }
+            });
         };
 
         /**
@@ -122,12 +169,13 @@ angular.module('formFor').directive('formFor',
          * Setup a debounce validator on a registered form field.
          * This validator will update error messages inline as the user progresses through the form.
          */
-        var createScopeWatcher = function(fieldName) {
-          var formFieldScope = $scope.formFieldScopes[fieldName];
+        var createScopeWatcher = function(formFieldDatum) {
           var initialized;
 
-          return $scope.$watch('formFor.' + fieldName,
+          console.log('• [createScopeWatcher] watching: formFor.' + formFieldDatum.getterFieldName);
+          return $scope.$watch('formFor.' + formFieldDatum.getterFieldName,
             function(newValue, oldValue) {
+              console.log('•• [createScopeWatcher] formFor.' + formFieldDatum.getterFieldName + ' ~> ' + newValue);
               // Scope watchers always trigger once when added.
               // Only mark our field dirty when a user-edit actually triggers the watcher.
               if (!initialized) {
@@ -137,16 +185,16 @@ angular.module('formFor').directive('formFor',
               // We shouldn't treat this as a user-edit though unless the user actually typed something.
               // It's possible they typed and then erased, but that seems less likely...
               } else if (oldValue !== undefined || newValue !== '') {
-                $scope.formForStateHelper.setFieldHasBeenModified(fieldName, true);
+                $scope.formForStateHelper.setFieldHasBeenModified(formFieldDatum.fieldName, true);
               }
 
               if ($scope.$validationRules) {
-                ModelValidator.validateField($scope.formFor, fieldName, $scope.$validationRules).then(
+                ModelValidator.validateField($scope.formFor, formFieldDatum.fieldName, $scope.$validationRules).then(
                   function() {
-                    $scope.formForStateHelper.setFieldError(fieldName, null);
+                    $scope.formForStateHelper.setFieldError(formFieldDatum.fieldName, null);
                   },
                   function(error) {
-                    $scope.formForStateHelper.setFieldError(fieldName, error);
+                    $scope.formForStateHelper.setFieldError(formFieldDatum.fieldName, error);
                   });
               }
             });
@@ -207,13 +255,6 @@ angular.module('formFor').directive('formFor',
 
           return validationPromise;
         };
-
-        // Clean up dangling watchers on destroy.
-        $scope.$on('$destroy', function() {
-          angular.forEach($scope.scopeWatcherUnwatchFunctions, function(unwatch) {
-            unwatch();
-          });
-        });
       },
       link: function($scope, $element, $attributes, controller) {
         // Override form submit to trigger overall validation.
