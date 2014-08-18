@@ -31,13 +31,13 @@
   If we configure formFor like this:
 </p>
 
-<prism parser="markup" source="/app/samples/defining-validations.html"></prism>
+<prism parser="markup" source="app/samples/defining-validations.html"></prism>
 
 <p>
   Then our UserSignUp service might look like this:
 </p>
 
-<prism parser="javascript" source="/app/samples/defining-validations.js"></prism>
+<prism parser="javascript" source="app/samples/defining-validations.js"></prism>
 
 <p>
   We could also configure formFor to validate based on a set of rules attached to the $scope like this:
@@ -51,13 +51,13 @@
   formFor also supports nested fields. Here's a short example of the syntax:
 </p>
 
-<prism parser="markup" source="/app/samples/validating-nested-fields.html"></prism>
+<prism parser="markup" source="app/samples/validating-nested-fields.html"></prism>
 
 <p>
   The controller for the above form snippet might look something like this:
 </p>
 
-<prism parser="javascript" source="/app/samples/validating-nested-fields.js"></prism>
+<prism parser="javascript" source="app/samples/validating-nested-fields.js"></prism>
 
 <h2>Custom validations</h2>
 
@@ -69,11 +69,11 @@ Custom validation functions enable you to extend formFor's built in validations.
 For example we might modify the above validation service to check if an email address was already reserved. To do that we could define a custom validation rule on the email field:
 </p>
 
-<prism parser="javascript" source="/app/samples/custom-validation-email.js"></prism>
+<prism parser="javascript" source="app/samples/custom-validation-email.js"></prism>
 
 <p>We could also implement a custom validation function to ensure that two password fields match:</p>
 
-<prism parser="javascript" source="/app/samples/custom-validation-password.js"></prism>
+<prism parser="javascript" source="app/samples/custom-validation-password.js"></prism>
 
 <h2>Custom error messages</h2>
 <p>
@@ -82,13 +82,13 @@ Each type of validation has a built-in error message. For example if a required 
 <p>
 To display a custom validation error for an invalid email address in our above example we might use the following:
 </p>
-<prism parser="javascript" source="/app/samples/custom-error-message-pattern.js"></prism>
+<prism parser="javascript" source="app/samples/custom-error-message-pattern.js"></prism>
 
 <p>
 This type of error message override can be used for each of the supported validation types except the custom validation function. This type of validation should specify its error message by rejecting the promise like so:
 </p>
 
-<prism parser="javascript" source="/app/samples/custom-error-message-custom.js"></prism>
+<prism parser="javascript" source="app/samples/custom-error-message-custom.js"></prism>
 
 <ul class="pager">
   <li class="previous"><a href="#/input-types"><i class="fa fa-arrow-left"></i> Input Types</a></li>
