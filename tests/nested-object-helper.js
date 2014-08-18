@@ -18,8 +18,8 @@ describe('NestedObjectHelper', function() {
       expect(NestedObjectHelper.flattenAttribute('foo')).toMatch('foo');
     });
 
-    it('should handle array notation by stripping it', function() {
-      expect(NestedObjectHelper.flattenAttribute('foo[]')).toMatch('foo');
+    it('should handle array notation', function() {
+      expect(NestedObjectHelper.flattenAttribute('foo[1].bar')).toMatch('foo___1___bar');
     });
   });
 
@@ -73,8 +73,21 @@ describe('NestedObjectHelper', function() {
       expect(NestedObjectHelper.readAttribute(object, 'fake')).toBeFalsy();
     });
 
-    it('should handle array notation by stripping it', function() {
-      expect(NestedObjectHelper.readAttribute(object, 'foo[]')).toBe(123);
+    it('should handle array notation when array is empty or non-existent', function() {
+      object = {
+        empty: []
+      };
+
+      expect(NestedObjectHelper.readAttribute(object, 'empty[0]')).toBeFalsy();
+      expect(NestedObjectHelper.readAttribute(object, 'nonexistent[0]')).toBeFalsy();
+    });
+
+    it('should handle array notation by reading values from an array at the specified index', function() {
+      object = {
+        array: ['one']
+      };
+
+      expect(NestedObjectHelper.readAttribute(object, 'array[0]')).toMatch('one');
     });
   });
 
@@ -104,11 +117,54 @@ describe('NestedObjectHelper', function() {
       expect(object.nonexistent).toMatch('brand new');
     });
 
-    it('should handle array notation by stripping it', function() {
-      NestedObjectHelper.writeAttribute(object, 'collection[]', 'brand new');
+    it('should handle array notation by creating arrays that do not yet exist', function() {
+      NestedObjectHelper.writeAttribute(object, 'collection[0]', 'first item');
 
-      expect(object.collection).toMatch('brand new');
+      expect(object.collection).toBeTruthy();
+      expect(object.collection[0]).toMatch('first item');
+    });
+
+    it('should handle array notation by creating indexes that do not yet exist', function() {
+      object.collection = ['one'];
+
+      NestedObjectHelper.writeAttribute(object, 'collection[1]', 'two');
+
+      expect(object.collection).toBeTruthy();
+      expect(object.collection[0]).toMatch('one');
+      expect(object.collection[1]).toMatch('two');
+    });
+
+    it('should handle array notation with nested objects for indexes that do not yet exist', function() {
+      object.collection = [];
+
+      NestedObjectHelper.writeAttribute(object, 'collection[0].number', 'one');
+
+      expect(object.collection).toBeTruthy();
+      expect(object.collection[0].number).toMatch('one');
+    });
+
+    it('should handle array notation by writing values to an array at the specified index', function() {
+      object.collection = ['old'];
+
+      NestedObjectHelper.writeAttribute(object, 'collection[0]', 'new');
+
+      expect(object.collection).toBeTruthy();
+      expect(object.collection[0]).toMatch('new');
+    });
+
+    it('should handle array notation with nested objects for indexes that already exist', function() {
+      object.collection = [{
+        foo: 'FOO',
+        bar: 'BAR'
+      }];
+
+      NestedObjectHelper.writeAttribute(object, 'collection[0].bar', 'RAB');
+      NestedObjectHelper.writeAttribute(object, 'collection[0].baz', 'BAZ');
+
+      expect(object.collection).toBeTruthy();
+      expect(object.collection[0].foo).toMatch('FOO');
+      expect(object.collection[0].bar).toMatch('RAB');
+      expect(object.collection[0].baz).toMatch('BAZ');
     });
   });
-
 });

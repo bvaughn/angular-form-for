@@ -80,11 +80,12 @@ angular.module('formFor').directive('formFor',
           var formFieldDatum = {
             bindable: null,
             required: rules && !!rules.required,
-            isCollection: fieldName.indexOf('[]') > 0,
+            isCollection: fieldName.indexOf('[') > 0,
             fieldName: fieldName,
             scope: formFieldScope
           };
 
+          // If this is a collection we'll need to store multiple field $scopes.
           if (formFieldDatum.isCollection) {
             if (!$scope.formFieldData.hasOwnProperty(safeFieldName)) {
               $scope.formFieldData[safeFieldName] = [];
@@ -104,14 +105,7 @@ angular.module('formFor').directive('formFor',
           // To simplify binding for formFor children, we encapsulate this and return a simple bindable model.
           // We need to manage 2-way binding to keep the original model and our wrapper in sync though.
           // Given a model {foo: {bar: 'baz'}} and a field-name 'foo.bar' $parse allows us to retrieve 'baz'.
-
-          if (formFieldDatum.isCollection) {
-            var index = $scope.formFieldData[safeFieldName].length - 1;
-
-            formFieldDatum.getterFieldName = fieldName.replace('[]', '[' + index + ']');
-          } else {
-            formFieldDatum.getterFieldName = fieldName;
-          }
+          formFieldDatum.getterFieldName = fieldName;
 
           console.log('fieldName:'+fieldName+' ~> getterFieldName:'+formFieldDatum.getterFieldName);
           var getter = $parse(formFieldDatum.getterFieldName);
@@ -144,7 +138,7 @@ angular.module('formFor').directive('formFor',
          */
         this.unregisterFormField = function(formFieldScope, fieldName) {
           var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
-          var formFieldData = fieldName.indexOf('[]') > 0 ? $scope.formFieldData[safeFieldName] : [$scope.formFieldData[safeFieldName]];
+          var formFieldData = fieldName.indexOf('[') > 0 ? $scope.formFieldData[safeFieldName] : [$scope.formFieldData[safeFieldName]];
 
           angular.foreach(formFieldData,
             function(formFieldDatum) {

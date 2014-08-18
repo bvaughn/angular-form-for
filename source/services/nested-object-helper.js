@@ -5,14 +5,52 @@
  * Helper utility to simplify working with nested objects.
  */
 angular.module('formFor').service('NestedObjectHelper', function($parse) {
-  var sanitizeAttribute = function(attribute) {
-    return attribute.replace('[]', '');
-  }
 
   return {
 
+    // $parse does not handle array brackets so we need to create Arrays that don't exist yet
+    // @see https://github.com/angular/angular.js/issues/2845
+    $createEmptyArrays: function(object, attribute) {
+      var startOfArray = 0;
+
+      while (true) {
+        startOfArray = attribute.indexOf('[', startOfArray);
+
+        if (startOfArray < 0) {
+          break;
+        }
+
+        var arrayAttribute = attribute.substr(0, startOfArray);
+        var possibleArray = this.readAttribute(object, arrayAttribute);
+
+        // Create the Array if it doesn't yet exist
+        if (!possibleArray) {
+          possibleArray = [];
+
+          this.writeAttribute(object, arrayAttribute, possibleArray);
+        }
+
+        // Create an empty Object in the Array if the user is about to write to one (and one does not yet exist)
+        var match = attribute.substr(startOfArray).match(/([0-9]+)\]\./);
+
+        if (match) {
+          var index = parseInt(match[1]);
+
+          if (!possibleArray[index]) {
+            possibleArray[index] = {};
+          }
+        }
+
+        // Increment and keep scanning
+        startOfArray++;
+      }
+    },
+
     flattenAttribute: function(attribute) {
-      return sanitizeAttribute(attribute).replace(/\./g, '___');
+      attribute = attribute.replace(/\[([^\]]+)\]\.{0,1}/g, '___$1___');
+      attribute = attribute.replace(/\./g, '___');
+
+      return attribute;
     },
 
     /**
@@ -64,7 +102,7 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * @returns {Object} Value defined at the specified key
      */
     readAttribute: function(object, attribute) {
-      return $parse(sanitizeAttribute(attribute))(object);
+      return $parse(attribute)(object);
     },
 
     /**
@@ -76,7 +114,9 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * @param {Object} value Value to be written
      */
     writeAttribute: function(object, attribute, value) {
-      $parse(sanitizeAttribute(attribute)).assign(object, value);
+      this.$createEmptyArrays(object, attribute);
+
+      $parse(attribute).assign(object, value);
     }
   };
 });
