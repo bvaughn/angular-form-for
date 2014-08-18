@@ -1,6 +1,52 @@
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#selectfield
+ * @ngdoc Directives
+ * @name select-field
+ * @description
+ * Renders a drop-down &lt;select&gt; menu along with an input label.
+ * This type of component works with large enumerations and can be configured to allow for a blank/empty selection by way of an allow-blank attribute.
+ *
+ * @param {attribute} allow-blank The presence of this attribute indicates that an empty/blank selection should be allowed.
+ * @param {String} attribute Name of the attribute within the parent form-for directive's model object.
+ * This attributes specifies the data-binding target for the input.
+ * Dot notation (ex "address.street") is supported.
+ * @param {Boolean} disable Disable input element.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {Boolean} enableFiltering Enable filtering of list via a text input at the top of the dropdown.
+ * @param {String} filter Two-way bindable filter string.
+ * $watch this property to load remote options based on filter text.
+ * (Refer to this Plunker demo for an example.)
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Optional field label displayed before the drop-down.
+ * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
+ * @param {String} labelAttribute Optional override for label key in options array.
+ * Defaults to "label".
+ * @param {Array} options Set of options, each containing a label and value key.
+ * The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.
+ * @param {String} placeholder Optional placeholder text to display if no value has been selected.
+ * The text "Select" will be displayed if no placeholder is provided.
+ * @param {String} valueAttribute Optional override for value key in options array.
+ * Defaults to "value".
+ *
+ * @example
+ * // To use this component you'll first need to define a set of options. For instance:
+ * $scope.genders = [
+ *   { value: 'f', label: 'Female' },
+ *   { value: 'm', label: 'Male' }
+ * ];
+ *
+ * // To render a drop-down input using the above options:
+ * <select-field attribute="gender"
+ *               label="Gender"
+ *               options="genders">
+ * </select-field>
+ *
+ * // If you want to make this attribute optional you can use the allow-blank attribute as follows:
+ * <select-field attribute="gender"
+ *               label="Gender"
+ *               options="genders"
+ *               allow-blank>
+ * </select-field>
  */
 angular.module('formFor').directive('selectField',
   function($document, $log, $timeout, FieldHelper) {

@@ -1,10 +1,16 @@
 /**
+ * @ngdoc Services
+ * @name StringUtil
+ * @description
  * Utility for working with strings.
  */
 angular.module('formFor').service('StringUtil', function() {
 
   /**
-   * Converts text in common variable formats (ex. myVariable, my_variable) to humanized form (My Variable).
+   * Converts text in common variable formats to humanized form.
+   * @memberof StringUtil
+   * @param {String} text Name of variable to be humanized (ex. myVariable, my_variable)
+   * @returns {String} Humanized string (ex. 'My Variable')
    */
   this.humanize = function(text) {
     if (!text) {

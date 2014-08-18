@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var es = require('event-stream');
 var pipe = es.pipe.bind(es);
 var concat = require('gulp-concat');
+var shell = require('gulp-shell');
 
 var CONFIG = {
   distDir: 'dist',
@@ -89,3 +90,11 @@ gulp.task('test', function(done) {
 });
 
 gulp.task('build', ['clean', 'lintJs', 'test', 'createCompressedJs', 'createUncompressedJs', 'compileCss']);
+
+gulp.task('docs', shell.task([
+  'node_modules/jsdoc/jsdoc.js '+
+    '-c node_modules/angular-jsdoc/conf.json '+   // config file
+    '-t node_modules/angular-jsdoc/template '+    // template file
+    '-d build/docs '+                             // output directory
+    '-r source'                                   // source code directory
+]));

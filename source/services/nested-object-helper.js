@@ -1,4 +1,7 @@
 /**
+ * @ngdoc Services
+ * @name NestedObjectHelper
+ * @description
  * Helper utility to simplify working with nested objects.
  */
 angular.module('formFor').service('NestedObjectHelper', function($parse) {
@@ -12,6 +15,9 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
      * Crawls an object and returns a flattened set of all attributes using dot notation.
      * This converts an Object like: {foo: {bar: true}, baz: true}
      * Into an Array like ['foo', 'foo.bar', 'baz']
+     * @memberof NestedObjectHelper
+     * @param {Object} object Object to be flattened
+     * @returns {Array} Array of flattened keys (perhaps containing dot notation)
      */
     flattenObjectKeys: function(object) {
       var keys = [];
@@ -48,9 +54,10 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
     /**
      * Returns the value defined by the specified attribute.
      * This function guards against dot notation for nested references (ex. 'foo.bar').
-     *
-     * @param object Object
-     * @param attribute Attribute (or dot-notation path)
+     * @memberof NestedObjectHelper
+     * @param {Object} object Object ot be read
+     * @param {String} attribute Attribute (or dot-notation path) to read
+     * @returns {Object} Value defined at the specified key
      */
     readAttribute: function(object, attribute) {
       return $parse(attribute)(object);
@@ -59,10 +66,10 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
     /**
      * Writes the specified value to the specified attribute.
      * This function guards against dot notation for nested references (ex. 'foo.bar').
-     *
-     * @param object Object
-     * @param attribute Attribute (or dot-notation path)
-     * @param value Value to be written
+     * @memberof NestedObjectHelper
+     * @param {Object} object Object ot be updated
+     * @param {String} attribute Attribute (or dot-notation path) to update
+     * @param {Object} value Value to be written
      */
     writeAttribute: function(object, attribute, value) {
       $parse(attribute).assign(object, value);

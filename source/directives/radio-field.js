@@ -1,6 +1,27 @@
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#radiofield
+ * @ngdoc Directives
+ * @name radio-field
+ *
+ * @description
+ * Renders a radio &lt;input&gt; with optional label.
+ * This type of component is well-suited for small enumerations.
+ *
+ * @param {String} attribute Name of the attribute within the parent form-for directive's model object.
+ * This attributes specifies the data-binding target for the input.
+ * Dot notation (ex "address.street") is supported.
+ * @param {Boolean} disable Disable input element.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Optional field label displayed after the radio input.
+ * (Although not required, it is strongly suggested that you specify a value for this attribute.)
+ * HTML is allowed for this attribute
+ * @param {Object} Value to be assigned to model if this radio component is selected.
+ *
+ * @example
+ * // To render a radio group for gender selection you might use the following markup:
+ * <radio-field label="Female" attribute="gender" value="f"></radio-field>
+ * <radio-field label="Male" attribute="gender" value="m"></radio-field>
  */
 angular.module('formFor').directive('radioField',
   function($log, FieldHelper) {

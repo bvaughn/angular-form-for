@@ -1,6 +1,35 @@
 /**
- * For documentation please refer to the project wiki:
- * https://github.com/bvaughn/angular-form-for/wiki/API-Reference#formfor
+ * @ngdoc Directives
+ * @name form-for
+ * @description
+ * This directive should be paired with an Angular ngForm object and should contain at least one of the formFor field types described below.
+ * At a high level, it operates on a bindable form-data object and runs validations each time a change is detected.
+ *
+ * @param {Object} controller Two way bindable attribute exposing access to the formFor controller API.
+ * See below for an example of how to use this binding to access the controller.
+ * @param {Boolean} disable Form is disabled.
+ * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * This attribute is 2-way bindable.
+ * @param {Object} formFor An object on $scope that formFor should read and write data to.
+ * To prevent accidentally persisting changes to this object after a cancelled form, it is recommended that you bind to a copied object.
+ * For more information refer to angular.copy.
+ * @param {String} service Convenience mehtod for identifying an $injector-accessible model containing both the validation rules and submit function.
+ * Validation rules should be accessible via an attribute named validationRules and the submit function should be named submit.
+ * @param {Function} submitComplete Custom handler to be invoked upon a successful form submission.
+ * Use this to display custom messages or do custom routing after submit.
+ * This method should accept a "data" parameter.
+ * See below for an example.
+ * (To set a global, default submit-with handler see FormForConfiguration.)
+ * @param {Function} submitError Custom error handler function.
+ * This function should accept an "error" parameter.
+ * See below for an example.
+ * (To set a global, default submit-with handler see FormForConfiguration.)
+ * @param {Function} submitWith Function triggered on form-submit.
+ * This function should accept a named parameter data (the model object) and should return a promise to be resolved/rejected based on the result of the submission.
+ * In the event of a rejection, the promise can return an error string or a map of field-names to specific errors.
+ * See below for an example.
+ * @param {Object} validationRules Set of client-side validation rules (keyed by form field names) to apply to form-data before submitting.
+ * For more information refer to the Validation Types page.
  */
 angular.module('formFor').directive('formFor',
   function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
@@ -25,6 +54,7 @@ angular.module('formFor').directive('formFor',
         $scope.scopeWatcherUnwatchFunctions = [];
         $scope.submitButtonScopes = [];
 
+        var controller = this;
 
         if ($scope.service) {
           $scope.$service = $injector.get($scope.service);
@@ -40,10 +70,11 @@ angular.module('formFor').directive('formFor',
 
         /**
          * All form-input children of formFor must register using this function.
-         * @param formFieldScope $scope of input directive
-         * @param fieldName Unique identifier of field within model; used to map errors back to input fields
+         * @memberof form-for
+         * @param {$scope} formFieldScope $scope of input directive
+         * @param {String} fieldName Unique identifier of field within model; used to map errors back to input fields
          */
-        this.registerFormField = function(formFieldScope, fieldName) {
+        controller.registerFormField = function(formFieldScope, fieldName) {
           var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
           var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
 
@@ -80,15 +111,18 @@ angular.module('formFor').directive('formFor',
 
         /**
          * All submitButton children must register with formFor using this function.
+         * @memberof form-for
+         * @param {$scope} submitButtonScope $scope of submit button directive
          */
-        this.registerSubmitButton = function(submitButtonScope) {
+        controller.registerSubmitButton = function(submitButtonScope) {
           $scope.submitButtonScopes.push(submitButtonScope);
         };
 
         /**
          * Resets errors displayed on the <form> without resetting the form data values.
+         * @memberof form-for
          */
-        this.resetErrors = function() {
+        controller.resetErrors = function() {
           $scope.formForStateHelper.setFormSubmitted(false);
 
           var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
@@ -118,9 +152,10 @@ angular.module('formFor').directive('formFor',
         // Track field validity and dirty state.
         $scope.formForStateHelper = new $FormForStateHelper($scope);
 
-        /**
+        /*
          * Setup a debounce validator on a registered form field.
          * This validator will update error messages inline as the user progresses through the form.
+         * @param {String} fieldName Name of field within form-data
          */
         var createScopeWatcher = function(fieldName) {
           var formFieldScope = $scope.formFieldScopes[fieldName];
@@ -170,11 +205,10 @@ angular.module('formFor').directive('formFor',
           });
         });
 
-        /**
+        /*
          * Update all registered form fields with the specified error messages.
          * Specified map should be keyed with fieldName and should container user-friendly error strings.
-         *
-         * @param errorMap Map of field names (or paths) to errors
+         * @param {Object} errorMap Map of field names (or paths) to errors
          */
         $scope.updateErrors = function(errorMap) {
           angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
@@ -184,7 +218,7 @@ angular.module('formFor').directive('formFor',
           });
         };
 
-        /**
+        /*
          * Validate all registered fields and update FormForStateHelper's error mapping.
          * This update indirectly triggers form validity check and inline error message display.
          */

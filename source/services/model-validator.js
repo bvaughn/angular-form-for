@@ -1,4 +1,7 @@
 /**
+ * @ngdoc Services
+ * @name ModelValidator
+ * @description
  * ModelValidator service used by formFor to determine if each field in the form-data passes validation rules.
  * This service is not intended for use outside of the formFor module/library.
  */
@@ -9,9 +12,10 @@ angular.module('formFor').service('ModelValidator',
      * Validates the model against all rules in the validationRules.
      * This method returns a promise to be resolved on successful validation,
      * Or rejected with a map of field-name to error-message.
-     *
-     * @param model Model data to validate with any existing rules
-     * @param validationRules Set of named validation rules
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateAll = function(model, validationRules) {
       var fields = NestedObjectHelper.flattenObjectKeys(validationRules);
@@ -23,10 +27,11 @@ angular.module('formFor').service('ModelValidator',
      * Validates the values in model with the rules defined in the current validationRules.
      * This method returns a promise to be resolved on successful validation,
      * Or rejected with a map of field-name to error-message.
-     *
-     * @param model Model data
-     * @param fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
-     * @param validationRules Set of named validation rules
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Array} fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateFields = function(model, fieldNames, validationRules) {
       var deferred = $q.defer();
@@ -63,10 +68,11 @@ angular.module('formFor').service('ModelValidator',
      * Validates a value against the related rule-set (within validationRules).
      * This method returns a promise to be resolved on successful validation.
      * If validation fails the promise will be rejected with an error message.
-     *
-     * @param model Form-data object model is contained within
-     * @param fieldName Name of field used to associate the rule-set map with a given value
-     * @param validationRules Set of named validation rules
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {String} fieldName Name of field used to associate the rule-set map with a given value
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateField = function(model, fieldName, validationRules) {
       var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
