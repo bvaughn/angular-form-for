@@ -1,0 +1,19 @@
+<form form-for="formData" service="UserSignUp" submit-error="submitFailed(error)">
+  <text-field label="Username" attribute="username" icon-after="fa fa-user" placeholder="brian" help="This username will be visible to others"></text-field>
+  <text-field label="Password" attribute="password" icon-before="fa fa-key" type="password" placeholder="Pick a good one" help="Strong passwords usually have mixed-case letters and numbers"></text-field>
+
+  <text-field label="Comments" attribute="comments" multiline placeholder="Go ahead, say anything."></text-field>
+
+  <h4>Gender</h4>
+  <radio-field label="Male" attribute="gender" value="male"></radio-field>
+  <radio-field label="Female" attribute="gender" value="female"></radio-field>
+
+  <h4>Type validations</h4>
+  <text-field label="Email" attribute="email"></text-field>
+  <text-field label="Negative integer" attribute="negativeInteger"></text-field>
+  <text-field label="Positive number" attribute="positiveNumber"></text-field>
+
+  <checkbox-field label="I agree to the TOS" attribute="agreed"></checkbox-field>
+
+  <submit-button label="Sign Up"></submit-button>
+</form>

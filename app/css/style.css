@@ -1,0 +1,18 @@
+.header-logo {
+  margin-right: 5px;
+}
+
+ul.nav li.dropdown:hover {
+  background-color: #393a35;
+  cursor: pointer;
+}
+ul.nav li.dropdown:hover > ul.dropdown-menu {
+  display: block;
+}
+
+a {
+  color: #325d88;
+}
+a:hover {
+  color: #244363;
+}

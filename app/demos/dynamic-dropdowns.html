@@ -1,0 +1,15 @@
+<form form-for="formData">
+  <select-field label="Filtered, local options"
+                attribute="localOption" options="localOptions"
+                enable-filtering>
+  </select-field>
+
+  <select-field label="Filtered, local options"
+                attribute="localOption" options="remoteOptions"
+                enable-filtering filter="filterText">
+  </select-field>
+
+  <select-field label="Field with pre-selected value"
+                attribute="preselectedLocalOption" options="localOptions">
+  </select-field>
+</form>

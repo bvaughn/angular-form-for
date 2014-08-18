@@ -1,0 +1,58 @@
+<h1>
+  <img class="header-logo" src="images/form-for-logo-small.png" width="47" height="50">
+  Introducing formFor
+</h1>
+
+<p>
+  formFor is a <strong>quick</strong> and <strong>easy</strong> way to create complex HTML forms with client-side validations.
+</p>
+
+<div class="well">
+  <legend>Sample sign-up form</legend>
+  <form form-for="formData" controller="formController" validation-rules="validationRules" submit-with="submit()">
+    <div class="row show-grid">
+      <div class="col-md-6"><text-field label="Email" attribute="email"></text-field></div>
+      <div class="col-md-6"><text-field label="Password" attribute="password" type="password"></text-field></div>
+    </div>
+    <checkbox-field label="I agree to the terms of service" attribute="iAgreeToTheTermsOfService"></checkbox-field>
+    <button class="btn btn-default" ng-click="reset()">Reset <i class="fa fa-undo"></i></button>
+    <button class="btn btn-primary">Sign Up <i class="fa fa-user"></i></button>
+  </form>
+</div>
+
+<p>
+  formFor is incredibly flexible, offering a wide range of configuration options.
+  Check out the demos and documentation to learn more!
+</p>
+
+<p>
+  If you've got any questions, reach out to me <a href="https://github.com/bvaughn" target="_blank">on Github</a>.
+</p>
+
+<h1>Installation</h1>
+
+<p>You can install this plugin with either <a href="http://bower.io/" target="_blank">Bower</a>
+or <a href="https://www.npmjs.org/" target="_blank">NPM</a>:</p>
+
+<pre class="language-bash"><code>bower install angular-form-for --save
+npm install angular-form-for --save</code></pre>
+
+<p>
+  This will download an angular-form-for folder into your bower/node components directory.
+  Inside of that folder there will be a dist folder with the formFor JavaScript and CSS files.
+  By default formFor is compatible with <a href="https://github.com/bvaughn/angular-form-for/blob/master/getbootstrap.com" target="_blank">Bootstrap</a> 3.2.x styles.
+  A separate, formFor only CSS stylehseet is included for those not using Bootstrap.
+</p>
+
+<p>
+  Lastly just include the formFor module in your Angular application like so:
+</p>
+
+<pre class="language-javascript"><code>angular.module('myAngularApp', ['formFor']);</code></pre>
+
+<h1>License</h1>
+
+<p>
+  Copyright (c) 2014 Brian Vaughn.
+  Licensed under the MIT license.
+</p>

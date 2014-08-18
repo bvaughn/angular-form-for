@@ -1,0 +1,55 @@
+<h1>IE8 Support</h1>
+
+<p>The formFor library officially supports IE9+, but IE8 support can be achieved with a few simple steps.</p>
+
+<h2>Do not change input type</h2>
+
+<p>According to <a href="http://msdn.microsoft.com/en-us/library/ms534700.aspx" target="_blank">Microsoft</a>:</p>
+
+<blockquote>
+The type property is read/write-once, but only when an input element is created with the createElement method and before it is added to the document.
+</blockquote>
+
+<p>
+The default textField skin declares a binding for the input's type attribute and so causes problems with IE.
+To fix that, you can override the <code>&lt;input&gt;</code> declaration as follows:
+</p>
+
+<prism source="samples/text-field-template-patch.html"></prism>
+
+<h2>Polyfills</h2>
+
+<p>
+<code>Function.prototype.bind</code> was added in ECMA 5.1 and so is only available on IE9+.
+Mozilla provides a simple polyfill to add support though:
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank">
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind</a>
+</p>
+
+<p>
+<code>Object.keys</code> was added in ECMA 5.1 and so is only available on IE9+.
+Mozilla provides a polyfill for it though:
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys" target="_blank">
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys</a>
+</p>
+
+<h2>Define custom element tags for formFor directives</h2>
+
+<p>
+In order to prevent IE8 from erroring due to unrecognized element types, you'll have to tell it about formFor directives as follows:
+</p>
+
+<prism source="samples/ie8-define-custom-elements.html"></prism>
+
+<h2>Other IE gotchas</h2>
+
+<p>
+The Angular website offers a great set of resources for
+<a href="https://docs.angularjs.org/guide/ie" target="_blank">dealing with the challenges of older IE versions</a>.
+Give it a read if you run into any snags.
+</p>
+
+<ul class="pager">
+  <li class="previous"><a href="#/template-overrides"><i class="fa fa-arrow-left"></i> Template Overrides</a></li>
+  <li class="next disabled"><a>Next <i class="fa fa-arrow-right"></i></a></li>
+</ul>

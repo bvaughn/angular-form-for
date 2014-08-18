@@ -1,0 +1,16 @@
+<div ng-if="!multiline &amp;&amp; type === 'text'">
+  <input type="text"
+         class="text-field-input" ng-class="{'has-error': error, 'has-icon': icon}"
+         ng-disabled="disable || disabledByForm"
+         placeholder="{{placeholder}}"
+         ng-model="model.bindable"
+         form-for-debounce="{{debounce}}" />
+</div>
+<div ng-if="!multiline &amp;&amp; type === 'password'">
+  <input type="password"
+         class="text-field-input" ng-class="{'has-error': error, 'has-icon': icon}"
+         ng-disabled="disable || disabledByForm"
+         placeholder="{{placeholder}}"
+         ng-model="model.bindable"
+         form-for-debounce="{{debounce}}" />
+</div>

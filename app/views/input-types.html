@@ -1,0 +1,65 @@
+<h1>Input Types</h1>
+
+<p>
+  formFor supports the following field types:
+</p>
+
+<dl>
+  <dt><a href="https://rawgit.com/bvaughn/angular-form-for/master/dist/docs/text-field.html" target="_blank">textField</a></dt>
+  <dd>
+    Used for text input.
+    Specify a type attribute to configure additional behavior (like password).
+    Specify a multiline attribute to enable multiline text input.
+  </dd>
+  <dt><a href="https://rawgit.com/bvaughn/angular-form-for/master/dist/docs/select-field.html" target="_blank">selectField</a></dt>
+  <dd>
+    Drop-down/select menu for enumerations.
+    Requires an options parameter to specify the set of valid values.
+    Add an allow-blank attribute to signify optional fields.
+  </dd>
+  <dt><a href="https://rawgit.com/bvaughn/angular-form-for/master/dist/docs/radio-field.html" target="_blank">radioField</a></dt>
+  <dd>
+    Checkbox for Boolean values.
+  </dd>
+  <dt><a href="https://rawgit.com/bvaughn/angular-form-for/master/dist/docs/checkbox-field.html" target="_blank">checkboxField</a></dt>
+  <dd>
+    Radio button for enumerations.
+    This type of component is automatically grouped by its attribute attribute to ensure that only one value is selected at a time.
+  </dd>
+  <dt><a href="https://rawgit.com/bvaughn/angular-form-for/master/dist/docs/type-ahead-field.html" target="_blank">typeAheadField</a></dt>
+  <dd>
+    Type-ahead text input component based on the Angular Bootstrap typeahead component.
+  </dd>
+  <dt><a href="https://rawgit.com/bvaughn/angular-form-for/master/dist/docs/submit-button.html" target="_blank">submitButton</a></dt>
+  <dd>
+    (Optional) submit button directive.
+    This button automatically binds to formFor and disables itself during submission.
+    For a complete list of attributes for the above directives, refer to the API Reference page.
+  </dd>
+</dl>
+
+<p>
+  For a complete list of attributes for the above directives check out the
+  <a href="https://rawgit.com/bvaughn/angular-form-for/master/dist/docs/index.html" target="_blank">documentation</a>.
+</p>
+
+<h2>Creating a custom field</h2>
+
+<p>You can also create a custom field directive as follows:</p>
+
+<prism parser="javascript" source="/samples/custom-field.js"></prism>
+
+<p>
+  formFor fields have a lot of capabilities, but the only <em>requirements</em> are:
+</p>
+
+<ul>
+  <li>It must register with the formFor controller's <em>registerFormField</em> method.</li>
+  <li>It must read/write to the <em>bindable</em> attribute of the object returned by registerFormField.</li>
+  <li>It should observe a <em>disabledByForm</em> attribute to be managed by formFor.</li>
+</ul>
+
+<ul class="pager">
+  <li class="previous"><a href="#/overview"><i class="fa fa-arrow-left"></i> Overview</a></li>
+  <li class="next"><a href="#/validation-types">Validation Types <i class="fa fa-arrow-right"></i></a></li>
+</ul>
