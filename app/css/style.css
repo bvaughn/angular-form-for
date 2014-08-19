@@ -1,5 +1,16 @@
-.header-logo {
-  margin-right: 5px;
+.image-header-table {
+  margin: 10px 0 20px;
+}
+.index-header-logo {
+  height: 100px;
+  width: 94px;
+  margin-right: 15px;
+}
+.index-header {
+  margin: 0;
+}
+.index-header small {
+  display: block;
 }
 
 ul.nav li.dropdown:hover {
@@ -43,6 +54,7 @@ a:hover {
 }
 
 pre[class*="language-"] {
+  background-color: #242422;
   margin-top: 0;
   border: none;
 }
