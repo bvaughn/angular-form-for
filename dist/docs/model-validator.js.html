@@ -85,10 +85,44 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
-     * TODO Document
+     * Validate all of the specified collections.
+     * This method returns a promise to be resolved on successful validation,
+     * Or rejected with a map of field-name to error-message.
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Array} fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
+     * @private
+     * It would be nice if validateCollections and validateFields could be combined
      */
     this.validateCollections = function(model, fieldNames, validationRules) {
-      // TODO
+      var deferred = $q.defer();
+      var promises = [];
+      var errorMap = {};
+
+      angular.forEach(fieldNames, function(fieldName) {
+        var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+        if (rules) {
+          var promise = this.validateCollection(model, fieldName, validationRules);
+          promise.then(
+            angular.noop,
+            function(error) {
+              $parse(fieldName).assign(errorMap, error);
+            });
+
+          promises.push(promise);
+        }
+      }, this);
+
+      $q.waitForAll(promises).then(
+        deferred.resolve,
+        function() {
+          deferred.reject(errorMap);
+        });
+
+      return deferred.promise;
     };
 
     /**
@@ -105,14 +139,12 @@ angular.module('formFor').service('ModelValidator',
       var deferred = $q.defer();
       var promises = [];
       var errorMap = {};
-      var that = this;
 
       angular.forEach(fieldNames, function(fieldName) {
         var rules = this.$getRulesForFieldName(validationRules, fieldName);
 
         if (rules) {
-          var promise = that.validateField(model, fieldName, validationRules);
-
+          var promise = this.validateField(model, fieldName, validationRules);
           promise.then(
             angular.noop,
             function(error) {
@@ -318,7 +350,7 @@ angular.module('formFor').service('ModelValidator',
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li><li><a href="global.html#validateCollection">validateCollection</a></li><li><a href="global.html#validateCollections">validateCollections</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li><li><a href="global.html#validateCollection">validateCollection</a></li></ul>
 </nav>
 
 <br clear="both">

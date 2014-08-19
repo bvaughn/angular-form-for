@@ -39,7 +39,6 @@ angular.module('formFor').directive('formFor',
       scope: {
         controller: '=?',
         disable: '=?',
-        errorMap: '=?',
         formFor: '=',
         service: '@',
         submitComplete: '&?',
@@ -49,6 +48,8 @@ angular.module('formFor').directive('formFor',
         validationRules: '=?'
       },
       controller: function($scope) {
+        $scope.collectionNameToErrorMap = {};
+        $scope.fieldNameToErrorMap = {};
 
         // Map of safe (bindable, $scope.$watch-able) field names to objects containing the following keys:
         // • bindableWrapper: Shared between formFor and field directives. Returned by registerFormField(). Contains:
@@ -226,6 +227,7 @@ angular.module('formFor').directive('formFor',
           var watcherInitialized = false;
 
           $scope.$watch('formFor.' + fieldName + '.length', function(newValue, oldValue) {
+            console.log('collection watch size:'+newValue+', initialized:'+watcherInitialized);
             // The initial $watch should not trigger a visible validation...
             if (!watcherInitialized) {
               watcherInitialized = true;
@@ -250,7 +252,7 @@ angular.module('formFor').directive('formFor',
         controller.resetErrors = function() {
           $scope.formForStateHelper.setFormSubmitted(false);
 
-          var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
+          var keys = NestedObjectHelper.flattenObjectKeys($scope.fieldNameToErrorMap);
 
           angular.forEach(keys, function(fieldName) {
             $scope.formForStateHelper.setFieldHasBeenModified(fieldName, false);
@@ -302,19 +304,26 @@ angular.module('formFor').directive('formFor',
         });
 
         /*
-         * Update all registered form fields with the specified error messages.
+         * Update all registered collection labels with the specified error messages.
          * Specified map should be keyed with fieldName and should container user-friendly error strings.
-         * @param {Object} errorMap Map of field names (or paths) to errors
+         * @param {Object} fieldNameToErrorMap Map of collection names (or paths) to errors
          */
-        $scope.updateErrors = function(errorMap) {
-          angular.forEach($scope.fields, function(scope, bindableFieldName) {
-            var error = NestedObjectHelper.readAttribute(errorMap, bindableFieldName);
+        $scope.updateCollectionErrors = function(fieldNameToErrorMap) {
+          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, bindableFieldName);
 
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
           });
+        };
 
-          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
-            var error = NestedObjectHelper.readAttribute(errorMap, bindableFieldName);
+        /*
+         * Update all registered form fields with the specified error messages.
+         * Specified map should be keyed with fieldName and should container user-friendly error strings.
+         * @param {Object} fieldNameToErrorMap Map of field names (or paths) to errors
+         */
+        $scope.updateFieldErrors = function(fieldNameToErrorMap) {
+          angular.forEach($scope.fields, function(scope, bindableFieldName) {
+            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, bindableFieldName);
 
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
           });
@@ -325,9 +334,13 @@ angular.module('formFor').directive('formFor',
          * This update indirectly triggers form validity check and inline error message display.
          */
         $scope.validateAll = function() {
-          $scope.updateErrors({}); // Reset errors before starting new validation.
 
-          var validationPromise;
+          // Reset errors before starting new validation.
+          $scope.updateCollectionErrors({});
+          $scope.updateFieldErrors({});
+
+          var validateCollectionsPromise;
+          var validateFieldsPromise;
 
           if ($scope.$validationRules) {
             var validationKeys = [];
@@ -336,18 +349,24 @@ angular.module('formFor').directive('formFor',
               validationKeys.push(field.fieldName);
             });
 
+            validateFieldsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
+            validateFieldsPromise.then(angular.noop, $scope.updateFieldErrors);
+
+            validationKeys = [];
+
             angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
               validationKeys.push(bindableFieldName);
             });
 
-            validationPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
+            validateCollectionsPromise = ModelValidator.validateCollections($scope.formFor, validationKeys, $scope.$validationRules);
+            validateCollectionsPromise.then(angular.noop, $scope.updateCollectionErrors);
+
           } else {
-            validationPromise = $q.resolve();
+            validateCollectionsPromise = $q.resolve();
+            validateFieldsPromise = $q.resolve();
           }
 
-          validationPromise.then(angular.noop, $scope.updateErrors);
-
-          return validationPromise;
+          return $q.waitForAll([validateCollectionsPromise, validateFieldsPromise]);
         };
       },
       link: function($scope, $element, $attributes, controller) {
@@ -387,7 +406,9 @@ angular.module('formFor').directive('formFor',
                     // If the remote response returned inline-errors update our error map.
                     // This is unecessary if a string was returned.
                     if (angular.isObject(errorMessageOrErrorMap)) {
-                      $scope.updateErrors(errorMessageOrErrorMap);
+                      // TODO Questionable: Maybe server should be forced to return fields/collections constraints?
+                      $scope.updateCollectionErrors(errorMessageOrErrorMap);
+                      $scope.updateFieldErrors(errorMessageOrErrorMap);
                     }
 
                     // $scope.submitError is wrapped with a virtual function so we must check via attributes

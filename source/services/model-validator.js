@@ -58,10 +58,44 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
-     * TODO Document
+     * Validate all of the specified collections.
+     * This method returns a promise to be resolved on successful validation,
+     * Or rejected with a map of field-name to error-message.
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Array} fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
+     * @private
+     * It would be nice if validateCollections and validateFields could be combined
      */
     this.validateCollections = function(model, fieldNames, validationRules) {
-      // TODO
+      var deferred = $q.defer();
+      var promises = [];
+      var errorMap = {};
+
+      angular.forEach(fieldNames, function(fieldName) {
+        var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+        if (rules) {
+          var promise = this.validateCollection(model, fieldName, validationRules);
+          promise.then(
+            angular.noop,
+            function(error) {
+              $parse(fieldName).assign(errorMap, error);
+            });
+
+          promises.push(promise);
+        }
+      }, this);
+
+      $q.waitForAll(promises).then(
+        deferred.resolve,
+        function() {
+          deferred.reject(errorMap);
+        });
+
+      return deferred.promise;
     };
 
     /**
@@ -78,14 +112,12 @@ angular.module('formFor').service('ModelValidator',
       var deferred = $q.defer();
       var promises = [];
       var errorMap = {};
-      var that = this;
 
       angular.forEach(fieldNames, function(fieldName) {
         var rules = this.$getRulesForFieldName(validationRules, fieldName);
 
         if (rules) {
-          var promise = that.validateField(model, fieldName, validationRules);
-
+          var promise = this.validateField(model, fieldName, validationRules);
           promise.then(
             angular.noop,
             function(error) {
