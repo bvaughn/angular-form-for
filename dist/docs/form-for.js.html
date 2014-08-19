@@ -91,6 +91,10 @@ angular.module('formFor').directive('formFor',
         // A field like 'hobbies[0].name' might be mapped to something like 'hobbies__0__name' so that we can safely $watch it.
         $scope.fields = {};
 
+        // Maps collection names (ex. 'hobbies') to &lt;collection-label> directives.
+        // Allows formFor to mark collections as required and to display collection-level errors.
+        $scope.collectionLabels = {};
+
         // Set of bindable wrappers used to disable buttons when form-submission is in progress.
         // Wrappers contain the following keys:
         //   • disabled: Button should be disabled (generally because form-submission is in progress)
@@ -204,7 +208,6 @@ angular.module('formFor').directive('formFor',
         this.unregisterFormField = function(fieldName) {
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
-          console.log('unregistgering '+fieldName+' aka '+bindableFieldName);
           angular.forEach(
             $scope.fields[bindableFieldName].unwatchers,
             function(unwatch) {
@@ -230,6 +233,27 @@ angular.module('formFor').directive('formFor',
         };
 
         /**
+         * Collection headers should register themselves using this function in order to be notified of validation errors.
+         * @memberof form-for
+         * @param {String} fieldName Unique identifier of collection within model
+         * @return {Object} Object containing keys to be observed by the input field:
+         * • error: Header should display the string contained in this field (if one exists); this means the collection is invalid.
+         * • required: Header should display a 'required' indicator if this value is true.
+         */
+        controller.registerCollectionLabel = function(fieldName) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+          var bindableWrapper = {
+            error: null,
+            required: ModelValidator.isCollectionRequired(fieldName, $scope.validationRules)
+          };
+
+          $scope.collectionLabels[bindableFieldName] = bindableWrapper;
+
+          return bindableWrapper;
+        };
+
+        /**
          * Resets errors displayed on the &lt;form> without resetting the form data values.
          * @memberof form-for
          */
@@ -245,10 +269,8 @@ angular.module('formFor').directive('formFor',
 
         // Expose controller methods to the $scope.controller interface
         $scope.controller = $scope.controller || {};
-        $scope.controller.registerFormField = this.registerFormField;
-        $scope.controller.registerSubmitButton = this.registerSubmitButton;
-        $scope.controller.resetErrors = this.resetErrors;
-        $scope.controller.unregisterFormField = this.unregisterFormField;
+
+        angular.copy(controller, $scope.controller);
 
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disable', function(value) {
@@ -270,6 +292,7 @@ angular.module('formFor').directive('formFor',
         $scope.$watch('formForStateHelper.watchable', function() {
           var hasFormBeenSubmitted = $scope.formForStateHelper.hasFormBeenSubmitted();
 
+          // Mark invalid fields
           angular.forEach($scope.fields, function(fieldDatum, bindableFieldName) {
             if (hasFormBeenSubmitted || $scope.formForStateHelper.hasFieldBeenModified(bindableFieldName)) {
               var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
@@ -277,6 +300,27 @@ angular.module('formFor').directive('formFor',
               fieldDatum.bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
             } else {
               fieldDatum.bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset.
+            }
+          });
+
+          // Mark invalid collections
+          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+            if (hasFormBeenSubmitted) {
+              var errors = $scope.formForStateHelper.getFieldError(bindableFieldName);
+              var errorsToDisplay = [];
+
+              // Objects in the error array indicate nested attributes; we should ignore them in this context.
+              for (var i = 0; i &lt; errors.length; i++) {
+                if (!angular.isObject(errors[i])) {
+                  errorsToDisplay.push(errors[i]);
+                }
+              }
+
+              var error = errorsToDisplay.join(' ');
+
+              bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
+            } else {
+              bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset.
             }
           });
         });
@@ -288,6 +332,12 @@ angular.module('formFor').directive('formFor',
          */
         $scope.updateErrors = function(errorMap) {
           angular.forEach($scope.fields, function(scope, bindableFieldName) {
+            var error = NestedObjectHelper.readAttribute(errorMap, bindableFieldName);
+
+            $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+          });
+
+          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
             var error = NestedObjectHelper.readAttribute(errorMap, bindableFieldName);
 
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
@@ -307,7 +357,6 @@ angular.module('formFor').directive('formFor',
             var validationKeys = [];
 
             angular.forEach($scope.fields, function(field) {
-
               // Only validate collections once
               if (validationKeys.indexOf(field.validationAttribute) &lt; 0) {
                 validationKeys.push(field.validationAttribute);
@@ -395,7 +444,7 @@ angular.module('formFor').directive('formFor',
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
 </nav>
 
 <br clear="both">

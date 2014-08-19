@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: directives/field-label.js</title>
+    <title>JSDoc: Source: directives/collection-label.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: directives/field-label.js</h1>
+    <h1 class="page-title">Source: directives/collection-label.js</h1>
 
     
 
@@ -27,40 +27,38 @@
         <article>
             <pre class="prettyprint source linenums"><code>/**
  * @ngdoc Directives
- * @name field-label
+ * @name collection-label
  * @description
- * This component is only intended for internal use by the formFor module.
+ * Header label for collections.
+ * This component displays header text as well as collection validation errors.
  *
  * @param {String} help Optional help tooltip to display on hover.
  * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
  * @param {String} label Field label string. This string can contain HTML markup.
- * @param {String} required Optional attribute specifies that this field is a required field.
- * If a required label has been provided via FormForConfiguration then field label will display that value for required fields.
+ * @param {String} attribute Name of collection within validation rules
  *
  * @example
- * // To display a simple label with a help tooltip:
- * &lt;field-label label="Username"
- *              help="This will be visible to other users">
- * &lt;/field-label>
+ * // To display a simple collection header:
+ * &lt;collection-label  label="Hobbies" attribute="hobbies">
+ * &lt;/collection-label>
  */
-angular.module('formFor').directive('fieldLabel',
+angular.module('formFor').directive('collectionLabel',
   function( $sce, FormForConfiguration ) {
     return {
+      require: '^formFor',
       restrict: 'EA',
-      templateUrl: 'form-for/templates/field-label.html',
+      templateUrl: 'form-for/templates/collection-label.html',
       scope: {
+        attribute: '@',
         help: '@?',
-        label: '@',
-        required: '@?'
+        label: '@'
       },
-      controller: function($scope) {
+      link: function($scope, $element, $attributes, formForController) {
         $scope.$watch('label', function(value) {
           $scope.bindableLabel = $sce.trustAsHtml(value);
         });
 
-        if ($scope.required) {
-          $scope.requiredLabel = FormForConfiguration.requiredLabel;
-        }
+        $scope.model = formForController.registerCollectionLabel($scope.attribute);
       }
     };
   });

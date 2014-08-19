@@ -535,6 +535,8 @@ describe('ModelValidator', function() {
 
       expect(ModelValidator.validateField({things: [{name: 'Brian'}]},    'things', model.rules)).toBeResolved();
     });
+
+    // TODO Collection validations should return an array of only the errors (no undefined)
   });
 
   describe('validateFields', function() {

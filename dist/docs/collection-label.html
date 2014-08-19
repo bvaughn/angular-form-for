@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Directives: radio-field</title>
+    <title>JSDoc: Directives: collection-label</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Directives: radio-field</h1>
+    <h1 class="page-title">Directives: collection-label</h1>
 
     
 
@@ -27,7 +27,7 @@
 
 <header>
     <h2>
-    radio-field
+    collection-label
     </h2>
     
 </header>
@@ -42,7 +42,7 @@
 
     
     
-      <a href="radio-field.js.html#line1" class="name-link"><h4 class="name" id="radio-field"><span class="type-signature"></span>radio-field<span class="signature">(attribute, disable, help, label, Value)</span><span class="type-signature"></span></h4></a>
+      <a href="collection-label.js.html#line1" class="name-link"><h4 class="name" id="collection-label"><span class="type-signature"></span>collection-label<span class="signature">(help, label, attribute)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -51,8 +51,8 @@
 
     
     <div class="description">
-        <p>Renders a radio &lt;input&gt; with optional label.
-This type of component is well-suited for small enumerations.</p>
+        <p>Header label for collections.
+This component displays header text as well as collection validation errors.</p>
     </div>
     
 
@@ -82,55 +82,6 @@ This type of component is well-suited for small enumerations.</p>
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>attribute</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of the attribute within the parent form-for directive's model object.
-This attributes specifies the data-binding target for the input.
-Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>disable</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Disable input element.
-(Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).</p></td>
-        </tr>
-
     
 
         <tr>
@@ -175,22 +126,20 @@ By default this makes use of the Angular Bootstrap tooltip directive and the Fon
 
             
 
-            <td class="description last"><p>Optional field label displayed after the radio input.
-(Although not required, it is strongly suggested that you specify a value for this attribute.)
-HTML is allowed for this attribute</p></td>
+            <td class="description last"><p>Field label string. This string can contain HTML markup.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>Value</code></td>
+                <td class="name"><code>attribute</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
             
@@ -200,7 +149,7 @@ HTML is allowed for this attribute</p></td>
 
             
 
-            <td class="description last"><p>to be assigned to model if this radio component is selected.</p></td>
+            <td class="description last"><p>Name of collection within validation rules</p></td>
         </tr>
 
     
@@ -231,7 +180,7 @@ HTML is allowed for this attribute</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="radio-field.js.html">directives/radio-field.js</a>, <a href="radio-field.js.html#line1">line 1</a>
+        <a href="collection-label.js.html">directives/collection-label.js</a>, <a href="collection-label.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -258,9 +207,9 @@ HTML is allowed for this attribute</p></td>
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>// To render a radio group for gender selection you might use the following markup:
-&lt;radio-field label="Female" attribute="gender" value="f">&lt;/radio-field>
-&lt;radio-field label="Male" attribute="gender" value="m">&lt;/radio-field></code></pre>
+    <pre class="prettyprint"><code>// To display a simple collection header:
+&lt;collection-label  label="Hobbies" attribute="hobbies">
+&lt;/collection-label></code></pre>
 
     
 </dd>

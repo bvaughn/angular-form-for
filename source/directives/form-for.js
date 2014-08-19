@@ -64,6 +64,10 @@ angular.module('formFor').directive('formFor',
         // A field like 'hobbies[0].name' might be mapped to something like 'hobbies__0__name' so that we can safely $watch it.
         $scope.fields = {};
 
+        // Maps collection names (ex. 'hobbies') to <collection-label> directives.
+        // Allows formFor to mark collections as required and to display collection-level errors.
+        $scope.collectionLabels = {};
+
         // Set of bindable wrappers used to disable buttons when form-submission is in progress.
         // Wrappers contain the following keys:
         //   • disabled: Button should be disabled (generally because form-submission is in progress)
@@ -202,6 +206,27 @@ angular.module('formFor').directive('formFor',
         };
 
         /**
+         * Collection headers should register themselves using this function in order to be notified of validation errors.
+         * @memberof form-for
+         * @param {String} fieldName Unique identifier of collection within model
+         * @return {Object} Object containing keys to be observed by the input field:
+         * • error: Header should display the string contained in this field (if one exists); this means the collection is invalid.
+         * • required: Header should display a 'required' indicator if this value is true.
+         */
+        controller.registerCollectionLabel = function(fieldName) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+          var bindableWrapper = {
+            error: null,
+            required: ModelValidator.isCollectionRequired(fieldName, $scope.validationRules)
+          };
+
+          $scope.collectionLabels[bindableFieldName] = bindableWrapper;
+
+          return bindableWrapper;
+        };
+
+        /**
          * Resets errors displayed on the <form> without resetting the form data values.
          * @memberof form-for
          */
@@ -217,10 +242,8 @@ angular.module('formFor').directive('formFor',
 
         // Expose controller methods to the $scope.controller interface
         $scope.controller = $scope.controller || {};
-        $scope.controller.registerFormField = this.registerFormField;
-        $scope.controller.registerSubmitButton = this.registerSubmitButton;
-        $scope.controller.resetErrors = this.resetErrors;
-        $scope.controller.unregisterFormField = this.unregisterFormField;
+
+        angular.copy(controller, $scope.controller);
 
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disable', function(value) {
@@ -242,6 +265,7 @@ angular.module('formFor').directive('formFor',
         $scope.$watch('formForStateHelper.watchable', function() {
           var hasFormBeenSubmitted = $scope.formForStateHelper.hasFormBeenSubmitted();
 
+          // Mark invalid fields
           angular.forEach($scope.fields, function(fieldDatum, bindableFieldName) {
             if (hasFormBeenSubmitted || $scope.formForStateHelper.hasFieldBeenModified(bindableFieldName)) {
               var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
@@ -249,6 +273,27 @@ angular.module('formFor').directive('formFor',
               fieldDatum.bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
             } else {
               fieldDatum.bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset.
+            }
+          });
+
+          // Mark invalid collections
+          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+            if (hasFormBeenSubmitted) {
+              var errors = $scope.formForStateHelper.getFieldError(bindableFieldName);
+              var errorsToDisplay = [];
+
+              // Objects in the error array indicate nested attributes; we should ignore them in this context.
+              for (var i = 0; i < errors.length; i++) {
+                if (!angular.isObject(errors[i])) {
+                  errorsToDisplay.push(errors[i]);
+                }
+              }
+
+              var error = errorsToDisplay.join(' ');
+
+              bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
+            } else {
+              bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset.
             }
           });
         });
@@ -260,6 +305,12 @@ angular.module('formFor').directive('formFor',
          */
         $scope.updateErrors = function(errorMap) {
           angular.forEach($scope.fields, function(scope, bindableFieldName) {
+            var error = NestedObjectHelper.readAttribute(errorMap, bindableFieldName);
+
+            $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+          });
+
+          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
             var error = NestedObjectHelper.readAttribute(errorMap, bindableFieldName);
 
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
@@ -279,7 +330,6 @@ angular.module('formFor').directive('formFor',
             var validationKeys = [];
 
             angular.forEach($scope.fields, function(field) {
-
               // Only validate collections once
               if (validationKeys.indexOf(field.validationAttribute) < 0) {
                 validationKeys.push(field.validationAttribute);

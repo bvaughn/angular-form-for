@@ -20,6 +20,18 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
+     * Convenience method for determining if the specified collection is flagged as required (aka min length).
+     */
+    this.isCollectionRequired = function(fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+      return  rules &&
+              rules.collection &&
+              rules.collection.min &&
+              (angular.isObject(rules.collection.min) ? rules.collection.min.rule : rules.collection.min);
+    };
+
+    /**
      * Convenience method for determining if the specified field is flagged as required.
      */
     this.isFieldRequired = function(fieldName, validationRules) {
@@ -264,7 +276,31 @@ angular.module('formFor').service('ModelValidator',
             }, this);
           }
 
-          return $q.waitForAll(promises);
+          var deferred = $q.defer();
+          $q.waitForAll(promises).then(
+            function() {
+              deferred.resolve();
+            },
+            function(errors) {
+              var nonEmptyErrors = [];
+              var queue = errors;
+
+              // $q.watForAll returns a 2D array of statuses.
+              // We only care about the validations that failed.
+              while (queue.length) {
+                var result = queue.shift();
+
+                if (angular.isArray(result)) {
+                  queue = queue.concat(result);
+                } else if (result) {
+                  nonEmptyErrors.push(result);
+                }
+              }
+
+              deferred.reject(nonEmptyErrors);
+            });
+
+          return deferred.promise;
 
         } else {
           return this.$validateWithRules(model, value, rules);

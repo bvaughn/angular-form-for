@@ -47,6 +47,18 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
+     * Convenience method for determining if the specified collection is flagged as required (aka min length).
+     */
+    this.isCollectionRequired = function(fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+      return  rules &amp;&amp;
+              rules.collection &amp;&amp;
+              rules.collection.min &amp;&amp;
+              (angular.isObject(rules.collection.min) ? rules.collection.min.rule : rules.collection.min);
+    };
+
+    /**
      * Convenience method for determining if the specified field is flagged as required.
      */
     this.isFieldRequired = function(fieldName, validationRules) {
@@ -291,7 +303,31 @@ angular.module('formFor').service('ModelValidator',
             }, this);
           }
 
-          return $q.waitForAll(promises);
+          var deferred = $q.defer();
+          $q.waitForAll(promises).then(
+            function() {
+              deferred.resolve();
+            },
+            function(errors) {
+              var nonEmptyErrors = [];
+              var queue = errors;
+
+              // $q.watForAll returns a 2D array of statuses.
+              // We only care about the validations that failed.
+              while (queue.length) {
+                var result = queue.shift();
+
+                if (angular.isArray(result)) {
+                  queue = queue.concat(result);
+                } else if (result) {
+                  nonEmptyErrors.push(result);
+                }
+              }
+
+              deferred.reject(nonEmptyErrors);
+            });
+
+          return deferred.promise;
 
         } else {
           return this.$validateWithRules(model, value, rules);
@@ -313,7 +349,7 @@ angular.module('formFor').service('ModelValidator',
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
 </nav>
 
 <br clear="both">
