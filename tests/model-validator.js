@@ -493,6 +493,12 @@ describe('ModelValidator', function() {
       };
     });
 
+    it('should strip array brackets from collection field names', function() {
+      model.rules.things.collection = { fields: { name: { required: true } } };
+
+      expect(ModelValidator.validateField({things: null}, 'things[0].name', model.rules)).toBeRejected();
+    });
+
     it('should validate collections size min/max', function() {
       expect(ModelValidator.validateField({}, 'things', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({things: null},             'things', model.rules)).toBeRejected();

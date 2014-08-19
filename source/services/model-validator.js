@@ -8,6 +8,17 @@
 angular.module('formFor').service('ModelValidator',
   function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
 
+    /*
+     * Strip array brackets from field names so that model values can be mapped to rules.
+     * For instance:
+     * • 'foo[0].bar' should be validated against 'foo.collection.fields.bar'.
+     */
+    this.$getRulesForFieldName = function(validationRules, fieldName) {
+      fieldName = fieldName.replace(/\[[^\]]+\]/g, '.collection.fields');
+
+      return NestedObjectHelper.readAttribute(validationRules, fieldName);
+    };
+
     /**
      * Validates the model against all rules in the validationRules.
      * This method returns a promise to be resolved on successful validation,
@@ -40,7 +51,7 @@ angular.module('formFor').service('ModelValidator',
       var that = this;
 
       angular.forEach(fieldNames, function(fieldName) {
-        var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
+        var rules = this.$getRulesForFieldName(validationRules, fieldName);
 
         if (rules) {
           var promise = that.validateField(model, fieldName, validationRules);
@@ -53,7 +64,7 @@ angular.module('formFor').service('ModelValidator',
 
           promises.push(promise);
         }
-      });
+      }, this);
 
       $q.waitForAll(promises).then(
         deferred.resolve,
@@ -200,7 +211,7 @@ angular.module('formFor').service('ModelValidator',
      * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateField = function(model, fieldName, validationRules) {
-      var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
       var value = $parse(fieldName)(model);
 
       if (rules) {

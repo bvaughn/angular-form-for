@@ -43,7 +43,9 @@ angular.module('formFor').service('FormForConfiguration',
       requiredLabel: null,
       validationFailedForCustomMessage: 'Failed custom validation',
       validationFailedForPatternMessage: 'Invalid format',
+      validationFailedForMaxCollectionSizeMessage: 'Must be fewer than {{num}} items',
       validationFailedForMaxLengthMessage: 'Must be fewer than {{num}} characters',
+      validationFailedForMinCollectionSizeMessage: 'Must at least {{num}} items',
       validationFailedForMinLengthMessage: 'Must be at least {{num}} characters',
       validationFailedForRequiredMessage: 'Required field',
       validationFailedForEmailTypeMessage: 'Invalid email format',
@@ -125,6 +127,16 @@ angular.module('formFor').service('FormForConfiguration',
       },
 
       /**
+       * Override the default error message for failed max collection size validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
+      setValidationFailedForMaxCollectionSizeMessage: function(value) {
+        this.validationFailedForMaxCollectionSizeMessage = value;
+      },
+
+      /**
        * Override the default error message for failed maxlength validations.
        * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
        * @memberof FormForConfiguration
@@ -132,6 +144,16 @@ angular.module('formFor').service('FormForConfiguration',
        */
       setValidationFailedForMaxLengthMessage: function(value) {
         this.validationFailedForMaxLengthMessage = value;
+      },
+
+      /**
+       * Override the default error message for failed min collection size validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
+      setValidationFailedForMinCollectionSizeMessage: function(value) {
+        this.validationFailedForMaxCollectionSizeMessage = value;
       },
 
       /**

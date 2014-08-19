@@ -254,11 +254,26 @@ angular.module('formFor').directive('formFor',
           var validationPromise;
 
           if ($scope.$validationRules) {
-            validationPromise =
-              ModelValidator.validateFields(
-                $scope.formFor,
-                Object.keys($scope.formFieldScopes),
-                $scope.$validationRules);
+            var validationKeys = [];
+
+            // TRICKY:
+            // Model data may contain collections, ex:
+            // { things: ['thing1', 'thing2'] }
+            // But validation rules represent collections in a nested-object format, ex:
+            // { things: { collection: {...rules...} } }
+            // So we need to convert keys from their model format to their validation format.
+            // Storage in a Dictionary is just a
+            angular.forEach(
+              Object.keys($scope.formFieldScopes),
+              function(key) {
+                var flattenedKey = key.split(/___/)[0];
+
+                if (validationKeys.indexOf(flattenedKey) < 0) {
+                  validationKeys.push(flattenedKey);
+                }
+              });
+
+            validationPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
           } else {
             validationPromise = $q.resolve();
           }
