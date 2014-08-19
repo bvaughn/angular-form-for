@@ -223,6 +223,27 @@ angular.module('formFor').directive('formFor',
 
           $scope.collectionLabels[bindableFieldName] = bindableWrapper;
 
+          var watcherInitialized = false;
+
+          $scope.$watch('formFor.' + fieldName + '.length', function(newValue, oldValue) {
+            // The initial $watch should not trigger a visible validation...
+            if (!watcherInitialized) {
+              watcherInitialized = true;
+            } else {
+              ModelValidator.validateField(
+                  $scope.formFor,
+                  fieldName,
+                  $scope.$validationRules
+                ).then(
+                    function() {
+                      $scope.formForStateHelper.setFieldError(bindableFieldName, null);
+                    },
+                    function(error) {
+                      $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+                    });
+            }
+          });
+
           return bindableWrapper;
         };
 
@@ -278,23 +299,21 @@ angular.module('formFor').directive('formFor',
 
           // Mark invalid collections
           angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
-            if (hasFormBeenSubmitted) {
-              var errors = $scope.formForStateHelper.getFieldError(bindableFieldName);
-              var errorsToDisplay = [];
+            var errors = $scope.formForStateHelper.getFieldError(bindableFieldName);
+            var errorsToDisplay = [];
 
-              // Objects in the error array indicate nested attributes; we should ignore them in this context.
+            // Objects in the error array indicate nested attributes; we should ignore them in this context.
+            if (errors) {
               for (var i = 0; i < errors.length; i++) {
                 if (!angular.isObject(errors[i])) {
                   errorsToDisplay.push(errors[i]);
                 }
               }
-
-              var error = errorsToDisplay.join(' ');
-
-              bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
-            } else {
-              bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset.
             }
+
+            var error = errorsToDisplay.join(' ');
+
+            bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
           });
         });
 

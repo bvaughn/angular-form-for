@@ -1,5 +1,5 @@
 angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<div  class=\"field checkbox-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error left-aligned\" ng-bind=\"model.error\"></p>\n\n  <label>\n    <div class=\"checkbox-field-input\" ng-class=\"{\'is-checked\': model.bindable}\"></div>\n\n    <input  type=\"checkbox\" ng-model=\"model.bindable\"\n            class=\"field-input\"\n            ng-disabled=\"disable || model.disabled\">\n\n    <field-label  ng-if=\"label\"\n                  label=\"{{label}}\"\n                  help=\"{{help}}\"\n                  ng-click=\"toggle()\">\n    </field-label>\n  </label>\n</div>\n");
-$templateCache.put("form-for/templates/collection-label.html","<div class=\"collectionLabel\" ng-class=\"{\'text-danger field-error\': model.error}\">\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <small ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></small>\n</div>\n");
+$templateCache.put("form-for/templates/collection-label.html","<div class=\"collection-label\" ng-class=\"{\'text-danger field-error\': model.error}\">\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <small ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></small>\n</div>\n");
 $templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n\n  <span ng-if=\"help\" class=\"fa-stack help-icon-stack\">\n    <i class=\"fa fa-stack-2x fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-stack-1x fa-inverse fa-question help-foreground-icon\"></i>\n  </span>\n\n  <span class=\"label label-default field-label-required-label\" ng-if=\"requiredLabel\" ng-bind=\"requiredLabel\"></span>\n</label>\n");
 $templateCache.put("form-for/templates/radio-field.html","<span class=\"field radio-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error left-aligned\" ng-bind=\"model.error\"></p>\n\n  <label>\n    <span  class=\"radio-field-input\" ng-class=\"{\'is-selected\': model.bindable === value}\"\n          ng-click=\"click()\"></span>\n\n    <input  type=\"radio\" ng-model=\"model.bindable\" ng-value=\"value\"\n            class=\"field-input\"\n            ng-disabled=\"disable || model.disabled\">\n\n    <field-label  ng-if=\"label\"\n                  label=\"{{label}}\"\n                  help=\"{{help}}\"\n                  ng-click=\"click()\">\n    </field-label>\n  </label>\n</span>\n");
 $templateCache.put("form-for/templates/select-field.html","<div  class=\"form-group field select-field\"\n      ng-class=\"{disabled: disable || model.disabled, open: isOpen, \'has-error\': model.error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></p>\n\n  <div  class=\"form-control select-field-toggle-button\"\n        ng-class=\"{open: isOpen, disabled: disable || model.disabled}\">\n\n    <span ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\"></span>\n\n    <span ng-if=\"!selectedOptionLabel\">\n      <span ng-if=\"placeholder\" ng-bind=\"placeholder\"></span>\n      <span ng-if=\"!placeholder\">Select</span>\n    </span>\n\n    <span class=\"fa fa-caret-down pull-right select-field-toggle-caret\"></span>\n  </div>\n\n  <div ng-show=\"isOpen\" class=\"list-group-container\">\n    <div class=\"list-group\">\n      <div  ng-show=\"enableFiltering\" class=\"input-group filter-input-group\"\n            ng-click=\"$event.stopPropagation()\">\n        <input  type=\"text\"\n                class=\"form-control text-field-input filter-text-input\"\n                ng-model=\"filter\"\n                ng-keydown=\"keyDown($event)\"\n                form-for-debounce=\"{{filterDebounce}}\" />\n\n        <span class=\"input-group-addon input-group-addon-after\">\n          <i class=\"fa fa-search text-field-icon\"></i>\n        </span>\n      </div>\n\n      <div class=\"list-group-scrollable\">\n        <a  class=\"list-group-item\"\n            ng-repeat=\"option in filteredOptions\"\n            ng-value=\"option[valueAttribute]\"\n            ng-click=\"selectOption(option)\"\n            ng-mouseenter=\"mouseOver($index)\"\n            ng-class=\"{active: option === selectedOption, hover: $index === mouseOverIndex}\">\n\n          <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->\n          <strong ng-if=\"$index === mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></strong>\n          <span ng-if=\"$index !== mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></span>\n          <spgn ng-if=\"!option[labelAttribute]\">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->\n        </a>\n\n        <a ng-if=\"!options\" class=\"list-group-item\">\n          <i class=\"fa fa-circle-o-notch fa-spin\"></i>\n          Loading...\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n");
@@ -454,6 +454,27 @@ angular.module('formFor').directive('formFor',
 
           $scope.collectionLabels[bindableFieldName] = bindableWrapper;
 
+          var watcherInitialized = false;
+
+          $scope.$watch('formFor.' + fieldName + '.length', function(newValue, oldValue) {
+            // The initial $watch should not trigger a visible validation...
+            if (!watcherInitialized) {
+              watcherInitialized = true;
+            } else {
+              ModelValidator.validateField(
+                  $scope.formFor,
+                  fieldName,
+                  $scope.$validationRules
+                ).then(
+                    function() {
+                      $scope.formForStateHelper.setFieldError(bindableFieldName, null);
+                    },
+                    function(error) {
+                      $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+                    });
+            }
+          });
+
           return bindableWrapper;
         };
 
@@ -509,23 +530,21 @@ angular.module('formFor').directive('formFor',
 
           // Mark invalid collections
           angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
-            if (hasFormBeenSubmitted) {
-              var errors = $scope.formForStateHelper.getFieldError(bindableFieldName);
-              var errorsToDisplay = [];
+            var errors = $scope.formForStateHelper.getFieldError(bindableFieldName);
+            var errorsToDisplay = [];
 
-              // Objects in the error array indicate nested attributes; we should ignore them in this context.
+            // Objects in the error array indicate nested attributes; we should ignore them in this context.
+            if (errors) {
               for (var i = 0; i < errors.length; i++) {
                 if (!angular.isObject(errors[i])) {
                   errorsToDisplay.push(errors[i]);
                 }
               }
-
-              var error = errorsToDisplay.join(' ');
-
-              bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
-            } else {
-              bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset.
             }
+
+            var error = errorsToDisplay.join(' ');
+
+            bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
           });
         });
 
