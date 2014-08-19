@@ -115,7 +115,7 @@ angular.module('formFor').directive('formFor',
             },
             fieldName: fieldName,
             unwatchers: [],
-            validationAttribute: fieldName.split('[')[0]
+            validationAttribute: fieldName.split('[')[0] // TODO Is this needed?
           };
 
           $scope.fields[bindableFieldName] = fieldDatum;
@@ -230,17 +230,13 @@ angular.module('formFor').directive('formFor',
             if (!watcherInitialized) {
               watcherInitialized = true;
             } else {
-              ModelValidator.validateField(
-                  $scope.formFor,
-                  fieldName,
-                  $scope.$validationRules
-                ).then(
-                    function() {
-                      $scope.formForStateHelper.setFieldError(bindableFieldName, null);
-                    },
-                    function(error) {
-                      $scope.formForStateHelper.setFieldError(bindableFieldName, error);
-                    });
+              ModelValidator.validateCollection($scope.formFor, fieldName, $scope.$validationRules).then(
+                function() {
+                  $scope.formForStateHelper.setFieldError(bindableFieldName, null);
+                },
+                function(error) {
+                  $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+                });
             }
           });
 
@@ -299,19 +295,7 @@ angular.module('formFor').directive('formFor',
 
           // Mark invalid collections
           angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
-            var errors = $scope.formForStateHelper.getFieldError(bindableFieldName);
-            var errorsToDisplay = [];
-
-            // Objects in the error array indicate nested attributes; we should ignore them in this context.
-            if (errors) {
-              for (var i = 0; i < errors.length; i++) {
-                if (!angular.isObject(errors[i])) {
-                  errorsToDisplay.push(errors[i]);
-                }
-              }
-            }
-
-            var error = errorsToDisplay.join(' ');
+            var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
 
             bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
           });
@@ -349,10 +333,11 @@ angular.module('formFor').directive('formFor',
             var validationKeys = [];
 
             angular.forEach($scope.fields, function(field) {
-              // Only validate collections once
-              if (validationKeys.indexOf(field.validationAttribute) < 0) {
-                validationKeys.push(field.validationAttribute);
-              }
+              validationKeys.push(field.fieldName);
+            });
+
+            angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+              validationKeys.push(bindableFieldName);
             });
 
             validationPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);

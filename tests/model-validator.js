@@ -481,7 +481,36 @@ describe('ModelValidator', function() {
     });
   });
 
-  describe('validateField collections', function() {
+  describe('$getRulesForFieldName', function() {
+    beforeEach(function() {
+      model.rules = {
+        things: {
+          collection: {
+            fields: {
+              name: {
+                required: true
+              }
+            }
+          }
+        },
+        thing: {
+          name: {
+            required: true
+          }
+        }
+      };
+    });
+
+    it('should strip array brackets from collection field names', function() {
+      expect(ModelValidator.$getRulesForFieldName(model.rules, 'things[0].name')).toEqual(model.rules.things.collection.fields.name);
+    });
+
+    it('should not modify field anmes without array brackets', function() {
+      expect(ModelValidator.$getRulesForFieldName(model.rules, 'thing.name')).toEqual(model.rules.thing.name);
+    });
+  });
+
+  describe('validateCollection and validateField for collections', function() {
     beforeEach(function() {
       model.rules = {
         things: {
@@ -497,19 +526,20 @@ describe('ModelValidator', function() {
       model.rules.things.collection = { fields: { name: { required: true } } };
 
       expect(ModelValidator.validateField({things: null}, 'things[0].name', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: [{name: 'Brian'}]}, 'things[0].name', model.rules)).toBeResolved();
     });
 
     it('should validate collections size min/max', function() {
-      expect(ModelValidator.validateField({}, 'things', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({things: null},             'things', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({things: []},               'things', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({things: [{}]},             'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({}, 'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({things: null},             'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({things: []},               'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({things: [{}]},             'things', model.rules)).toBeRejected();
 
-      expect(ModelValidator.validateField({things: [{},{}]},          'things', model.rules)).toBeResolved();
-      expect(ModelValidator.validateField({things: [{},{},{}]},       'things', model.rules)).toBeResolved();
-      expect(ModelValidator.validateField({things: [{},{},{},{}]},    'things', model.rules)).toBeResolved();
+      expect(ModelValidator.validateCollection({things: [{},{}]},          'things', model.rules)).toBeResolved();
+      expect(ModelValidator.validateCollection({things: [{},{},{}]},       'things', model.rules)).toBeResolved();
+      expect(ModelValidator.validateCollection({things: [{},{},{},{}]},    'things', model.rules)).toBeResolved();
 
-      expect(ModelValidator.validateField({things: [{},{},{},{},{}]}, 'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({things: [{},{},{},{},{}]}, 'things', model.rules)).toBeRejected();
     });
 
     it('should validate custom collections validation error messages', function() {
@@ -517,26 +547,15 @@ describe('ModelValidator', function() {
       model.rules.things.collection.max = {rule: 4, message: 'custom max'};
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({things: []}, 'things', model.rules),
-        ['custom min']);
+        ModelValidator.validateCollection({things: []}, 'things', model.rules),
+        'custom min');
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({things: [{},{},{},{},{}]}, 'things', model.rules),
-        ['custom max']);
+        ModelValidator.validateCollection({things: [{},{},{},{},{}]}, 'things', model.rules),
+        'custom max');
     });
 
-    it('should validate individual items in the collection', function() {
-      model.rules.things.collection = { fields: { name: { required: true } } };
-
-      expect(ModelValidator.validateField({things: [{}]},                 'things', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({things: [{name: null}]},       'things', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({things: [{name: undefined}]},  'things', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({things: [{name: ''}]},         'things', model.rules)).toBeRejected();
-
-      expect(ModelValidator.validateField({things: [{name: 'Brian'}]},    'things', model.rules)).toBeResolved();
-    });
-
-    // TODO Collection validations should return an array of only the errors (no undefined)
+    // TODO validateCollections
   });
 
   describe('validateFields', function() {

@@ -42,256 +42,6 @@
 
     
     
-      <a href="checkbox-field.js.html#line1" class="name-link"><h4 class="name" id="checkbox-field"><span class="type-signature"></span>checkbox-field<span class="signature">(attribute, disable, help, label)</span><span class="type-signature"></span></h4></a>
-    
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Renders a checkbox &lt;input&gt; with optional label.
-This type of component is well-suited for boolean attributes.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>attribute</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of the attribute within the parent form-for directive's model object.
-This attributes specifies the data-binding target for the input.
-Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>disable</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Disable input element.
-(Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>help</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional help tooltip to display on hover.
-By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional field label displayed after the checkbox input.
-(Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="checkbox-field.js.html">directives/checkbox-field.js</a>, <a href="checkbox-field.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>// To display a simple TOS checkbox you might use the following markup:
-&lt;checkbox-field label="I agree with the TOS"
-                attribute="accepted">
-&lt;/checkbox-field></code></pre>
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-<section>
-
-<header>
-    <h2>
-    checkbox-field
-    </h2>
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-<dt>
-
-    
-    
       <a href="type-ahead.js.html#line1" class="name-link"><h4 class="name" id="checkbox-field"><span class="type-signature"></span>checkbox-field<span class="signature">(attribute, autofocus, debounce, disable, filter, help, label, labelAttribute, options, placeholder, valueAttribute)</span><span class="type-signature"></span></h4></a>
     
 
@@ -693,10 +443,260 @@ $scope.$watch('filterText', function(value) {
 
 
 
+
+
+<section>
+
+<header>
+    <h2>
+    checkbox-field
+    </h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+
+    
+    
+      <a href="checkbox-field.js.html#line1" class="name-link"><h4 class="name" id="checkbox-field"><span class="type-signature"></span>checkbox-field<span class="signature">(attribute, disable, help, label)</span><span class="type-signature"></span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Renders a checkbox &lt;input&gt; with optional label.
+This type of component is well-suited for boolean attributes.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>attribute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of the attribute within the parent form-for directive's model object.
+This attributes specifies the data-binding target for the input.
+Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>disable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Disable input element.
+(Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>help</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional help tooltip to display on hover.
+By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional field label displayed after the checkbox input.
+(Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="checkbox-field.js.html">directives/checkbox-field.js</a>, <a href="checkbox-field.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>// To display a simple TOS checkbox you might use the following markup:
+&lt;checkbox-field label="I agree with the TOS"
+                attribute="accepted">
+&lt;/checkbox-field></code></pre>
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li><li><a href="global.html#validateCollection">validateCollection</a></li><li><a href="global.html#validateCollections">validateCollections</a></li></ul>
 </nav>
 
 <br clear="both">

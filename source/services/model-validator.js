@@ -58,6 +58,13 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
+     * TODO Document
+     */
+    this.validateCollections = function(model, fieldNames, validationRules) {
+      // TODO
+    };
+
+    /**
      * Validates the values in model with the rules defined in the current validationRules.
      * This method returns a promise to be resolved on successful validation,
      * Or rejected with a map of field-name to error-message.
@@ -98,125 +105,38 @@ angular.module('formFor').service('ModelValidator',
       return deferred.promise;
     };
 
-    /*
-     * Helper function used to validate a basic field OR individual items within a collections field.
-     * This function returns a promise.
+    /**
+     * TODO Document
      */
-    this.$validateWithRules = function(model, value, rules) {
-      value = value || '';
+    this.validateCollection = function(model, fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+      var collection = $parse(fieldName)(model);
 
-      if (rules.required) {
-        var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
+      if (rules && rules.collection) {
+        collection = collection || [];
 
-        if (!!value !== required) {
-          return $q.reject(
-            angular.isObject(rules.required) ?
-              rules.required.message :
-              FormForConfiguration.validationFailedForRequiredMessage);
-        }
-      }
+        var collectionRules = rules.collection;
 
-      if (rules.minlength) {
-        var minlength = angular.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
+        if (collectionRules.min) {
+          var min = angular.isObject(collectionRules.min) ? collectionRules.min.rule : collectionRules.min;
 
-        if (value.length < minlength) {
-          return $q.reject(
-            angular.isObject(rules.minlength) ?
-              rules.minlength.message :
-              $interpolate(FormForConfiguration.validationFailedForMinLengthMessage)({num: minlength}));
-        }
-      }
-
-      if (rules.maxlength) {
-        var maxlength = angular.isObject(rules.maxlength) ? rules.maxlength.rule : rules.maxlength;
-
-        if (value.length > maxlength) {
-          return $q.reject(
-            angular.isObject(rules.maxlength) ?
-              rules.maxlength.message :
-              $interpolate(FormForConfiguration.validationFailedForMaxLengthMessage)({num: maxlength}));
-        }
-      }
-
-      if (rules.type) {
-        var type = angular.isObject(rules.type) ? rules.type.rule : rules.type;
-        var stringValue = value.toString();
-
-        if (type.indexOf('integer') >= 0 && !stringValue.match(/^\-*[0-9]+$/)) {
-          return $q.reject(
-            angular.isObject(rules.type) ?
-              rules.type.message :
-              FormForConfiguration.validationFailedForIntegerTypeMessage);
+          if (collection.length < min) {
+            return $q.reject(
+              angular.isObject(collectionRules.min) ?
+                collectionRules.min.message :
+                $interpolate(FormForConfiguration.validationFailedForMinCollectionSizeMessage)({num: min}));
+          }
         }
 
-        if (type.indexOf('number') >= 0 && !stringValue.match(/^\-*[0-9\.]+$/)) {
-          return $q.reject(
-            angular.isObject(rules.type) ?
-              rules.type.message :
-              FormForConfiguration.validationFailedForNumericTypeMessage);
-        }
+        if (collectionRules.max) {
+          var max = angular.isObject(collectionRules.max) ? collectionRules.max.rule : collectionRules.max;
 
-        if (type.indexOf('negative') >= 0 && !stringValue.match(/^\-[0-9\.]+$/)) {
-          return $q.reject(
-            angular.isObject(rules.type) ?
-              rules.type.message :
-              FormForConfiguration.validationFailedForNegativeTypeMessage);
-        }
-
-        if (type.indexOf('positive') >= 0 && !stringValue.match(/^[0-9\.]+$/)) {
-          return $q.reject(
-            angular.isObject(rules.type) ?
-              rules.type.message :
-              FormForConfiguration.validationFailedForPositiveTypeMessage);
-        }
-
-        if (type.indexOf('email') >= 0 && !stringValue.match(/^[\w\.\+]+@\w+\.\w+$/)) {
-          return $q.reject(
-            angular.isObject(rules.type) ?
-              rules.type.message :
-              FormForConfiguration.validationFailedForEmailTypeMessage);
-        }
-      }
-
-      if (rules.pattern) {
-        var isRegExp = rules.pattern instanceof RegExp;
-        var pattern = isRegExp ? rules.pattern : rules.pattern.rule;
-
-        if (!pattern.exec(value)) {
-          return $q.reject(
-            isRegExp ?
-              FormForConfiguration.validationFailedForPatternMessage :
-              rules.pattern.message);
-        }
-      }
-
-      if (rules.custom) {
-        var defaultErrorMessage = angular.isFunction(rules.custom) ? FormForConfiguration.validationFailedForCustomMessage : rules.custom.message;
-        var validationFunction = angular.isFunction(rules.custom) ? rules.custom : rules.custom.rule;
-
-        // Validations can fail in 3 ways:
-        // A promise that gets rejected (potentially with an error message)
-        // An error that gets thrown (potentially with a message)
-        // A falsy value
-
-        try {
-          var returnValue = validationFunction(value, model);
-        } catch (error) {
-          return $q.reject(error.message || defaultErrorMessage);
-        }
-
-        if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
-          return returnValue.then(
-            function(reason) {
-              return $q.resolve(reason);
-            },
-            function(reason) {
-              return $q.reject(reason || defaultErrorMessage);
-            });
-        } else if (returnValue) {
-          return $q.resolve(returnValue);
-        } else {
-          return $q.reject(defaultErrorMessage);
+          if (collection.length > max) {
+            return $q.reject(
+              angular.isObject(collectionRules.max) ?
+                collectionRules.max.message :
+                $interpolate(FormForConfiguration.validationFailedForMaxCollectionSizeMessage)({num: max}));
+          }
         }
       }
 
@@ -238,72 +158,121 @@ angular.module('formFor').service('ModelValidator',
       var value = $parse(fieldName)(model);
 
       if (rules) {
-        if (rules.collection) {
-          value = value || [];
+        value = value || '';
 
-          var collectionRules = rules.collection;
-          var promises = [];
+        if (rules.required) {
+          var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
 
-          if (collectionRules.min) {
-            var min = angular.isObject(collectionRules.min) ? collectionRules.min.rule : collectionRules.min;
+          if (!!value !== required) {
+            return $q.reject(
+              angular.isObject(rules.required) ?
+                rules.required.message :
+                FormForConfiguration.validationFailedForRequiredMessage);
+          }
+        }
 
-            if (value.length < min) {
-              promises.push(
-                $q.reject(
-                  angular.isObject(collectionRules.min) ?
-                    collectionRules.min.message :
-                    $interpolate(FormForConfiguration.validationFailedForMinCollectionSizeMessage)({num: min})));
-            }
+        if (rules.minlength) {
+          var minlength = angular.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
+
+          if (value.length < minlength) {
+            return $q.reject(
+              angular.isObject(rules.minlength) ?
+                rules.minlength.message :
+                $interpolate(FormForConfiguration.validationFailedForMinLengthMessage)({num: minlength}));
+          }
+        }
+
+        if (rules.maxlength) {
+          var maxlength = angular.isObject(rules.maxlength) ? rules.maxlength.rule : rules.maxlength;
+
+          if (value.length > maxlength) {
+            return $q.reject(
+              angular.isObject(rules.maxlength) ?
+                rules.maxlength.message :
+                $interpolate(FormForConfiguration.validationFailedForMaxLengthMessage)({num: maxlength}));
+          }
+        }
+
+        if (rules.type) {
+          var type = angular.isObject(rules.type) ? rules.type.rule : rules.type;
+          var stringValue = value.toString();
+
+          if (type.indexOf('integer') >= 0 && !stringValue.match(/^\-*[0-9]+$/)) {
+            return $q.reject(
+              angular.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForIntegerTypeMessage);
           }
 
-          if (collectionRules.max) {
-            var max = angular.isObject(collectionRules.max) ? collectionRules.max.rule : collectionRules.max;
-
-            if (value.length > max) {
-              promises.push(
-                $q.reject(
-                  angular.isObject(collectionRules.max) ?
-                    collectionRules.max.message :
-                    $interpolate(FormForConfiguration.validationFailedForMaxCollectionSizeMessage)({num: max})));
-            }
+          if (type.indexOf('number') >= 0 && !stringValue.match(/^\-*[0-9\.]+$/)) {
+            return $q.reject(
+              angular.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForNumericTypeMessage);
           }
 
-          // Items within the collection should be validated
-          if (collectionRules.fields) {
-            angular.forEach(value, function(item) {
-              promises.push(
-                this.validateAll(item, collectionRules.fields));
-            }, this);
+          if (type.indexOf('negative') >= 0 && !stringValue.match(/^\-[0-9\.]+$/)) {
+            return $q.reject(
+              angular.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForNegativeTypeMessage);
           }
 
-          var deferred = $q.defer();
-          $q.waitForAll(promises).then(
-            function() {
-              deferred.resolve();
-            },
-            function(errors) {
-              var nonEmptyErrors = [];
-              var queue = errors;
+          if (type.indexOf('positive') >= 0 && !stringValue.match(/^[0-9\.]+$/)) {
+            return $q.reject(
+              angular.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForPositiveTypeMessage);
+          }
 
-              // $q.watForAll returns a 2D array of statuses.
-              // We only care about the validations that failed.
-              while (queue.length) {
-                var result = queue.shift();
+          if (type.indexOf('email') >= 0 && !stringValue.match(/^[\w\.\+]+@\w+\.\w+$/)) {
+            return $q.reject(
+              angular.isObject(rules.type) ?
+                rules.type.message :
+                FormForConfiguration.validationFailedForEmailTypeMessage);
+          }
+        }
 
-                if (angular.isArray(result)) {
-                  queue = queue.concat(result);
-                } else if (result) {
-                  nonEmptyErrors.push(result);
-                }
-              }
+        if (rules.pattern) {
+          var isRegExp = rules.pattern instanceof RegExp;
+          var pattern = isRegExp ? rules.pattern : rules.pattern.rule;
 
-              deferred.reject(nonEmptyErrors);
-            });
+          if (!pattern.exec(value)) {
+            return $q.reject(
+              isRegExp ?
+                FormForConfiguration.validationFailedForPatternMessage :
+                rules.pattern.message);
+          }
+        }
 
-          return deferred.promise;
+        if (rules.custom) {
+          var defaultErrorMessage = angular.isFunction(rules.custom) ? FormForConfiguration.validationFailedForCustomMessage : rules.custom.message;
+          var validationFunction = angular.isFunction(rules.custom) ? rules.custom : rules.custom.rule;
 
-        } else {
-          return this.$validateWithRules(model, value, rules);
+          // Validations can fail in 3 ways:
+          // A promise that gets rejected (potentially with an error message)
+          // An error that gets thrown (potentially with a message)
+          // A falsy value
+
+          try {
+            var returnValue = validationFunction(value, model);
+          } catch (error) {
+            return $q.reject(error.message || defaultErrorMessage);
+          }
+
+          if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
+            return returnValue.then(
+              function(reason) {
+                return $q.resolve(reason);
+              },
+              function(reason) {
+                return $q.reject(reason || defaultErrorMessage);
+              });
+          } else if (returnValue) {
+            return $q.resolve(returnValue);
+          } else {
+            return $q.reject(defaultErrorMessage);
+          }
         }
       }
 
