@@ -1,3 +1,8 @@
+.nav-header-logo {
+  height: 30px;
+  margin-right: 5px;
+}
+
 .image-header-table {
   margin: 10px 0 20px;
 }
@@ -65,9 +70,10 @@ pre[class*="language-"] {
 }
 
 #toast-container {
-  position: absolute;
+  position: fixed;
   top: 85px;
   right: 25px;
+  z-index: 2000;
 }
 #toast-container .toast {
   padding: 15px;

@@ -22,11 +22,11 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
           max: {
             rule: 4,
             message: 'Do not be greedy. Four hobbies are probably enough!'
-          }
-        },
-        fields: {
-          name: {
-            required: true
+          },
+          fields: {
+            name: {
+              required: true
+            }
           }
         }
       }
@@ -41,6 +41,7 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
     };
 
     $scope.submit = function(data) {
+      console.log(data);
       flashr.now.info("This is just a demo. You aren't supposed to actually save anything! ;)");
     };
   });
