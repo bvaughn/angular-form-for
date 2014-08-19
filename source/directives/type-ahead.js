@@ -92,7 +92,7 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('filter', updateFilteredOptions);
         $scope.$watch('options', updateFilteredOptions);
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         // Incoming model values should control the type-ahead field's default value.

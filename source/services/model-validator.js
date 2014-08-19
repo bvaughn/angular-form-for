@@ -20,6 +20,17 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
+     * Convenience method for determining if the specified field is flagged as required.
+     */
+    this.isFieldRequired = function(fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+      return  rules &&
+              rules.required &&
+              (angular.isObject(rules.required) ? rules.required.rule : rules.required);
+    };
+
+    /**
      * Validates the model against all rules in the validationRules.
      * This method returns a promise to be resolved on successful validation,
      * Or rejected with a map of field-name to error-message.

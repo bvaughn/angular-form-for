@@ -1,5 +1,5 @@
 <div  class="form-group field select-field"
-      ng-class="{disabled: disable || disabledByForm, open: isOpen, 'has-error': error}">
+      ng-class="{disabled: disable || model.disabled, open: isOpen, 'has-error': model.error}">
 
   <field-label  ng-if="label"
                 label="{{label}}"
@@ -7,10 +7,10 @@
                 required="{{model.required}}">
   </field-label>
 
-  <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
+  <p ng-if="model.error" class="text-danger field-error" ng-bind="model.error"></p>
 
   <div  class="form-control select-field-toggle-button"
-        ng-class="{open: isOpen, disabled: disable || disabledByForm}">
+        ng-class="{open: isOpen, disabled: disable || model.disabled}">
 
     <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
 

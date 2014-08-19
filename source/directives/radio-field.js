@@ -48,7 +48,7 @@ angular.module('formFor').directive('radioField',
           nameToActiveRadioMap[$scope.attribute] = {
             defaultScope: $scope,
             scopes: [],
-            model: formForController.registerFormField($scope, $scope.attribute)
+            model: formForController.registerFormField($scope.attribute)
           };
         }
 
@@ -64,7 +64,7 @@ angular.module('formFor').directive('radioField',
         var $input = $element.find('input');
 
         $scope.click = function() {
-          if (!$scope.disable && !$scope.disabledByForm) {
+          if (!$scope.disable && !$scope.model.disabled) {
             $scope.model.bindable = $scope.value;
           }
         };
@@ -72,8 +72,8 @@ angular.module('formFor').directive('radioField',
         activeRadio.defaultScope.$watch('disable', function(value) {
           $scope.disable = value;
         });
-        activeRadio.defaultScope.$watch('disabledByForm', function(value) {
-          $scope.disabledByForm = value;
+        activeRadio.defaultScope.$watch('model.disabled', function(value) {
+          $scope.model.disabled = value;
         });
 
         $scope.$watch('model.bindable', function(newValue, oldValue) {

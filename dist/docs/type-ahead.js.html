@@ -119,7 +119,7 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('filter', updateFilteredOptions);
         $scope.$watch('options', updateFilteredOptions);
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         // Incoming model values should control the type-ahead field's default value.
@@ -171,7 +171,7 @@ angular.module('formFor').directive('typeAheadField',
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#unregisterFormField">unregisterFormField</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
 </nav>
 
 <br clear="both">

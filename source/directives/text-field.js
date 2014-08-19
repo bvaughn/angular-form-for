@@ -76,7 +76,7 @@ angular.module('formFor').directive('textField',
           });
         }
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
+        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         $scope.onIconAfterClick = function() {

@@ -1,14 +1,14 @@
 <div  class="field checkbox-field"
-      ng-class="{disabled: disable || disabledByForm, 'has-error': error}">
+      ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
 
-  <p ng-if="error" class="text-danger field-error left-aligned" ng-bind="error"></p>
+  <p ng-if="model.error" class="text-danger field-error left-aligned" ng-bind="model.error"></p>
 
   <label>
     <div class="checkbox-field-input" ng-class="{'is-checked': model.bindable}"></div>
 
     <input  type="checkbox" ng-model="model.bindable"
             class="field-input"
-            ng-disabled="disable || disabledByForm">
+            ng-disabled="disable || model.disabled">
 
     <field-label  ng-if="label"
                   label="{{label}}"
