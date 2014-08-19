@@ -16,3 +16,38 @@ a {
 a:hover {
   color: #244363;
 }
+
+.nav-tabs.nav-justified > li > a {
+  background-color: #3e3f3a;
+  color: #FFF;
+  border: none;
+  margin: 0 1px;
+  cursor: pointer;
+  user-select: none;
+}
+.nav-tabs.nav-justified > li:first-of-type > a {
+  margin-left: 0;
+}
+.nav-tabs.nav-justified > li:last-of-type > a {
+  margin-right: 0;
+}
+.nav-tabs.nav-justified > li > a:hover {
+  background-color: #393a35;
+  border: none;
+}
+.nav-tabs.nav-justified > .active > a,
+.nav-tabs.nav-justified > .active > a:hover {
+  background-color: #242422;
+  color: #FFF;
+  border: none;
+}
+
+pre[class*="language-"] {
+  margin-top: 0;
+  border: none;
+}
+.tab-content,
+pre[class*="language-"] {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
