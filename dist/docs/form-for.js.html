@@ -113,19 +113,10 @@ angular.module('formFor').directive('formFor',
           };
 
           // If this is a collection we'll need to store multiple field $scopes.
-          if (formFieldDatum.isCollection) {
-            if (!$scope.formFieldData.hasOwnProperty(safeFieldName)) {
-              $scope.formFieldData[safeFieldName] = [];
-              $scope.formFieldScopes[safeFieldName] = [];
-            }
+          // Fortunately NestedObjectHelper.flattenAttribute helps with this by converting foo[1].bar to foo_1__bar
+          $scope.formFieldData[safeFieldName] = formFieldDatum;
+          $scope.formFieldScopes[safeFieldName] = formFieldScope;
 
-            $scope.formFieldData[safeFieldName].push(formFieldDatum);
-            $scope.formFieldScopes[safeFieldName].push(formFieldScope);
-
-          } else {
-            $scope.formFieldData[safeFieldName] = formFieldDatum;
-            $scope.formFieldScopes[safeFieldName] = formFieldScope;
-          }
 
           // TRICKY Why do we use $parse?
           // Dot notation (ex. 'foo.bar') causes trouble with the brackets accessor.
@@ -134,23 +125,18 @@ angular.module('formFor').directive('formFor',
           // Given a model {foo: {bar: 'baz'}} and a field-name 'foo.bar' $parse allows us to retrieve 'baz'.
           formFieldDatum.getterFieldName = fieldName;
 
-          console.log('fieldName:'+fieldName+' ~> getterFieldName:'+formFieldDatum.getterFieldName);
           var getter = $parse(formFieldDatum.getterFieldName);
           var setter = getter.assign;
 
-          console.log('• [registerFormField] watching: formFieldData.' + formFieldDatum.getterFieldName + '.bindable');
           formFieldDatum.unwatchFormFieldDataForSync =
-            $scope.$watch('formFieldData.' + formFieldDatum.getterFieldName + '.bindable', function(newValue, oldValue) {
-              console.log('•• [registerFormField] formFieldData.' + formFieldDatum.getterFieldName + '.bindable ~> ' + newValue);
+            $scope.$watch('formFieldData.' + safeFieldName + '.bindable', function(newValue, oldValue) {
               if (newValue !== oldValue) {
                 setter($scope.formFor, newValue);
               }
             });
 
-          console.log('• [registerFormField] watching: formFor.' + formFieldDatum.getterFieldName);
           formFieldDatum.unwatchFormDataForSync =
             $scope.$watch('formFor.' + formFieldDatum.getterFieldName, function(newValue, oldValue) {
-              console.log('•• [registerFormField] formFor.' + formFieldDatum.getterFieldName + ' ~> ' + newValue);
               formFieldDatum.bindable = getter($scope.formFor);
             });
 
@@ -228,10 +214,8 @@ angular.module('formFor').directive('formFor',
         var createScopeWatcher = function(formFieldDatum) {
           var initialized;
 
-          console.log('• [createScopeWatcher] watching: formFor.' + formFieldDatum.getterFieldName);
           return $scope.$watch('formFor.' + formFieldDatum.getterFieldName,
             function(newValue, oldValue) {
-              console.log('•• [createScopeWatcher] formFor.' + formFieldDatum.getterFieldName + ' ~> ' + newValue);
               // Scope watchers always trigger once when added.
               // Only mark our field dirty when a user-edit actually triggers the watcher.
               if (!initialized) {
