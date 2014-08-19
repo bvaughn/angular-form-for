@@ -165,7 +165,7 @@ angular.module('formFor').directive('formFor',
           // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
           fieldDatum.unwatchers.push(
             $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
-              fieldDatum.bindable = getter($scope.formFor);
+              fieldDatum.bindableWrapper.bindable = getter($scope.formFor);
 
               // Changes in form-data should also trigger validations.
               // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
@@ -254,7 +254,6 @@ angular.module('formFor').directive('formFor',
           var watcherInitialized = false;
 
           $scope.$watch('formFor.' + fieldName + '.length', function(newValue, oldValue) {
-            console.log('collection watch size:'+newValue+', initialized:'+watcherInitialized);
             // The initial $watch should not trigger a visible validation...
             if (!watcherInitialized) {
               watcherInitialized = true;
@@ -350,7 +349,7 @@ angular.module('formFor').directive('formFor',
          */
         $scope.updateFieldErrors = function(fieldNameToErrorMap) {
           angular.forEach($scope.fields, function(scope, bindableFieldName) {
-            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, bindableFieldName);
+            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, scope.fieldName);
 
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
           });
@@ -385,7 +384,7 @@ angular.module('formFor').directive('formFor',
               validationKeys.push(bindableFieldName);
             });
 
-            validateCollectionsPromise = ModelValidator.validateCollections($scope.formFor, validationKeys, $scope.$validationRules);
+            validateCollectionsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
             validateCollectionsPromise.then(angular.noop, $scope.updateCollectionErrors);
 
           } else {
@@ -469,7 +468,7 @@ angular.module('formFor').directive('formFor',
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li><li><a href="global.html#validateCollection">validateCollection</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
 </nav>
 
 <br clear="both">

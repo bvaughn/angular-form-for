@@ -554,56 +554,7 @@ describe('ModelValidator', function() {
         ModelValidator.validateCollection({things: [{},{},{},{},{}]}, 'things', model.rules),
         'custom max');
     });
-  });
-
-  describe('validateCollections', function() {
-    it('should resolve if model matches all of the specified rules', function() {
-      model.rules = {
-        foo: {
-          collection: { min: 2 }
-        },
-        bar: {
-          collection: { max: 4 }
-        }
-      };
-
-      expect(ModelValidator.validateCollections({
-        foo: ['1','2'],
-        bar: ['1','2']
-      }, ['foo', 'bar'], model.rules)).toBeResolved();
-    });
-
-    it('should reject if model does not match any of the specified rules', function() {
-      model.rules = {
-        foo: {
-          collection: { min: 2 }
-        },
-        bar: {
-          collection: { max: 4 }
-        }
-      };
-
-      var promise = ModelValidator.validateCollections({
-        foo: ['1'],
-        bar: ['1','2','3','4','5']
-      }, ['foo', 'bar'], model.rules);
-
-      expect(promise).toBeRejected();
-
-      var errorMap;
-
-      promise.then(
-        angular.noop,
-        function(value) {
-          errorMap = value;
-        });
-
-      $rootScope.$apply(); // Trigger Promise resolution
-
-      expect(errorMap.foo).toBeTruthy();
-      expect(errorMap.bar).toBeTruthy();
-    });
-  });
+  }); // validateCollection
 
   describe('validateFields', function() {
     it('should validate only fields specified by the whitelist', function() {
@@ -712,7 +663,53 @@ describe('ModelValidator', function() {
       expect(errorMap.foo.bar).toBeTruthy();
       expect(errorMap.foo.baz).toBeFalsy();
     });
-  });
+    it('should resolve if model matches all of the specified rules', function() {
+      model.rules = {
+        foo: {
+          collection: { min: 2 }
+        },
+        bar: {
+          collection: { max: 4 }
+        }
+      };
+
+      expect(ModelValidator.validateFields({
+        foo: ['1','2'],
+        bar: ['1','2']
+      }, ['foo', 'bar'], model.rules)).toBeResolved();
+    });
+
+    it('should reject if model does not match any of the specified rules', function() {
+      model.rules = {
+        foo: {
+          collection: { min: 2 }
+        },
+        bar: {
+          collection: { max: 4 }
+        }
+      };
+
+      var promise = ModelValidator.validateFields({
+        foo: ['1'],
+        bar: ['1','2','3','4','5']
+      }, ['foo', 'bar'], model.rules);
+
+      expect(promise).toBeRejected();
+
+      var errorMap;
+
+      promise.then(
+        angular.noop,
+        function(value) {
+          errorMap = value;
+        });
+
+      $rootScope.$apply(); // Trigger Promise resolution
+
+      expect(errorMap.foo).toBeTruthy();
+      expect(errorMap.bar).toBeTruthy();
+    });
+  }); // validateFields
 
   describe('validateAll', function() {
     it('should resolve on an empty set of fields', function() {

@@ -308,7 +308,200 @@ Or rejected with a map of field-name to error-message.</p>
 
     
     
-      <a href="model-validator.js.html#line188" class="name-link"><h4 class="name" id="this.validateField"><span class="type-signature">(static) </span>this.validateField<span class="signature">(model, fieldName, validationRules)</span><span class="type-signature"> &rarr; {Promise}</span></h4></a>
+      <a href="model-validator.js.html#line116" class="name-link"><h4 class="name" id="this.validateCollection"><span class="type-signature">(static) </span>this.validateCollection<span class="signature">(model, fieldName, validationRules)</span><span class="type-signature"> &rarr; {Promise}</span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Validate the properties of a collection (but not the items within the collection).
+This method returns a promise to be resolved on successful validation,
+Or rejected with an error message.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>model</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Form-data object model is contained within</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fieldName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of collection to validate</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>validationRules</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Set of named validation rules</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="model-validator.js.html">services/model-validator.js</a>, <a href="model-validator.js.html#line116">line 116</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>To be resolved or rejected based on validation success or failure.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+
+    
+    
+      <a href="model-validator.js.html#line161" class="name-link"><h4 class="name" id="this.validateField"><span class="type-signature">(static) </span>this.validateField<span class="signature">(model, fieldName, validationRules)</span><span class="type-signature"> &rarr; {Promise}</span></h4></a>
     
 
     
@@ -446,7 +639,7 @@ If validation fails the promise will be rejected with an error message.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model-validator.js.html">services/model-validator.js</a>, <a href="model-validator.js.html#line188">line 188</a>
+        <a href="model-validator.js.html">services/model-validator.js</a>, <a href="model-validator.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -501,7 +694,7 @@ If validation fails the promise will be rejected with an error message.</p>
 
     
     
-      <a href="model-validator.js.html#line111" class="name-link"><h4 class="name" id="this.validateFields"><span class="type-signature">(static) </span>this.validateFields<span class="signature">(model, fieldNames, validationRules)</span><span class="type-signature"> &rarr; {Promise}</span></h4></a>
+      <a href="model-validator.js.html#line70" class="name-link"><h4 class="name" id="this.validateFields"><span class="type-signature">(static) </span>this.validateFields<span class="signature">(model, fieldNames, validationRules)</span><span class="type-signature"> &rarr; {Promise}</span></h4></a>
     
 
     
@@ -639,7 +832,7 @@ Or rejected with a map of field-name to error-message.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model-validator.js.html">services/model-validator.js</a>, <a href="model-validator.js.html#line111">line 111</a>
+        <a href="model-validator.js.html">services/model-validator.js</a>, <a href="model-validator.js.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -704,7 +897,7 @@ Or rejected with a map of field-name to error-message.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li><li><a href="global.html#validateCollection">validateCollection</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Directives</h3><ul><li><a href="checkbox-field.html">checkbox-field</a></li><li><a href="collection-label.html">collection-label</a></li><li><a href="field-label.html">field-label</a></li><li><a href="form-for.html">form-for</a></li><li><a href="form-for-debounce.html">form-for-debounce</a></li><li><a href="radio-field.html">radio-field</a></li><li><a href="select-field.html">select-field</a></li><li><a href="submit-button.html">submit-button</a></li><li><a href="text-field.html">text-field</a></li></ul><h3>Services</h3><ul><li><a href="FieldHelper.html">FieldHelper</a></li><li><a href="FormForConfiguration.html">FormForConfiguration</a></li><li><a href="ModelValidator.html">ModelValidator</a></li><li><a href="NestedObjectHelper.html">NestedObjectHelper</a></li><li><a href="StringUtil.html">StringUtil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
 </nav>
 
 <br clear="both">

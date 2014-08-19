@@ -138,7 +138,7 @@ angular.module('formFor').directive('formFor',
           // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
           fieldDatum.unwatchers.push(
             $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
-              fieldDatum.bindable = getter($scope.formFor);
+              fieldDatum.bindableWrapper.bindable = getter($scope.formFor);
 
               // Changes in form-data should also trigger validations.
               // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
@@ -227,7 +227,6 @@ angular.module('formFor').directive('formFor',
           var watcherInitialized = false;
 
           $scope.$watch('formFor.' + fieldName + '.length', function(newValue, oldValue) {
-            console.log('collection watch size:'+newValue+', initialized:'+watcherInitialized);
             // The initial $watch should not trigger a visible validation...
             if (!watcherInitialized) {
               watcherInitialized = true;
@@ -323,7 +322,7 @@ angular.module('formFor').directive('formFor',
          */
         $scope.updateFieldErrors = function(fieldNameToErrorMap) {
           angular.forEach($scope.fields, function(scope, bindableFieldName) {
-            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, bindableFieldName);
+            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, scope.fieldName);
 
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
           });
@@ -358,7 +357,7 @@ angular.module('formFor').directive('formFor',
               validationKeys.push(bindableFieldName);
             });
 
-            validateCollectionsPromise = ModelValidator.validateCollections($scope.formFor, validationKeys, $scope.$validationRules);
+            validateCollectionsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
             validateCollectionsPromise.then(angular.noop, $scope.updateCollectionErrors);
 
           } else {

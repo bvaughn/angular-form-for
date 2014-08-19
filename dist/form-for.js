@@ -369,7 +369,7 @@ angular.module('formFor').directive('formFor',
           // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
           fieldDatum.unwatchers.push(
             $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
-              fieldDatum.bindable = getter($scope.formFor);
+              fieldDatum.bindableWrapper.bindable = getter($scope.formFor);
 
               // Changes in form-data should also trigger validations.
               // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
@@ -458,7 +458,6 @@ angular.module('formFor').directive('formFor',
           var watcherInitialized = false;
 
           $scope.$watch('formFor.' + fieldName + '.length', function(newValue, oldValue) {
-            console.log('collection watch size:'+newValue+', initialized:'+watcherInitialized);
             // The initial $watch should not trigger a visible validation...
             if (!watcherInitialized) {
               watcherInitialized = true;
@@ -554,7 +553,7 @@ angular.module('formFor').directive('formFor',
          */
         $scope.updateFieldErrors = function(fieldNameToErrorMap) {
           angular.forEach($scope.fields, function(scope, bindableFieldName) {
-            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, bindableFieldName);
+            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, scope.fieldName);
 
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
           });
@@ -589,7 +588,7 @@ angular.module('formFor').directive('formFor',
               validationKeys.push(bindableFieldName);
             });
 
-            validateCollectionsPromise = ModelValidator.validateCollections($scope.formFor, validationKeys, $scope.$validationRules);
+            validateCollectionsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
             validateCollectionsPromise.then(angular.noop, $scope.updateCollectionErrors);
 
           } else {
@@ -1669,7 +1668,7 @@ angular.module('formFor').factory('$FormForStateHelper', ["NestedObjectHelper", 
  * This service is not intended for use outside of the formFor module/library.
  */
 angular.module('formFor').service('ModelValidator',
-  ["$interpolate", "$parse", "$q", "FormForConfiguration", "NestedObjectHelper", function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
+  ["$interpolate", "$q", "FormForConfiguration", "NestedObjectHelper", function($interpolate, $q, FormForConfiguration, NestedObjectHelper) {
 
     /*
      * Strip array brackets from field names so that model values can be mapped to rules.
@@ -1721,47 +1720,6 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
-     * Validate all of the specified collections.
-     * This method returns a promise to be resolved on successful validation,
-     * Or rejected with a map of field-name to error-message.
-     * @memberof ModelValidator
-     * @param {Object} model Form-data object model is contained within
-     * @param {Array} fieldNames Whitelist set of fields to validate for the given model; values outside of this list will be ignored
-     * @param {Object} validationRules Set of named validation rules
-     * @returns {Promise} To be resolved or rejected based on validation success or failure.
-     * @private
-     * It would be nice if validateCollections and validateFields could be combined
-     */
-    this.validateCollections = function(model, fieldNames, validationRules) {
-      var deferred = $q.defer();
-      var promises = [];
-      var errorMap = {};
-
-      angular.forEach(fieldNames, function(fieldName) {
-        var rules = this.$getRulesForFieldName(validationRules, fieldName);
-
-        if (rules) {
-          var promise = this.validateCollection(model, fieldName, validationRules);
-          promise.then(
-            angular.noop,
-            function(error) {
-              $parse(fieldName).assign(errorMap, error);
-            });
-
-          promises.push(promise);
-        }
-      }, this);
-
-      $q.waitForAll(promises).then(
-        deferred.resolve,
-        function() {
-          deferred.reject(errorMap);
-        });
-
-      return deferred.promise;
-    };
-
-    /**
      * Validates the values in model with the rules defined in the current validationRules.
      * This method returns a promise to be resolved on successful validation,
      * Or rejected with a map of field-name to error-message.
@@ -1780,11 +1738,18 @@ angular.module('formFor').service('ModelValidator',
         var rules = this.$getRulesForFieldName(validationRules, fieldName);
 
         if (rules) {
-          var promise = this.validateField(model, fieldName, validationRules);
+          var promise;
+
+          if (rules.collection) {
+            promise = this.validateCollection(model, fieldName, validationRules);
+          } else {
+            promise = this.validateField(model, fieldName, validationRules);
+          }
+
           promise.then(
             angular.noop,
             function(error) {
-              $parse(fieldName).assign(errorMap, error);
+              NestedObjectHelper.writeAttribute(errorMap, fieldName, error);
             });
 
           promises.push(promise);
@@ -1801,11 +1766,18 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
-     * TODO Document
+     * Validate the properties of a collection (but not the items within the collection).
+     * This method returns a promise to be resolved on successful validation,
+     * Or rejected with an error message.
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Array} fieldName Name of collection to validate
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateCollection = function(model, fieldName, validationRules) {
       var rules = this.$getRulesForFieldName(validationRules, fieldName);
-      var collection = $parse(fieldName)(model);
+      var collection = NestedObjectHelper.readAttribute(model, fieldName);
 
       if (rules && rules.collection) {
         collection = collection || [];
@@ -1850,7 +1822,7 @@ angular.module('formFor').service('ModelValidator',
      */
     this.validateField = function(model, fieldName, validationRules) {
       var rules = this.$getRulesForFieldName(validationRules, fieldName);
-      var value = $parse(fieldName)(model);
+      var value = NestedObjectHelper.readAttribute(model, fieldName);
 
       if (rules) {
         value = value || '';
