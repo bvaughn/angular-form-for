@@ -54,6 +54,7 @@ a:hover {
 }
 
 pre[class*="language-"] {
+  background-color: #242422;
   margin-top: 0;
   border: none;
 }
