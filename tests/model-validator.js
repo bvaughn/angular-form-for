@@ -481,6 +481,56 @@ describe('ModelValidator', function() {
     });
   });
 
+  describe('validateField collections', function() {
+    beforeEach(function() {
+      model.rules = {
+        things: {
+          collection: {
+            min: 2,
+            max: 4
+          }
+        }
+      };
+    });
+
+    it('should validate collections size min/max', function() {
+      expect(ModelValidator.validateField({}, 'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: null},             'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: []},               'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: [{}]},             'things', model.rules)).toBeRejected();
+
+      expect(ModelValidator.validateField({things: [{},{}]},          'things', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({things: [{},{},{}]},       'things', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({things: [{},{},{},{}]},    'things', model.rules)).toBeResolved();
+
+      expect(ModelValidator.validateField({things: [{},{},{},{},{}]}, 'things', model.rules)).toBeRejected();
+    });
+
+    it('should validate custom collections validation error messages', function() {
+      model.rules.things.collection.min = {rule: 2, message: 'custom min'};
+      model.rules.things.collection.max = {rule: 4, message: 'custom max'};
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({things: []}, 'things', model.rules),
+        ['custom min']);
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({things: [{},{},{},{},{}]}, 'things', model.rules),
+        ['custom max']);
+    });
+
+    it('should validate individual items in the collection', function() {
+      model.rules.things.collection = { fields: { name: { required: true } } };
+
+      expect(ModelValidator.validateField({things: [{}]},                 'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: [{name: null}]},       'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: [{name: undefined}]},  'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: [{name: ''}]},         'things', model.rules)).toBeRejected();
+
+      expect(ModelValidator.validateField({things: [{name: 'Brian'}]},    'things', model.rules)).toBeResolved();
+    });
+  });
+
   describe('validateFields', function() {
     it('should validate only fields specified by the whitelist', function() {
       var fooCalled, barCalled, bazCalled;
