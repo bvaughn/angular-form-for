@@ -90,6 +90,8 @@ angular.module('formFor').directive('radioField',
 
           if (activeRadio.scopes.length === 0) {
             delete nameToActiveRadioMap[$scope.attribute];
+
+            formForController.unregisterFormField($scope.attribute);
           }
         });
       }

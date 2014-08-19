@@ -131,6 +131,10 @@ angular.module('formFor').directive('typeAheadField',
 
           $scope.model.bindable = option && option[$scope.valueAttribute];
         });
+
+        $scope.$on('$destroy', function() {
+          formForController.unregisterFormField($scope.attribute);
+        });
       }
     };
   });

@@ -282,6 +282,8 @@ angular.module('formFor').directive('selectField',
 
         $scope.$on('$destroy', function() {
           removeClickWatch();
+
+          formForController.unregisterFormField($scope.attribute);
         });
       }
     };

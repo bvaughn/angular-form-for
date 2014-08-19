@@ -94,6 +94,10 @@ angular.module('formFor').directive('textField',
             $scope.focused();
           }
         };
+
+        $scope.$on('$destroy', function() {
+          formForController.unregisterFormField($scope.attribute);
+        });
       }
     };
   });

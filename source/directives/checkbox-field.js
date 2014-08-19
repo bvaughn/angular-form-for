@@ -50,6 +50,10 @@ angular.module('formFor').directive('checkboxField',
             $scope.model.bindable = !$scope.model.bindable;
           }
         };
+
+        $scope.$on('$destroy', function() {
+          formForController.unregisterFormField($scope.attribute);
+        });
       }
     };
   });

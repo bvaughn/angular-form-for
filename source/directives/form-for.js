@@ -177,7 +177,7 @@ angular.module('formFor').directive('formFor',
         this.unregisterFormField = function(fieldName) {
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
-          angular.foreach(
+          angular.forEach(
             $scope.fields[bindableFieldName].unwatchers,
             function(unwatch) {
               unwatch();

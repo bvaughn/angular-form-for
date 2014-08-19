@@ -59,6 +59,10 @@ angular.module('formFor').directive('checkboxField',
             $scope.model.bindable = !$scope.model.bindable;
           }
         };
+
+        $scope.$on('$destroy', function() {
+          formForController.unregisterFormField($scope.attribute);
+        });
       }
     };
   }]);
@@ -307,11 +311,9 @@ angular.module('formFor').directive('formFor',
           var getter = $parse(fieldName);
           var setter = getter.assign;
 
-          console.log('• watching: fields.' + bindableFieldName + '.bindableWrapper.bindable');
           // Changes made by our field should be synced back to the form-data model.
           fieldDatum.unwatchers.push(
             $scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function(newValue, oldValue) {
-              console.log('•• triggered: fields.' + bindableFieldName + '.bindableWrapper.bindable ~>',newValue);
               if (newValue !== oldValue) {
                 setter($scope.formFor, newValue);
               }
@@ -319,12 +321,10 @@ angular.module('formFor').directive('formFor',
 
           var formDataWatcherInitialized;
 
-          console.log('• watching: formFor.' + fieldName);
           // Changes made to the form-data model should likewise be synced to the field's bindable model.
           // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
           fieldDatum.unwatchers.push(
             $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
-              console.log('•• triggered: formFor.' + fieldName,'~>',newValue);
               fieldDatum.bindable = getter($scope.formFor);
 
               // Changes in form-data should also trigger validations.
@@ -344,7 +344,6 @@ angular.module('formFor').directive('formFor',
 
               // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
               if ($scope.$validationRules) {
-                console.log('•• validating field:', fieldName);
                 ModelValidator.validateField(
                     $scope.formFor,
                     fieldName,
@@ -354,7 +353,6 @@ angular.module('formFor').directive('formFor',
                         $scope.formForStateHelper.setFieldError(bindableFieldName, null);
                       },
                       function(error) {
-                        console.log('•• field error:',error);
                         $scope.formForStateHelper.setFieldError(bindableFieldName, error);
                       });
               }
@@ -371,7 +369,8 @@ angular.module('formFor').directive('formFor',
         this.unregisterFormField = function(fieldName) {
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
-          angular.foreach(
+          console.log('unregistgering '+fieldName+' aka '+bindableFieldName);
+          angular.forEach(
             $scope.fields[bindableFieldName].unwatchers,
             function(unwatch) {
               unwatch();
@@ -437,10 +436,8 @@ angular.module('formFor').directive('formFor',
           var hasFormBeenSubmitted = $scope.formForStateHelper.hasFormBeenSubmitted();
 
           angular.forEach($scope.fields, function(fieldDatum, bindableFieldName) {
-            console.log('• watchable changed, checking:',bindableFieldName);
             if (hasFormBeenSubmitted || $scope.formForStateHelper.hasFieldBeenModified(bindableFieldName)) {
               var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
-              console.log('•• error:',error);
 
               fieldDatum.bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
             } else {
@@ -646,6 +643,8 @@ angular.module('formFor').directive('radioField',
 
           if (activeRadio.scopes.length === 0) {
             delete nameToActiveRadioMap[$scope.attribute];
+
+            formForController.unregisterFormField($scope.attribute);
           }
         });
       }
@@ -936,6 +935,8 @@ angular.module('formFor').directive('selectField',
 
         $scope.$on('$destroy', function() {
           removeClickWatch();
+
+          formForController.unregisterFormField($scope.attribute);
         });
       }
     };
@@ -1084,6 +1085,10 @@ angular.module('formFor').directive('textField',
             $scope.focused();
           }
         };
+
+        $scope.$on('$destroy', function() {
+          formForController.unregisterFormField($scope.attribute);
+        });
       }
     };
   }]);
@@ -1220,6 +1225,10 @@ angular.module('formFor').directive('typeAheadField',
           }
 
           $scope.model.bindable = option && option[$scope.valueAttribute];
+        });
+
+        $scope.$on('$destroy', function() {
+          formForController.unregisterFormField($scope.attribute);
         });
       }
     };
