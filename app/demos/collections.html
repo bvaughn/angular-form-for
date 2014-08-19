@@ -1,0 +1,20 @@
+<form form-for="formData" validation-rules="validationRules" submit-with="submit(data)">
+
+  <text-field label="Name" attribute="name" placeholder="My name is..."></text-field>
+
+  <h3>
+    My hobbies
+    <div class="btn btn-primary" ng-click="addHobby()">
+      Add
+      <i class="fa fa-plus"></i>
+    </div>
+  </h3>
+  <ul class="list-unstyled">
+    <li ng-repeat="hobby in formData.hobbies">
+      <text-field label="Name" attribute="hobbies[{{$index}}].name" icon-after="fa fa-times" icon-after-clicked="removeHobby(hobby)"></text-field>
+      <text-field label="Description" attribute="hobbies[{{$index}}].description" multiline></text-field>
+    </li>
+  </ul>
+
+  <submit-button label="Sign Up"></submit-button>
+</form>

@@ -1,9 +1,9 @@
 angular.module('formForDocumentation').controller('AdvancedFormDemoController',
-  function($scope, $timeout) {
+  function($scope, flashr) {
     $scope.formData = {};
 
     $scope.submitFailed = function(error) {
-      alert(error);
+      flashr.now.info(error);
     };
 });
 

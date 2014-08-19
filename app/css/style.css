@@ -51,3 +51,30 @@ pre[class*="language-"] {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+#toast-container {
+  position: absolute;
+  top: 85px;
+  right: 25px;
+}
+#toast-container .toast {
+  padding: 15px;
+  margin-bottom: 25px;
+  border-radius: 5px;
+}
+#toast-container .toast.toast-success {
+  background-color: #93c54b;
+  color: #FFFFFF;
+}
+#toast-container .toast.toast-info {
+  background-color: #29abe0;
+  color: #FFFFFF;
+}
+#toast-container .toast.toast-error {
+  background-color: #d9534f;
+  color: #FFFFFF;
+}
+#toast-container .toast.toast-warning {
+  background-color: #f47c3c;
+  color: #FFFFFF;
+}

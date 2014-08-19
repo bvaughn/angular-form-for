@@ -17,17 +17,21 @@
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.20/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.20/angular-route.min.js"></script>
-    <script src="//cdn.rawgit.com/bvaughn/angular-form-for/1.1.11/dist/form-for.js"></script>
+    <script src="bower_components/angular-form-for/dist/form-for.js"></script> <!-- TESTING -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="bower_components/toastr/toastr.js"></script>
+    <script src="bower_components/angular.flashr/angular-flashr.js"></script>
 
     <script src="app/scripts/prism.js"></script>
     <script src="app/scripts/app.js"></script>
     <script src="app/scripts/controllers.js"></script>
     <script src="app/scripts/directives.js"></script>
-    <script src="app/demos/simple-form.js"></script>
     <script src="app/demos/advanced-form.js"></script>
+    <script src="app/demos/collections.js"></script>
     <script src="app/demos/dynamic-dropdowns.js"></script>
+    <script src="app/demos/simple-form.js"></script>
   </head>
   <body>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -54,6 +58,7 @@
                 <li><a href="#/demo/simple-form">Simple Form</a></li>
                 <li><a href="#/demo/advanced-form">Advanced Form</a></li>
                 <li><a href="#/demo/dynamic-dropdowns">Dynamic Dropdowns</a></li>
+                <li><a href="#/demo/collections">Collections</a></li>
               </ul>
             </li>
             <li class="dropdown">

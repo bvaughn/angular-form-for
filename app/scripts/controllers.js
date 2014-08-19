@@ -1,5 +1,5 @@
 angular.module('formForDocumentation').
-  controller('IndexController', function($q, $scope, $timeout) {
+  controller('IndexController', function($q, $scope, $timeout, flashr) {
     $scope.formData = {};
     $scope.validationRules = {
       iAgreeToTheTermsOfService: {
@@ -21,7 +21,7 @@ angular.module('formForDocumentation').
       $timeout($scope.formController.resetErrors);
     };
     $scope.submit = function() {
-      alert('This is just an example form');
+      flashr.now.info('This is just an example form');
     };
   }).
   controller('OverviewController', function($scope) {

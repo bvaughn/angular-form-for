@@ -1,5 +1,5 @@
 angular.module('formForDocumentation').controller('SimpleFormDemoController',
-  function($scope, FormForConfiguration) {
+  function($scope, FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
     $scope.formData = {};
@@ -25,6 +25,6 @@ angular.module('formForDocumentation').controller('SimpleFormDemoController',
     };
 
     $scope.submit = function(data) {
-      alert('This is just a demo form! ;)');
+      flashr.now.info('This is just a demo form! ;)');
     };
   });
