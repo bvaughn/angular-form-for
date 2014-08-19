@@ -23,11 +23,14 @@
   ],
   "dependencies": {
     "jquery": "~2.1.1",
-    "angular": "~1.2.21"
+    "angular": "1.2.22"
   },
   "devDependencies": {
     "jasmine-object-matchers": "~0.0.3",
     "jasmine-promise-matchers": "~0.0.3",
-    "angular-mocks": "~1.2.21"
+    "angular-mocks": "1.2.22"
+  },
+  "resolutions": {
+    "angular": "1.2.22"
   }
 }

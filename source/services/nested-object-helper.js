@@ -8,7 +8,8 @@ angular.module('formFor').service('NestedObjectHelper', function($parse) {
 
   return {
 
-    // $parse does not handle array brackets so we need to create Arrays that don't exist yet
+    // For Angular 1.2.21 and below, $parse does not handle array brackets gracefully.
+    // Essentially we need to create Arrays that don't exist yet or objects within array indices that don't yet exist.
     // @see https://github.com/angular/angular.js/issues/2845
     $createEmptyArrays: function(object, attribute) {
       var startOfArray = 0;
