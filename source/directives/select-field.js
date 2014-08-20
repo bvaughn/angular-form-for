@@ -76,8 +76,9 @@ angular.module('formFor').directive('selectField',
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
 
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
@@ -200,7 +201,7 @@ angular.module('formFor').directive('selectField',
         var list = $element.find('.list-group');
 
         var clickToOpen = function() {
-          if ($scope.disable || $scope.disabledByForm) {
+          if ($scope.disable || $scope.model.disabled) {
             addClickToOpen();
 
             return;

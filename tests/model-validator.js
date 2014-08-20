@@ -481,6 +481,81 @@ describe('ModelValidator', function() {
     });
   });
 
+  describe('$getRulesForFieldName', function() {
+    beforeEach(function() {
+      model.rules = {
+        things: {
+          collection: {
+            fields: {
+              name: {
+                required: true
+              }
+            }
+          }
+        },
+        thing: {
+          name: {
+            required: true
+          }
+        }
+      };
+    });
+
+    it('should strip array brackets from collection field names', function() {
+      expect(ModelValidator.$getRulesForFieldName(model.rules, 'things[0].name')).toEqual(model.rules.things.collection.fields.name);
+    });
+
+    it('should not modify field anmes without array brackets', function() {
+      expect(ModelValidator.$getRulesForFieldName(model.rules, 'thing.name')).toEqual(model.rules.thing.name);
+    });
+  });
+
+  describe('validateCollection and validateField for collections', function() {
+    beforeEach(function() {
+      model.rules = {
+        things: {
+          collection: {
+            min: 2,
+            max: 4
+          }
+        }
+      };
+    });
+
+    it('should strip array brackets from collection field names', function() {
+      model.rules.things.collection = { fields: { name: { required: true } } };
+
+      expect(ModelValidator.validateField({things: null}, 'things[0].name', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({things: [{name: 'Brian'}]}, 'things[0].name', model.rules)).toBeResolved();
+    });
+
+    it('should validate collections size min/max', function() {
+      expect(ModelValidator.validateCollection({}, 'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({things: null},             'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({things: []},               'things', model.rules)).toBeRejected();
+      expect(ModelValidator.validateCollection({things: [{}]},             'things', model.rules)).toBeRejected();
+
+      expect(ModelValidator.validateCollection({things: [{},{}]},          'things', model.rules)).toBeResolved();
+      expect(ModelValidator.validateCollection({things: [{},{},{}]},       'things', model.rules)).toBeResolved();
+      expect(ModelValidator.validateCollection({things: [{},{},{},{}]},    'things', model.rules)).toBeResolved();
+
+      expect(ModelValidator.validateCollection({things: [{},{},{},{},{}]}, 'things', model.rules)).toBeRejected();
+    });
+
+    it('should validate custom collections validation error messages', function() {
+      model.rules.things.collection.min = {rule: 2, message: 'custom min'};
+      model.rules.things.collection.max = {rule: 4, message: 'custom max'};
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateCollection({things: []}, 'things', model.rules),
+        'custom min');
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateCollection({things: [{},{},{},{},{}]}, 'things', model.rules),
+        'custom max');
+    });
+  }); // validateCollection
+
   describe('validateFields', function() {
     it('should validate only fields specified by the whitelist', function() {
       var fooCalled, barCalled, bazCalled;
@@ -588,7 +663,53 @@ describe('ModelValidator', function() {
       expect(errorMap.foo.bar).toBeTruthy();
       expect(errorMap.foo.baz).toBeFalsy();
     });
-  });
+    it('should resolve if model matches all of the specified rules', function() {
+      model.rules = {
+        foo: {
+          collection: { min: 2 }
+        },
+        bar: {
+          collection: { max: 4 }
+        }
+      };
+
+      expect(ModelValidator.validateFields({
+        foo: ['1','2'],
+        bar: ['1','2']
+      }, ['foo', 'bar'], model.rules)).toBeResolved();
+    });
+
+    it('should reject if model does not match any of the specified rules', function() {
+      model.rules = {
+        foo: {
+          collection: { min: 2 }
+        },
+        bar: {
+          collection: { max: 4 }
+        }
+      };
+
+      var promise = ModelValidator.validateFields({
+        foo: ['1'],
+        bar: ['1','2','3','4','5']
+      }, ['foo', 'bar'], model.rules);
+
+      expect(promise).toBeRejected();
+
+      var errorMap;
+
+      promise.then(
+        angular.noop,
+        function(value) {
+          errorMap = value;
+        });
+
+      $rootScope.$apply(); // Trigger Promise resolution
+
+      expect(errorMap.foo).toBeTruthy();
+      expect(errorMap.bar).toBeTruthy();
+    });
+  }); // validateFields
 
   describe('validateAll', function() {
     it('should resolve on an empty set of fields', function() {

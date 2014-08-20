@@ -1,10 +1,11 @@
-angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<div  class=\"field checkbox-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <p ng-if=\"error\" class=\"text-danger field-error left-aligned\" ng-bind=\"error\"></p>\n\n  <label>\n    <div class=\"checkbox-field-input\" ng-class=\"{\'is-checked\': model.bindable}\"></div>\n\n    <input  type=\"checkbox\" ng-model=\"model.bindable\"\n            class=\"field-input\"\n            ng-disabled=\"disable || disabledByForm\">\n\n    <field-label  ng-if=\"label\"\n                  label=\"{{label}}\"\n                  help=\"{{help}}\"\n                  ng-click=\"toggle()\">\n    </field-label>\n  </label>\n</div>\n");
+angular.module("formFor.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form-for/templates/checkbox-field.html","<div  class=\"field checkbox-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error left-aligned\" ng-bind=\"model.error\"></p>\n\n  <label>\n    <div class=\"checkbox-field-input\" ng-class=\"{\'is-checked\': model.bindable}\"></div>\n\n    <input  type=\"checkbox\" ng-model=\"model.bindable\"\n            class=\"field-input\"\n            ng-disabled=\"disable || model.disabled\">\n\n    <field-label  ng-if=\"label\"\n                  label=\"{{label}}\"\n                  help=\"{{help}}\"\n                  ng-click=\"toggle()\">\n    </field-label>\n  </label>\n</div>\n");
+$templateCache.put("form-for/templates/collection-label.html","<div class=\"collection-label\" ng-class=\"{\'text-danger field-error\': model.error}\">\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <small ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></small>\n</div>\n");
 $templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n\n  <span ng-if=\"help\" class=\"fa-stack help-icon-stack\">\n    <i class=\"fa fa-stack-2x fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-stack-1x fa-inverse fa-question help-foreground-icon\"></i>\n  </span>\n\n  <span class=\"label label-default field-label-required-label\" ng-if=\"requiredLabel\" ng-bind=\"requiredLabel\"></span>\n</label>\n");
-$templateCache.put("form-for/templates/radio-field.html","<span class=\"field radio-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <p ng-if=\"error\" class=\"text-danger field-error left-aligned\" ng-bind=\"error\"></p>\n\n  <label>\n    <span  class=\"radio-field-input\" ng-class=\"{\'is-selected\': model.bindable === value}\"\n          ng-click=\"click()\"></span>\n\n    <input  type=\"radio\" ng-model=\"model.bindable\" ng-value=\"value\"\n            class=\"field-input\"\n            ng-disabled=\"disable || disabledByForm\">\n\n    <field-label  ng-if=\"label\"\n                  label=\"{{label}}\"\n                  help=\"{{help}}\"\n                  ng-click=\"click()\">\n    </field-label>\n  </label>\n</span>\n");
-$templateCache.put("form-for/templates/select-field.html","<div  class=\"form-group field select-field\"\n      ng-class=\"{disabled: disable || disabledByForm, open: isOpen, \'has-error\': error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <div  class=\"form-control select-field-toggle-button\"\n        ng-class=\"{open: isOpen, disabled: disable || disabledByForm}\">\n\n    <span ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\"></span>\n\n    <span ng-if=\"!selectedOptionLabel\">\n      <span ng-if=\"placeholder\" ng-bind=\"placeholder\"></span>\n      <span ng-if=\"!placeholder\">Select</span>\n    </span>\n\n    <span class=\"fa fa-caret-down pull-right select-field-toggle-caret\"></span>\n  </div>\n\n  <div ng-show=\"isOpen\" class=\"list-group-container\">\n    <div class=\"list-group\">\n      <div  ng-show=\"enableFiltering\" class=\"input-group filter-input-group\"\n            ng-click=\"$event.stopPropagation()\">\n        <input  type=\"text\"\n                class=\"form-control text-field-input filter-text-input\"\n                ng-model=\"filter\"\n                ng-keydown=\"keyDown($event)\"\n                form-for-debounce=\"{{filterDebounce}}\" />\n\n        <span class=\"input-group-addon input-group-addon-after\">\n          <i class=\"fa fa-search text-field-icon\"></i>\n        </span>\n      </div>\n\n      <div class=\"list-group-scrollable\">\n        <a  class=\"list-group-item\"\n            ng-repeat=\"option in filteredOptions\"\n            ng-value=\"option[valueAttribute]\"\n            ng-click=\"selectOption(option)\"\n            ng-mouseenter=\"mouseOver($index)\"\n            ng-class=\"{active: option === selectedOption, hover: $index === mouseOverIndex}\">\n\n          <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->\n          <strong ng-if=\"$index === mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></strong>\n          <span ng-if=\"$index !== mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></span>\n          <spgn ng-if=\"!option[labelAttribute]\">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->\n        </a>\n\n        <a ng-if=\"!options\" class=\"list-group-item\">\n          <i class=\"fa fa-circle-o-notch fa-spin\"></i>\n          Loading...\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("form-for/templates/radio-field.html","<span class=\"field radio-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error left-aligned\" ng-bind=\"model.error\"></p>\n\n  <label>\n    <span  class=\"radio-field-input\" ng-class=\"{\'is-selected\': model.bindable === value}\"\n          ng-click=\"click()\"></span>\n\n    <input  type=\"radio\" ng-model=\"model.bindable\" ng-value=\"value\"\n            class=\"field-input\"\n            ng-disabled=\"disable || model.disabled\">\n\n    <field-label  ng-if=\"label\"\n                  label=\"{{label}}\"\n                  help=\"{{help}}\"\n                  ng-click=\"click()\">\n    </field-label>\n  </label>\n</span>\n");
+$templateCache.put("form-for/templates/select-field.html","<div  class=\"form-group field select-field\"\n      ng-class=\"{disabled: disable || model.disabled, open: isOpen, \'has-error\': model.error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></p>\n\n  <div  class=\"form-control select-field-toggle-button\"\n        ng-class=\"{open: isOpen, disabled: disable || model.disabled}\">\n\n    <span ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\"></span>\n\n    <span ng-if=\"!selectedOptionLabel\">\n      <span ng-if=\"placeholder\" ng-bind=\"placeholder\"></span>\n      <span ng-if=\"!placeholder\">Select</span>\n    </span>\n\n    <span class=\"fa fa-caret-down pull-right select-field-toggle-caret\"></span>\n  </div>\n\n  <div ng-show=\"isOpen\" class=\"list-group-container\">\n    <div class=\"list-group\">\n      <div  ng-show=\"enableFiltering\" class=\"input-group filter-input-group\"\n            ng-click=\"$event.stopPropagation()\">\n        <input  type=\"text\"\n                class=\"form-control text-field-input filter-text-input\"\n                ng-model=\"filter\"\n                ng-keydown=\"keyDown($event)\"\n                form-for-debounce=\"{{filterDebounce}}\" />\n\n        <span class=\"input-group-addon input-group-addon-after\">\n          <i class=\"fa fa-search text-field-icon\"></i>\n        </span>\n      </div>\n\n      <div class=\"list-group-scrollable\">\n        <a  class=\"list-group-item\"\n            ng-repeat=\"option in filteredOptions\"\n            ng-value=\"option[valueAttribute]\"\n            ng-click=\"selectOption(option)\"\n            ng-mouseenter=\"mouseOver($index)\"\n            ng-class=\"{active: option === selectedOption, hover: $index === mouseOverIndex}\">\n\n          <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->\n          <strong ng-if=\"$index === mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></strong>\n          <span ng-if=\"$index !== mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></span>\n          <spgn ng-if=\"!option[labelAttribute]\">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->\n        </a>\n\n        <a ng-if=\"!options\" class=\"list-group-item\">\n          <i class=\"fa fa-circle-o-notch fa-spin\"></i>\n          Loading...\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("form-for/templates/submit-button.html","<button class=\"btn btn-default submit-button\" ng-disabled=\"disable || disabledByForm\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n</button>\n");
-$templateCache.put("form-for/templates/text-field.html","<div  class=\"form-group field text-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <div ng-class=\"{\'input-group\': iconBefore || iconAfter}\">\n    <span ng-if=\"iconBefore\" class=\"input-group-addon input-group-addon-before\"\n          ng-click=\"onIconBeforeClick()\">\n      <i class=\"text-field-icon\" ng-class=\"iconBefore\"></i>\n    </span>\n\n    <input  ng-if=\"!multiline\"\n            type=\"{{type}}\"\n            class=\"form-control text-field-input\"\n            ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n            ng-disabled=\"disable || disabledByForm\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\"\n            ng-click=\"onFocus()\" />\n\n\n    <textarea ng-if=\"multiline\"\n              class=\"form-control text-field-input\"\n              ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n              ng-disabled=\"disable || disabledByForm\"\n              placeholder=\"{{placeholder}}\"\n              ng-model=\"model.bindable\"\n              form-for-debounce=\"{{debounce}}\"\n              ng-click=\"onFocus()\">\n    </textarea>\n\n    <span ng-if=\"iconAfter\" class=\"input-group-addon input-group-addon-after\"\n          ng-click=\"onIconAfterClick()\">\n      <i class=\"text-field-icon\" ng-class=\"iconAfter\"></i>\n    </span>\n  </div>\n</div>\n");
-$templateCache.put("form-for/templates/type-ahead-field.html","<div  class=\"form-group field type-ahead-field\"\n      ng-class=\"{disabled: disable || disabledByForm, \'has-error\': error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"error\" class=\"text-danger field-error\" ng-bind=\"error\"></p>\n\n  <input  type=\"text\"\n          class=\"form-control type-ahead-field-input\"\n          placeholder=\"{{placeholder}}\"\n          ng-model=\"model.selectedOption\"\n          ng-change=\"changeHandler()\"\n          typeahead=\"option as option[labelAttribute] for option in filteredOptions\"\n          typeahead-wait-ms=\"debounce || 1000\">\n</div>\n");}]);
+$templateCache.put("form-for/templates/text-field.html","<div  class=\"form-group field text-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></p>\n\n  <div ng-class=\"{\'input-group\': iconBefore || iconAfter}\">\n    <span ng-if=\"iconBefore\" class=\"input-group-addon input-group-addon-before\"\n          ng-click=\"onIconBeforeClick()\">\n      <i class=\"text-field-icon\" ng-class=\"iconBefore\"></i>\n    </span>\n\n    <input  ng-if=\"!multiline\"\n            type=\"{{type}}\"\n            class=\"form-control text-field-input\"\n            ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n            ng-disabled=\"disable || model.disabled\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\"\n            ng-click=\"onFocus()\" />\n\n\n    <textarea ng-if=\"multiline\"\n              class=\"form-control text-field-input\"\n              ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n              ng-disabled=\"disable || model.disabled\"\n              placeholder=\"{{placeholder}}\"\n              ng-model=\"model.bindable\"\n              form-for-debounce=\"{{debounce}}\"\n              ng-click=\"onFocus()\">\n    </textarea>\n\n    <span ng-if=\"iconAfter\" class=\"input-group-addon input-group-addon-after\"\n          ng-click=\"onIconAfterClick()\">\n      <i class=\"text-field-icon\" ng-class=\"iconAfter\"></i>\n    </span>\n  </div>\n</div>\n");
+$templateCache.put("form-for/templates/type-ahead-field.html","<div  class=\"form-group field type-ahead-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></p>\n\n  <input  type=\"text\"\n          class=\"form-control type-ahead-field-input\"\n          placeholder=\"{{placeholder}}\"\n          ng-model=\"model.selectedOption\"\n          ng-change=\"changeHandler()\"\n          typeahead=\"option as option[labelAttribute] for option in filteredOptions\"\n          typeahead-wait-ms=\"debounce || 1000\">\n</div>\n");}]);
 angular.module('formFor', ['formFor.templates']);
 
 /**
@@ -49,16 +50,55 @@ angular.module('formFor').directive('checkboxField',
           return;
         }
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
 
         $scope.toggle = function toggle() {
-          if (!$scope.disable && !$scope.disabledByForm) {
+          if (!$scope.disable && !$scope.model.disabled) {
             $scope.model.bindable = !$scope.model.bindable;
           }
         };
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
+      }
+    };
+  }]);
+
+/**
+ * @ngdoc Directives
+ * @name collection-label
+ * @description
+ * Header label for collections.
+ * This component displays header text as well as collection validation errors.
+ *
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Field label string. This string can contain HTML markup.
+ * @param {String} attribute Name of collection within validation rules
+ *
+ * @example
+ * // To display a simple collection header:
+ * <collection-label  label="Hobbies" attribute="hobbies">
+ * </collection-label>
+ */
+angular.module('formFor').directive('collectionLabel',
+  ["$sce", "FormForConfiguration", function( $sce, FormForConfiguration ) {
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/collection-label.html',
+      scope: {
+        attribute: '@',
+        help: '@?',
+        label: '@'
+      },
+      link: function($scope, $element, $attributes, formForController) {
+        $scope.$watch('label', function(value) {
+          $scope.bindableLabel = $sce.trustAsHtml(value);
+        });
+
+        $scope.model = formForController.registerCollectionLabel($scope.attribute);
       }
     };
   }]);
@@ -69,9 +109,9 @@ angular.module('formFor').directive('checkboxField',
  * @description
  * This component is only intended for internal use by the formFor module.
  *
- * @param {String} help Field label string. This string can contain HTML markup.
- * @param {String} label Optional help tooltip to display on hover.
+ * @param {String} help Optional help tooltip to display on hover.
  * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Field label string. This string can contain HTML markup.
  * @param {String} required Optional attribute specifies that this field is a required field.
  * If a required label has been provided via FormForConfiguration then field label will display that value for required fields.
  *
@@ -227,7 +267,6 @@ angular.module('formFor').directive('formFor',
       scope: {
         controller: '=?',
         disable: '=?',
-        errorMap: '=?',
         formFor: '=',
         service: '@',
         submitComplete: '&?',
@@ -237,12 +276,33 @@ angular.module('formFor').directive('formFor',
         validationRules: '=?'
       },
       controller: ["$scope", function($scope) {
-        $scope.formFieldScopes = {};
-        $scope.bindable = {};
-        $scope.scopeWatcherUnwatchFunctions = [];
-        $scope.submitButtonScopes = [];
+        $scope.collectionNameToErrorMap = {};
+        $scope.fieldNameToErrorMap = {};
 
-        var controller = this;
+        // Map of safe (bindable, $scope.$watch-able) field names to objects containing the following keys:
+        // • bindableWrapper: Shared between formFor and field directives. Returned by registerFormField(). Contains:
+        //   • bindable: Used for easier 2-way data binding between formFor and input field
+        //   • disabled: Field should be disabled (generally because form-submission is in progress)
+        //   • error: Field should display the following validation error message
+        //   • required: Informs the field's label if it should show a "required" marker
+        // • fieldName: Original field name
+        // • unwatchers: Array of unwatch functions to be invoked on field-unregister
+        // • validationAttribute: Maps field name to the location of field validation rules
+        //
+        // A note on safe field names:
+        // A field like 'hobbies[0].name' might be mapped to something like 'hobbies__0__name' so that we can safely $watch it.
+        $scope.fields = {};
+
+        // Maps collection names (ex. 'hobbies') to <collection-label> directives.
+        // Allows formFor to mark collections as required and to display collection-level errors.
+        $scope.collectionLabels = {};
+
+        // Set of bindable wrappers used to disable buttons when form-submission is in progress.
+        // Wrappers contain the following keys:
+        //   • disabled: Button should be disabled (generally because form-submission is in progress)
+        //
+        // Note that there is no current way to associate a wrapper with a button.
+        $scope.buttons = [];
 
         if ($scope.service) {
           $scope.$service = $injector.get($scope.service);
@@ -256,54 +316,160 @@ angular.module('formFor').directive('formFor',
           $scope.$validationRules = $scope.validationRules;
         }
 
+        // Attaching controller methods to a 'controller' object instead of 'this' results in prettier JSDoc display.
+        var controller = this;
+
         /**
          * All form-input children of formFor must register using this function.
          * @memberof form-for
-         * @param {$scope} formFieldScope $scope of input directive
          * @param {String} fieldName Unique identifier of field within model; used to map errors back to input fields
+         * @return {Object} Object containing keys to be observed by the input field:
+         * • bindable: Input should 2-way bind against this attribute in order to sync data with formFor.
+         * • disabled: Input should disable itself if this value becomes true; typically this means the form is being submitted.
+         * • error: Input should display the string contained in this field (if one exists); this means the input value is invalid.
+         * • required: Input should display a 'required' indicator if this value is true.
          */
-        controller.registerFormField = function(formFieldScope, fieldName) {
-          var safeFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+        controller.registerFormField = function(fieldName) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
           var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
 
-          $scope.formFieldScopes[fieldName] = formFieldScope;
-          $scope.bindable[safeFieldName] = {
-            bindable: null,
-            required: rules && !!rules.required
+          // Store information about this field that we'll need for validation and binding purposes.
+          // @see Above documentation for $scope.fields
+          var fieldDatum = {
+            bindableWrapper: {
+              bindable: null,
+              disabled: false,
+              error: null,
+              required: ModelValidator.isFieldRequired(fieldName, $scope.validationRules)
+            },
+            fieldName: fieldName,
+            unwatchers: [],
+            validationAttribute: fieldName.split('[')[0] // TODO Is this needed?
           };
 
-          // TRICKY Why do we use $parse?
-          // Dot notation (ex. 'foo.bar') causes trouble with the brackets accessor.
-          // To simplify binding for formFor children, we encapsulate this and return a simple bindable model.
-          // We need to manage 2-way binding to keep the original model and our wrapper in sync though.
-          // Given a model {foo: {bar: 'baz'}} and a field-name 'foo.bar' $parse allows us to retrieve 'baz'.
+          $scope.fields[bindableFieldName] = fieldDatum;
 
           var getter = $parse(fieldName);
           var setter = getter.assign;
 
-          $scope.$watch('bindable.' + safeFieldName + '.bindable', function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              setter($scope.formFor, newValue);
-            }
-          });
+          // Changes made by our field should be synced back to the form-data model.
+          fieldDatum.unwatchers.push(
+            $scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function(newValue, oldValue) {
+              if (newValue !== oldValue) {
+                setter($scope.formFor, newValue);
+              }
+            }));
 
-          $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
-            $scope.bindable[safeFieldName].bindable = getter($scope.formFor);
-          });
+          var formDataWatcherInitialized;
 
-          // Also run validations on-change as necessary.
-          createScopeWatcher(fieldName);
+          // Changes made to the form-data model should likewise be synced to the field's bindable model.
+          // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
+          fieldDatum.unwatchers.push(
+            $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
+              fieldDatum.bindableWrapper.bindable = getter($scope.formFor);
 
-          return $scope.bindable[safeFieldName];
+              // Changes in form-data should also trigger validations.
+              // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
+              // We shouldn't mark our field as dirty when Angular auto-invokes the initial watcher though,
+              // So we ignore the first invocation...
+              if (!formDataWatcherInitialized) {
+                formDataWatcherInitialized = true;
+
+              // If formFor was binded with an empty object, ngModel will auto-initialize keys on blur.
+              // We shouldn't treat this as a user-edit though unless the user actually typed something.
+              // It's possible they typed and then erased, but that seems less likely.
+              // So we also shouldn't mark as dirty unless a truthy value has been provided.
+              } else if (oldValue !== undefined || newValue !== '') {
+                $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+              }
+
+              // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
+              if ($scope.$validationRules) {
+                ModelValidator.validateField(
+                    $scope.formFor,
+                    fieldName,
+                    $scope.$validationRules
+                  ).then(
+                      function() {
+                        $scope.formForStateHelper.setFieldError(bindableFieldName, null);
+                      },
+                      function(error) {
+                        $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+                      });
+              }
+            }));
+
+          return fieldDatum.bindableWrapper;
+        };
+
+        /**
+         * Form fields created within ngRepeat or ngIf directive should clean up themselves on removal.
+         * @memberof form-for
+         * @param {String} fieldName Unique identifier of field within model; used to map errors back to input fields
+         */
+        this.unregisterFormField = function(fieldName) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+          angular.forEach(
+            $scope.fields[bindableFieldName].unwatchers,
+            function(unwatch) {
+              unwatch();
+            });
         };
 
         /**
          * All submitButton children must register with formFor using this function.
          * @memberof form-for
          * @param {$scope} submitButtonScope $scope of submit button directive
+         * @return {Object} Object containing keys to be observed by the input button:
+         * • disabled: Button should disable itself if this value becomes true; typically this means the form is being submitted.
          */
         controller.registerSubmitButton = function(submitButtonScope) {
-          $scope.submitButtonScopes.push(submitButtonScope);
+          var bindableWrapper = {
+            disabled: false
+          };
+
+          $scope.buttons.push(bindableWrapper);
+
+          return bindableWrapper;
+        };
+
+        /**
+         * Collection headers should register themselves using this function in order to be notified of validation errors.
+         * @memberof form-for
+         * @param {String} fieldName Unique identifier of collection within model
+         * @return {Object} Object containing keys to be observed by the input field:
+         * • error: Header should display the string contained in this field (if one exists); this means the collection is invalid.
+         * • required: Header should display a 'required' indicator if this value is true.
+         */
+        controller.registerCollectionLabel = function(fieldName) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+          var bindableWrapper = {
+            error: null,
+            required: ModelValidator.isCollectionRequired(fieldName, $scope.validationRules)
+          };
+
+          $scope.collectionLabels[bindableFieldName] = bindableWrapper;
+
+          var watcherInitialized = false;
+
+          $scope.$watch('formFor.' + fieldName + '.length', function(newValue, oldValue) {
+            // The initial $watch should not trigger a visible validation...
+            if (!watcherInitialized) {
+              watcherInitialized = true;
+            } else {
+              ModelValidator.validateCollection($scope.formFor, fieldName, $scope.$validationRules).then(
+                function() {
+                  $scope.formForStateHelper.setFieldError(bindableFieldName, null);
+                },
+                function(error) {
+                  $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+                });
+            }
+          });
+
+          return bindableWrapper;
         };
 
         /**
@@ -313,7 +479,7 @@ angular.module('formFor').directive('formFor',
         controller.resetErrors = function() {
           $scope.formForStateHelper.setFormSubmitted(false);
 
-          var keys = NestedObjectHelper.flattenObjectKeys($scope.errorMap);
+          var keys = NestedObjectHelper.flattenObjectKeys($scope.fieldNameToErrorMap);
 
           angular.forEach(keys, function(fieldName) {
             $scope.formForStateHelper.setFieldHasBeenModified(fieldName, false);
@@ -322,87 +488,71 @@ angular.module('formFor').directive('formFor',
 
         // Expose controller methods to the $scope.controller interface
         $scope.controller = $scope.controller || {};
-        $scope.controller.registerFormField = this.registerFormField;
-        $scope.controller.registerSubmitButton = this.registerSubmitButton;
-        $scope.controller.resetErrors = this.resetErrors;
+
+        angular.copy(controller, $scope.controller);
 
         // Disable all child inputs if the form becomes disabled.
         $scope.$watch('disable', function(value) {
-          angular.forEach($scope.formFieldScopes, function(scope) {
-            scope.disabledByForm = value;
+          angular.forEach($scope.fields, function(field) {
+            field.bindableWrapper.disabled = value;
           });
 
-          angular.forEach($scope.submitButtonScopes, function(scope) {
-            scope.disabledByForm = value;
+          angular.forEach($scope.buttons, function(wrapper) {
+            wrapper.disabled = value;
           });
         });
 
         // Track field validity and dirty state.
         $scope.formForStateHelper = new $FormForStateHelper($scope);
 
-        /*
-         * Setup a debounce validator on a registered form field.
-         * This validator will update error messages inline as the user progresses through the form.
-         * @param {String} fieldName Name of field within form-data
-         */
-        var createScopeWatcher = function(fieldName) {
-          var formFieldScope = $scope.formFieldScopes[fieldName];
-          var initialized;
-
-          return $scope.$watch('formFor.' + fieldName,
-            function(newValue, oldValue) {
-              // Scope watchers always trigger once when added.
-              // Only mark our field dirty when a user-edit actually triggers the watcher.
-              if (!initialized) {
-                initialized = true;
-
-              // If formFor was binded with an empty object, ngModel will auto-initialize keys on blur.
-              // We shouldn't treat this as a user-edit though unless the user actually typed something.
-              // It's possible they typed and then erased, but that seems less likely...
-              } else if (oldValue !== undefined || newValue !== '') {
-                $scope.formForStateHelper.setFieldHasBeenModified(fieldName, true);
-              }
-
-              if ($scope.$validationRules) {
-                ModelValidator.validateField($scope.formFor, fieldName, $scope.$validationRules).then(
-                  function() {
-                    $scope.formForStateHelper.setFieldError(fieldName, null);
-                  },
-                  function(error) {
-                    $scope.formForStateHelper.setFieldError(fieldName, error);
-                  });
-              }
-            });
-        };
-
         // Watch for any validation changes or changes in form-state that require us to notify the user.
         // Rather than using a deep-watch, FormForStateHelper exposes a bindable attribute 'watchable'.
-        // This attribute is gauranteed to change whenever validation criteria change, but its value is meaningless.
+        // This attribute is gauranteed to change whenever validation criteria change (but its value is meaningless).
         $scope.$watch('formForStateHelper.watchable', function() {
-          var formForStateHelper = $scope.formForStateHelper;
+          var hasFormBeenSubmitted = $scope.formForStateHelper.hasFormBeenSubmitted();
 
-          angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
-            if (formForStateHelper.hasFormBeenSubmitted() || formForStateHelper.hasFieldBeenModified(fieldName)) {
-              var error = formForStateHelper.getFieldError(fieldName);
+          // Mark invalid fields
+          angular.forEach($scope.fields, function(fieldDatum, bindableFieldName) {
+            if (hasFormBeenSubmitted || $scope.formForStateHelper.hasFieldBeenModified(bindableFieldName)) {
+              var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
 
-              scope.error = error ? $sce.trustAsHtml(error) : null;
+              fieldDatum.bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
             } else {
-              // Clear out field errors in the event that the form has been reset.
-              scope.error = null;
+              fieldDatum.bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset.
             }
+          });
+
+          // Mark invalid collections
+          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+            var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
+
+            bindableWrapper.error = error ? $sce.trustAsHtml(error) : null;
           });
         });
 
         /*
+         * Update all registered collection labels with the specified error messages.
+         * Specified map should be keyed with fieldName and should container user-friendly error strings.
+         * @param {Object} fieldNameToErrorMap Map of collection names (or paths) to errors
+         */
+        $scope.updateCollectionErrors = function(fieldNameToErrorMap) {
+          angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, bindableFieldName);
+
+            $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+          });
+        };
+
+        /*
          * Update all registered form fields with the specified error messages.
          * Specified map should be keyed with fieldName and should container user-friendly error strings.
-         * @param {Object} errorMap Map of field names (or paths) to errors
+         * @param {Object} fieldNameToErrorMap Map of field names (or paths) to errors
          */
-        $scope.updateErrors = function(errorMap) {
-          angular.forEach($scope.formFieldScopes, function(scope, fieldName) {
-            var error = NestedObjectHelper.readAttribute(errorMap, fieldName);
+        $scope.updateFieldErrors = function(fieldNameToErrorMap) {
+          angular.forEach($scope.fields, function(scope, bindableFieldName) {
+            var error = NestedObjectHelper.readAttribute(fieldNameToErrorMap, scope.fieldName);
 
-            $scope.formForStateHelper.setFieldError(fieldName, error);
+            $scope.formForStateHelper.setFieldError(bindableFieldName, error);
           });
         };
 
@@ -411,35 +561,43 @@ angular.module('formFor').directive('formFor',
          * This update indirectly triggers form validity check and inline error message display.
          */
         $scope.validateAll = function() {
-          $scope.updateErrors({});
 
-          var validationPromise;
+          // Reset errors before starting new validation.
+          $scope.updateCollectionErrors({});
+          $scope.updateFieldErrors({});
+
+          var validateCollectionsPromise;
+          var validateFieldsPromise;
 
           if ($scope.$validationRules) {
-            validationPromise =
-              ModelValidator.validateFields(
-                $scope.formFor,
-                Object.keys($scope.formFieldScopes),
-                $scope.$validationRules);
+            var validationKeys = [];
+
+            angular.forEach($scope.fields, function(field) {
+              validationKeys.push(field.fieldName);
+            });
+
+            validateFieldsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
+            validateFieldsPromise.then(angular.noop, $scope.updateFieldErrors);
+
+            validationKeys = [];
+
+            angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+              validationKeys.push(bindableFieldName);
+            });
+
+            validateCollectionsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
+            validateCollectionsPromise.then(angular.noop, $scope.updateCollectionErrors);
+
           } else {
-            validationPromise = $q.resolve();
+            validateCollectionsPromise = $q.resolve();
+            validateFieldsPromise = $q.resolve();
           }
 
-          validationPromise.then(angular.noop, $scope.updateErrors);
-
-          return validationPromise;
+          return $q.waitForAll([validateCollectionsPromise, validateFieldsPromise]);
         };
-
-        // Clean up dangling watchers on destroy.
-        $scope.$on('$destroy', function() {
-          angular.forEach($scope.scopeWatcherUnwatchFunctions, function(unwatch) {
-            unwatch();
-          });
-        });
       }],
       link: function($scope, $element, $attributes, controller) {
-        // Override form submit to trigger overall validation.
-        $element.on('submit',
+        $element.on('submit', // Override form submit to trigger overall validation.
           function() {
             $scope.formForStateHelper.setFormSubmitted(true);
             $scope.disable = true;
@@ -475,7 +633,9 @@ angular.module('formFor').directive('formFor',
                     // If the remote response returned inline-errors update our error map.
                     // This is unecessary if a string was returned.
                     if (angular.isObject(errorMessageOrErrorMap)) {
-                      $scope.updateErrors(errorMessageOrErrorMap);
+                      // TODO Questionable: Maybe server should be forced to return fields/collections constraints?
+                      $scope.updateCollectionErrors(errorMessageOrErrorMap);
+                      $scope.updateFieldErrors(errorMessageOrErrorMap);
                     }
 
                     // $scope.submitError is wrapped with a virtual function so we must check via attributes
@@ -547,11 +707,14 @@ angular.module('formFor').directive('radioField',
         }
 
         if (!nameToActiveRadioMap[$scope.attribute]) {
-          nameToActiveRadioMap[$scope.attribute] = {
+          var mainRadioDatum = {
             defaultScope: $scope,
-            scopes: [],
-            model: formForController.registerFormField($scope, $scope.attribute)
+            scopes: []
           };
+
+          FieldHelper.manageFieldRegistration($scope, formForController);
+
+          nameToActiveRadioMap[$scope.attribute] = mainRadioDatum;
         }
 
         // TODO How to handle errors?
@@ -560,22 +723,26 @@ angular.module('formFor').directive('radioField',
         var activeRadio = nameToActiveRadioMap[$scope.attribute];
         activeRadio.scopes.push($scope);
 
-        $scope.model = activeRadio.model;
         $scope.label = FieldHelper.getLabel($attributes, $scope.value);
 
         var $input = $element.find('input');
 
         $scope.click = function() {
-          if (!$scope.disable && !$scope.disabledByForm) {
+          if (!$scope.disable && !$scope.model.disabled) {
             $scope.model.bindable = $scope.value;
           }
         };
 
+        activeRadio.defaultScope.$watch('model', function(value) {
+          $scope.model = value;
+        });
         activeRadio.defaultScope.$watch('disable', function(value) {
           $scope.disable = value;
         });
-        activeRadio.defaultScope.$watch('disabledByForm', function(value) {
-          $scope.disabledByForm = value;
+        activeRadio.defaultScope.$watch('model.disabled', function(value) {
+          if ($scope.model) {
+            $scope.model.disabled = value;
+          }
         });
 
         $scope.$watch('model.bindable', function(newValue, oldValue) {
@@ -676,8 +843,9 @@ angular.module('formFor').directive('selectField',
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
 
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
@@ -800,7 +968,7 @@ angular.module('formFor').directive('selectField',
         var list = $element.find('.list-group');
 
         var clickToOpen = function() {
-          if ($scope.disable || $scope.disabledByForm) {
+          if ($scope.disable || $scope.model.disabled) {
             addClickToOpen();
 
             return;
@@ -1003,6 +1171,7 @@ angular.module('formFor').directive('textField',
           return;
         }
 
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
 
@@ -1011,9 +1180,6 @@ angular.module('formFor').directive('textField',
             $element.find( $scope.multiline ? 'textarea' : 'input' ).focus();
           });
         }
-
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {
@@ -1030,6 +1196,8 @@ angular.module('formFor').directive('textField',
             $scope.focused();
           }
         };
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   }]);
@@ -1128,8 +1296,9 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('filter', updateFilteredOptions);
         $scope.$watch('options', updateFilteredOptions);
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
 
         // Incoming model values should control the type-ahead field's default value.
         // In this case we need to match the model *value* with the corresponding option (Object).
@@ -1195,7 +1364,28 @@ angular.module('formFor').service('FieldHelper',
       if (FormForConfiguration.autoGenerateLabels) {
         return StringUtil.humanize(valueToHumanize);
       }
-    }
+    };
+
+    /**
+     * Helper method that registers a form field and stores the bindable object returned on the $scope.
+     * This method also unregisters the field on $scope $destroy.
+     * @memberof FieldHelper
+     * @param {$scope} $scope Input field $scope
+     * @param {Object} formForController Controller object for parent formFor
+     */
+    this.manageFieldRegistration = function($scope, formForController) {
+      $scope.$watch('attribute', function(newValue, oldValue) {
+        if ($scope.model) {
+          formForController.unregisterFormField(oldValue);
+        }
+
+        $scope.model = formForController.registerFormField($scope.attribute);
+      });
+
+      $scope.$on('$destroy', function() {
+        formForController.unregisterFormField($scope.attribute);
+      });
+    };
   }]);
 
 /**
@@ -1216,7 +1406,9 @@ angular.module('formFor').service('FormForConfiguration',
       requiredLabel: null,
       validationFailedForCustomMessage: 'Failed custom validation',
       validationFailedForPatternMessage: 'Invalid format',
+      validationFailedForMaxCollectionSizeMessage: 'Must be fewer than {{num}} items',
       validationFailedForMaxLengthMessage: 'Must be fewer than {{num}} characters',
+      validationFailedForMinCollectionSizeMessage: 'Must at least {{num}} items',
       validationFailedForMinLengthMessage: 'Must be at least {{num}} characters',
       validationFailedForRequiredMessage: 'Required field',
       validationFailedForEmailTypeMessage: 'Invalid email format',
@@ -1298,6 +1490,16 @@ angular.module('formFor').service('FormForConfiguration',
       },
 
       /**
+       * Override the default error message for failed max collection size validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
+      setValidationFailedForMaxCollectionSizeMessage: function(value) {
+        this.validationFailedForMaxCollectionSizeMessage = value;
+      },
+
+      /**
        * Override the default error message for failed maxlength validations.
        * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
        * @memberof FormForConfiguration
@@ -1305,6 +1507,16 @@ angular.module('formFor').service('FormForConfiguration',
        */
       setValidationFailedForMaxLengthMessage: function(value) {
         this.validationFailedForMaxLengthMessage = value;
+      },
+
+      /**
+       * Override the default error message for failed min collection size validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
+      setValidationFailedForMinCollectionSizeMessage: function(value) {
+        this.validationFailedForMaxCollectionSizeMessage = value;
       },
 
       /**
@@ -1471,7 +1683,41 @@ angular.module('formFor').factory('$FormForStateHelper', ["NestedObjectHelper", 
  * This service is not intended for use outside of the formFor module/library.
  */
 angular.module('formFor').service('ModelValidator',
-  ["$interpolate", "$parse", "$q", "FormForConfiguration", "NestedObjectHelper", function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
+  ["$interpolate", "$q", "FormForConfiguration", "NestedObjectHelper", function($interpolate, $q, FormForConfiguration, NestedObjectHelper) {
+
+    /*
+     * Strip array brackets from field names so that model values can be mapped to rules.
+     * For instance:
+     * • 'foo[0].bar' should be validated against 'foo.collection.fields.bar'.
+     */
+    this.$getRulesForFieldName = function(validationRules, fieldName) {
+      fieldName = fieldName.replace(/\[[^\]]+\]/g, '.collection.fields');
+
+      return NestedObjectHelper.readAttribute(validationRules, fieldName);
+    };
+
+    /**
+     * Convenience method for determining if the specified collection is flagged as required (aka min length).
+     */
+    this.isCollectionRequired = function(fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+      return  rules &&
+              rules.collection &&
+              rules.collection.min &&
+              (angular.isObject(rules.collection.min) ? rules.collection.min.rule : rules.collection.min);
+    };
+
+    /**
+     * Convenience method for determining if the specified field is flagged as required.
+     */
+    this.isFieldRequired = function(fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+      return  rules &&
+              rules.required &&
+              (angular.isObject(rules.required) ? rules.required.rule : rules.required);
+    };
 
     /**
      * Validates the model against all rules in the validationRules.
@@ -1502,23 +1748,28 @@ angular.module('formFor').service('ModelValidator',
       var deferred = $q.defer();
       var promises = [];
       var errorMap = {};
-      var that = this;
 
       angular.forEach(fieldNames, function(fieldName) {
-        var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
+        var rules = this.$getRulesForFieldName(validationRules, fieldName);
 
         if (rules) {
-          var promise = that.validateField(model, fieldName, validationRules);
+          var promise;
+
+          if (rules.collection) {
+            promise = this.validateCollection(model, fieldName, validationRules);
+          } else {
+            promise = this.validateField(model, fieldName, validationRules);
+          }
 
           promise.then(
             angular.noop,
             function(error) {
-              $parse(fieldName).assign(errorMap, error);
+              NestedObjectHelper.writeAttribute(errorMap, fieldName, error);
             });
 
           promises.push(promise);
         }
-      });
+      }, this);
 
       $q.waitForAll(promises).then(
         deferred.resolve,
@@ -1527,6 +1778,51 @@ angular.module('formFor').service('ModelValidator',
         });
 
       return deferred.promise;
+    };
+
+    /**
+     * Validate the properties of a collection (but not the items within the collection).
+     * This method returns a promise to be resolved on successful validation,
+     * Or rejected with an error message.
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Array} fieldName Name of collection to validate
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
+     */
+    this.validateCollection = function(model, fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+      var collection = NestedObjectHelper.readAttribute(model, fieldName);
+
+      if (rules && rules.collection) {
+        collection = collection || [];
+
+        var collectionRules = rules.collection;
+
+        if (collectionRules.min) {
+          var min = angular.isObject(collectionRules.min) ? collectionRules.min.rule : collectionRules.min;
+
+          if (collection.length < min) {
+            return $q.reject(
+              angular.isObject(collectionRules.min) ?
+                collectionRules.min.message :
+                $interpolate(FormForConfiguration.validationFailedForMinCollectionSizeMessage)({num: min}));
+          }
+        }
+
+        if (collectionRules.max) {
+          var max = angular.isObject(collectionRules.max) ? collectionRules.max.rule : collectionRules.max;
+
+          if (collection.length > max) {
+            return $q.reject(
+              angular.isObject(collectionRules.max) ?
+                collectionRules.max.message :
+                $interpolate(FormForConfiguration.validationFailedForMaxCollectionSizeMessage)({num: max}));
+          }
+        }
+      }
+
+      return $q.resolve();
     };
 
     /**
@@ -1540,8 +1836,8 @@ angular.module('formFor').service('ModelValidator',
      * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateField = function(model, fieldName, validationRules) {
-      var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
-      var value = $parse(fieldName)(model);
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+      var value = NestedObjectHelper.readAttribute(model, fieldName);
 
       if (rules) {
         value = value || '';
@@ -1675,10 +1971,53 @@ angular.module('formFor').service('ModelValidator',
  * Helper utility to simplify working with nested objects.
  */
 angular.module('formFor').service('NestedObjectHelper', ["$parse", function($parse) {
+
   return {
 
+    // For Angular 1.2.21 and below, $parse does not handle array brackets gracefully.
+    // Essentially we need to create Arrays that don't exist yet or objects within array indices that don't yet exist.
+    // @see https://github.com/angular/angular.js/issues/2845
+    $createEmptyArrays: function(object, attribute) {
+      var startOfArray = 0;
+
+      while (true) {
+        startOfArray = attribute.indexOf('[', startOfArray);
+
+        if (startOfArray < 0) {
+          break;
+        }
+
+        var arrayAttribute = attribute.substr(0, startOfArray);
+        var possibleArray = this.readAttribute(object, arrayAttribute);
+
+        // Create the Array if it doesn't yet exist
+        if (!possibleArray) {
+          possibleArray = [];
+
+          this.writeAttribute(object, arrayAttribute, possibleArray);
+        }
+
+        // Create an empty Object in the Array if the user is about to write to one (and one does not yet exist)
+        var match = attribute.substr(startOfArray).match(/([0-9]+)\]\./);
+
+        if (match) {
+          var index = parseInt(match[1]);
+
+          if (!possibleArray[index]) {
+            possibleArray[index] = {};
+          }
+        }
+
+        // Increment and keep scanning
+        startOfArray++;
+      }
+    },
+
     flattenAttribute: function(attribute) {
-      return attribute.replace(/\./g, '___');
+      attribute = attribute.replace(/\[([^\]]+)\]\.{0,1}/g, '___$1___');
+      attribute = attribute.replace(/\./g, '___');
+
+      return attribute;
     },
 
     /**
@@ -1742,6 +2081,8 @@ angular.module('formFor').service('NestedObjectHelper', ["$parse", function($par
      * @param {Object} value Value to be written
      */
     writeAttribute: function(object, attribute, value) {
+      this.$createEmptyArrays(object, attribute);
+
       $parse(attribute).assign(object, value);
     }
   };

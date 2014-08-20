@@ -1,5 +1,5 @@
 <div  class="form-group field type-ahead-field"
-      ng-class="{disabled: disable || disabledByForm, 'has-error': error}">
+      ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
 
   <field-label  ng-if="label"
                 label="{{label}}"
@@ -7,7 +7,7 @@
                 required="{{model.required}}">
   </field-label>
 
-  <p ng-if="error" class="text-danger field-error" ng-bind="error"></p>
+  <p ng-if="model.error" class="text-danger field-error" ng-bind="model.error"></p>
 
   <input  type="text"
           class="form-control type-ahead-field-input"

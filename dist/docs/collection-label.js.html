@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Index</title>
+    <title>JSDoc: Source: directives/collection-label.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -18,30 +18,54 @@
 <body>
 
 <div id="main">
-  <h1 class="page-title">Index</h1>
+  <h1 class="page-title">Source: directives/collection-label.js</h1>
 
   
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @ngdoc Directives
+ * @name collection-label
+ * @description
+ * Header label for collections.
+ * This component displays header text as well as collection validation errors.
+ *
+ * @param {String} help Optional help tooltip to display on hover.
+ * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
+ * @param {String} label Field label string. This string can contain HTML markup.
+ * @param {String} attribute Name of collection within validation rules
+ *
+ * @example
+ * // To display a simple collection header:
+ * &lt;collection-label  label="Hobbies" attribute="hobbies">
+ * &lt;/collection-label>
+ */
+angular.module('formFor').directive('collectionLabel',
+  function( $sce, FormForConfiguration ) {
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/collection-label.html',
+      scope: {
+        attribute: '@',
+        help: '@?',
+        label: '@'
+      },
+      link: function($scope, $element, $attributes, formForController) {
+        $scope.$watch('label', function(value) {
+          $scope.bindableLabel = $sce.trustAsHtml(value);
+        });
 
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+        $scope.model = formForController.registerCollectionLabel($scope.attribute);
+      }
+    };
+  });
+</code></pre>
+        </article>
+    </section>
 
 
 

@@ -365,7 +365,154 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line77" class="name-link"><h4 class="name" id="controller.registerFormField"><span class="type-signature">(static) </span>controller.registerFormField<span class="signature">(formFieldScope, fieldName)</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line217" class="name-link"><h4 class="name" id="controller.registerCollectionLabel"><span class="type-signature">(static) </span>controller.registerCollectionLabel<span class="signature">(fieldName)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Collection headers should register themselves using this function in order to be notified of validation errors.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fieldName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Unique identifier of collection within model</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line217">line 217</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Object containing keys to be observed by the input field:
+• error: Header should display the string contained in this field (if one exists); this means the collection is invalid.
+• required: Header should display a 'required' indicator if this value is true.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+
+    
+    
+      <a href="form-for.js.html#line104" class="name-link"><h4 class="name" id="controller.registerFormField"><span class="type-signature">(static) </span>controller.registerFormField<span class="signature">(fieldName)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
     
 
     
@@ -404,29 +551,6 @@ For more information refer to the Validation Types page.</p></td>
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>formFieldScope</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">$scope</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>$scope of input directive</p></td>
-        </tr>
-
     
 
         <tr>
@@ -478,7 +602,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line77">line 77</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -501,6 +625,32 @@ For more information refer to the Validation Types page.</p></td>
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Object containing keys to be observed by the input field:
+• bindable: Input should 2-way bind against this attribute in order to sync data with formFor.
+• disabled: Input should disable itself if this value becomes true; typically this means the form is being submitted.
+• error: Input should display the string contained in this field (if one exists); this means the input value is invalid.
+• required: Input should display a 'required' indicator if this value is true.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -511,7 +661,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line117" class="name-link"><h4 class="name" id="controller.registerSubmitButton"><span class="type-signature">(static) </span>controller.registerSubmitButton<span class="signature">(submitButtonScope)</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line199" class="name-link"><h4 class="name" id="controller.registerSubmitButton"><span class="type-signature">(static) </span>controller.registerSubmitButton<span class="signature">(submitButtonScope)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
     
 
     
@@ -601,7 +751,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line117">line 117</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line199">line 199</a>
     </li></ul></dd>
     
 
@@ -624,6 +774,29 @@ For more information refer to the Validation Types page.</p></td>
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Object containing keys to be observed by the input button:
+• disabled: Button should disable itself if this value becomes true; typically this means the form is being submitted.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -634,7 +807,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line125" class="name-link"><h4 class="name" id="controller.resetErrors"><span class="type-signature">(static) </span>controller.resetErrors<span class="signature">()</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line251" class="name-link"><h4 class="name" id="controller.resetErrors"><span class="type-signature">(static) </span>controller.resetErrors<span class="signature">()</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -676,7 +849,130 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line125">line 125</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line251">line 251</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+
+    
+    
+      <a href="form-for.js.html#line182" class="name-link"><h4 class="name" id="this.unregisterFormField"><span class="type-signature">(static) </span>this.unregisterFormField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Form fields created within ngRepeat or ngIf directive should clean up themselves on removal.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fieldName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Unique identifier of field within model; used to map errors back to input fields</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line182">line 182</a>
     </li></ul></dd>
     
 
@@ -720,7 +1016,7 @@ For more information refer to the Validation Types page.</p></td>
 
 <nav>
   <ul class="list-group">
-    <li><h3>Directives</h3><ul class="list-unstyled"><a class="list-group-item" href="checkbox-field.html">checkbox-field</a><a class="list-group-item" href="field-label.html">field-label</a><a class="list-group-item" href="form-for.html">form-for</a><a class="list-group-item" href="form-for-debounce.html">form-for-debounce</a><a class="list-group-item" href="radio-field.html">radio-field</a><a class="list-group-item" href="select-field.html">select-field</a><a class="list-group-item" href="submit-button.html">submit-button</a><a class="list-group-item" href="text-field.html">text-field</a></ul></li><li><h3>Services</h3><ul class="list-unstyled"><a class="list-group-item" href="FieldHelper.html">FieldHelper</a><a class="list-group-item" href="FormForConfiguration.html">FormForConfiguration</a><a class="list-group-item" href="ModelValidator.html">ModelValidator</a><a class="list-group-item" href="NestedObjectHelper.html">NestedObjectHelper</a><a class="list-group-item" href="StringUtil.html">StringUtil</a></ul></li>
+    <li><h3>Directives</h3><ul class="list-unstyled"><a class="list-group-item" href="checkbox-field.html">checkbox-field</a><a class="list-group-item" href="collection-label.html">collection-label</a><a class="list-group-item" href="field-label.html">field-label</a><a class="list-group-item" href="form-for.html">form-for</a><a class="list-group-item" href="form-for-debounce.html">form-for-debounce</a><a class="list-group-item" href="radio-field.html">radio-field</a><a class="list-group-item" href="select-field.html">select-field</a><a class="list-group-item" href="submit-button.html">submit-button</a><a class="list-group-item" href="text-field.html">text-field</a></ul></li><li><h3>Services</h3><ul class="list-unstyled"><a class="list-group-item" href="FieldHelper.html">FieldHelper</a><a class="list-group-item" href="FormForConfiguration.html">FormForConfiguration</a><a class="list-group-item" href="ModelValidator.html">ModelValidator</a><a class="list-group-item" href="NestedObjectHelper.html">NestedObjectHelper</a><a class="list-group-item" href="StringUtil.html">StringUtil</a></ul></li><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
   </ul>
 </nav>
 

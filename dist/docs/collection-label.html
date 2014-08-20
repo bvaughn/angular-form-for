@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Services: StringUtil</title>
+    <title>JSDoc: Directives: collection-label</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -18,7 +18,7 @@
 <body>
 
 <div id="main">
-  <h1 class="page-title">Services: StringUtil</h1>
+  <h1 class="page-title">Directives: collection-label</h1>
 
   
 
@@ -28,7 +28,7 @@
 
 <header>
     <h2>
-    StringUtil
+    collection-label
     </h2>
     
 </header>
@@ -43,7 +43,7 @@
 
     
     
-      <a href="string-util.js.html#line1" class="name-link"><h4 class="name" id="StringUtil"><span class="type-signature"></span>StringUtil<span class="signature">()</span><span class="type-signature"></span></h4></a>
+      <a href="collection-label.js.html#line1" class="name-link"><h4 class="name" id="collection-label"><span class="type-signature"></span>collection-label<span class="signature">(help, label, attribute)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -52,102 +52,8 @@
 
     
     <div class="description">
-        <p>Utility for working with strings.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="string-util.js.html">services/string-util.js</a>, <a href="string-util.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-
-    
-    
-      <a href="string-util.js.html#line15" class="name-link"><h4 class="name" id="this.humanize"><span class="type-signature">(static) </span>this.humanize<span class="signature">(text)</span><span class="type-signature"> &rarr; {String}</span></h4></a>
-    
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Converts text in common variable formats to humanized form.</p>
+        <p>Header label for collections.
+This component displays header text as well as collection validation errors.</p>
     </div>
     
 
@@ -181,7 +87,7 @@
 
         <tr>
             
-                <td class="name"><code>text</code></td>
+                <td class="name"><code>help</code></td>
             
 
             <td class="type">
@@ -197,7 +103,54 @@
 
             
 
-            <td class="description last"><p>Name of variable to be humanized (ex. myVariable, my_variable)</p></td>
+            <td class="description last"><p>Optional help tooltip to display on hover.
+By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Field label string. This string can contain HTML markup.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>attribute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of collection within validation rules</p></td>
         </tr>
 
     
@@ -228,7 +181,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="string-util.js.html">services/string-util.js</a>, <a href="string-util.js.html#line15">line 15</a>
+        <a href="collection-label.js.html">directives/collection-label.js</a>, <a href="collection-label.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -251,33 +204,34 @@
     
 
     
-    <h5>Returns:</h5>
+
     
-            
-<div class="param-desc">
-    <p>Humanized string (ex. 'My Variable')</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
+        <h5>Example</h5>
         
-<span class="param-type">String</span>
-
-
-    </dd>
-</dl>
-
-        
+    <pre class="prettyprint"><code>// To display a simple collection header:
+&lt;collection-label  label="Hobbies" attribute="hobbies">
+&lt;/collection-label></code></pre>
 
     
 </dd>
 
-        </dl>
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
     
 
     

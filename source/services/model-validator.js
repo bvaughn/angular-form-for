@@ -6,7 +6,41 @@
  * This service is not intended for use outside of the formFor module/library.
  */
 angular.module('formFor').service('ModelValidator',
-  function($interpolate, $parse, $q, FormForConfiguration, NestedObjectHelper) {
+  function($interpolate, $q, FormForConfiguration, NestedObjectHelper) {
+
+    /*
+     * Strip array brackets from field names so that model values can be mapped to rules.
+     * For instance:
+     * • 'foo[0].bar' should be validated against 'foo.collection.fields.bar'.
+     */
+    this.$getRulesForFieldName = function(validationRules, fieldName) {
+      fieldName = fieldName.replace(/\[[^\]]+\]/g, '.collection.fields');
+
+      return NestedObjectHelper.readAttribute(validationRules, fieldName);
+    };
+
+    /**
+     * Convenience method for determining if the specified collection is flagged as required (aka min length).
+     */
+    this.isCollectionRequired = function(fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+      return  rules &&
+              rules.collection &&
+              rules.collection.min &&
+              (angular.isObject(rules.collection.min) ? rules.collection.min.rule : rules.collection.min);
+    };
+
+    /**
+     * Convenience method for determining if the specified field is flagged as required.
+     */
+    this.isFieldRequired = function(fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+
+      return  rules &&
+              rules.required &&
+              (angular.isObject(rules.required) ? rules.required.rule : rules.required);
+    };
 
     /**
      * Validates the model against all rules in the validationRules.
@@ -37,23 +71,28 @@ angular.module('formFor').service('ModelValidator',
       var deferred = $q.defer();
       var promises = [];
       var errorMap = {};
-      var that = this;
 
       angular.forEach(fieldNames, function(fieldName) {
-        var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
+        var rules = this.$getRulesForFieldName(validationRules, fieldName);
 
         if (rules) {
-          var promise = that.validateField(model, fieldName, validationRules);
+          var promise;
+
+          if (rules.collection) {
+            promise = this.validateCollection(model, fieldName, validationRules);
+          } else {
+            promise = this.validateField(model, fieldName, validationRules);
+          }
 
           promise.then(
             angular.noop,
             function(error) {
-              $parse(fieldName).assign(errorMap, error);
+              NestedObjectHelper.writeAttribute(errorMap, fieldName, error);
             });
 
           promises.push(promise);
         }
-      });
+      }, this);
 
       $q.waitForAll(promises).then(
         deferred.resolve,
@@ -62,6 +101,51 @@ angular.module('formFor').service('ModelValidator',
         });
 
       return deferred.promise;
+    };
+
+    /**
+     * Validate the properties of a collection (but not the items within the collection).
+     * This method returns a promise to be resolved on successful validation,
+     * Or rejected with an error message.
+     * @memberof ModelValidator
+     * @param {Object} model Form-data object model is contained within
+     * @param {Array} fieldName Name of collection to validate
+     * @param {Object} validationRules Set of named validation rules
+     * @returns {Promise} To be resolved or rejected based on validation success or failure.
+     */
+    this.validateCollection = function(model, fieldName, validationRules) {
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+      var collection = NestedObjectHelper.readAttribute(model, fieldName);
+
+      if (rules && rules.collection) {
+        collection = collection || [];
+
+        var collectionRules = rules.collection;
+
+        if (collectionRules.min) {
+          var min = angular.isObject(collectionRules.min) ? collectionRules.min.rule : collectionRules.min;
+
+          if (collection.length < min) {
+            return $q.reject(
+              angular.isObject(collectionRules.min) ?
+                collectionRules.min.message :
+                $interpolate(FormForConfiguration.validationFailedForMinCollectionSizeMessage)({num: min}));
+          }
+        }
+
+        if (collectionRules.max) {
+          var max = angular.isObject(collectionRules.max) ? collectionRules.max.rule : collectionRules.max;
+
+          if (collection.length > max) {
+            return $q.reject(
+              angular.isObject(collectionRules.max) ?
+                collectionRules.max.message :
+                $interpolate(FormForConfiguration.validationFailedForMaxCollectionSizeMessage)({num: max}));
+          }
+        }
+      }
+
+      return $q.resolve();
     };
 
     /**
@@ -75,8 +159,8 @@ angular.module('formFor').service('ModelValidator',
      * @returns {Promise} To be resolved or rejected based on validation success or failure.
      */
     this.validateField = function(model, fieldName, validationRules) {
-      var rules = NestedObjectHelper.readAttribute(validationRules, fieldName);
-      var value = $parse(fieldName)(model);
+      var rules = this.$getRulesForFieldName(validationRules, fieldName);
+      var value = NestedObjectHelper.readAttribute(model, fieldName);
 
       if (rules) {
         value = value || '';

@@ -40,16 +40,17 @@ angular.module('formFor').directive('checkboxField',
           return;
         }
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
 
         $scope.toggle = function toggle() {
-          if (!$scope.disable && !$scope.disabledByForm) {
+          if (!$scope.disable && !$scope.model.disabled) {
             $scope.model.bindable = !$scope.model.bindable;
           }
         };
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   });

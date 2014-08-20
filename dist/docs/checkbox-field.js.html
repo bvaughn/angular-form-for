@@ -68,16 +68,17 @@ angular.module('formFor').directive('checkboxField',
           return;
         }
 
-        $scope.model = formForController.registerFormField($scope, $scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
 
         $scope.toggle = function toggle() {
-          if (!$scope.disable &amp;&amp; !$scope.disabledByForm) {
+          if (!$scope.disable &amp;&amp; !$scope.model.disabled) {
             $scope.model.bindable = !$scope.model.bindable;
           }
         };
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   });
@@ -92,7 +93,7 @@ angular.module('formFor').directive('checkboxField',
 
 <nav>
   <ul class="list-group">
-    <li><h3>Directives</h3><ul class="list-unstyled"><a class="list-group-item" href="checkbox-field.html">checkbox-field</a><a class="list-group-item" href="field-label.html">field-label</a><a class="list-group-item" href="form-for.html">form-for</a><a class="list-group-item" href="form-for-debounce.html">form-for-debounce</a><a class="list-group-item" href="radio-field.html">radio-field</a><a class="list-group-item" href="select-field.html">select-field</a><a class="list-group-item" href="submit-button.html">submit-button</a><a class="list-group-item" href="text-field.html">text-field</a></ul></li><li><h3>Services</h3><ul class="list-unstyled"><a class="list-group-item" href="FieldHelper.html">FieldHelper</a><a class="list-group-item" href="FormForConfiguration.html">FormForConfiguration</a><a class="list-group-item" href="ModelValidator.html">ModelValidator</a><a class="list-group-item" href="NestedObjectHelper.html">NestedObjectHelper</a><a class="list-group-item" href="StringUtil.html">StringUtil</a></ul></li>
+    <li><h3>Directives</h3><ul class="list-unstyled"><a class="list-group-item" href="checkbox-field.html">checkbox-field</a><a class="list-group-item" href="collection-label.html">collection-label</a><a class="list-group-item" href="field-label.html">field-label</a><a class="list-group-item" href="form-for.html">form-for</a><a class="list-group-item" href="form-for-debounce.html">form-for-debounce</a><a class="list-group-item" href="radio-field.html">radio-field</a><a class="list-group-item" href="select-field.html">select-field</a><a class="list-group-item" href="submit-button.html">submit-button</a><a class="list-group-item" href="text-field.html">text-field</a></ul></li><li><h3>Services</h3><ul class="list-unstyled"><a class="list-group-item" href="FieldHelper.html">FieldHelper</a><a class="list-group-item" href="FormForConfiguration.html">FormForConfiguration</a><a class="list-group-item" href="ModelValidator.html">ModelValidator</a><a class="list-group-item" href="NestedObjectHelper.html">NestedObjectHelper</a><a class="list-group-item" href="StringUtil.html">StringUtil</a></ul></li><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
   </ul>
 </nav>
 

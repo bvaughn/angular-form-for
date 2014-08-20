@@ -45,11 +45,14 @@ angular.module('formFor').directive('radioField',
         }
 
         if (!nameToActiveRadioMap[$scope.attribute]) {
-          nameToActiveRadioMap[$scope.attribute] = {
+          var mainRadioDatum = {
             defaultScope: $scope,
-            scopes: [],
-            model: formForController.registerFormField($scope, $scope.attribute)
+            scopes: []
           };
+
+          FieldHelper.manageFieldRegistration($scope, formForController);
+
+          nameToActiveRadioMap[$scope.attribute] = mainRadioDatum;
         }
 
         // TODO How to handle errors?
@@ -58,22 +61,26 @@ angular.module('formFor').directive('radioField',
         var activeRadio = nameToActiveRadioMap[$scope.attribute];
         activeRadio.scopes.push($scope);
 
-        $scope.model = activeRadio.model;
         $scope.label = FieldHelper.getLabel($attributes, $scope.value);
 
         var $input = $element.find('input');
 
         $scope.click = function() {
-          if (!$scope.disable && !$scope.disabledByForm) {
+          if (!$scope.disable && !$scope.model.disabled) {
             $scope.model.bindable = $scope.value;
           }
         };
 
+        activeRadio.defaultScope.$watch('model', function(value) {
+          $scope.model = value;
+        });
         activeRadio.defaultScope.$watch('disable', function(value) {
           $scope.disable = value;
         });
-        activeRadio.defaultScope.$watch('disabledByForm', function(value) {
-          $scope.disabledByForm = value;
+        activeRadio.defaultScope.$watch('model.disabled', function(value) {
+          if ($scope.model) {
+            $scope.model.disabled = value;
+          }
         });
 
         $scope.$watch('model.bindable', function(newValue, oldValue) {
