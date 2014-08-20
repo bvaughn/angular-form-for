@@ -112,7 +112,7 @@ angular.module('formFor').directive('formFor',
               bindable: null,
               disabled: false,
               error: null,
-              required: ModelValidator.isFieldRequired(fieldName, $scope.validationRules)
+              required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules)
             },
             fieldName: fieldName,
             unwatchers: [],
@@ -220,7 +220,7 @@ angular.module('formFor').directive('formFor',
 
           var bindableWrapper = {
             error: null,
-            required: ModelValidator.isCollectionRequired(fieldName, $scope.validationRules)
+            required: ModelValidator.isCollectionRequired(fieldName, $scope.$validationRules)
           };
 
           $scope.collectionLabels[bindableFieldName] = bindableWrapper;

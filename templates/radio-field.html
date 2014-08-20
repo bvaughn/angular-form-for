@@ -4,11 +4,12 @@
   <p ng-if="model.error" class="text-danger field-error left-aligned" ng-bind="model.error"></p>
 
   <label>
-    <span  class="radio-field-input" ng-class="{'is-selected': model.bindable === value}"
+    <span  class="radio-field-input" ng-class="{'is-selected': checked}"
           ng-click="click()"></span>
 
     <input  type="radio" ng-model="model.bindable" ng-value="value"
             class="field-input"
+            ng-checked="checked"
             ng-disabled="disable || model.disabled">
 
     <field-label  ng-if="label"
