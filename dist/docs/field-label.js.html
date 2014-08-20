@@ -59,9 +59,9 @@ angular.module('formFor').directive('fieldLabel',
           $scope.bindableLabel = $sce.trustAsHtml(value);
         });
 
-        if ($scope.required) {
-          $scope.requiredLabel = FormForConfiguration.requiredLabel;
-        }
+        $scope.$watch('required', function(required) {
+          $scope.requiredLabel = $scope.$eval(required) ? FormForConfiguration.requiredLabel : null;
+        });
       }
     };
   });
