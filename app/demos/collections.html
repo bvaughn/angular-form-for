@@ -19,12 +19,13 @@
 
       <select-field label="How often do you participate in this hobby"
                     attribute="hobbies[{{$index}}].frequency"
-                    options="hobbyFrequencyOptions">
+                    options="hobbyFrequencyOptions"
+                    allow-blank>
       </select-field>
 
-      <h4>Is this a paid hobby?</h4>
-      <radio-field label="Yes" attribute="hobbies[{{$index}}].paid" value="true"></radio-field>
-      <radio-field label="I wish" attribute="hobbies[{{$index}}].paid" value="false"></radio-field>
+      <label>Is this a paid hobby?</label>
+      <radio-field label="Yup" attribute="hobbies[{{$index}}].paid" value="yup"></radio-field>
+      <radio-field label="I wish" attribute="hobbies[{{$index}}].paid" value="wish"></radio-field>
 
       <checkbox-field label="Would you recommend this hobby to a friend?"
                       attribute="hobbies[{{$index}}].recommend">

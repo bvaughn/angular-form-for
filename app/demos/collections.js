@@ -4,15 +4,17 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
       hobbies: [
         {
           name: 'Creating forms',
-          description: 'This sure is a silly example hobby.'
+          frequency: 'daily',
+          paid: 'wish',
+          recommend: true
         }
       ]
     };
 
     $scope.hobbyFrequencyOptions = [
-      {label: 'Once', value: 1},
-      {label: 'Twice', value: 2},
-      {label: 'A million', value: 1000000}
+      {label: 'Daily', value: 'daily'},
+      {label: 'Weekly', value: 'weekly'},
+      {label: 'Monthly', value: 'monthly'}
     ];
 
     $scope.validationRules = {
