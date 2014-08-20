@@ -5,8 +5,7 @@
   <text-field label="Comments" attribute="comments" multiline placeholder="Go ahead, say anything."></text-field>
 
   <h4>Gender</h4>
-  <radio-field label="Male" attribute="gender" value="male"></radio-field>
-  <radio-field label="Female" attribute="gender" value="female"></radio-field>
+  <radio-field attribute="gender" label="{{gender.label}}" value="{{gender.value}}" ng-repeat="gender in genders"></radio-field>
 
   <h4>Type validations</h4>
   <text-field label="Email" attribute="email"></text-field>

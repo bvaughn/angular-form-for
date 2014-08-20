@@ -24,8 +24,8 @@
       </select-field>
 
       <label>Is this a paid hobby?</label>
-      <radio-field label="Yup" attribute="hobbies[{{$index}}].paid" value="yup"></radio-field>
-      <radio-field label="I wish" attribute="hobbies[{{$index}}].paid" value="wish"></radio-field>
+      <radio-field label="Yup" attribute="hobbies[{{$index}}].paid" value="true"></radio-field>
+      <radio-field label="I wish" attribute="hobbies[{{$index}}].paid" value="false"></radio-field>
 
       <checkbox-field label="Would you recommend this hobby to a friend?"
                       attribute="hobbies[{{$index}}].recommend">

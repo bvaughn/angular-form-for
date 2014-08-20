@@ -1,6 +1,14 @@
 angular.module('formForDocumentation').controller('AdvancedFormDemoController',
   function($scope, flashr) {
-    $scope.formData = {};
+    $scope.formData = {
+      gender: 3
+    };
+
+    $scope.genders = [
+      {label: 'Male', value: '1'},
+      {label: 'Female', value: '2'},
+      {label: 'Unspecified', value: '3'}
+    ];
 
     $scope.submitFailed = function(error) {
       flashr.now.info(error);
