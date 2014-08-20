@@ -92,8 +92,9 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('filter', updateFilteredOptions);
         $scope.$watch('options', updateFilteredOptions);
 
-        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
 
         // Incoming model values should control the type-ahead field's default value.
         // In this case we need to match the model *value* with the corresponding option (Object).
@@ -130,10 +131,6 @@ angular.module('formFor').directive('typeAheadField',
           }
 
           $scope.model.bindable = option && option[$scope.valueAttribute];
-        });
-
-        $scope.$on('$destroy', function() {
-          formForController.unregisterFormField($scope.attribute);
         });
       }
     };

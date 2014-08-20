@@ -67,6 +67,7 @@ angular.module('formFor').directive('textField',
           return;
         }
 
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
 
@@ -75,9 +76,6 @@ angular.module('formFor').directive('textField',
             $element.find( $scope.multiline ? 'textarea' : 'input' ).focus();
           });
         }
-
-        $scope.model = formForController.registerFormField($scope.attribute);
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {
@@ -95,9 +93,7 @@ angular.module('formFor').directive('textField',
           }
         };
 
-        $scope.$on('$destroy', function() {
-          formForController.unregisterFormField($scope.attribute);
-        });
+        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   });

@@ -103,8 +103,9 @@ angular.module('formFor').directive('selectField',
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
-        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
 
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
@@ -309,8 +310,6 @@ angular.module('formFor').directive('selectField',
 
         $scope.$on('$destroy', function() {
           removeClickWatch();
-
-          formForController.unregisterFormField($scope.attribute);
         });
       }
     };

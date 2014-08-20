@@ -50,7 +50,6 @@ angular.module('formFor').directive('checkboxField',
           return;
         }
 
-        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
@@ -61,9 +60,7 @@ angular.module('formFor').directive('checkboxField',
           }
         };
 
-        $scope.$on('$destroy', function() {
-          formForController.unregisterFormField($scope.attribute);
-        });
+        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   }]);
@@ -710,11 +707,14 @@ angular.module('formFor').directive('radioField',
         }
 
         if (!nameToActiveRadioMap[$scope.attribute]) {
-          nameToActiveRadioMap[$scope.attribute] = {
+          var mainRadioDatum = {
             defaultScope: $scope,
-            scopes: [],
-            model: formForController.registerFormField($scope.attribute)
+            scopes: []
           };
+
+          FieldHelper.manageFieldRegistration($scope, formForController);
+
+          nameToActiveRadioMap[$scope.attribute] = mainRadioDatum;
         }
 
         // TODO How to handle errors?
@@ -723,7 +723,6 @@ angular.module('formFor').directive('radioField',
         var activeRadio = nameToActiveRadioMap[$scope.attribute];
         activeRadio.scopes.push($scope);
 
-        $scope.model = activeRadio.model;
         $scope.label = FieldHelper.getLabel($attributes, $scope.value);
 
         var $input = $element.find('input');
@@ -734,11 +733,16 @@ angular.module('formFor').directive('radioField',
           }
         };
 
+        activeRadio.defaultScope.$watch('model', function(value) {
+          $scope.model = value;
+        });
         activeRadio.defaultScope.$watch('disable', function(value) {
           $scope.disable = value;
         });
         activeRadio.defaultScope.$watch('model.disabled', function(value) {
-          $scope.model.disabled = value;
+          if ($scope.model) {
+            $scope.model.disabled = value;
+          }
         });
 
         $scope.$watch('model.bindable', function(newValue, oldValue) {
@@ -755,8 +759,6 @@ angular.module('formFor').directive('radioField',
 
           if (activeRadio.scopes.length === 0) {
             delete nameToActiveRadioMap[$scope.attribute];
-
-            formForController.unregisterFormField($scope.attribute);
           }
         });
       }
@@ -841,8 +843,9 @@ angular.module('formFor').directive('selectField',
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
-        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
 
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
@@ -1047,8 +1050,6 @@ angular.module('formFor').directive('selectField',
 
         $scope.$on('$destroy', function() {
           removeClickWatch();
-
-          formForController.unregisterFormField($scope.attribute);
         });
       }
     };
@@ -1170,6 +1171,7 @@ angular.module('formFor').directive('textField',
           return;
         }
 
+        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
 
@@ -1178,9 +1180,6 @@ angular.module('formFor').directive('textField',
             $element.find( $scope.multiline ? 'textarea' : 'input' ).focus();
           });
         }
-
-        $scope.model = formForController.registerFormField($scope.attribute);
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {
@@ -1198,9 +1197,7 @@ angular.module('formFor').directive('textField',
           }
         };
 
-        $scope.$on('$destroy', function() {
-          formForController.unregisterFormField($scope.attribute);
-        });
+        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   }]);
@@ -1299,8 +1296,9 @@ angular.module('formFor').directive('typeAheadField',
         $scope.$watch('filter', updateFilteredOptions);
         $scope.$watch('options', updateFilteredOptions);
 
-        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
+
+        FieldHelper.manageFieldRegistration($scope, formForController);
 
         // Incoming model values should control the type-ahead field's default value.
         // In this case we need to match the model *value* with the corresponding option (Object).
@@ -1338,10 +1336,6 @@ angular.module('formFor').directive('typeAheadField',
 
           $scope.model.bindable = option && option[$scope.valueAttribute];
         });
-
-        $scope.$on('$destroy', function() {
-          formForController.unregisterFormField($scope.attribute);
-        });
       }
     };
   }]);
@@ -1370,7 +1364,28 @@ angular.module('formFor').service('FieldHelper',
       if (FormForConfiguration.autoGenerateLabels) {
         return StringUtil.humanize(valueToHumanize);
       }
-    }
+    };
+
+    /**
+     * Helper method that registers a form field and stores the bindable object returned on the $scope.
+     * This method also unregisters the field on $scope $destroy.
+     * @memberof FieldHelper
+     * @param {$scope} $scope Input field $scope
+     * @param {Object} formForController Controller object for parent formFor
+     */
+    this.manageFieldRegistration = function($scope, formForController) {
+      $scope.$watch('attribute', function(newValue, oldValue) {
+        if ($scope.model) {
+          formForController.unregisterFormField(oldValue);
+        }
+
+        $scope.model = formForController.registerFormField($scope.attribute);
+      });
+
+      $scope.$on('$destroy', function() {
+        formForController.unregisterFormField($scope.attribute);
+      });
+    };
   }]);
 
 /**

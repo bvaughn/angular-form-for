@@ -40,7 +40,6 @@ angular.module('formFor').directive('checkboxField',
           return;
         }
 
-        $scope.model = formForController.registerFormField($scope.attribute);
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         var $input = $element.find('input');
@@ -51,9 +50,7 @@ angular.module('formFor').directive('checkboxField',
           }
         };
 
-        $scope.$on('$destroy', function() {
-          formForController.unregisterFormField($scope.attribute);
-        });
+        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   });
