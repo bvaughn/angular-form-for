@@ -12,10 +12,23 @@
 
   <ul class="list-unstyled">
     <li ng-repeat="hobby in formData.hobbies">
-      <text-field label="Name" attribute="hobbies[{{$index}}].name" placeholder="Every good hobby needs a name"
-                  icon-after="fa fa-times" icon-after-clicked="removeHobby(hobby)"></text-field>
-      <text-field label="Description" attribute="hobbies[{{$index}}].description"
-                  placeholder="What exactly is it..that you say..you do here?" multiline></text-field>
+      <text-field label="Name" attribute="hobbies[{{$index}}].name"
+                  placeholder="What exactly is it..that you say..you do here?"
+                  icon-after="fa fa-times" icon-after-clicked="removeHobby(hobby)">
+      </text-field>
+
+      <select-field label="How often do you participate in this hobby"
+                    attribute="hobbies[{{$index}}].frequency"
+                    options="hobbyFrequencyOptions">
+      </select-field>
+
+      <h4>Is this a paid hobby?</h4>
+      <radio-field label="Yes" attribute="hobbies[{{$index}}].paid" value="true"></radio-field>
+      <radio-field label="I wish" attribute="hobbies[{{$index}}].paid" value="false"></radio-field>
+
+      <checkbox-field label="Would you recommend this hobby to a friend?"
+                      attribute="hobbies[{{$index}}].recommend">
+      </checkbox-field>
     </li>
   </ul>
 

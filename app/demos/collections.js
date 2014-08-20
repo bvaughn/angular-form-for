@@ -9,6 +9,12 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
       ]
     };
 
+    $scope.hobbyFrequencyOptions = [
+      {label: 'Once', value: 1},
+      {label: 'Twice', value: 2},
+      {label: 'A million', value: 1000000}
+    ];
+
     $scope.validationRules = {
       name: {
         required: true
