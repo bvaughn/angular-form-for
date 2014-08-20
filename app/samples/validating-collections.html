@@ -1,0 +1,7 @@
+<collection-label attribute="things"></collection-label>
+
+<ul class="list-unstyled">
+  <li ng-repeat="thing in formData.things">
+    <text-field attribute="things[{{$index}}].name"></text-field>
+  </li>
+</ul>
