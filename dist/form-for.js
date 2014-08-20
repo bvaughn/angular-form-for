@@ -1206,7 +1206,7 @@ angular.module('formFor').directive('textField',
 
 /**
  * @ngdoc Directives
- * @name checkbox-field
+ * @name type-ahead-field
  *
  * @description
  * Displays a HTML <input> element with type-ahead functionality.
