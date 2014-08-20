@@ -112,11 +112,12 @@ angular.module('formFor').directive('radioField',
         });
 
         $scope.$watch('model.bindable', function(newValue, oldValue) {
-          if (newValue === $scope.value) {
-            $input.attr('checked', true);
-          } else {
-            $input.removeAttr('checked');
-          }
+          $scope.checked =
+            newValue !== undefined &amp;&amp;
+            newValue !== null &amp;&amp;
+            $scope.value !== undefined &amp;&amp;
+            $scope.value !== null &amp;&amp;
+            newValue.toString() === $scope.value.toString();
         });
 
         $scope.$on('$destroy', function() {
