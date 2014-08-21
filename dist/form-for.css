@@ -9,7 +9,7 @@ checkbox-field {
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border-radius: 4px;
-  border: 1px solid #bfc8c7;
+  border: 1px solid #aaa;
   position: relative;
   margin-right: 5px;
   cursor: inherit;
@@ -26,6 +26,8 @@ checkbox-field {
   line-height: 18px;
   text-align: center;
   color: #848b88;
+  margin-top: 1px;
+  margin-left: 1px;
 }
 .checkbox-field {
   cursor: pointer;
@@ -51,14 +53,14 @@ field-label {
 }
 .help-icon-stack {
   position: relative;
-  font-size: 10px;
+  font-size: 0.8em;
 }
 .help-icon-stack .help-background-icon,
 .help-icon-stack .help-foreground-icon {
   text-align: center;
 }
 .help-icon-stack .help-background-icon {
-  color: #899795;
+  color: #848b88;
 }
 .help-icon-stack .help-foreground-icon {
   color: #fff;
@@ -71,7 +73,7 @@ field-label {
   font-weight: normal;
 }
 .field-label:hover .help-icon-stack .help-background-icon {
-  color: #beccca;
+  color: #8a918e;
 }
 .field-label-required-label {
   color: #848b88;
@@ -93,7 +95,6 @@ field-label {
   top: 100%;
   border-radius: 4px;
   background-color: #e35256;
-  box-shadow: inset 0 -1px #802e31;
   color: #fff;
   padding: 7px 15px;
   z-index: 1000;
@@ -133,7 +134,6 @@ field-label {
   font-weight: normal;
   white-space: normal;
   background-color: #e3f3fc;
-  box-shadow: inset 0 -1px #a1bbc9;
   color: #252726;
   background-clip: padding-box;
   border-radius: 6px;
@@ -153,7 +153,7 @@ field-label {
 .popover-title {
   padding: 10px 20px;
   margin: 0;
-  font-size: 13px;
+  font-size: inherit;
   font-weight: normal;
   line-height: 18px;
   background-color: #e3f3fc;
@@ -249,8 +249,8 @@ radio-field {
   width: 20px;
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
-  border-radius: 10px;
-  border: 1px solid #bfc8c7;
+  border-radius: 15px;
+  border: 1px solid #aaa;
   position: relative;
   margin-right: 5px;
   vertical-align: middle;
@@ -290,10 +290,10 @@ select-field {
 }
 .select-field-toggle-button {
   position: relative;
-  background: -webkit-linear-gradient(top, #fff, #eff0f0);
-  background: linear-gradient(to bottom, #fff, #eff0f0);
+  background: -webkit-linear-gradient(top, #fff, #efefef);
+  background: linear-gradient(to bottom, #fff, #efefef);
   border-radius: 6px;
-  border: 1px solid #bfc8c7;
+  border: 1px solid #aaa;
   color: inherit;
   display: block;
   font-family: inherit;
@@ -322,7 +322,7 @@ select-field {
 .select-field-toggle-button:not(.disabled):not(.open):hover {
   background: -webkit-linear-gradient(top, #fff, #f7f7f7);
   background: linear-gradient(to bottom, #fff, #f7f7f7);
-  border-color: #cdd4d3;
+  border-color: #b7b7b7;
 }
 .select-field-toggle-button.blank-selected {
   color: #848b88;
@@ -345,10 +345,10 @@ select-field {
   width: 100%;
   z-index: 1050;
   background-color: #fff;
-  border: 1px solid #bfc8c7;
+  border: 1px solid #aaa;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-  box-shadow: 0 2px 0 #bfc8c7;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -406,18 +406,18 @@ submit-field {
 }
 .submit-button {
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  -webkit-transition: all 100ms linear;
-          transition: all 100ms linear;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all;
+  transition: all;
   border-radius: 6px;
   border-style: none;
-  background-color: #a0b0ae;
+  background-color: #0075ba;
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
+  font-size: inherit;
   font-weight: 400;
   line-height: 35px;
   outline: 0;
@@ -426,18 +426,19 @@ submit-field {
 }
 .submit-button:not(.disabled):not(:disabled):hover,
 .submit-button:not(.disabled):not(:disabled):active {
-  background-color: #bfc8c7;
+  background-color: #007fca;
   color: #fff;
 }
 .submit-button:active {
-  background-color: #899795;
   -webkit-transition: none;
-          transition: none;
-  box-shadow: inset 0 1px 0 rgba(0,0,0,0.25);
+  transition: none;
+  box-shadow: inset 0 4px 2px rgba(0,0,0,0.1);
 }
 .submit-button.disabled,
 .submit-button:disabled {
   opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
   cursor: default;
   box-shadow: none;
 }
@@ -450,8 +451,8 @@ text-field {
 }
 .text-field-input {
   border-radius: 4px;
-  border: 1px solid #bfc8c7;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+  border: 1px solid #aaa;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
   color: inherit;
   display: block;
   font-family: inherit;
@@ -465,8 +466,23 @@ text-field {
   -moz-box-sizing: border-box;
        box-sizing: border-box;
 }
+.text-field-input::-webkit-input-placeholder {
+  color: #aaa;
+}
+.text-field-input:-moz-placeholder {
+/* FF 4-18 */
+  color: #aaa;
+}
+.text-field-input::-moz-placeholder {
+/* FF 19+ */
+  color: #aaa;
+}
+.text-field-input:-ms-input-placeholder {
+/* IE 10+ */
+  color: #aaa;
+}
 .text-field-input:focus {
-  border-color: #899795;
+  border-color: #999;
 }
 .text-field-input.has-icon-before {
   padding-left: 40px;
@@ -487,10 +503,10 @@ text-field {
   color: #848b88;
 }
 .input-group .input-group-addon.input-group-addon-before {
-  left: 12px;
+  left: 10px;
 }
 .input-group .input-group-addon.input-group-addon-after {
-  right: 12px;
+  right: 10px;
 }
 .text-field.disabled .text-field-input {
   opacity: 0.5;
@@ -504,8 +520,8 @@ type-ahead-field {
 }
 .type-ahead-field-input {
   border-radius: 4px;
-  border: 1px solid #bfc8c7;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+  border: 1px solid #aaa;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
   color: inherit;
   display: block;
   font-family: inherit;
@@ -520,7 +536,7 @@ type-ahead-field {
        box-sizing: border-box;
 }
 .type-ahead-field-input:focus {
-  border-color: #899795;
+  border-color: #999;
 }
 .type-ahead-field-input.has-icon-before {
   padding-left: 40px;
@@ -543,7 +559,7 @@ type-ahead-field {
   overflow: auto;
   z-index: 1050;
   background-color: #fff;
-  border: 1px solid #bfc8c7;
+  border: 1px solid #aaa;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   box-shadow: $select-field-box-shadow;

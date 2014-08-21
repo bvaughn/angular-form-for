@@ -239,7 +239,7 @@ angular.module('formFor').directive('formForDebounce', ["$log", "$timeout", "For
  * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
  * This attribute is 2-way bindable.
  * @param {Object} formFor An object on $scope that formFor should read and write data to.
- * To prevent accidentally persisting changes to this object after a cancelled form, it is recommended that you bind to a copied object.
+ * It is recommended that you bind to a copied object so that you can quickly revert changes if the user cancels or if submit fails.
  * For more information refer to angular.copy.
  * @param {String} service Convenience mehtod for identifying an $injector-accessible model containing both the validation rules and submit function.
  * Validation rules should be accessible via an attribute named validationRules and the submit function should be named submit.

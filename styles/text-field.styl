@@ -1,3 +1,4 @@
+@require '_mixins';
 @require '_variables';
 
 text-field {
@@ -7,7 +8,7 @@ text-field {
 .text-field-input {
   border-radius: 4px;
   border: $border;
-  box-shadow: inset 0 1px 4px rgba(0,0,0, 0.15);
+  box-shadow: $box-shadow;
   color: inherit;
   display: block;
   font-family: inherit;
@@ -19,6 +20,8 @@ text-field {
   width: 100%;
   margin-top: $padding-small;
   box-sizing: border-box;
+
+  placeholder-color($color-fill-4);
 
   &:focus {
     border-color: $border-color-focused;
@@ -45,11 +48,11 @@ text-field {
     color: $color-text-1;
 
     &.input-group-addon-before {
-      left: 12px;
+      left: 10px;
     }
 
     &.input-group-addon-after {
-      right: 12px;
+      right: 10px;
     }
   }
 }

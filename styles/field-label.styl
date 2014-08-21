@@ -6,7 +6,7 @@ field-label {
 
 .help-icon-stack {
   position: relative;
-  font-size: 10px;
+  font-size: .8em;
 
   .help-background-icon,
   .help-foreground-icon {
@@ -14,7 +14,7 @@ field-label {
   }
 
   .help-background-icon {
-    color: $color-fill-5;
+    color: $color-text-1;
   }
   .help-foreground-icon {
     color: white;
@@ -31,7 +31,7 @@ field-label {
   &:hover {
     .help-icon-stack {
       .help-background-icon {
-        color: $color-fill-5-hover;
+        color: lighten($color-text-1, 5%);
       }
     }
   }

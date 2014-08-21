@@ -153,7 +153,7 @@ This attribute is 2-way bindable.</p></td>
             
 
             <td class="description last"><p>An object on $scope that formFor should read and write data to.
-To prevent accidentally persisting changes to this object after a cancelled form, it is recommended that you bind to a copied object.
+It is recommended that you bind to a copied object so that you can quickly revert changes if the user cancels or if submit fails.
 For more information refer to angular.copy.</p></td>
         </tr>
 

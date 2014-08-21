@@ -1,3 +1,4 @@
+@import 'nib';
 @require '_variables';
 
 submit-field {
@@ -11,11 +12,11 @@ submit-field {
 
   border-radius: $border-radius;
   border-style: none;
-  background-color: $color-fill-4;
+  background-color: blue;
   color: white;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
+  font-size: inherit;
   font-weight: 400;
   line-height: 35px;
   outline: 0;
@@ -24,16 +25,15 @@ submit-field {
 
   &:not(.disabled):not(:disabled) {
     &:hover, &:active {
-      background-color: $color-fill-3;
+      background-color: lighten(blue, 5%);
       color: white;
     }
   }
 
   &:active {
-    background-color: $color-fill-5;
     transition: none;
 
-    box-shadow: inset 0 1px 0 rgba(0,0,0, 0.25);
+    box-shadow: inset 0 4px 2px rgba(0,0,0, 0.1);
   }
 
   &.disabled,
