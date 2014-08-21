@@ -32,6 +32,9 @@ checkbox-field {
 .checkbox-field {
   cursor: pointer;
 }
+.checkbox-field .field-label {
+  vertical-align: middle;
+}
 .checkbox-field label {
   cursor: inherit;
 }
@@ -268,6 +271,9 @@ radio-field {
 }
 .radio-field {
   cursor: pointer;
+}
+.radio-field .field-label {
+  vertical-align: middle;
 }
 .radio-field label {
   cursor: inherit;

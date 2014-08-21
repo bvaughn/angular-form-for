@@ -380,7 +380,8 @@ angular.module('formFor').directive('formFor',
               // It's possible they typed and then erased, but that seems less likely.
               // So we also shouldn't mark as dirty unless a truthy value has been provided.
               } else if (oldValue !== undefined || newValue !== '') {
-                $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+                // We also check if newValue is undefined to handle the case where erros have been reset.
+                $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, newValue !== undefined);
               }
 
               // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
@@ -482,7 +483,7 @@ angular.module('formFor').directive('formFor',
           var keys = NestedObjectHelper.flattenObjectKeys($scope.fieldNameToErrorMap);
 
           angular.forEach(keys, function(fieldName) {
-            $scope.formForStateHelper.setFieldHasBeenModified(fieldName, false);
+            $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
           });
         };
 
@@ -1205,7 +1206,7 @@ angular.module('formFor').directive('textField',
 
 /**
  * @ngdoc Directives
- * @name checkbox-field
+ * @name type-ahead-field
  *
  * @description
  * Displays a HTML <input> element with type-ahead functionality.

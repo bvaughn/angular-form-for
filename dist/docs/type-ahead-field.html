@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Directives: text-field</title>
+    <title>JSDoc: Directives: type-ahead-field</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -18,7 +18,7 @@
 <body>
 
 <div id="main">
-  <h1 class="page-title">Directives: text-field</h1>
+  <h1 class="page-title">Directives: type-ahead-field</h1>
 
   
 
@@ -28,7 +28,7 @@
 
 <header>
     <h2>
-    text-field
+    type-ahead-field
     </h2>
     
 </header>
@@ -43,7 +43,7 @@
 
     
     
-      <a href="text-field.js.html#line1" class="name-link"><h4 class="name" id="text-field"><span class="type-signature"></span>text-field<span class="signature">(attribute, autofocus, debounce, disable, help, focused, iconAfter, iconAfterClicked, iconBefore, iconBeforeClicked, label, multiline, placeholder, type)</span><span class="type-signature"></span></h4></a>
+      <a href="type-ahead-field.js.html#line1" class="name-link"><h4 class="name" id="type-ahead-field"><span class="type-signature"></span>type-ahead-field<span class="signature">(attribute, autofocus, debounce, disable, filter, help, label, labelAttribute, options, placeholder, valueAttribute)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -52,7 +52,8 @@
 
     
     <div class="description">
-        <p>Displays a HTML &lt;input&gt; element along with an input label.
+        <p>Displays a HTML <input> element with type-ahead functionality.
+This component requires the Angular Bootstrap library as a dependency.
 This directive can be configured to optionally display an informational tooltip.
 In the event of a validation error, this directive will also render an inline error message.</p>
     </div>
@@ -104,9 +105,7 @@ In the event of a validation error, this directive will also render an inline er
 
             
 
-            <td class="description last"><p>Name of the attribute within the parent form-for directive's model object.
-This attributes specifies the data-binding target for the input.
-Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
+            <td class="description last"><p>Name of the attribute within the parent form-for directive's model object. This attributes specifies the data-binding target for the input. Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
         </tr>
 
     
@@ -152,9 +151,7 @@ Dot notation (ex &quot;address.street&quot;) is supported.</p></td>
 
             
 
-            <td class="description last"><p>Debounce duration (in ms) before input text is applied to model and evaluated.
-To disable debounce (update only on blur) specify a value of false.
-This value's default is determined by FormForConfiguration.</p></td>
+            <td class="description last"><p>Debounce duration (in ms) before input text is applied to model and evaluated. To disable debounce (update only on blur) specify a value of false. This value's default is determined by FormForConfiguration.</p></td>
         </tr>
 
     
@@ -177,8 +174,30 @@ This value's default is determined by FormForConfiguration.</p></td>
 
             
 
-            <td class="description last"><p>Disable input element.
-(Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).</p></td>
+            <td class="description last"><p>Disable input element. (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Two-way bindable filter string. $watch this property to load remote options based on filter text. (Refer to this Plunker demo for an example.)</p></td>
         </tr>
 
     
@@ -201,123 +220,7 @@ This value's default is determined by FormForConfiguration.</p></td>
 
             
 
-            <td class="description last"><p>Optional help tooltip to display on hover.
-By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>focused</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional function to be invoked on text input focus.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>iconAfter</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional CSS class to display as an icon after the input field.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>iconAfterClicked</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional function to be invoked when the after-icon is clicked.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>iconBefore</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional CSS class to display as a icon before the input field.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>iconBeforeClicked</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Optional function to be invoked when the before-icon is clicked.</p></td>
+            <td class="description last"><p>Optional help tooltip to display on hover. By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.</p></td>
         </tr>
 
     
@@ -340,21 +243,20 @@ By default this makes use of the Angular Bootstrap tooltip directive and the Fon
 
             
 
-            <td class="description last"><p>Optional field label displayed before the input.
-(Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.</p></td>
+            <td class="description last"><p>Optional field label displayed before the input. (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>multiline</code></td>
+                <td class="name"><code>labelAttribute</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">attribute</span>
+<span class="param-type">String</span>
 
 
             
@@ -364,7 +266,30 @@ By default this makes use of the Angular Bootstrap tooltip directive and the Fon
 
             
 
-            <td class="description last"><p>The presence of this attribute enables multi-line input.</p></td>
+            <td class="description last"><p>Optional override for label key in options array. Defaults to &quot;label&quot;.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Set of options, each containing a label and value key. The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.</p></td>
         </tr>
 
     
@@ -394,7 +319,7 @@ By default this makes use of the Angular Bootstrap tooltip directive and the Fon
 
         <tr>
             
-                <td class="name"><code>type</code></td>
+                <td class="name"><code>valueAttribute</code></td>
             
 
             <td class="type">
@@ -410,9 +335,7 @@ By default this makes use of the Angular Bootstrap tooltip directive and the Fon
 
             
 
-            <td class="description last"><p>Optional HTML input-type (ex.
-text, password, etc.).
-Defaults to &quot;text&quot;.</p></td>
+            <td class="description last"><p>Optional override for value key in options array. Defaults to &quot;value&quot;.</p></td>
         </tr>
 
     
@@ -443,7 +366,7 @@ Defaults to &quot;text&quot;.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="text-field.js.html">directives/text-field.js</a>, <a href="text-field.js.html#line1">line 1</a>
+        <a href="type-ahead-field.js.html">directives/type-ahead-field.js</a>, <a href="type-ahead-field.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -470,16 +393,24 @@ Defaults to &quot;text&quot;.</p></td>
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>// To create a password input you might use the following markup:
-&lt;text-field attribute="password" label="Password" type="password">&lt;/text-field>
+    <pre class="prettyprint"><code>// To render a type-ahead field that filters data specified via options:
+&lt;type-ahead-field label="State"
+                  attribute="state"
+                  options="states"
+                  placeholder="Choose a state">
+&lt;/type-ahead-field>
 
-// To create a more advanced input field, with placeholder text and help tooltip you might use the following markup:
-&lt;text-field attribute="username" label="Username"
-            placeholder="Example brianvaughn"
-            help="Your username will be visible to others!">&lt;/text-field>
+// To reload remote data based on filter text, bind to the filter attribute as follows:
+&lt;type-ahead-field label="State"
+                  attribute="state"
+                  options="states"
+                  placeholder="Choose a state"
+                  filter="filterText">
+&lt;/type-ahead-field>
 
-// To render a multiline text input (or &lt;textarea>):
-&lt;text-field attribute="description" label="Description" multiline>&lt;/text-field></code></pre>
+$scope.$watch('filterText', function(value) {
+  // Load remote data and update $scope.states collection
+});</code></pre>
 
     
 </dd>
