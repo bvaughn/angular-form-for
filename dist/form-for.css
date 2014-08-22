@@ -409,11 +409,6 @@ select-field {
 .select-field.disabled {
   cursor: default;
 }
-.select-field.disabled .select-field-toggle-button {
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-}
 .select-field.has-error .select-field-toggle-button {
   border-color: #e35256;
 }

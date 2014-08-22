@@ -896,6 +896,12 @@ angular.module('formFor').directive('selectField',
           var matchingOption;
 
           if ($scope.model.bindable === selected) {
+
+            // Default select the first item in the list (if blank is not allowed)
+            if (!$scope.allowBlank && $scope.options && $scope.options.length) {
+              $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+            }
+
             return;
           }
 
@@ -911,7 +917,7 @@ angular.module('formFor').directive('selectField',
         };
 
         $scope.$watch('model.bindable', updateDefaultOption);
-        $scope.$watch('options', updateDefaultOption);
+        $scope.$watch('options.length', updateDefaultOption);
 
         /*****************************************************************************************
          * The following code deals with toggling/collapsing the drop-down and selecting values.
