@@ -17,9 +17,10 @@
  * <submit-button label="Sign Up" icon="fa fa-user"></submit-button>
  *
  * // You can use your own <button> components within a formFor as well.
- * // If you choose to, it is recommended that you bind your buttons disabled attribute to a disabledByForm scope property (managed by formFor) as follows:
+ * // If you choose to you must register your button with formFor's controller using registerSubmitButton().
+ * // This method returns a model with a bindable 'disabled' attribute that your button should use like so:
  * <form form-for="formData">
- *   <button ng-disabled="disabledByForm">Submit</button>
+ *   <button ng-disabled="model.disabled">Submit</button>
  * </form>
  */
 angular.module('formFor').directive('submitButton',
@@ -29,7 +30,7 @@ angular.module('formFor').directive('submitButton',
       restrict: 'EA',
       templateUrl: 'form-for/templates/submit-button.html',
       scope: {
-        disable: '@',
+        disable: '=',
         icon: '@',
         label: '@'
       },
@@ -40,7 +41,7 @@ angular.module('formFor').directive('submitButton',
           $scope.bindableLabel = $sce.trustAsHtml(value);
         });
 
-        formForController.registerSubmitButton($scope);
+        $scope.model = formForController.registerSubmitButton($scope);
       }
     };
   });

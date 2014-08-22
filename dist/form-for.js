@@ -3,7 +3,7 @@ $templateCache.put("form-for/templates/collection-label.html","<div class=\"coll
 $templateCache.put("form-for/templates/field-label.html","<label  class=\"field-label\"\n        popover=\"{{help}}\"\n        popover-trigger=\"mouseenter\"\n        popover-placement=\"right\">\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n\n  <span ng-if=\"help\" class=\"fa-stack help-icon-stack\">\n    <i class=\"fa fa-stack-2x fa-circle help-background-icon\"></i>\n    <i class=\"fa fa-stack-1x fa-inverse fa-question help-foreground-icon\"></i>\n  </span>\n\n  <span class=\"label label-default field-label-required-label\" ng-if=\"requiredLabel\" ng-bind=\"requiredLabel\"></span>\n</label>\n");
 $templateCache.put("form-for/templates/radio-field.html","<span class=\"field radio-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error left-aligned\" ng-bind=\"model.error\"></p>\n\n  <label>\n    <span  class=\"radio-field-input\" ng-class=\"{\'is-selected\': checked}\"\n          ng-click=\"click()\"></span>\n\n    <input  type=\"radio\" ng-model=\"model.bindable\" ng-value=\"value\"\n            class=\"field-input\"\n            ng-checked=\"checked\"\n            ng-disabled=\"disable || model.disabled\">\n\n    <field-label  ng-if=\"label\"\n                  label=\"{{label}}\"\n                  help=\"{{help}}\"\n                  ng-click=\"click()\">\n    </field-label>\n  </label>\n</span>\n");
 $templateCache.put("form-for/templates/select-field.html","<div  class=\"form-group field select-field\"\n      ng-class=\"{disabled: disable || model.disabled, open: isOpen, \'has-error\': model.error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></p>\n\n  <div  class=\"form-control select-field-toggle-button\"\n        ng-class=\"{open: isOpen, disabled: disable || model.disabled}\">\n\n    <span ng-if=\"selectedOptionLabel\" ng-bind=\"selectedOptionLabel\"></span>\n\n    <span ng-if=\"!selectedOptionLabel\">\n      <span ng-if=\"placeholder\" ng-bind=\"placeholder\"></span>\n      <span ng-if=\"!placeholder\">Select</span>\n    </span>\n\n    <span class=\"fa fa-caret-down pull-right select-field-toggle-caret\"></span>\n  </div>\n\n  <div ng-show=\"isOpen\" class=\"list-group-container\">\n    <div class=\"list-group\">\n      <div  ng-show=\"enableFiltering\" class=\"input-group filter-input-group\"\n            ng-click=\"$event.stopPropagation()\">\n        <input  type=\"text\"\n                class=\"form-control text-field-input filter-text-input\"\n                ng-model=\"filter\"\n                ng-keydown=\"keyDown($event)\"\n                form-for-debounce=\"{{filterDebounce}}\" />\n\n        <span class=\"input-group-addon input-group-addon-after\">\n          <i class=\"fa fa-search text-field-icon\"></i>\n        </span>\n      </div>\n\n      <div class=\"list-group-scrollable\">\n        <a  class=\"list-group-item\"\n            ng-repeat=\"option in filteredOptions\"\n            ng-value=\"option[valueAttribute]\"\n            ng-click=\"selectOption(option)\"\n            ng-mouseenter=\"mouseOver($index)\"\n            ng-class=\"{active: option === selectedOption, hover: $index === mouseOverIndex}\">\n\n          <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->\n          <strong ng-if=\"$index === mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></strong>\n          <span ng-if=\"$index !== mouseOverIndex\" ng-bind=\"option[labelAttribute]\"></span>\n          <spgn ng-if=\"!option[labelAttribute]\">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->\n        </a>\n\n        <a ng-if=\"!options\" class=\"list-group-item\">\n          <i class=\"fa fa-circle-o-notch fa-spin\"></i>\n          Loading...\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("form-for/templates/submit-button.html","<button class=\"btn btn-default submit-button\" ng-disabled=\"disable || disabledByForm\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n</button>\n");
+$templateCache.put("form-for/templates/submit-button.html","<button class=\"btn btn-default submit-button\" ng-disabled=\"disable || model.disabled\">\n  <i ng-if=\"icon\" class=\"submit-button-icon\" ng-class=\"icon\"></i>\n\n  <span ng-bind-html=\"bindableLabel\"></span>\n</button>\n");
 $templateCache.put("form-for/templates/text-field.html","<div  class=\"form-group field text-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></p>\n\n  <div ng-class=\"{\'input-group\': iconBefore || iconAfter}\">\n    <span ng-if=\"iconBefore\" class=\"input-group-addon input-group-addon-before\"\n          ng-click=\"onIconBeforeClick()\">\n      <i class=\"text-field-icon\" ng-class=\"iconBefore\"></i>\n    </span>\n\n    <input  ng-if=\"!multiline\"\n            type=\"{{type}}\"\n            class=\"form-control text-field-input\"\n            ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n            ng-disabled=\"disable || model.disabled\"\n            placeholder=\"{{placeholder}}\"\n            ng-model=\"model.bindable\"\n            form-for-debounce=\"{{debounce}}\"\n            ng-click=\"onFocus()\" />\n\n\n    <textarea ng-if=\"multiline\"\n              class=\"form-control text-field-input\"\n              ng-class=\"{\'has-icon-before\': iconBefore, \'has-icon-after\': iconAfter}\"\n              ng-disabled=\"disable || model.disabled\"\n              placeholder=\"{{placeholder}}\"\n              ng-model=\"model.bindable\"\n              form-for-debounce=\"{{debounce}}\"\n              ng-click=\"onFocus()\">\n    </textarea>\n\n    <span ng-if=\"iconAfter\" class=\"input-group-addon input-group-addon-after\"\n          ng-click=\"onIconAfterClick()\">\n      <i class=\"text-field-icon\" ng-class=\"iconAfter\"></i>\n    </span>\n  </div>\n</div>\n");
 $templateCache.put("form-for/templates/type-ahead-field.html","<div  class=\"form-group field type-ahead-field\"\n      ng-class=\"{disabled: disable || model.disabled, \'has-error\': model.error}\">\n\n  <field-label  ng-if=\"label\"\n                label=\"{{label}}\"\n                help=\"{{help}}\"\n                required=\"{{model.required}}\">\n  </field-label>\n\n  <p ng-if=\"model.error\" class=\"text-danger field-error\" ng-bind=\"model.error\"></p>\n\n  <input  type=\"text\"\n          class=\"form-control type-ahead-field-input\"\n          placeholder=\"{{placeholder}}\"\n          ng-model=\"model.selectedOption\"\n          ng-change=\"changeHandler()\"\n          typeahead=\"option as option[labelAttribute] for option in filteredOptions\"\n          typeahead-wait-ms=\"debounce || 1000\">\n</div>\n");}]);
 angular.module('formFor', ['formFor.templates']);
@@ -40,7 +40,7 @@ angular.module('formFor').directive('checkboxField',
       templateUrl: 'form-for/templates/checkbox-field.html',
       scope: {
         attribute: '@',
-        disable: '@',
+        disable: '=',
         help: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
@@ -696,7 +696,7 @@ angular.module('formFor').directive('radioField',
       templateUrl: 'form-for/templates/radio-field.html',
       scope: {
         attribute: '@',
-        disable: '@',
+        disable: '=',
         help: '@?',
         value: '@'
       },
@@ -825,7 +825,7 @@ angular.module('formFor').directive('selectField',
       templateUrl: 'form-for/templates/select-field.html',
       scope: {
         attribute: '@',
-        disable: '@',
+        disable: '=',
         filter: '=?',
         filterDebounce: '@?',
         help: '@?',
@@ -1076,9 +1076,10 @@ angular.module('formFor').directive('selectField',
  * <submit-button label="Sign Up" icon="fa fa-user"></submit-button>
  *
  * // You can use your own <button> components within a formFor as well.
- * // If you choose to, it is recommended that you bind your buttons disabled attribute to a disabledByForm scope property (managed by formFor) as follows:
+ * // If you choose to you must register your button with formFor's controller using registerSubmitButton().
+ * // This method returns a model with a bindable 'disabled' attribute that your button should use like so:
  * <form form-for="formData">
- *   <button ng-disabled="disabledByForm">Submit</button>
+ *   <button ng-disabled="model.disabled">Submit</button>
  * </form>
  */
 angular.module('formFor').directive('submitButton',
@@ -1088,7 +1089,7 @@ angular.module('formFor').directive('submitButton',
       restrict: 'EA',
       templateUrl: 'form-for/templates/submit-button.html',
       scope: {
-        disable: '@',
+        disable: '=',
         icon: '@',
         label: '@'
       },
@@ -1099,7 +1100,7 @@ angular.module('formFor').directive('submitButton',
           $scope.bindableLabel = $sce.trustAsHtml(value);
         });
 
-        formForController.registerSubmitButton($scope);
+        $scope.model = formForController.registerSubmitButton($scope);
       }
     };
   }]);
@@ -1157,7 +1158,7 @@ angular.module('formFor').directive('textField',
       scope: {
         attribute: '@',
         debounce: '@?',
-        disable: '@',
+        disable: '=',
         focused: '&?',
         help: '@?',
         iconAfter: '@?',
@@ -1254,7 +1255,7 @@ angular.module('formFor').directive('typeAheadField',
       templateUrl: 'form-for/templates/type-ahead-field.html',
       scope: {
         attribute: '@',
-        disable: '@',
+        disable: '=',
         filter: '=?',
         help: '@?',
         options: '=',

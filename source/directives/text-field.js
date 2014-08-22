@@ -51,7 +51,7 @@ angular.module('formFor').directive('textField',
       scope: {
         attribute: '@',
         debounce: '@?',
-        disable: '@',
+        disable: '=',
         focused: '&?',
         help: '@?',
         iconAfter: '@?',

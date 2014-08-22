@@ -48,7 +48,7 @@ angular.module('formFor').directive('typeAheadField',
       templateUrl: 'form-for/templates/type-ahead-field.html',
       scope: {
         attribute: '@',
-        disable: '@',
+        disable: '=',
         filter: '=?',
         help: '@?',
         options: '=',

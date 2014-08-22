@@ -30,7 +30,7 @@ angular.module('formFor').directive('checkboxField',
       templateUrl: 'form-for/templates/checkbox-field.html',
       scope: {
         attribute: '@',
-        disable: '@',
+        disable: '=',
         help: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
