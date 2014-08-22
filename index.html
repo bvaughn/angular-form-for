@@ -28,7 +28,7 @@
     <meta property="og:image:width" content="1000" />
     <meta property="og:image:height" content="1062" />
     <meta property="og:url" content="https://bvaughn.github.io/angular-form-for/">
-    <mega property="twitter:domain" content="bvaughn.github.io">
+    <meta property="twitter:domain" content="bvaughn.github.io">
     <meta name="twitter:card" content="photo">
     <meta name="twitter:creator" content="@brian_d_vaughn">
     <meta property="og:title" content="Angular formFor">
@@ -67,9 +67,14 @@
       <div class="container">
         <div class="navbar-header">
           <a href="#/index" class="navbar-brand">
-            <img class="nav-header-logo" src="app/images/form-for-logo.svg">
-            <span class="hidden-sm">Angular formFor</span>
-            <span class="visible-sm">formFor</span>
+            <span class="hidden-sm">
+              <img class="nav-header-logo" src="app/images/form-for-logo.svg">
+              Angular formFor
+            </span>
+            <span class="visible-sm">
+              <img class="nav-header-logo" src="app/images/form-for-logo.svg">
+              formFor
+            </span>
           </a>
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
             <span class="icon-bar"></span>
@@ -106,7 +111,7 @@
             </li>
             <form class="navbar-form navbar-left"
                   action="//github.com/bvaughn/angular-form-for/search?" method="GET" target="_blank">
-              <input name="q" type="text" class="form-control" placeholder="Search">
+              <input name="q" type="text" class="form-control navbar-search" placeholder="Search">
             </form>
           </ul>
 
@@ -130,8 +135,8 @@
       </div>
     </div>
 
-    <h1>&nbsp;</h1>
+    <div class="header-padding"></div>
 
-    <div ng-view class="container"></div>
+    <div ng-view></div>
   </body>
 </html>

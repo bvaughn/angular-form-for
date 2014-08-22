@@ -1,39 +1,41 @@
-<h1>Override templates</h1>
-<p>
-The formFor distribution includes HTML templates for fields. You can override the template HTML using
-<a href="https://docs.angularjs.org/api/ng/service/$templateCache" target="_blank">Angular's $templateCache</a>.
-</p>
+<div class="container">
+  <h1>Override templates</h1>
+  <p>
+  The formFor distribution includes HTML templates for fields. You can override the template HTML using
+  <a href="https://docs.angularjs.org/api/ng/service/$templateCache" target="_blank">Angular's $templateCache</a>.
+  </p>
 
-<p>
-For instance to override the markup used by the <code>&lt;text-field&gt;</code> directive you could use either of the following approaches:
-</p>
+  <p>
+  For instance to override the markup used by the <code>&lt;text-field&gt;</code> directive you could use either of the following approaches:
+  </p>
 
-<h2>Define a simple inline template</h2>
+  <h2>Define a simple inline template</h2>
 
-<prism parser="javascript">$templateCache.put('form-for/templates/text-field.html', '<div>Your custom HTML here</div>');</prism>
+  <prism parser="javascript">$templateCache.put('form-for/templates/text-field.html', '<div>Your custom HTML here</div>');</prism>
 
-<h2>Load an external template</h2>
+  <h2>Load an external template</h2>
 
-<prism parser="javascript">$http.get('your/custom/template.html').success(function(html) {
-  $templateCache.put('form-for/templates/text-field.html', html);
-});</prism>
+  <prism parser="javascript">$http.get('your/custom/template.html').success(function(html) {
+    $templateCache.put('form-for/templates/text-field.html', html);
+  });</prism>
 
-<p>
-The key thing to note is the template URL format used by formFor components.
-</p>
+  <p>
+  The key thing to note is the template URL format used by formFor components.
+  </p>
 
-<h2>Override styles</h2>
+  <h2>Override styles</h2>
 
-<p>
-The formFor distribution includes optional, default stylesheets. You can choose to provide your own stylesheets instead simply by not including the styles bundled with formFor.
-</p>
+  <p>
+  The formFor distribution includes optional, default stylesheets. You can choose to provide your own stylesheets instead simply by not including the styles bundled with formFor.
+  </p>
 
-<p>
-For a complete list of configurable styles, check out the formFor
-<a href="https://github.com/bvaughn/angular-form-for/tree/master/templates" target="_blank">templates</a>.
-</p>
+  <p>
+  For a complete list of configurable styles, check out the formFor
+  <a href="https://github.com/bvaughn/angular-form-for/tree/master/templates" target="_blank">templates</a>.
+  </p>
 
-<ul class="pager">
-  <li class="previous"><a href="#/validation-types"><i class="fa fa-arrow-left"></i> Validation Types</a></li>
-  <li class="next"><a href="#/ie8-support">IE8 Support <i class="fa fa-arrow-right"></i></a></li>
-</ul>
+  <ul class="pager">
+    <li class="previous"><a href="#/validation-types"><i class="fa fa-arrow-left"></i> Validation Types</a></li>
+    <li class="next"><a href="#/ie8-support">IE8 Support <i class="fa fa-arrow-right"></i></a></li>
+  </ul>
+</div>

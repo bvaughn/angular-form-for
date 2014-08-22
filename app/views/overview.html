@@ -1,38 +1,40 @@
-<h1>Overview</h1>
+<div class="container">
+  <h1>Overview</h1>
 
-<p>
-The formFor directive simplifies the process of creating and managing HTML forms as well as (potentially asynchronous) form validation.
-What does this mean?
-We'll go over an example below.
-</p>
+  <p>
+  The formFor directive simplifies the process of creating and managing HTML forms as well as (potentially asynchronous) form validation.
+  What does this mean?
+  We'll go over an example below.
+  </p>
 
-<h2>Creating a form</h2>
+  <h2>Creating a form</h2>
 
-<p>
-Using formFor, you could create a simple sign-up form as follows:
-</p>
+  <p>
+  Using formFor, you could create a simple sign-up form as follows:
+  </p>
 
-<prism parser="markup" source="app/samples/sign-up-form.html"></prism>
+  <prism parser="markup" source="app/samples/sign-up-form.html"></prism>
 
-<p>
-The above form will read/write data to a $scope.user object and will validate itself against a set of rules defined in a UserSignUp service.
-If validation errors occur they will automatically be displayed inline.
-</p>
+  <p>
+  The above form will read/write data to a $scope.user object and will validate itself against a set of rules defined in a UserSignUp service.
+  If validation errors occur they will automatically be displayed inline.
+  </p>
 
-<h2>Validating form data</h2>
+  <h2>Validating form data</h2>
 
-<p>
-In the above example we told formFor to look for validation rules in a UserSignUp service.
-That service might look something like this:
-</p>
+  <p>
+  In the above example we told formFor to look for validation rules in a UserSignUp service.
+  That service might look something like this:
+  </p>
 
-<prism parser="javascript" source="app/samples/sign-up-form.js"></prism>
+  <prism parser="javascript" source="app/samples/sign-up-form.js"></prism>
 
-<p>
-To learn more about validations, check the <a href="#/validation-types">Validation Rules page</a>.
-</p>
+  <p>
+  To learn more about validations, check the <a href="#/validation-types">Validation Rules page</a>.
+  </p>
 
-<ul class="pager">
-  <li class="previous disabled"><a><i class="fa fa-arrow-left"></i> Older</a></li>
-  <li class="next"><a href="#/input-types">Input Types <i class="fa fa-arrow-right"></i></a></li>
-</ul>
+  <ul class="pager">
+    <li class="previous disabled"><a><i class="fa fa-arrow-left"></i> Older</a></li>
+    <li class="next"><a href="#/input-types">Input Types <i class="fa fa-arrow-right"></i></a></li>
+  </ul>
+</div>

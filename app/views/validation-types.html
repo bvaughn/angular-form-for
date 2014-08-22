@@ -1,116 +1,118 @@
-<h1>Validation Types </h1>
+<div class="container">
+  <h1>Validation Types </h1>
 
-<p>
-  formFor supports the following types of validation:
-</p>
+  <p>
+    formFor supports the following types of validation:
+  </p>
 
-<dl>
-  <dt>required <small>Boolean</small></dt>
-  <dd>A truthy value must be specified for this field.</dd>
-  <dt>minlength <small>int</small></dt>
-  <dd>Field must contain at least this many characters.</dd>
-  <dt>maxlength <small>int</small></dt>
-  <dd>Field must contain no more than this many characters.</dd>
-  <dt>pattern <small>RegExp</small></dt>
-  <dd>Field must match this regular expression.</dd>
-  <dt>type <small>String</small></dt>
-  <dd>Enumeration for common validation types. Supported types include integer, number, positive, negative, and email. You can also stack types (ex. positive </integer, negative number).
-  <dt>custom <small>Function</small></dt>
-  <dd>Field must be approved by this custom validation function (see below for more details).</dd>
-</dl>
+  <dl>
+    <dt>required <small>Boolean</small></dt>
+    <dd>A truthy value must be specified for this field.</dd>
+    <dt>minlength <small>int</small></dt>
+    <dd>Field must contain at least this many characters.</dd>
+    <dt>maxlength <small>int</small></dt>
+    <dd>Field must contain no more than this many characters.</dd>
+    <dt>pattern <small>RegExp</small></dt>
+    <dd>Field must match this regular expression.</dd>
+    <dt>type <small>String</small></dt>
+    <dd>Enumeration for common validation types. Supported types include integer, number, positive, negative, and email. You can also stack types (ex. positive </integer, negative number).
+    <dt>custom <small>Function</small></dt>
+    <dd>Field must be approved by this custom validation function (see below for more details).</dd>
+  </dl>
 
-<h2>Defining validations</h2>
+  <h2>Defining validations</h2>
 
-<p>
-  Validation rules can be passed in as an array or defined on a service accessible to the $injector.
-  If defined on a service, rules should be stored in a validationRules attribute.
-  This attribute should be a hash with field names as keys that point to validation criteria.
-</p>
+  <p>
+    Validation rules can be passed in as an array or defined on a service accessible to the $injector.
+    If defined on a service, rules should be stored in a validationRules attribute.
+    This attribute should be a hash with field names as keys that point to validation criteria.
+  </p>
 
-<p>
-  If we configure formFor like this:
-</p>
+  <p>
+    If we configure formFor like this:
+  </p>
 
-<prism parser="markup" source="app/samples/defining-validations.html"></prism>
+  <prism parser="markup" source="app/samples/defining-validations.html"></prism>
 
-<p>
-  Then our UserSignUp service might look like this:
-</p>
+  <p>
+    Then our UserSignUp service might look like this:
+  </p>
 
-<prism parser="javascript" source="app/samples/defining-validations.js"></prism>
+  <prism parser="javascript" source="app/samples/defining-validations.js"></prism>
 
-<p>
-  We could also configure formFor to validate based on a set of rules attached to the $scope like this:
-</p>
+  <p>
+    We could also configure formFor to validate based on a set of rules attached to the $scope like this:
+  </p>
 
-<prism><form form-for="user" validation-rules="rules"></form></prism>
+  <prism><form form-for="user" validation-rules="rules"></form></prism>
 
-<h2>Validating Nested Fields <small>(dot notation)</small></h2>
+  <h2>Validating Nested Fields <small>(dot notation)</small></h2>
 
-<p>
-  formFor also supports nested fields. Here's a short example of the syntax:
-</p>
+  <p>
+    formFor also supports nested fields. Here's a short example of the syntax:
+  </p>
 
-<prism parser="markup" source="app/samples/validating-nested-fields.html"></prism>
+  <prism parser="markup" source="app/samples/validating-nested-fields.html"></prism>
 
-<p>
-  The controller for the above form snippet might look something like this:
-</p>
+  <p>
+    The controller for the above form snippet might look something like this:
+  </p>
 
-<prism parser="javascript" source="app/samples/validating-nested-fields.js"></prism>
+  <prism parser="javascript" source="app/samples/validating-nested-fields.js"></prism>
 
-<h2>Validating Collections</h2>
+  <h2>Validating Collections</h2>
 
-<div ng-include="'app/views/_parse-warning.html'"></div>
+  <div ng-include="'app/views/_parse-warning.html'"></div>
 
-<p>
-  formFor supports collections (one to many relationships). Here's a short example of the syntax:
-</p>
+  <p>
+    formFor supports collections (one to many relationships). Here's a short example of the syntax:
+  </p>
 
-<prism parser="markup" source="app/samples/validating-collections.html"></prism>
+  <prism parser="markup" source="app/samples/validating-collections.html"></prism>
 
-<p>
-  The controller for the above form snippet might look something like this:
-</p>
+  <p>
+    The controller for the above form snippet might look something like this:
+  </p>
 
-<prism parser="javascript" source="app/samples/validating-collections.js"></prism>
+  <prism parser="javascript" source="app/samples/validating-collections.js"></prism>
 
-<p>
-  You can see a demo of the collections feature <a href="#/demo/collections">here</a>.
-</p>
+  <p>
+    You can see a demo of the collections feature <a href="#/demo/collections">here</a>.
+  </p>
 
-<h2>Custom validations</h2>
+  <h2>Custom validations</h2>
 
-<p>
-Custom validation functions enable you to extend formFor's built in validations. This function will be passed 2 parameters: the field's current form-value and the full form-data object. It should then return either a promise to be resolved/rejected based on the validation results, or a truthy/falsy value indicating whether the specified value is valid.
-</p>
+  <p>
+  Custom validation functions enable you to extend formFor's built in validations. This function will be passed 2 parameters: the field's current form-value and the full form-data object. It should then return either a promise to be resolved/rejected based on the validation results, or a truthy/falsy value indicating whether the specified value is valid.
+  </p>
 
-<p>
-For example we might modify the above validation service to check if an email address was already reserved. To do that we could define a custom validation rule on the email field:
-</p>
+  <p>
+  For example we might modify the above validation service to check if an email address was already reserved. To do that we could define a custom validation rule on the email field:
+  </p>
 
-<prism parser="javascript" source="app/samples/custom-validation-email.js"></prism>
+  <prism parser="javascript" source="app/samples/custom-validation-email.js"></prism>
 
-<p>We could also implement a custom validation function to ensure that two password fields match:</p>
+  <p>We could also implement a custom validation function to ensure that two password fields match:</p>
 
-<prism parser="javascript" source="app/samples/custom-validation-password.js"></prism>
+  <prism parser="javascript" source="app/samples/custom-validation-password.js"></prism>
 
-<h2>Custom error messages</h2>
-<p>
-Each type of validation has a built-in error message. For example if a required field is falsy formFor will display "Required field". You can override built-in error messages though by passing a hash to the validation rule. This hash must define 2 keys: rule and message.
-</p>
-<p>
-To display a custom validation error for an invalid email address in our above example we might use the following:
-</p>
-<prism parser="javascript" source="app/samples/custom-error-message-pattern.js"></prism>
+  <h2>Custom error messages</h2>
+  <p>
+  Each type of validation has a built-in error message. For example if a required field is falsy formFor will display "Required field". You can override built-in error messages though by passing a hash to the validation rule. This hash must define 2 keys: rule and message.
+  </p>
+  <p>
+  To display a custom validation error for an invalid email address in our above example we might use the following:
+  </p>
+  <prism parser="javascript" source="app/samples/custom-error-message-pattern.js"></prism>
 
-<p>
-This type of error message override can be used for each of the supported validation types except the custom validation function. This type of validation should specify its error message by rejecting the promise like so:
-</p>
+  <p>
+  This type of error message override can be used for each of the supported validation types except the custom validation function. This type of validation should specify its error message by rejecting the promise like so:
+  </p>
 
-<prism parser="javascript" source="app/samples/custom-error-message-custom.js"></prism>
+  <prism parser="javascript" source="app/samples/custom-error-message-custom.js"></prism>
 
-<ul class="pager">
-  <li class="previous"><a href="#/input-types"><i class="fa fa-arrow-left"></i> Input Types</a></li>
-  <li class="next"><a href="#/template-overrides">Template Overrides <i class="fa fa-arrow-right"></i></a></li>
-</ul>
+  <ul class="pager">
+    <li class="previous"><a href="#/input-types"><i class="fa fa-arrow-left"></i> Input Types</a></li>
+    <li class="next"><a href="#/template-overrides">Template Overrides <i class="fa fa-arrow-right"></i></a></li>
+  </ul>
+</div>

@@ -1,3 +1,65 @@
+.header-splash-area-background {
+  background-color: #1baae3;
+  height: 300px;
+  margin-bottom: 20px;
+}
+.header-splash-area-table {
+  display: table;
+  height: 100%;
+}
+.header-splash-area-cell {
+  display: table-cell;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  background-image: url(../images/form-for-header.png);
+  background-size: auto 250px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  padding-left: 30%;
+  color: white;
+}
+.header-main-text {
+  font-size: 45px;
+  margin: 0 0 15px;
+}
+.header-sub-text {
+  font-size: 18px;
+  margin: 0 0 15px;
+}
+.header-sub-text em {
+  font-weight: bold;
+  font-style: italic;
+}
+
+@media (max-width : 992px) {
+  .header-splash-area-background {
+    height: 250px;
+  }
+  .header-splash-area-cell {
+    background-size: auto 200px;
+  }
+  .header-main-text {
+    font-size: 35px;
+    margin: 0 0 10px;
+  }
+  .header-sub-text {
+    font-size: 14px;
+    margin: 0 0 10px;
+  }
+}
+
+.header-padding {
+  height: 63px;
+}
+
+.navbar-search {
+  width: 150px !important;
+}
+
+.navbar-brand {
+  white-space: nowrap;
+}
 .nav-header-logo {
   height: 30px;
   margin-right: 5px;
@@ -5,17 +67,6 @@
 
 .image-header-table {
   margin: 10px 0 20px;
-}
-.index-header-logo {
-  height: 100px;
-  width: 94px;
-  margin-right: 15px;
-}
-.index-header {
-  margin: 0;
-}
-.index-header small {
-  display: block;
 }
 
 ul.nav li.dropdown:hover {

@@ -1,68 +1,68 @@
-<table class="image-header-table">
-  <tr>
-    <td rowspan="2">
-      <img class="index-header-logo" src="app/images/form-for-logo.svg">
-    </td>
-    <td>
-      <h1 class="index-header">
-        Introducing
-        <small>formFor</small>
-      </h1>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      formFor is a <strong>quick</strong> and <strong>easy</strong> way to create complex HTML forms with client-side validations.
-    </td>
-  </tr>
-</table>
+<div class="header-splash-area-background">
+  <div class="container header-splash-area-table">
+    <div class="header-splash-area-cell">
+      <h1 class="header-main-text">Angular JS <em>formFor</em></h1>
+      <p class="header-sub-text">the <em>fastest</em> and <em>easiest</em> way to create and validate Angular forms</p>
 
-<div class="well">
-  <legend>Sample sign-up form</legend>
-  <form form-for="formData" controller="formController" validation-rules="validationRules" submit-with="submit()">
-    <div class="row show-grid">
-      <div class="col-md-6"><text-field label="Email" attribute="email"></text-field></div>
-      <div class="col-md-6"><text-field label="Password" attribute="password" type="password"></text-field></div>
+      <iframe src="http://ghbtns.com/github-btn.html?user=bvaughn&repo=angular-form-for&type=fork&count=true"
+              allowtransparency="true" frameborder="0" scrolling="0" width="90" height="20">
+      </iframe>
+
+      <iframe src="http://ghbtns.com/github-btn.html?user=bvaughn&repo=angular-form-for&type=watch&count=true"
+              allowtransparency="true" frameborder="0" scrolling="0" width="90" height="20">
+      </iframe>
     </div>
-    <checkbox-field label="I agree to the terms of service" attribute="iAgreeToTheTermsOfService"></checkbox-field>
-    <button class="btn btn-default" ng-click="reset()">Reset <i class="fa fa-undo"></i></button>
-    <button class="btn btn-primary">Sign Up <i class="fa fa-user"></i></button>
-  </form>
+  </div>
 </div>
 
-<p>
-  formFor is incredibly flexible, offering a wide range of configuration options.
-  Check out the demos and documentation to learn more!
-</p>
+<div class="container">
+  <div class="well">
+    <legend>Sample sign-up form</legend>
+    <form form-for="formData" controller="formController" validation-rules="validationRules" submit-with="submit()">
+      <div class="row show-grid">
+        <div class="col-md-6"><text-field label="Email" attribute="email"></text-field></div>
+        <div class="col-md-6"><text-field label="Password" attribute="password" type="password"></text-field></div>
+      </div>
+      <checkbox-field label="I agree to the terms of service" attribute="iAgreeToTheTermsOfService"></checkbox-field>
+      <button class="btn btn-default" ng-click="reset()">Reset <i class="fa fa-undo"></i></button>
+      <button class="btn btn-primary">Sign Up <i class="fa fa-user"></i></button>
+    </form>
+  </div>
 
-<p>
-  If you've got any questions, reach out to me <a href="https://github.com/bvaughn" target="_blank">on Github</a>.
-</p>
+  <p>
+    formFor is incredibly flexible, offering a wide range of configuration options.
+    Check out the demos and documentation to learn more!
+  </p>
 
-<h1>Installation</h1>
+  <p>
+    If you've got any questions, reach out to me <a href="https://github.com/bvaughn" target="_blank">on Github</a>.
+  </p>
 
-<p>You can install this plugin with either <a href="http://bower.io/" target="_blank">Bower</a>
-or <a href="https://www.npmjs.org/" target="_blank">NPM</a>:</p>
+  <h1>Installation</h1>
 
-<pre class="language-bash"><code>bower install angular-form-for --save
-npm install angular-form-for --save</code></pre>
+  <p>You can install this plugin with either <a href="http://bower.io/" target="_blank">Bower</a>
+  or <a href="https://www.npmjs.org/" target="_blank">NPM</a>:</p>
 
-<p>
-  This will download an angular-form-for folder into your bower/node components directory.
-  Inside of that folder there will be a dist folder with the formFor JavaScript and CSS files.
-  By default formFor is compatible with <a href="https://github.com/bvaughn/angular-form-for/blob/master/getbootstrap.com" target="_blank">Bootstrap</a> 3.2.x styles.
-  A separate, formFor only CSS stylehseet is included for those not using Bootstrap.
-</p>
+  <pre class="language-bash"><code>bower install angular-form-for --save
+  npm install angular-form-for --save</code></pre>
 
-<p>
-  Lastly just include the formFor module in your Angular application like so:
-</p>
+  <p>
+    This will download an angular-form-for folder into your bower/node components directory.
+    Inside of that folder there will be a dist folder with the formFor JavaScript and CSS files.
+    By default formFor is compatible with <a href="https://github.com/bvaughn/angular-form-for/blob/master/getbootstrap.com" target="_blank">Bootstrap</a> 3.2.x styles.
+    A separate, formFor only CSS stylehseet is included for those not using Bootstrap.
+  </p>
 
-<pre class="language-javascript"><code>angular.module('myAngularApp', ['formFor']);</code></pre>
+  <p>
+    Lastly just include the formFor module in your Angular application like so:
+  </p>
 
-<h1>License</h1>
+  <pre class="language-javascript"><code>angular.module('myAngularApp', ['formFor']);</code></pre>
 
-<p>
-  Copyright (c) 2014 Brian Vaughn.
-  Licensed under the MIT license.
-</p>
+  <h1>License</h1>
+
+  <p>
+    Copyright (c) 2014 Brian Vaughn.
+    Licensed under the MIT license.
+  </p>
+</div>
