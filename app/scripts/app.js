@@ -6,11 +6,13 @@ angular.module('formForDocumentation', ['flashr', 'formFor', 'ngRoute', 'ui.boot
     $routeProvider.when('/demo/advanced-form', {templateUrl: 'app/views/advanced-form.html', controller: 'AdvancedFormDemoController'});
     $routeProvider.when('/demo/dynamic-dropdowns', {templateUrl: 'app/views/dynamic-dropdowns.html', controller: 'DynamicDropdownsDemoController'});
     $routeProvider.when('/demo/collections', {templateUrl: 'app/views/collections.html', controller: 'CollectionsDemoController'});
+    $routeProvider.when('/demo/form-metadata', {templateUrl: 'app/views/form-metadata.html', controller: 'FormMetadataDemoController'});
 
-    $routeProvider.when('/overview', {templateUrl: 'app/views/overview.html', controller: 'OverviewController'});
-    $routeProvider.when('/input-types', {templateUrl: 'app/views/input-types.html', controller: 'InputTypesController'});
-    $routeProvider.when('/validation-types', {templateUrl: 'app/views/validation-types.html', controller: 'ValidationTypesController'});
-    $routeProvider.when('/template-overrides', {templateUrl: 'app/views/template-overrides.html', controller: 'TemplateOverridesController'});
-    $routeProvider.when('/ie8-support', {templateUrl: 'app/views/ie8-support.html', controller: 'IE8SupportController'});
+    $routeProvider.when('/overview', {templateUrl: 'app/views/overview.html'});
+    $routeProvider.when('/input-types', {templateUrl: 'app/views/input-types.html'});
+    $routeProvider.when('/validation-types', {templateUrl: 'app/views/validation-types.html'});
+    $routeProvider.when('/template-overrides', {templateUrl: 'app/views/template-overrides.html'});
+    $routeProvider.when('/ie8-support', {templateUrl: 'app/views/ie8-support.html'});
+
     $routeProvider.otherwise({redirectTo: '/index'});
   });

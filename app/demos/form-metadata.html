@@ -1,0 +1,68 @@
+<p>
+  The right-aligned buttons demonstrate how you can disable individual input controls with formFor.
+</p>
+
+<form form-for="formData" validation-rules="validationRules" submit-with="submit(data)"
+      controller="formController" valid="formIsValid" disable="formIsDisabled">
+
+  <span class="btn btn-danger btn-xs pull-right" ng-click="disablePlainText = !disablePlainText">
+    {{disablePlainText ? 'Enable' : 'Disable'}}
+  </span>
+  <text-field attribute="plainText" disable="disablePlainText"></text-field>
+
+  <span class="btn btn-danger btn-xs pull-right" ng-click="disablePassword = !disablePassword">
+    {{disablePassword ? 'Enable' : 'Disable'}}
+  </span>
+  <text-field attribute="password" type="password" disable="disablePassword"></text-field>
+
+  <span class="btn btn-danger btn-xs pull-right" ng-click="disableCheckbox = !disableCheckbox">
+    {{disableCheckbox ? 'Enable' : 'Disable'}}
+  </span>
+  <checkbox-field attribute="checkSomething" disable="disableCheckbox"></checkbox-field>
+
+  <span class="btn btn-danger btn-xs pull-right" ng-click="disableSelect = !disableSelect">
+    {{disableSelect ? 'Enable' : 'Disable'}}
+  </span>
+  <select-field attribute="selectSomething" disable="disableSelect"></select-field>
+
+  <fieldset>
+    <span class="btn btn-danger btn-xs pull-right" ng-click="disableRadio = !disableRadio">
+      {{disableRadio ? 'Enable' : 'Disable'}}
+    </span>
+    <radio-field value="left" attribute="gender" disable="disableRadio"></radio-field>
+    <radio-field value="right" attribute="gender" disable="disableRadio"></radio-field>
+  </fieldset>
+
+  <span class="btn btn-danger btn-xs pull-right" ng-click="disableButton = !disableButton">
+    {{disableButton ? 'Enable' : 'Disable'}}
+  </span>
+
+  <submit-button label="Sign Up" button-class="btn btn-primary" disable="disableButton"></submit-button>
+</form>
+
+<br/>
+
+<p>
+  The following grid shows some of the additional bindable interactions you can setup with formFor.
+</p>
+
+<ul class="list-inline">
+  <li>
+    Is this form valid?
+    <strong>{{formIsValid ? 'Yes' : 'No'}}</strong>
+  </li>
+  <li>
+    Is form disabled?
+    <strong>{{formIsDisabled ? 'Yes' : 'No'}}</strong>
+  </li>
+  <li>
+    <button class="btn btn-danger submit-button" ng-click="formIsDisabled = !formIsDisabled">
+      {{formIsDisabled ? 'Enable' : 'Disable'}} form
+    </button>
+  </li>
+  <li>
+    <button class="btn btn-danger submit-button" ng-click="formController.resetErrors()">
+      Clear validation errors
+    </button>
+  </li>
+</ul>

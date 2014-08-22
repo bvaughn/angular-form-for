@@ -23,14 +23,4 @@ angular.module('formForDocumentation').
     $scope.submit = function() {
       flashr.now.info('This is just an example form');
     };
-  }).
-  controller('OverviewController', function($scope) {
-  }).
-  controller('InputTypesController', function($scope) {
-  }).
-  controller('ValidationTypesController', function($scope) {
-  }).
-  controller('TemplateOverridesController', function($scope) {
-  }).
-  controller('IE8SupportController', function($scope) {
   });
