@@ -5,7 +5,7 @@
  * @description
  * Displays a submit &lt;button&gt; component that is automatically disabled when a form is invalid or in the process of submitting.
  *
- * @param {String} class Optional CSS class names to apply to button component.
+ * @param {String} buttonClass Optional CSS class names to apply to button component.
  * @param {Boolean} disable Disable button.
  * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
  * @param {String} icon Optional CSS class to display as a button icon.
@@ -35,7 +35,7 @@ angular.module('formFor').directive('submitButton',
         label: '@'
       },
       link: function($scope, $element, $attributes, formForController) {
-        $scope['class'] = $attributes['class'];
+        $scope['buttonClass'] = $attributes.buttonClass;
 
         $scope.$watch('label', function(value) {
           $scope.bindableLabel = $sce.trustAsHtml(value);

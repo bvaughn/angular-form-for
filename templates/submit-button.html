@@ -1,4 +1,4 @@
-<button class="btn btn-default submit-button" ng-disabled="disable || model.disabled">
+<button class="submit-button" ng-class="buttonClass || 'btn btn-default'" ng-disabled="disable || model.disabled">
   <i ng-if="icon" class="submit-button-icon" ng-class="icon"></i>
 
   <span ng-bind-html="bindableLabel"></span>
