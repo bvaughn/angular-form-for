@@ -7,7 +7,7 @@
                 required="{{model.required}}">
   </field-label>
 
-  <p ng-if="model.error" class="text-danger field-error" ng-bind="model.error"></p>
+  <field-error error="model.error"></field-error>
 
   <div  class="form-control select-field-toggle-button" ng-class="{open: isOpen}"
         ng-disabled="disable || model.disabled">

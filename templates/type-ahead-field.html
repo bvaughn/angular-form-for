@@ -7,7 +7,7 @@
                 required="{{model.required}}">
   </field-label>
 
-  <p ng-if="model.error" class="text-danger field-error" ng-bind="model.error"></p>
+  <field-error error="model.error"></field-error>
 
   <input  type="text"
           class="form-control type-ahead-field-input"

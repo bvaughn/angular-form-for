@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: directives/field-label.js</title>
+    <title>JSDoc: Source: directives/field-error.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -18,7 +18,7 @@
 <body>
 
 <div id="main">
-  <h1 class="page-title">Source: directives/field-label.js</h1>
+  <h1 class="page-title">Source: directives/field-error.js</h1>
 
   
 
@@ -28,40 +28,26 @@
         <article>
             <pre class="prettyprint source linenums"><code>/**
  * @ngdoc Directives
- * @name field-label
+ * @name field-error
  * @description
- * This component is only intended for internal use by the formFor module.
+ * Displays a standard formFor field validation error message.
  *
- * @param {String} help Optional help tooltip to display on hover.
- * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
- * @param {String} label Field label string. This string can contain HTML markup.
- * @param {String} required Optional attribute specifies that this field is a required field.
- * If a required label has been provided via FormForConfiguration then field label will display that value for required fields.
+ * @param {String} error Error messages to display (or null if field is valid OR pristine)
+ * @param {Boolean} leftAligned Apply additional 'left-aligned' class to error message (useful for checkbox and radio items)
  *
  * @example
- * // To display a simple label with a help tooltip:
- * &lt;field-label label="Username"
- *              help="This will be visible to other users">
- * &lt;/field-label>
+ * // To display a field error:
+ * &lt;field-error error="This is an error message">
+ * &lt;/field-error>
  */
-angular.module('formFor').directive('fieldLabel',
+angular.module('formFor').directive('fieldError',
   function( $sce, FormForConfiguration ) {
     return {
       restrict: 'EA',
-      templateUrl: 'form-for/templates/field-label.html',
+      templateUrl: 'form-for/templates/field-error.html',
       scope: {
-        help: '@?',
-        label: '@',
-        required: '@?'
-      },
-      controller: function($scope) {
-        $scope.$watch('label', function(value) {
-          $scope.bindableLabel = $sce.trustAsHtml(value);
-        });
-
-        $scope.$watch('required', function(required) {
-          $scope.requiredLabel = $scope.$eval(required) ? FormForConfiguration.requiredLabel : null;
-        });
+        error: '=',
+        leftAligned: '@?'
       }
     };
   });

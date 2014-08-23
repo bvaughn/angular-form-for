@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: directives/field-label.js</title>
+    <title>JSDoc: Directives: field-error</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -18,56 +18,203 @@
 <body>
 
 <div id="main">
-  <h1 class="page-title">Source: directives/field-label.js</h1>
+  <h1 class="page-title">Directives: field-error</h1>
 
   
 
 
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @ngdoc Directives
- * @name field-label
- * @description
- * This component is only intended for internal use by the formFor module.
- *
- * @param {String} help Optional help tooltip to display on hover.
- * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
- * @param {String} label Field label string. This string can contain HTML markup.
- * @param {String} required Optional attribute specifies that this field is a required field.
- * If a required label has been provided via FormForConfiguration then field label will display that value for required fields.
- *
- * @example
- * // To display a simple label with a help tooltip:
- * &lt;field-label label="Username"
- *              help="This will be visible to other users">
- * &lt;/field-label>
- */
-angular.module('formFor').directive('fieldLabel',
-  function( $sce, FormForConfiguration ) {
-    return {
-      restrict: 'EA',
-      templateUrl: 'form-for/templates/field-label.html',
-      scope: {
-        help: '@?',
-        label: '@',
-        required: '@?'
-      },
-      controller: function($scope) {
-        $scope.$watch('label', function(value) {
-          $scope.bindableLabel = $sce.trustAsHtml(value);
-        });
 
-        $scope.$watch('required', function(required) {
-          $scope.requiredLabel = $scope.$eval(required) ? FormForConfiguration.requiredLabel : null;
-        });
-      }
-    };
-  });
-</code></pre>
-        </article>
-    </section>
+<section>
+
+<header>
+    <h2>
+    field-error
+    </h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+
+    
+    
+      <a href="field-error.js.html#line1" class="name-link"><h4 class="name" id="field-error"><span class="type-signature"></span>field-error<span class="signature">(error, leftAligned)</span><span class="type-signature"></span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Displays a standard formFor field validation error message.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Error messages to display (or null if field is valid OR pristine)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>leftAligned</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Apply additional 'left-aligned' class to error message (useful for checkbox and radio items)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="field-error.js.html">directives/field-error.js</a>, <a href="field-error.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>// To display a field error:
+&lt;field-error error="This is an error message">
+&lt;/field-error></code></pre>
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
