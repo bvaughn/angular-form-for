@@ -4,6 +4,10 @@ angular.module('formForDocumentation').controller('SimpleFormDemoController',
 
     $scope.formData = {};
 
+    $scope.validationFailed = function() {
+      flashr.now.error('Something is wrong! Check again.');
+    };
+
     $scope.validationRules = {
       iAgreeToTheTermsOfService: {
         required: {
