@@ -13,6 +13,7 @@ angular.module('formFor').service('FormForConfiguration',
       defaultDebounceDuration: 1000,
       defaultSubmitComplete: angular.noop,
       defaultSubmitError: angular.noop,
+      defaultValidationFailed: angular.noop,
       requiredLabel: null,
       validationFailedForCustomMessage: 'Failed custom validation',
       validationFailedForPatternMessage: 'Invalid format',
@@ -78,6 +79,16 @@ angular.module('formFor').service('FormForConfiguration',
        */
       setDefaultSubmitError: function(value) {
         this.defaultSubmitError = value;
+      },
+
+      /**
+       * Sets the default validation-failed behavior for all formFor directives.
+       * This setting can be overridden on a per-form basis (see formFor).
+       * @memberof FormForConfiguration
+       * @param {Function} method Default function invoked when local form validation fails.
+       */
+      setDefaultValidationFailed: function(value) {
+        this.defaultValidationFailed = value;
       },
 
       /**

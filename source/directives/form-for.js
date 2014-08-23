@@ -28,6 +28,7 @@
  * This function should accept a named parameter data (the model object) and should return a promise to be resolved/rejected based on the result of the submission.
  * In the event of a rejection, the promise can return an error string or a map of field-names to specific errors.
  * See below for an example.
+ * @param {Function} validationFailed Optional callback to be invoked whenever a form-submit is blocked due to a failed validation.
  * @param {Object} validationRules Set of client-side validation rules (keyed by form field names) to apply to form-data before submitting.
  * For more information refer to the Validation Types page.
  */
@@ -45,6 +46,7 @@ angular.module('formFor').directive('formFor',
         submitError: '&?',
         submitWith: '&?',
         valid: '=?',
+        validationFailed: '&?',
         validationRules: '=?'
       },
       controller: function($scope) {
@@ -366,7 +368,21 @@ angular.module('formFor').directive('formFor',
             validateFieldsPromise = $q.resolve();
           }
 
-          return $q.waitForAll([validateCollectionsPromise, validateFieldsPromise]);
+          var deferred = $q.defer();
+
+          $q.waitForAll([validateCollectionsPromise, validateFieldsPromise]).then(
+            deferred.resolve,
+            function(errors) {
+
+              // If all collections are valid (or no collections exist) this will be an empty array.
+              if (angular.isArray(errors[0]) && errors[0].length === 0) {
+                errors.splice(0,1);
+              }
+
+              deferred.reject(errors);
+            });
+
+          return deferred.promise;
         };
       },
       link: function($scope, $element, $attributes, controller) {
@@ -425,6 +441,13 @@ angular.module('formFor').directive('formFor',
               },
               function() {
                 $scope.disable = false;
+
+                // $scope.validationFailed is wrapped with a virtual function so we must check via attributes
+                if ($attributes.validationFailed) {
+                  $scope.validationFailed();
+                } else {
+                  FormForConfiguration.defaultValidationFailed();
+                }
               });
 
           return false;
