@@ -156,11 +156,25 @@ pre[class*="language-"] {
   color: #FFFFFF;
 }
 
-.btn-count {
-  background-color: #f8f5f0;
-  color: #333;
-  text-shadow: none;
+.btn-and-tooltip-group {
+  position: relative;
+  display: inline-block;
+  margin-right: 50px;
 }
-.btn-count:hover {
-  color: #000;
+.btn-and-tooltip-group .tooltip {
+  left: 100%;
+  top: 50%;
+  line-height: 1em;
+  margin-top: -.5em;
+}
+.btn-and-tooltip-group .tooltip:hover {
+  text-decoration: none;
+}
+.btn-and-tooltip-group .tooltip.right .tooltip-arrow {
+  border-right-color: #FFF;
+}
+.btn-and-tooltip-group .tooltip .tooltip-inner {
+  background-color: #FFF;
+  color: #393a35;
+  text-shadow: none;
 }

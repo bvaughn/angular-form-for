@@ -4,36 +4,33 @@
       <h1 class="header-main-text">Angular JS <em>formFor</em></h1>
       <p class="header-sub-text">the <em>fastest</em> and <em>easiest</em> way to create and validate Angular forms</p>
 
-      <div class="btn-group">
-        <a  class="btn btn-sm btn-default" target="_blank"
-            ng-href="{{githubData.url}}">
+      <div class="btn-and-tooltip-group">
+        <a class="btn btn-sm btn-default" ng-href="{{githubData.url}}" target="_blank">
           <i class="fa fa-github"></i> Fork
         </a>
-        <a  class="btn btn-sm btn-count" target="_blank"
-            ng-href="{{githubData.forks_url}}">
-          {{githubData.forks}}
+        <a class="tooltip fade right in" ng-href="{{githubData.forks_url}}" target="_blank">
+          <span class="tooltip-arrow"></span>
+          <span class="tooltip-inner">{{githubData.forks}}</span>
         </a>
       </div>
 
-      <div class="btn-group">
-        <a  class="btn btn-sm btn-default" target="_blank"
-            ng-href="{{githubData.url}}">
+      <div class="btn-and-tooltip-group">
+        <a class="btn btn-sm btn-default" ng-href="{{githubData.url}}" target="_blank">
           <i class="fa fa-github-alt"></i> Watch
         </a>
-        <a  class="btn btn-sm btn-count" target="_blank"
-            ng-href="{{githubData.watchers_url}}">
-          {{githubData.watchers}}
+        <a class="tooltip fade right in" ng-href="{{githubData.watchers_url}}" target="_blank">
+          <span class="tooltip-arrow"></span>
+          <span class="tooltip-inner">{{githubData.watchers}}</span>
         </a>
       </div>
 
-      <div class="btn-group">
-        <a  class="btn btn-sm btn-default" target="_blank"
-            ng-href="{{githubData.url}}">
+      <div class="btn-and-tooltip-group">
+        <a class="btn btn-sm btn-default" ng-href="{{githubData.url}}" target="_blank">
           <i class="fa fa-star"></i> Star
         </a>
-        <a  class="btn btn-sm btn-count" target="_blank"
-            ng-href="{{githubData.stargazers_url}}">
-          {{githubData.stargazers}}
+        <a class="tooltip fade right in" ng-href="{{githubData.stargazers_url}}" target="_blank">
+          <span class="tooltip-arrow"></span>
+          <span class="tooltip-inner">{{githubData.stargazers}}</span>
         </a>
       </div>
 
