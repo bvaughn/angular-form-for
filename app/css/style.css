@@ -8,6 +8,7 @@
   top: 50%;
   line-height: 1em;
   margin-top: -.5em;
+  z-index: 1;
 }
 .btn-and-tooltip-group .tooltip:hover {
   text-decoration: none;
@@ -82,6 +83,11 @@
     text-align: center;
   }
 }
+@media (max-width : 768px) {
+  .navbar-search-form {
+    display: none;
+  }
+}
 @media (max-width : 475px) {
   .header-sub-text {
     font-size: 12px;
@@ -124,11 +130,7 @@
 }
 
 ul.nav li.dropdown:hover {
-  background-color: #393a35;
   cursor: pointer;
-}
-ul.nav li.dropdown:hover > ul.dropdown-menu {
-  display: block;
 }
 
 a {
