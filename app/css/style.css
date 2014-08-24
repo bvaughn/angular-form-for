@@ -1,3 +1,26 @@
+.btn-and-tooltip-group {
+  position: relative;
+  display: inline-block;
+  margin-right: 50px;
+}
+.btn-and-tooltip-group .tooltip {
+  left: 100%;
+  top: 50%;
+  line-height: 1em;
+  margin-top: -.5em;
+}
+.btn-and-tooltip-group .tooltip:hover {
+  text-decoration: none;
+}
+.btn-and-tooltip-group .tooltip.right .tooltip-arrow {
+  border-right-color: #FFF;
+}
+.btn-and-tooltip-group .tooltip .tooltip-inner {
+  background-color: #FFF;
+  color: #393a35;
+  text-shadow: none;
+}
+
 .header-splash-area-background {
   background-color: #1baae3;
   height: 300px;
@@ -49,7 +72,10 @@
     margin: 0 0 10px;
   }
 }
-@media (max-width : 650px) {
+@media (max-width : 775px) {
+  .header-splash-area-background {
+    height: 150px;
+  }
   .header-splash-area-cell {
     background-image: none;
     padding-left: 0;
@@ -59,6 +85,14 @@
 @media (max-width : 475px) {
   .header-sub-text {
     font-size: 12px;
+  }
+}
+@media (max-width : 400px) {
+  .header-main-text {
+    font-size: 25px;
+  }
+  .watch-group {
+    display: none;
   }
 }
 
@@ -166,27 +200,4 @@ pre[class*="language-"] {
 #toast-container .toast.toast-warning {
   background-color: #f47c3c;
   color: #FFFFFF;
-}
-
-.btn-and-tooltip-group {
-  position: relative;
-  display: inline-block;
-  margin-right: 50px;
-}
-.btn-and-tooltip-group .tooltip {
-  left: 100%;
-  top: 50%;
-  line-height: 1em;
-  margin-top: -.5em;
-}
-.btn-and-tooltip-group .tooltip:hover {
-  text-decoration: none;
-}
-.btn-and-tooltip-group .tooltip.right .tooltip-arrow {
-  border-right-color: #FFF;
-}
-.btn-and-tooltip-group .tooltip .tooltip-inner {
-  background-color: #FFF;
-  color: #393a35;
-  text-shadow: none;
 }
