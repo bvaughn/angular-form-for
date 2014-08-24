@@ -1,17 +1,13 @@
 .btn-and-tooltip-group {
   position: relative;
   display: inline-block;
-  margin-right: 50px;
 }
 .btn-and-tooltip-group .tooltip {
-  left: 100%;
-  top: 50%;
+  position: relative;
+  display: inline-block;
   line-height: 1em;
   margin-top: -.5em;
   z-index: 1;
-}
-.btn-and-tooltip-group .tooltip:hover {
-  text-decoration: none;
 }
 .btn-and-tooltip-group .tooltip.right .tooltip-arrow {
   border-right-color: #FFF;
@@ -20,6 +16,26 @@
   background-color: #FFF;
   color: #393a35;
   text-shadow: none;
+}
+.btn-and-tooltip-group .tooltip:hover {
+  text-decoration: none;
+}
+.btn-and-tooltip-group .tooltip.right:hover .tooltip-arrow {
+  border-right-color: #EEE;
+}
+.btn-and-tooltip-group .tooltip:hover .tooltip-inner {
+  background-color: #EEE;
+}
+
+.btn-and-tooltip-group a {
+  color: #dfd7ca;
+}
+.btn-and-tooltip-group a .fa {
+  color: white;
+  margin-right: 5px;
+}
+.btn-and-tooltip-group a:hover {
+  color: white;
 }
 
 .header-splash-area-background {
