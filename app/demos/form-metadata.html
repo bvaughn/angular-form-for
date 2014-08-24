@@ -5,36 +5,48 @@
 <form form-for="formData" validation-rules="validationRules" submit-with="submit(data)"
       controller="formController" valid="formIsValid" disable="formIsDisabled">
 
-  <span class="btn btn-danger btn-xs pull-right" ng-click="disablePlainText = !disablePlainText">
-    {{disablePlainText ? 'Enable' : 'Disable'}}
+  <span class="btn btn-xs pull-right"
+        ng-class="{'btn-default': !disablePlainText, 'btn-danger': disablePlainText}"
+        ng-click="disablePlainText = !disablePlainText">
+    {{disablePlainText ? 'Enable' : 'Disable'}} text
   </span>
   <text-field attribute="plainText" disable="disablePlainText"></text-field>
 
-  <span class="btn btn-danger btn-xs pull-right" ng-click="disablePassword = !disablePassword">
-    {{disablePassword ? 'Enable' : 'Disable'}}
+  <span class="btn btn-xs pull-right"
+        ng-class="{'btn-default': !disablePassword, 'btn-danger': disablePassword}"
+        ng-click="disablePassword = !disablePassword">
+    {{disablePassword ? 'Enable' : 'Disable'}} password
   </span>
   <text-field attribute="password" type="password" disable="disablePassword"></text-field>
 
-  <span class="btn btn-danger btn-xs pull-right" ng-click="disableCheckbox = !disableCheckbox">
-    {{disableCheckbox ? 'Enable' : 'Disable'}}
+  <span class="btn btn-xs pull-right"
+        ng-class="{'btn-default': !disableCheckbox, 'btn-danger': disableCheckbox}"
+        ng-click="disableCheckbox = !disableCheckbox">
+    {{disableCheckbox ? 'Enable' : 'Disable'}} checkbox
   </span>
   <checkbox-field attribute="checkSomething" disable="disableCheckbox"></checkbox-field>
 
-  <span class="btn btn-danger btn-xs pull-right" ng-click="disableSelect = !disableSelect">
-    {{disableSelect ? 'Enable' : 'Disable'}}
+  <span class="btn btn-xs pull-right"
+        ng-class="{'btn-default': !disableSelect, 'btn-danger': disableSelect}"
+        ng-click="disableSelect = !disableSelect">
+    {{disableSelect ? 'Enable' : 'Disable'}} select
   </span>
   <select-field attribute="selectSomething" disable="disableSelect"></select-field>
 
   <fieldset>
-    <span class="btn btn-danger btn-xs pull-right" ng-click="disableRadio = !disableRadio">
-      {{disableRadio ? 'Enable' : 'Disable'}}
+    <span class="btn btn-xs pull-right"
+          ng-class="{'btn-default': !disableRadio, 'btn-danger': disableRadio}"
+          ng-click="disableRadio = !disableRadio">
+      {{disableRadio ? 'Enable' : 'Disable'}} radios
     </span>
     <radio-field value="left" attribute="gender" disable="disableRadio"></radio-field>
     <radio-field value="right" attribute="gender" disable="disableRadio"></radio-field>
   </fieldset>
 
-  <span class="btn btn-danger btn-xs pull-right" ng-click="disableButton = !disableButton">
-    {{disableButton ? 'Enable' : 'Disable'}}
+  <span class="btn btn-xs pull-right"
+        ng-class="{'btn-default': !disableButton, 'btn-danger': disableButton}"
+        ng-click="disableButton = !disableButton">
+    {{disableButton ? 'Enable' : 'Disable'}} button
   </span>
 
   <submit-button label="Sign Up" button-class="btn btn-primary" disable="disableButton"></submit-button>
@@ -42,7 +54,7 @@
 
 <br/>
 
-<p>
+<p class="alert alert-info">
   The following grid shows some of the additional bindable interactions you can setup with formFor.
 </p>
 
@@ -56,12 +68,15 @@
     <strong>{{formIsDisabled ? 'Yes' : 'No'}}</strong>
   </li>
   <li>
-    <button class="btn btn-danger submit-button" ng-click="formIsDisabled = !formIsDisabled">
+    <button class="btn"
+            ng-class="{'btn-default': !formIsDisabled, 'btn-danger': formIsDisabled}"
+            ng-click="formIsDisabled = !formIsDisabled">
       {{formIsDisabled ? 'Enable' : 'Disable'}} form
     </button>
   </li>
   <li>
-    <button class="btn btn-danger submit-button" ng-click="formController.resetErrors()">
+    <button class="btn btn-default"
+            ng-click="formController.resetErrors()">
       Clear validation errors
     </button>
   </li>
