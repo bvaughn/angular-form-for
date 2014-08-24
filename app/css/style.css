@@ -49,6 +49,18 @@
     margin: 0 0 10px;
   }
 }
+@media (max-width : 650px) {
+  .header-splash-area-cell {
+    background-image: none;
+    padding-left: 0;
+    text-align: center;
+  }
+}
+@media (max-width : 475px) {
+  .header-sub-text {
+    font-size: 12px;
+  }
+}
 
 .header-padding {
   height: 63px;
@@ -177,9 +189,4 @@ pre[class*="language-"] {
   background-color: #FFF;
   color: #393a35;
   text-shadow: none;
-}
-@media (max-width : 550px) {
-  .watch-btn-and-tooltip-group {
-    display: none;
-  }
 }
