@@ -178,3 +178,8 @@ pre[class*="language-"] {
   color: #393a35;
   text-shadow: none;
 }
+@media (max-width : 550px) {
+  .watch-btn-and-tooltip-group {
+    display: none;
+  }
+}
