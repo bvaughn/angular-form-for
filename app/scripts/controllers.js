@@ -1,6 +1,9 @@
 angular.module('formForDocumentation').
-  controller('IndexController', function($q, $scope, $timeout, flashr) {
+  controller('IndexController', function($q, $scope, $timeout, flashr, Github) {
     $scope.formData = {};
+
+    $scope.githubData = Github.load().$object;
+
     $scope.validationRules = {
       iAgreeToTheTermsOfService: {
         required: true

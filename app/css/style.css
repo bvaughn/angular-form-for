@@ -155,3 +155,12 @@ pre[class*="language-"] {
   background-color: #f47c3c;
   color: #FFFFFF;
 }
+
+.btn-count {
+  background-color: #f8f5f0;
+  color: #333;
+  text-shadow: none;
+}
+.btn-count:hover {
+  color: #000;
+}

@@ -4,13 +4,39 @@
       <h1 class="header-main-text">Angular JS <em>formFor</em></h1>
       <p class="header-sub-text">the <em>fastest</em> and <em>easiest</em> way to create and validate Angular forms</p>
 
-      <iframe src="http://ghbtns.com/github-btn.html?user=bvaughn&repo=angular-form-for&type=fork&count=true"
-              allowtransparency="true" frameborder="0" scrolling="0" width="90" height="20">
-      </iframe>
+      <div class="btn-group">
+        <a  class="btn btn-sm btn-default" target="_blank"
+            ng-href="{{githubData.url}}">
+          <i class="fa fa-github"></i> Fork
+        </a>
+        <a  class="btn btn-sm btn-count" target="_blank"
+            ng-href="{{githubData.forks_url}}">
+          {{githubData.forks}}
+        </a>
+      </div>
 
-      <iframe src="http://ghbtns.com/github-btn.html?user=bvaughn&repo=angular-form-for&type=watch&count=true"
-              allowtransparency="true" frameborder="0" scrolling="0" width="90" height="20">
-      </iframe>
+      <div class="btn-group">
+        <a  class="btn btn-sm btn-default" target="_blank"
+            ng-href="{{githubData.url}}">
+          <i class="fa fa-github-alt"></i> Watch
+        </a>
+        <a  class="btn btn-sm btn-count" target="_blank"
+            ng-href="{{githubData.watchers_url}}">
+          {{githubData.watchers}}
+        </a>
+      </div>
+
+      <div class="btn-group">
+        <a  class="btn btn-sm btn-default" target="_blank"
+            ng-href="{{githubData.url}}">
+          <i class="fa fa-star"></i> Star
+        </a>
+        <a  class="btn btn-sm btn-count" target="_blank"
+            ng-href="{{githubData.stargazers_url}}">
+          {{githubData.stargazers}}
+        </a>
+      </div>
+
     </div>
   </div>
 </div>
