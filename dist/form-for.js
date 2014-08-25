@@ -648,7 +648,6 @@ angular.module('formFor').directive('formFor',
             $scope.formForStateHelper.setFormSubmitted(true);
             $scope.disable = true;
 
-            debugger;
             $scope.controller.validateForm().then(
               function(response) {
                 var promise;
