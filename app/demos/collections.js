@@ -49,7 +49,6 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
     };
 
     $scope.submit = function(data) {
-      console.log(data);
-      flashr.now.info("This is just a demo. You aren't supposed to actually save anything! ;)");
+      flashr.now.info('Your form has been submitted');
     };
   });

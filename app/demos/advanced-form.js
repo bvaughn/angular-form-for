@@ -69,7 +69,7 @@ angular.module('formForDocumentation').service('UserSignUp', function($q, $timeo
     submit: function(data) {
       var deferred = $q.defer();
       $timeout(function() {
-        deferred.reject('This is just a demo, silly!');
+        deferred.reject('Your form has been submitted');
       }, 1000);
       return deferred.promise;
     }

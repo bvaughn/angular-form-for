@@ -24,6 +24,6 @@ angular.module('formForDocumentation').
       $timeout($scope.formController.resetErrors);
     };
     $scope.submit = function() {
-      flashr.now.info('This is just an example form');
+      flashr.now.info('Your form has been submitted');
     };
   });

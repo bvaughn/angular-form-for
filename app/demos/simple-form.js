@@ -5,7 +5,7 @@ angular.module('formForDocumentation').controller('SimpleFormDemoController',
     $scope.formData = {};
 
     $scope.validationFailed = function() {
-      flashr.now.error('Something is wrong! Check again.');
+      flashr.now.error('Your form is invalid');
     };
 
     $scope.validationRules = {
@@ -29,6 +29,6 @@ angular.module('formForDocumentation').controller('SimpleFormDemoController',
     };
 
     $scope.submit = function(data) {
-      flashr.now.info('This is just a demo form! ;)');
+      flashr.now.info('Your form has been submitted');
     };
   });

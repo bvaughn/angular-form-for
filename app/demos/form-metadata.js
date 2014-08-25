@@ -22,7 +22,7 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
     };
 
     $scope.submit = function(data) {
-      flashr.now.info('This is just a demo form! ;)');
+      flashr.now.info('Your form has been submitted');
     };
   });
 
