@@ -35,7 +35,7 @@
 angular.module('formFor').directive('formFor',
   function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
     return {
-      require: 'form',
+      require: 'form', // We don't need the ngForm controller, but we do rely on the form-submit hook
       restrict: 'A',
       scope: {
         controller: '=?',
@@ -261,6 +261,60 @@ angular.module('formFor').directive('formFor',
           });
         };
 
+        /**
+         * Validate all registered form-fields.
+         * This method returns a promise that is resolved or rejected with a field to error message map.
+         * @memberof form-for
+         */
+        controller.validateForm = function() {
+          // Reset errors before starting new validation.
+          $scope.updateCollectionErrors({});
+          $scope.updateFieldErrors({});
+
+          var validateCollectionsPromise;
+          var validateFieldsPromise;
+
+          if ($scope.$validationRules) {
+            var validationKeys = [];
+
+            angular.forEach($scope.fields, function(field) {
+              validationKeys.push(field.fieldName);
+            });
+
+            validateFieldsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
+            validateFieldsPromise.then(angular.noop, $scope.updateFieldErrors);
+
+            validationKeys = [];
+
+            angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
+              validationKeys.push(bindableFieldName);
+            });
+
+            validateCollectionsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
+            validateCollectionsPromise.then(angular.noop, $scope.updateCollectionErrors);
+
+          } else {
+            validateCollectionsPromise = $q.resolve();
+            validateFieldsPromise = $q.resolve();
+          }
+
+          var deferred = $q.defer();
+
+          $q.waitForAll([validateCollectionsPromise, validateFieldsPromise]).then(
+            deferred.resolve,
+            function(errors) {
+
+              // If all collections are valid (or no collections exist) this will be an empty array.
+              if (angular.isArray(errors[0]) && errors[0].length === 0) {
+                errors.splice(0,1);
+              }
+
+              deferred.reject(errors);
+            });
+
+          return deferred.promise;
+        };
+
         // Expose controller methods to the $scope.controller interface
         $scope.controller = $scope.controller || {};
 
@@ -330,68 +384,14 @@ angular.module('formFor').directive('formFor',
             $scope.formForStateHelper.setFieldError(bindableFieldName, error);
           });
         };
-
-        /*
-         * Validate all registered fields and update FormForStateHelper's error mapping.
-         * This update indirectly triggers form validity check and inline error message display.
-         */
-        $scope.validateAll = function() {
-
-          // Reset errors before starting new validation.
-          $scope.updateCollectionErrors({});
-          $scope.updateFieldErrors({});
-
-          var validateCollectionsPromise;
-          var validateFieldsPromise;
-
-          if ($scope.$validationRules) {
-            var validationKeys = [];
-
-            angular.forEach($scope.fields, function(field) {
-              validationKeys.push(field.fieldName);
-            });
-
-            validateFieldsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
-            validateFieldsPromise.then(angular.noop, $scope.updateFieldErrors);
-
-            validationKeys = [];
-
-            angular.forEach($scope.collectionLabels, function(bindableWrapper, bindableFieldName) {
-              validationKeys.push(bindableFieldName);
-            });
-
-            validateCollectionsPromise = ModelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRules);
-            validateCollectionsPromise.then(angular.noop, $scope.updateCollectionErrors);
-
-          } else {
-            validateCollectionsPromise = $q.resolve();
-            validateFieldsPromise = $q.resolve();
-          }
-
-          var deferred = $q.defer();
-
-          $q.waitForAll([validateCollectionsPromise, validateFieldsPromise]).then(
-            deferred.resolve,
-            function(errors) {
-
-              // If all collections are valid (or no collections exist) this will be an empty array.
-              if (angular.isArray(errors[0]) && errors[0].length === 0) {
-                errors.splice(0,1);
-              }
-
-              deferred.reject(errors);
-            });
-
-          return deferred.promise;
-        };
       },
-      link: function($scope, $element, $attributes, controller) {
+      link: function($scope, $element, $attributes) {
         $element.on('submit', // Override form submit to trigger overall validation.
           function() {
             $scope.formForStateHelper.setFormSubmitted(true);
             $scope.disable = true;
 
-            $scope.validateAll().then(
+            $scope.controller.validateForm().then(
               function(response) {
                 var promise;
 
