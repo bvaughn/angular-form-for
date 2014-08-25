@@ -190,6 +190,8 @@ angular.module('formFor').directive('formFor',
             function(unwatch) {
               unwatch();
             });
+
+          delete $scope.fields[bindableFieldName];
         };
 
         /**
