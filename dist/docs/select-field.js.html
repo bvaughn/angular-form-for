@@ -77,7 +77,9 @@
  * &lt;/select-field>
  */
 angular.module('formFor').directive('selectField',
-  function($document, $log, $timeout, FieldHelper) {
+  function($document, $log, $timeout, $window, FieldHelper) {
+    var MAX_HEIGHT = 250;
+
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -99,6 +101,7 @@ angular.module('formFor').directive('selectField',
         }
 
         $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
+        $scope.dropDown = true; // Default
         $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
 
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
@@ -231,8 +234,35 @@ angular.module('formFor').directive('selectField',
           addClickToOpen();
         };
 
+        var scrollToggle = $element.find('.select-field-toggle-button');
         var scroller = $element.find('.list-group-container');
         var list = $element.find('.list-group');
+
+        $window = $($window);
+
+        var determineDropDownDirection = function() {
+          var offset = scrollToggle.offset().top - $window.scrollTop();
+          var css = {};
+
+          // TODO MAX_HEIGHT could be dynamic based on maxNumVisibleRows
+
+          if (offset + scrollToggle.outerHeight() + MAX_HEIGHT > $window.height()) {
+            $scope.dropDown = false;
+
+            css.top = 'auto',
+            css.bottom = (scrollToggle.outerHeight() - 1) + 'px'
+          } else {
+            $scope.dropDown = true;
+
+            css.bottom = 'auto',
+            css.top = '100%'
+          }
+
+          css.maxHeight = MAX_HEIGHT,
+          css.overflowY = 'scroll'
+
+          scroller.css(css);
+        };
 
         var clickToOpen = function() {
           if ($scope.disable || $scope.model.disabled) {
@@ -244,7 +274,8 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = !$scope.isOpen;
 
           if ($scope.isOpen) {
-            // TODO Determine whether to open downward or upward
+            determineDropDownDirection();
+
             // TODO Auto-focus input field if filterable
 
             oneClick($document, clickWatcher);

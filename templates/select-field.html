@@ -1,5 +1,9 @@
 <div  class="form-group field select-field"
-      ng-class="{disabled: disable || model.disabled, open: isOpen, 'has-error': model.error}">
+      ng-class="{ disabled: disable || model.disabled,
+                  open: isOpen,
+                  'has-error': model.error,
+                  'direction-down': dropDown,
+                  'direction-up': !dropDown}">
 
   <field-label  ng-if="label"
                 label="{{label}}"

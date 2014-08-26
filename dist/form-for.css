@@ -342,9 +342,6 @@ select-field {
 }
 .select-field-toggle-button.open {
   background: #fff;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: none;
 }
 .select-field-toggle-button.disabled {
   opacity: 0.5;
@@ -359,16 +356,11 @@ select-field {
   z-index: 1050;
   background-color: #fff;
   border: 1px solid #aaa;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .list-group-scrollable {
-  max-height: 200px;
   overflow: auto;
 }
 .list-group {
@@ -405,6 +397,28 @@ select-field {
 }
 .select-field .select-field-toggle-button .select-field-toggle-caret {
   display: none;
+}
+.select-field.direction-up .select-field-toggle-button.open {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
+}
+.select-field.direction-up .list-group-container {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  -webkit-box-shadow: inset 0 -1px 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 -1px 1px rgba(0,0,0,0.075);
+}
+.select-field.direction-down .select-field-toggle-button.open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+.select-field.direction-down .list-group-container {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
 }
 .select-field.disabled {
   cursor: default;
