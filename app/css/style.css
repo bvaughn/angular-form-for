@@ -119,7 +119,12 @@
 }
 
 .header-padding {
-  height: 63px;
+  height: 43px;
+}
+@media screen and (max-width: 767px) {
+  .header-padding {
+    height: 41px;
+  }
 }
 
 .navbar .nav > li > a .fa {
