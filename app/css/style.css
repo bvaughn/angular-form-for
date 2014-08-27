@@ -119,11 +119,11 @@
 }
 
 .header-padding {
-  height: 43px;
+  height: 63px;
 }
 @media screen and (max-width: 767px) {
   .header-padding {
-    height: 41px;
+    height: 61px;
   }
 }
 
