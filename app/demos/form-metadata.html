@@ -60,10 +60,6 @@
 
 <ul class="list-inline">
   <li>
-    Is this form valid?
-    <strong>{{formIsValid ? 'Yes' : 'No'}}</strong>
-  </li>
-  <li>
     Is form disabled?
     <strong>{{formIsDisabled ? 'Yes' : 'No'}}</strong>
   </li>
@@ -78,6 +74,12 @@
     <button class="btn btn-default"
             ng-click="formController.resetErrors()">
       Clear validation errors
+    </button>
+  </li>
+  <li>
+    <button class="btn btn-default"
+            ng-click="manuallyTriggerValidations()">
+      Manually Validate Form
     </button>
   </li>
 </ul>

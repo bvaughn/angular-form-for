@@ -21,6 +21,16 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       }
     };
 
+    $scope.manuallyTriggerValidations = function() {
+      $scope.formController.validateForm().then(
+        function() {
+          flashr.now.success('Your form is valid');
+        },
+        function() {
+          flashr.now.error('Your form is invalid');
+        });
+    };
+
     $scope.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
