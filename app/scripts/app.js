@@ -5,6 +5,7 @@ angular.module('formForDocumentation', ['flashr', 'formFor', 'ngRoute', 'ui.boot
     $routeProvider.when('/demo/simple-form', {templateUrl: 'app/views/simple-form.html', controller: 'SimpleFormDemoController'});
     $routeProvider.when('/demo/advanced-form', {templateUrl: 'app/views/advanced-form.html', controller: 'AdvancedFormDemoController'});
     $routeProvider.when('/demo/dynamic-dropdowns', {templateUrl: 'app/views/dynamic-dropdowns.html', controller: 'DynamicDropdownsDemoController'});
+    $routeProvider.when('/demo/dynamic-icons', {templateUrl: 'app/views/dynamic-icons.html', controller: 'DynamicIconsDemoController'});
     $routeProvider.when('/demo/collections', {templateUrl: 'app/views/collections.html', controller: 'CollectionsDemoController'});
     $routeProvider.when('/demo/form-metadata', {templateUrl: 'app/views/form-metadata.html', controller: 'FormMetadataDemoController'});
 
