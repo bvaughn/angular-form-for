@@ -483,7 +483,12 @@ Defaults to &quot;text&quot;.</p></td>
             help="Your username will be visible to others!">&lt;/text-field>
 
 // To render a multiline text input (or &lt;textarea>):
-&lt;text-field attribute="description" label="Description" multiline>&lt;/text-field></code></pre>
+&lt;text-field attribute="description" label="Description" multiline>&lt;/text-field>
+
+// To render icons based on the status of the field (pristin, invalid, valid) pass an object:
+&lt;text-field attribute="username" label="Username"
+            icon-after="{pristine: 'fa fa-user', invalid: 'fa fa-times', valid: 'fa fa-check'}">
+&lt;/text-field></code></pre>
 
     
 </dd>

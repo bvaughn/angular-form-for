@@ -45,6 +45,11 @@
  *
  * // To render a multiline text input (or <textarea>):
  * <text-field attribute="description" label="Description" multiline></text-field>
+ *
+ * // To render icons based on the status of the field (pristin, invalid, valid) pass an object:
+ * <text-field attribute="username" label="Username"
+ *             icon-after="{pristine: 'fa fa-user', invalid: 'fa fa-times', valid: 'fa fa-check'}">
+ * </text-field>
  */
 angular.module('formFor').directive('textField',
   function($log, $timeout, FieldHelper) {
