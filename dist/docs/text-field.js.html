@@ -111,10 +111,17 @@ angular.module('formFor').directive('textField',
 
         // Update $scope.iconAfter based on the field state (see class-level documentation for more)
         if ($attributes.iconAfter) {
-          var iconAfter = $scope.$eval($attributes.iconAfter);
+          var updateIconAfter = function() {
+            if (!$scope.model) {
+              return;
+            }
 
-          if (angular.isObject(iconAfter)) {
-            var updateIconAfter = function() {
+            var iconAfter =
+              $attributes.iconAfter.charAt(0) === '{' ?
+                $scope.$eval($attributes.iconAfter) :
+                $attributes.iconAfter;
+
+            if (angular.isObject(iconAfter)) {
               if ($scope.model.error) {
                 $scope.iconAfter = iconAfter.invalid;
               } else if ($scope.model.pristine) {
@@ -122,21 +129,29 @@ angular.module('formFor').directive('textField',
               } else {
                 $scope.iconAfter = iconAfter.valid;
               }
-            };
+            } else {
+              $scope.iconAfter = iconAfter;
+            }
+          };
 
-            $scope.$watch('model.error', updateIconAfter);
-            $scope.$watch('model.pristine', updateIconAfter);
-          } else {
-            $scope.iconAfter = iconAfter;
-          }
+          $attributes.$observe('iconAfter', updateIconAfter);
+          $scope.$watch('model.error', updateIconAfter);
+          $scope.$watch('model.pristine', updateIconAfter);
         }
 
         // Update $scope.iconBefore based on the field state (see class-level documentation for more)
         if ($attributes.iconBefore) {
-          var iconBefore = $scope.$eval($attributes.iconBefore);
+          var updateIconBefore = function() {
+            if (!$scope.model) {
+              return;
+            }
 
-          if (angular.isObject(iconBefore)) {
-            var updateIconBefore = function() {
+            var iconBefore =
+              $attributes.iconBefore.charAt(0) === '{' ?
+                $scope.$eval($attributes.iconBefore) :
+                $attributes.iconBefore;
+
+            if (angular.isObject(iconBefore)) {
               if ($scope.model.error) {
                 $scope.iconBefore = iconBefore.invalid;
               } else if ($scope.model.pristine) {
@@ -144,13 +159,14 @@ angular.module('formFor').directive('textField',
               } else {
                 $scope.iconBefore = iconBefore.valid;
               }
-            };
+            } else {
+              $scope.iconBefore = iconBefore;
+            }
+          };
 
-            $scope.$watch('model.error', updateIconBefore);
-            $scope.$watch('model.pristine', updateIconBefore);
-          } else {
-            $scope.iconBefore = iconBefore;
-          }
+          $attributes.$observe('iconBefore', updateIconBefore);
+          $scope.$watch('model.error', updateIconBefore);
+          $scope.$watch('model.pristine', updateIconBefore);
         }
 
         $scope.onIconAfterClick = function() {
