@@ -195,7 +195,7 @@ angular.module('formFor').directive('fieldLabel',
  *        ng-model="username"
  *        form-for-debounce="false" />
  */
-angular.module('formFor').directive('formForDebounce', ["$log", "$timeout", "FormForConfiguration", function($log, $timeout, FormForConfiguration) {
+angular.module('formFor').directive('formForDebounce', ["$log", "$sniffer", "$timeout", "FormForConfiguration", function($log, $sniffer, $timeout, FormForConfiguration) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -224,10 +224,20 @@ angular.module('formFor').directive('formForDebounce', ["$log", "$timeout", "For
         }
       }
 
-      $element.unbind('input');
+      // Older IEs do not have 'input' events - and trying to access them can cause TypeErrors.
+      // Angular's ngModel falls back to 'keydown' and 'paste' events in this case, so we must also.
+      if ($sniffer.hasEvent('input')) {
+        $element.off('input');
+      } else {
+        $element.off('keydown');
+
+        if ($sniffer.hasEvent('paste')) {
+          $element.off('paste');
+        }
+      }
 
       if (duration !== false) {
-        $element.bind('input', function() {
+        var inputChangeHandler = function() {
           $timeout.cancel(debounce);
 
           debounce = $timeout(function() {
@@ -235,10 +245,20 @@ angular.module('formFor').directive('formForDebounce', ["$log", "$timeout", "For
               ngModelController.$setViewValue($element.val());
             });
           }, duration);
-        });
+        };
+
+        if ($sniffer.hasEvent('input')) {
+          $element.on('input', inputChangeHandler);
+        } else {
+          $element.on('keydown', inputChangeHandler);
+
+          if ($sniffer.hasEvent('paste')) {
+            $element.on('paste', inputChangeHandler);
+          }
+        }
       }
 
-      $element.bind('blur', function() {
+      $element.on('blur', function() {
         $scope.$apply(function() {
           ngModelController.$setViewValue($element.val());
         });
