@@ -305,14 +305,13 @@ angular.module('formFor').directive('formFor',
         validationRules: '=?'
       },
       controller: ["$scope", function($scope) {
-        $scope.collectionNameToErrorMap = {};
-        $scope.fieldNameToErrorMap = {};
 
         // Map of safe (bindable, $scope.$watch-able) field names to objects containing the following keys:
         // • bindableWrapper: Shared between formFor and field directives. Returned by registerFormField(). Contains:
         //   • bindable: Used for easier 2-way data binding between formFor and input field
         //   • disabled: Field should be disabled (generally because form-submission is in progress)
         //   • error: Field should display the following validation error message
+        //   • pristine: Field has not been modified (or has been reset via resetErrors)
         //   • required: Informs the field's label if it should show a "required" marker
         // • fieldName: Original field name
         // • unwatchers: Array of unwatch functions to be invoked on field-unregister
@@ -369,6 +368,7 @@ angular.module('formFor').directive('formFor',
               bindable: null,
               disabled: false,
               error: null,
+              pristine: true,
               required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules)
             },
             fieldName: fieldName,
@@ -409,9 +409,12 @@ angular.module('formFor').directive('formFor',
               // It's possible they typed and then erased, but that seems less likely.
               // So we also shouldn't mark as dirty unless a truthy value has been provided.
               } else if (oldValue !== undefined || newValue !== '') {
+
                 // We also check if newValue is undefined to handle the case where erros have been reset.
                 $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, newValue !== undefined);
               }
+
+              fieldDatum.bindableWrapper.pristine = !$scope.formForStateHelper.hasFieldBeenModified(bindableFieldName);
 
               // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
               if ($scope.$validationRules) {
@@ -510,12 +513,11 @@ angular.module('formFor').directive('formFor',
          */
         controller.resetErrors = function() {
           $scope.formForStateHelper.setFormSubmitted(false);
+          $scope.formForStateHelper.resetFieldErrors();
 
-          var keys = NestedObjectHelper.flattenObjectKeys($scope.fieldNameToErrorMap);
-
-          angular.forEach(keys, function(fieldName) {
-            $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
-          });
+          for (var bindableFieldName in $scope.fields) {
+            $scope.fields[bindableFieldName].bindableWrapper.pristine = true;
+          }
         };
 
         /**
@@ -1184,8 +1186,12 @@ angular.module('formFor').directive('submitButton',
  * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
  * @param {Function} focused Optional function to be invoked on text input focus.
  * @param {String} iconAfter Optional CSS class to display as an icon after the input field.
+ * An object with the following keys may also be provided: pristine, valid, invalid
+ * In this case the icon specified by a particular state will be shown based on the field's validation status.
  * @param {Function} iconAfterClicked Optional function to be invoked when the after-icon is clicked.
  * @param {String} iconBefore Optional CSS class to display as a icon before the input field.
+ * An object with the following keys may also be provided: pristine, valid, invalid
+ * In this case the icon specified by a particular state will be shown based on the field's validation status.
  * @param {Function} iconBeforeClicked Optional function to be invoked when the before-icon is clicked.
  * @param {String} label Optional field label displayed before the input.
  * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
@@ -1219,9 +1225,7 @@ angular.module('formFor').directive('textField',
         disable: '=',
         focused: '&?',
         help: '@?',
-        iconAfter: '@?',
         iconAfterClicked: '&?',
-        iconBefore: '@?',
         iconBeforeClicked: '&?',
         placeholder: '@?'
       },
@@ -1242,6 +1246,52 @@ angular.module('formFor').directive('textField',
           });
         }
 
+        FieldHelper.manageFieldRegistration($scope, formForController);
+
+        // Update $scope.iconAfter based on the field state (see class-level documentation for more)
+        if ($attributes.iconAfter) {
+          var iconAfter = $scope.$eval($attributes.iconAfter);
+
+          if (angular.isObject(iconAfter)) {
+            var updateIconAfter = function() {
+              if ($scope.model.error) {
+                $scope.iconAfter = iconAfter.invalid;
+              } else if ($scope.model.pristine) {
+                $scope.iconAfter = iconAfter.pristine;
+              } else {
+                $scope.iconAfter = iconAfter.valid;
+              }
+            };
+
+            $scope.$watch('model.error', updateIconAfter);
+            $scope.$watch('model.pristine', updateIconAfter);
+          } else {
+            $scope.iconAfter = iconAfter;
+          }
+        }
+
+        // Update $scope.iconBefore based on the field state (see class-level documentation for more)
+        if ($attributes.iconBefore) {
+          var iconBefore = $scope.$eval($attributes.iconBefore);
+
+          if (angular.isObject(iconBefore)) {
+            var updateIconBefore = function() {
+              if ($scope.model.error) {
+                $scope.iconBefore = iconBefore.invalid;
+              } else if ($scope.model.pristine) {
+                $scope.iconBefore = iconBefore.pristine;
+              } else {
+                $scope.iconBefore = iconBefore.valid;
+              }
+            };
+
+            $scope.$watch('model.error', updateIconBefore);
+            $scope.$watch('model.pristine', updateIconBefore);
+          } else {
+            $scope.iconBefore = iconBefore;
+          }
+        }
+
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {
             $scope.iconAfterClicked();
@@ -1257,8 +1307,6 @@ angular.module('formFor').directive('textField',
             $scope.focused();
           }
         };
-
-        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   }]);
@@ -1716,6 +1764,10 @@ angular.module('formFor').factory('$FormForStateHelper', ["NestedObjectHelper", 
     }
 
     return true;
+  };
+
+  FormForStateHelper.prototype.resetFieldErrors = function() {
+    this.formScope.errorMap = {};
   };
 
   FormForStateHelper.prototype.setFieldError = function(fieldName, error) {

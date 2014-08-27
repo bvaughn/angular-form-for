@@ -19,8 +19,12 @@
  * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
  * @param {Function} focused Optional function to be invoked on text input focus.
  * @param {String} iconAfter Optional CSS class to display as an icon after the input field.
+ * An object with the following keys may also be provided: pristine, valid, invalid
+ * In this case the icon specified by a particular state will be shown based on the field's validation status.
  * @param {Function} iconAfterClicked Optional function to be invoked when the after-icon is clicked.
  * @param {String} iconBefore Optional CSS class to display as a icon before the input field.
+ * An object with the following keys may also be provided: pristine, valid, invalid
+ * In this case the icon specified by a particular state will be shown based on the field's validation status.
  * @param {Function} iconBeforeClicked Optional function to be invoked when the before-icon is clicked.
  * @param {String} label Optional field label displayed before the input.
  * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
@@ -54,9 +58,7 @@ angular.module('formFor').directive('textField',
         disable: '=',
         focused: '&?',
         help: '@?',
-        iconAfter: '@?',
         iconAfterClicked: '&?',
-        iconBefore: '@?',
         iconBeforeClicked: '&?',
         placeholder: '@?'
       },
@@ -77,6 +79,52 @@ angular.module('formFor').directive('textField',
           });
         }
 
+        FieldHelper.manageFieldRegistration($scope, formForController);
+
+        // Update $scope.iconAfter based on the field state (see class-level documentation for more)
+        if ($attributes.iconAfter) {
+          var iconAfter = $scope.$eval($attributes.iconAfter);
+
+          if (angular.isObject(iconAfter)) {
+            var updateIconAfter = function() {
+              if ($scope.model.error) {
+                $scope.iconAfter = iconAfter.invalid;
+              } else if ($scope.model.pristine) {
+                $scope.iconAfter = iconAfter.pristine;
+              } else {
+                $scope.iconAfter = iconAfter.valid;
+              }
+            };
+
+            $scope.$watch('model.error', updateIconAfter);
+            $scope.$watch('model.pristine', updateIconAfter);
+          } else {
+            $scope.iconAfter = iconAfter;
+          }
+        }
+
+        // Update $scope.iconBefore based on the field state (see class-level documentation for more)
+        if ($attributes.iconBefore) {
+          var iconBefore = $scope.$eval($attributes.iconBefore);
+
+          if (angular.isObject(iconBefore)) {
+            var updateIconBefore = function() {
+              if ($scope.model.error) {
+                $scope.iconBefore = iconBefore.invalid;
+              } else if ($scope.model.pristine) {
+                $scope.iconBefore = iconBefore.pristine;
+              } else {
+                $scope.iconBefore = iconBefore.valid;
+              }
+            };
+
+            $scope.$watch('model.error', updateIconBefore);
+            $scope.$watch('model.pristine', updateIconBefore);
+          } else {
+            $scope.iconBefore = iconBefore;
+          }
+        }
+
         $scope.onIconAfterClick = function() {
           if ($attributes.hasOwnProperty('iconAfterClicked')) {
             $scope.iconAfterClicked();
@@ -92,8 +140,6 @@ angular.module('formFor').directive('textField',
             $scope.focused();
           }
         };
-
-        FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
   });

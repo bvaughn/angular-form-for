@@ -50,14 +50,13 @@ angular.module('formFor').directive('formFor',
         validationRules: '=?'
       },
       controller: function($scope) {
-        $scope.collectionNameToErrorMap = {};
-        $scope.fieldNameToErrorMap = {};
 
         // Map of safe (bindable, $scope.$watch-able) field names to objects containing the following keys:
         // • bindableWrapper: Shared between formFor and field directives. Returned by registerFormField(). Contains:
         //   • bindable: Used for easier 2-way data binding between formFor and input field
         //   • disabled: Field should be disabled (generally because form-submission is in progress)
         //   • error: Field should display the following validation error message
+        //   • pristine: Field has not been modified (or has been reset via resetErrors)
         //   • required: Informs the field's label if it should show a "required" marker
         // • fieldName: Original field name
         // • unwatchers: Array of unwatch functions to be invoked on field-unregister
@@ -114,6 +113,7 @@ angular.module('formFor').directive('formFor',
               bindable: null,
               disabled: false,
               error: null,
+              pristine: true,
               required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules)
             },
             fieldName: fieldName,
@@ -154,9 +154,12 @@ angular.module('formFor').directive('formFor',
               // It's possible they typed and then erased, but that seems less likely.
               // So we also shouldn't mark as dirty unless a truthy value has been provided.
               } else if (oldValue !== undefined || newValue !== '') {
+
                 // We also check if newValue is undefined to handle the case where erros have been reset.
                 $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, newValue !== undefined);
               }
+
+              fieldDatum.bindableWrapper.pristine = !$scope.formForStateHelper.hasFieldBeenModified(bindableFieldName);
 
               // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
               if ($scope.$validationRules) {
@@ -255,12 +258,11 @@ angular.module('formFor').directive('formFor',
          */
         controller.resetErrors = function() {
           $scope.formForStateHelper.setFormSubmitted(false);
+          $scope.formForStateHelper.resetFieldErrors();
 
-          var keys = NestedObjectHelper.flattenObjectKeys($scope.fieldNameToErrorMap);
-
-          angular.forEach(keys, function(fieldName) {
-            $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
-          });
+          for (var bindableFieldName in $scope.fields) {
+            $scope.fields[bindableFieldName].bindableWrapper.pristine = true;
+          }
         };
 
         /**
