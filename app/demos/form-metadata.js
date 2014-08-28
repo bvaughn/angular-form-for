@@ -5,6 +5,12 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
     $scope.formData = {};
     $scope.formController = {};
 
+    $scope.options = [
+      {label: 'Option One', value: 1},
+      {label: 'Option Two', value: 2},
+      {label: 'Option Three', value: 3}
+    ];
+
     $scope.disableButton = false;
     $scope.disableCheckbox = false;
     $scope.disablePassword = false;
