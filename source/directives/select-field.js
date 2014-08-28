@@ -25,6 +25,8 @@
  * The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.
  * @param {String} placeholder Optional placeholder text to display if no value has been selected.
  * The text "Select" will be displayed if no placeholder is provided.
+ * @param {attribute} prevent-default-option Optional attribute to override default selection of the first list option.
+ * Without this attribute, lists with `allow-blank` will default select the first option in the options array.
  * @param {String} valueAttribute Optional override for value key in options array.
  * Defaults to "value".
  *
@@ -72,6 +74,7 @@ angular.module('formFor').directive('selectField',
 
         $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
         $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
+        $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
 
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
@@ -128,8 +131,9 @@ angular.module('formFor').directive('selectField',
 
           if ($scope.model.bindable === selected) {
 
-            // Default select the first item in the list (if blank is not allowed)
-            if (!$scope.allowBlank && $scope.options && $scope.options.length) {
+            // Default select the first item in the list
+            // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
+            if (!$scope.allowBlank && !$scope.preventDefaultOption && $scope.options && $scope.options.length) {
               $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
             }
 
