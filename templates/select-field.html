@@ -52,10 +52,8 @@
           <spgn ng-if="!option[labelAttribute]">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->
         </a>
 
-        <a ng-if="!options" class="list-group-item">
-          <i class="fa fa-circle-o-notch fa-spin"></i>
-          Loading...
-        </a>
+        <a  ng-if="!options" class="list-group-item"
+            ng-include src="'form-for/templates/select-field-loading-indicator.html'"></a>
       </div>
     </div>
   </div>
