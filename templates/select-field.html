@@ -9,7 +9,8 @@
 
   <field-error error="model.error"></field-error>
 
-  <div  class="form-control select-field-toggle-button" ng-class="{open: isOpen}"
+  <div  class="form-control select-field-toggle-button"
+        ng-class="{open: isOpen, disabled: disable || model.disabled}"
         ng-disabled="disable || model.disabled">
 
     <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
