@@ -57,16 +57,9 @@ select-field {
 }
 
 .list-group-container {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
   z-index: 1050; // Needs to be higher than .has-error
   background-color: white;
   border: $border;
-  border-bottom-left-radius: $border-radius;
-  border-bottom-right-radius: $border-radius;
-  box-shadow: $box-shadow;
   box-sizing: border-box;
 }
 
@@ -112,6 +105,35 @@ select-field {
   .select-field-toggle-button {
     .select-field-toggle-caret {
       display: none;
+    }
+  }
+
+  &.direction-up {
+    .select-field-toggle-button {
+      &.open {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: none;
+      }
+    }
+    .list-group-container {
+      border-top-left-radius: $border-radius;
+      border-top-right-radius: $border-radius;
+      box-shadow: $box-shadow-up;
+    }
+  }
+  &.direction-down {
+    .select-field-toggle-button {
+      &.open {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: none;
+      }
+    }
+    .list-group-container {
+      border-bottom-left-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+      box-shadow: $box-shadow;
     }
   }
 

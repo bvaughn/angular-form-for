@@ -39,6 +39,7 @@
  * Dot notation (ex "address.street") is supported.
  * @param {Boolean} disable Disable input element.
  * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
+ * @param {String} direction Specifies the select-field menu's vertical direction ('down', 'up'); defaults to 'down'.
  * @param {Boolean} enableFiltering Enable filtering of list via a text input at the top of the dropdown.
  * @param {String} filter Two-way bindable filter string.
  * $watch this property to load remote options based on filter text.
@@ -80,6 +81,8 @@
  */
 angular.module('formFor').directive('selectField',
   function($document, $log, $timeout, FieldHelper) {
+    var MAX_HEIGHT = 250;
+
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -110,6 +113,10 @@ angular.module('formFor').directive('selectField',
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         FieldHelper.manageFieldRegistration($scope, formForController);
+
+        $attributes.$observe('direction', function(value) {
+          $scope.dropUp = value === 'up';
+        });
 
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
@@ -235,7 +242,8 @@ angular.module('formFor').directive('selectField',
           addClickToOpen();
         };
 
-        var scroller = $element.find('.list-group-container');
+        var listContainer = $element.find('.list-group-container');
+        var listScroller = $element.find('.list-group-scrollable');
         var list = $element.find('.list-group');
 
         var clickToOpen = function() {
@@ -248,8 +256,9 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = !$scope.isOpen;
 
           if ($scope.isOpen) {
-            // TODO Determine whether to open downward or upward
             // TODO Auto-focus input field if filterable
+
+            setListVerticalDirection();
 
             oneClick($document, clickWatcher);
 
@@ -257,9 +266,9 @@ angular.module('formFor').directive('selectField',
 
             $timeout(
               angular.bind(
-                this,
+                $element,
                 function() {
-                  var listItems = list.find('.list-group-item');
+                  var listItems = this.find('.list-group-item');
                   var matchingListItem;
 
                   for (var index = 0; index &lt; listItems.length; index++) {
@@ -274,14 +283,49 @@ angular.module('formFor').directive('selectField',
                   }
 
                   if (matchingListItem) {
-                    scroller.scrollTop(
-                      $(matchingListItem).offset().top - $(matchingListItem).parent().offset().top);
+                    listScroller.scrollTop(0);
+
+                    var top = $(matchingListItem).offset().top - listScroller.offset().top;
+
+                    listScroller.scrollTop(top);
                   }
-                }), 1);
+                }));
           }
         };
 
         addClickToOpen();
+
+        /*****************************************************************************************
+         * The following code controls the directionality of the drop-down (or drop-up) menu
+         *****************************************************************************************/
+
+        var toggleButton = $element.find('.select-field-toggle-button');
+
+        var css = {
+          marginBottom: 0, // Override Bootstrap's default marginBottom: 20px
+          position: 'absolute',
+          width: '100%',
+          zIndex: 1050
+        };
+
+        var setListVerticalDirection = function() {
+          if ($scope.dropUp) {
+            css.top = 'auto';
+            css.bottom = (toggleButton.outerHeight() - 1) + 'px';
+          } else {
+            css.bottom = 'auto';
+            css.top = '100%';
+          }
+
+          listContainer.css(css);
+        };
+
+        listScroller.css({
+          maxHeight: MAX_HEIGHT,
+          overflowY: 'scroll'
+        });
+
+        $element.css('position', 'relative');
 
         /*****************************************************************************************
          * The following code responds to keyboard events when the drop-down is visible
