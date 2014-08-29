@@ -526,6 +526,7 @@ angular.module('formFor').directive('formFor',
         controller.resetField = function(fieldName) {
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
+          // If the field is invalid, we don't want it to appear valid- just pristing.
           if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
             $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
 
@@ -541,6 +542,7 @@ angular.module('formFor').directive('formFor',
          */
         controller.resetErrors = function() {
           for (var bindableFieldName in $scope.fields) {
+            // If the field is invalid, we don't want it to appear valid- just pristing.
             if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
               $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
 
@@ -1240,8 +1242,9 @@ angular.module('formFor').directive('submitButton',
  * @ngdoc Directives
  * @name text-field
  * @description
- * Displays a HTML &lt;input&gt; element along with an input label.
- * This directive can be configured to optionally display an informational tooltip.
+ * Displays an HTML &lt;input&gt; or &lt;textarea&gt; element along with an optional label.
+ * The HTML &lt;input&gt; type can be configured to allow for passwords, numbers, etc.
+ * This directive can also be configured to display an informational tooltip.
  * In the event of a validation error, this directive will also render an inline error message.
  *
  * @param {String} attribute Name of the attribute within the parent form-for directive's model object.

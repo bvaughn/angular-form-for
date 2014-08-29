@@ -10,8 +10,8 @@
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/sandstone/bootstrap.min.css">-->
 </head>
 
@@ -30,8 +30,9 @@
  * @ngdoc Directives
  * @name text-field
  * @description
- * Displays a HTML &amp;lt;input&amp;gt; element along with an input label.
- * This directive can be configured to optionally display an informational tooltip.
+ * Displays an HTML &amp;lt;input&amp;gt; or &amp;lt;textarea&amp;gt; element along with an optional label.
+ * The HTML &amp;lt;input&amp;gt; type can be configured to allow for passwords, numbers, etc.
+ * This directive can also be configured to display an informational tooltip.
  * In the event of a validation error, this directive will also render an inline error message.
  *
  * @param {String} attribute Name of the attribute within the parent form-for directive's model object.

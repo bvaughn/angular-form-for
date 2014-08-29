@@ -25,11 +25,14 @@ nav > ul a.list-group-item:hover {
   color: #2a6496;
 }
 
+table.params tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
 table.params th,
 table.params td.type,
 table.params td.name,
 table.params td.description {
-  padding: 2px 5px;
+  padding: 4px;
   vertical-align: middle;
   line-height: 1;
 }
@@ -39,4 +42,9 @@ table.params td.description > p {
 table.params td.type,
 table.params td.name {
   font-family: monospace;
+}
+
+code {
+  background-color: transparent;
+  padding: 0;
 }

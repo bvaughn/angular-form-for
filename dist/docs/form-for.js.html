@@ -10,8 +10,8 @@
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/sandstone/bootstrap.min.css">-->
 </head>
 
@@ -278,6 +278,7 @@ angular.module('formFor').directive('formFor',
         controller.resetField = function(fieldName) {
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
+          // If the field is invalid, we don't want it to appear valid- just pristing.
           if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
             $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
 
@@ -293,6 +294,7 @@ angular.module('formFor').directive('formFor',
          */
         controller.resetErrors = function() {
           for (var bindableFieldName in $scope.fields) {
+            // If the field is invalid, we don't want it to appear valid- just pristing.
             if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
               $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
 
