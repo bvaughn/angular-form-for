@@ -526,8 +526,11 @@ angular.module('formFor').directive('formFor',
         controller.resetField = function(fieldName) {
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
-          var fieldDatum = $scope.fields[bindableFieldName];
-          fieldDatum.bindableWrapper.pristine = true;
+          if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
+            $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
+
+            $scope.fields[bindableFieldName].bindableWrapper.pristine = true;
+          }
 
           $scope.formForStateHelper.setFieldError(bindableFieldName, null);
         };
@@ -537,13 +540,23 @@ angular.module('formFor').directive('formFor',
          * @memberof form-for
          */
         controller.resetErrors = function() {
+          for (var bindableFieldName in $scope.fields) {
+            if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
+              $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
+
+              $scope.fields[bindableFieldName].bindableWrapper.pristine = true;
+            }
+          }
+
           $scope.formForStateHelper.setFormSubmitted(false);
           $scope.formForStateHelper.resetFieldErrors();
-
-          for (var bindableFieldName in $scope.fields) {
-            $scope.fields[bindableFieldName].bindableWrapper.pristine = true;
-          }
         };
+
+        /**
+         * Alias to resetErrors.
+         * @memberof form-for
+         */
+        controller.resetFields = controller.resetErrors;
 
         /**
          * Force validation for an individual field.
@@ -557,8 +570,6 @@ angular.module('formFor').directive('formFor',
           var value = $parse(fieldName)($scope.formFor);
 
           $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
-
-          fieldDatum.bindableWrapper.pristine = true;
 
           // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
           if ($scope.$validationRules) {
