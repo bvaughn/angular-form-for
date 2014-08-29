@@ -140,7 +140,19 @@ angular.module('formFor').directive('formFor',
           // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
           fieldDatum.unwatchers.push(
             $scope.$watch('formFor.' + fieldName, function(newValue, oldValue) {
-              fieldDatum.bindableWrapper.bindable = getter($scope.formFor);
+
+              // An asynchronous formFor data source should reset any dirty flags.
+              // A user tabbing in and out of a field also shouldn't be counted as dirty.
+              // Easiest way to guard against this is to reset the initialization flag.
+              if (newValue !== fieldDatum.bindableWrapper.bindable ||
+                  oldValue === undefined && newValue === '' ||
+                  newValue === undefined) {
+                formDataWatcherInitialized = false;
+              }
+
+              fieldDatum.bindableWrapper.bindable = newValue;
+
+              controller.validateField(fieldName);
 
               // Changes in form-data should also trigger validations.
               // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
@@ -149,32 +161,10 @@ angular.module('formFor').directive('formFor',
               if (!formDataWatcherInitialized) {
                 formDataWatcherInitialized = true;
 
-              // If formFor was binded with an empty object, ngModel will auto-initialize keys on blur.
-              // We shouldn't treat this as a user-edit though unless the user actually typed something.
-              // It's possible they typed and then erased, but that seems less likely.
-              // So we also shouldn't mark as dirty unless a truthy value has been provided.
-              } else if (oldValue !== undefined || newValue !== '') {
-
-                // We also check if newValue is undefined to handle the case where erros have been reset.
-                $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, newValue !== undefined);
+                $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
               }
 
               fieldDatum.bindableWrapper.pristine = !$scope.formForStateHelper.hasFieldBeenModified(bindableFieldName);
-
-              // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
-              if ($scope.$validationRules) {
-                ModelValidator.validateField(
-                    $scope.formFor,
-                    fieldName,
-                    $scope.$validationRules
-                  ).then(
-                      function() {
-                        $scope.formForStateHelper.setFieldError(bindableFieldName, null);
-                      },
-                      function(error) {
-                        $scope.formForStateHelper.setFieldError(bindableFieldName, error);
-                      });
-              }
             }));
 
           return fieldDatum.bindableWrapper;
@@ -253,6 +243,20 @@ angular.module('formFor').directive('formFor',
         };
 
         /**
+         * Reset validation errors for an individual field.
+         * @memberof form-for
+         * @param {String} fieldName Field name within formFor data object (ex. billing.address)
+         */
+        controller.resetField = function(fieldName) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+          var fieldDatum = $scope.fields[bindableFieldName];
+          fieldDatum.bindableWrapper.pristine = true;
+
+          $scope.formForStateHelper.setFieldError(bindableFieldName, null);
+        };
+
+        /**
          * Resets errors displayed on the <form> without resetting the form data values.
          * @memberof form-for
          */
@@ -262,6 +266,37 @@ angular.module('formFor').directive('formFor',
 
           for (var bindableFieldName in $scope.fields) {
             $scope.fields[bindableFieldName].bindableWrapper.pristine = true;
+          }
+        };
+
+        /**
+         * Force validation for an individual field.
+         * If the field fails validation an error message will automatically be shown.
+         * @memberof form-for
+         * @param {String} fieldName Field name within formFor data object (ex. billing.address)
+         */
+        controller.validateField = function(fieldName) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+          var fieldDatum = $scope.fields[bindableFieldName];
+          var value = $parse(fieldName)($scope.formFor);
+
+          $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+
+          fieldDatum.bindableWrapper.pristine = true;
+
+          // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
+          if ($scope.$validationRules) {
+            ModelValidator.validateField(
+                $scope.formFor,
+                fieldName,
+                $scope.$validationRules
+              ).then(
+                  function() {
+                    $scope.formForStateHelper.setFieldError(bindableFieldName, null);
+                  },
+                  function(error) {
+                    $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+                  });
           }
         };
 
