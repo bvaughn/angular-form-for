@@ -250,6 +250,7 @@ angular.module('formFor').directive('formFor',
         controller.resetField = function(fieldName) {
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
+          // If the field is invalid, we don't want it to appear valid- just pristing.
           if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
             $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
 
@@ -265,6 +266,7 @@ angular.module('formFor').directive('formFor',
          */
         controller.resetErrors = function() {
           for (var bindableFieldName in $scope.fields) {
+            // If the field is invalid, we don't want it to appear valid- just pristing.
             if ($scope.formForStateHelper.getFieldError(bindableFieldName)) {
               $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
 
