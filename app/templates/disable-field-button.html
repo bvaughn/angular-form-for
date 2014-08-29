@@ -1,0 +1,7 @@
+<span class="btn btn-xs"
+      ng-class="{'btn-default': !isDisabled, 'btn-danger': isDisabled}"
+      ng-click="isDisabled = !isDisabled">
+
+  <span ng-if="isDisabled">Enable</span>
+  <span ng-if="!isDisabled">Disable</span>
+</span>

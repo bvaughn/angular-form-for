@@ -5,50 +5,35 @@
 <form form-for="formData" validation-rules="validationRules" submit-with="submit(data)"
       controller="formController" valid="formIsValid" disable="formIsDisabled">
 
-  <span class="btn btn-xs pull-right"
-        ng-class="{'btn-default': !disablePlainText, 'btn-danger': disablePlainText}"
-        ng-click="disablePlainText = !disablePlainText">
-    {{disablePlainText ? 'Enable' : 'Disable'}} text
-  </span>
+  <reset-field-button form-controller="formController" field-name="plainText"></reset-field-button>
+  <validate-field-button form-controller="formController" field-name="plainText"></validate-field-button>
+  <disable-field-button is-disabled="disablePlainText"></disable-field-button>
   <text-field attribute="plainText" disable="disablePlainText"></text-field>
 
-  <span class="btn btn-xs pull-right"
-        ng-class="{'btn-default': !disablePassword, 'btn-danger': disablePassword}"
-        ng-click="disablePassword = !disablePassword">
-    {{disablePassword ? 'Enable' : 'Disable'}} password
-  </span>
+  <reset-field-button form-controller="formController" field-name="password"></reset-field-button>
+  <validate-field-button form-controller="formController" field-name="password"></validate-field-button>
+  <disable-field-button is-disabled="disablePassword"></disable-field-button>
   <text-field attribute="password" type="password" disable="disablePassword"></text-field>
 
-  <span class="btn btn-xs pull-right"
-        ng-class="{'btn-default': !disableCheckbox, 'btn-danger': disableCheckbox}"
-        ng-click="disableCheckbox = !disableCheckbox">
-    {{disableCheckbox ? 'Enable' : 'Disable'}} checkbox
-  </span>
+  <reset-field-button form-controller="formController" field-name="checkSomething"></reset-field-button>
+  <validate-field-button form-controller="formController" field-name="checkSomething"></validate-field-button>
+  <disable-field-button is-disabled="disableCheckbox"></disable-field-button>
   <checkbox-field attribute="checkSomething" disable="disableCheckbox"></checkbox-field>
 
-  <span class="btn btn-xs pull-right"
-        ng-class="{'btn-default': !disableSelect, 'btn-danger': disableSelect}"
-        ng-click="disableSelect = !disableSelect">
-    {{disableSelect ? 'Enable' : 'Disable'}} select
-  </span>
+  <reset-field-button form-controller="formController" field-name="selectSomething"></reset-field-button>
+  <validate-field-button form-controller="formController" field-name="selectSomething"></validate-field-button>
+  <disable-field-button is-disabled="disableSelect"></disable-field-button>
   <select-field attribute="selectSomething" options="options" disable="disableSelect"></select-field>
 
   <fieldset>
-    <span class="btn btn-xs pull-right"
-          ng-class="{'btn-default': !disableRadio, 'btn-danger': disableRadio}"
-          ng-click="disableRadio = !disableRadio">
-      {{disableRadio ? 'Enable' : 'Disable'}} radios
-    </span>
+    <reset-field-button form-controller="formController" field-name="gender"></reset-field-button>
+    <validate-field-button form-controller="formController" field-name="gender"></validate-field-button>
+    <disable-field-button is-disabled="disableRadio"></disable-field-button>
     <radio-field value="left" attribute="gender" disable="disableRadio"></radio-field>
     <radio-field value="right" attribute="gender" disable="disableRadio"></radio-field>
   </fieldset>
 
-  <span class="btn btn-xs pull-right"
-        ng-class="{'btn-default': !disableButton, 'btn-danger': disableButton}"
-        ng-click="disableButton = !disableButton">
-    {{disableButton ? 'Enable' : 'Disable'}} button
-  </span>
-
+  <disable-field-button is-disabled="disableButton"></disable-field-button>
   <submit-button label="Sign Up" button-class="btn btn-primary" disable="disableButton"></submit-button>
 </form>
 

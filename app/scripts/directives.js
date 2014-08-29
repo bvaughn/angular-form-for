@@ -34,3 +34,45 @@ angular.module('formForDocumentation').directive('prism',
       }
     };
 });
+
+angular.module('formForDocumentation').directive('disableFieldButton', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/templates/disable-field-button.html',
+    scope: {
+      isDisabled: '='
+    }
+  };
+});
+
+angular.module('formForDocumentation').directive('validateFieldButton', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/templates/validate-field-button.html',
+    scope: {
+      fieldName: '@',
+      formController: '='
+    },
+    controller: function($scope) {
+      $scope.validateField = function() {
+        $scope.formController.validateField($scope.fieldName, true);
+      };
+    }
+  };
+});
+
+angular.module('formForDocumentation').directive('resetFieldButton', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/templates/reset-field-button.html',
+    scope: {
+      fieldName: '@',
+      formController: '='
+    },
+    controller: function($scope) {
+      $scope.resetField = function() {
+        $scope.formController.resetField($scope.fieldName);
+      };
+    }
+  };
+});

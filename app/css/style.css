@@ -224,3 +224,11 @@ pre[class*="language-"] {
   background-color: #f47c3c;
   color: #FFFFFF;
 }
+
+disable-field-button,
+reset-field-button,
+validate-field-button {
+  display: inline-block;
+  margin-right: 1px;
+  float: right;
+}

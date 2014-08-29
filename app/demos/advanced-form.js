@@ -1,8 +1,14 @@
 angular.module('formForDocumentation').controller('AdvancedFormDemoController',
-  function($scope, flashr) {
-    $scope.formData = {
-      gender: 3
-    };
+  function($scope, $timeout, flashr) {
+    $scope.formData = {};
+
+    // Simulate a delay in loading remote data
+    $timeout(function() {
+      $scope.formData = {
+        gender: 3,
+        password: 'password'
+      };
+    },1000);
 
     $scope.genders = [
       {label: 'Male', value: '1'},
