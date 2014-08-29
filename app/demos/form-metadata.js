@@ -20,7 +20,8 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
 
     $scope.validationRules = {
       plainText: {
-        required: true
+        required: true,
+        minlength: 3
       },
       password: {
         required: true

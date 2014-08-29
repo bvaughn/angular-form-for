@@ -8,7 +8,9 @@
   <reset-field-button form-controller="formController" field-name="plainText"></reset-field-button>
   <validate-field-button form-controller="formController" field-name="plainText"></validate-field-button>
   <disable-field-button is-disabled="disablePlainText"></disable-field-button>
-  <text-field attribute="plainText" disable="disablePlainText"></text-field>
+  <text-field attribute="plainText" disable="disablePlainText"
+              icon-after="{pristine: 'fa fa-user', invalid: 'fa fa-times', valid: 'fa fa-check'}">
+  </text-field>
 
   <reset-field-button form-controller="formController" field-name="password"></reset-field-button>
   <validate-field-button form-controller="formController" field-name="password"></validate-field-button>
