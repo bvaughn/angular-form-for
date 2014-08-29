@@ -11,7 +11,8 @@
  * Dot notation (ex "address.street") is supported.
  * @param {Boolean} disable Disable input element.
  * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
- * @param {String} direction Specifies the select-field menu's vertical direction ('down', 'up'); defaults to 'down'.
+ * @param {String} direction Specifies the select-field menu's vertical direction ('down', 'up', 'auto').
+ * This attribute defaults to 'auto' which means that the menu will drop up or down based on its position within the viewport.
  * @param {Boolean} enableFiltering Enable filtering of list via a text input at the top of the dropdown.
  * @param {String} filter Two-way bindable filter string.
  * $watch this property to load remote options based on filter text.
@@ -52,7 +53,7 @@
  * </select-field>
  */
 angular.module('formFor').directive('selectField',
-  function($document, $log, $timeout, FieldHelper) {
+  function($document, $log, $timeout, $window, FieldHelper) {
     var MAX_HEIGHT = 250;
 
     return {
@@ -69,6 +70,8 @@ angular.module('formFor').directive('selectField',
         placeholder: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
+        $window = $($window);
+
         if (!$scope.attribute) {
           $log.error('Missing required field "attribute"');
 
@@ -85,10 +88,6 @@ angular.module('formFor').directive('selectField',
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
         FieldHelper.manageFieldRegistration($scope, formForController);
-
-        $attributes.$observe('direction', function(value) {
-          $scope.dropUp = value === 'up';
-        });
 
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
@@ -274,23 +273,47 @@ angular.module('formFor').directive('selectField',
         var toggleButton = $element.find('.select-field-toggle-button');
 
         var css = {
-          marginBottom: 0, // Override Bootstrap's default marginBottom: 20px
           position: 'absolute',
           width: '100%',
           zIndex: 1050
         };
 
+        var shouldDropUp = function() {
+          switch ($attributes.direction) {
+            case 'up':
+              return true;
+              break;
+            case 'down':
+              return false;
+              break;
+            case 'auto':
+            default:
+              var offset = toggleButton.offset().top - $window.scrollTop();
+
+              return offset + toggleButton.outerHeight() + MAX_HEIGHT > $window.height();
+              break;
+          }
+        };
+
         var setListVerticalDirection = function() {
-          if ($scope.dropUp) {
+          if (shouldDropUp()) {
+            $scope.dropUp = true;
+
             css.top = 'auto';
             css.bottom = (toggleButton.outerHeight() - 1) + 'px';
           } else {
+            $scope.dropUp = false;
+
             css.bottom = 'auto';
             css.top = '100%';
           }
 
           listContainer.css(css);
         };
+
+        list.css({
+          marginBottom: 0 // Override Bootstrap's default marginBottom: 20px
+        });
 
         listScroller.css({
           maxHeight: MAX_HEIGHT,
