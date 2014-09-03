@@ -309,7 +309,7 @@ angular.module('formFor').directive('formForDebounce', ["$log", "$sniffer", "$ti
  * For more information refer to the Validation Types page.
  */
 angular.module('formFor').directive('formFor',
-  ["$injector", "$parse", "$q", "$sce", "FormForConfiguration", "$FormForStateHelper", "NestedObjectHelper", "ModelValidator", function($injector, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
+  ["$injector", "$log", "$parse", "$q", "$sce", "FormForConfiguration", "$FormForStateHelper", "NestedObjectHelper", "ModelValidator", function($injector, $log, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
     return {
       require: 'form', // We don't need the ngForm controller, but we do rely on the form-submit hook
       restrict: 'A',
@@ -326,6 +326,9 @@ angular.module('formFor').directive('formFor',
         validationRules: '=?'
       },
       controller: ["$scope", function($scope) {
+        if (!$scope.formFor) {
+          $log.error('The form data object specified by <form form-for=""> is null or undefined.');
+        }
 
         // Map of safe (bindable, $scope.$watch-able) field names to objects containing the following keys:
         // • bindableWrapper: Shared between formFor and field directives. Returned by registerFormField(). Contains:
