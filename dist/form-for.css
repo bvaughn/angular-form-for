@@ -305,6 +305,7 @@ radio-field {
 
 select-field {
   display: block;
+  position: relative;
 }
 .select-field-toggle-button {
   position: relative;
@@ -349,9 +350,6 @@ select-field {
 }
 .select-field-toggle-button.open {
   background: #fff;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: none;
 }
 .select-field-toggle-button:focus {
   border-color: #666;
@@ -363,6 +361,8 @@ select-field {
 }
 .list-group-container {
   z-index: 1050;
+  position: absolute;
+  width: 100%;
   background-color: #fff;
   border: 1px solid #aaa;
   -webkit-box-sizing: border-box;
@@ -413,7 +413,7 @@ select-field {
   border-top-right-radius: 0;
   border-top: none;
 }
-.select-field.direction-up .select-field-list {
+.select-field.direction-up .list-group-container {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   -webkit-box-shadow: $box-shadow-up;
@@ -424,7 +424,7 @@ select-field {
   border-bottom-right-radius: 0;
   border-bottom: none;
 }
-.select-field.direction-down .select-field-list {
+.select-field.direction-down .list-group-container {
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);

@@ -1103,6 +1103,42 @@ angular.module('formFor').directive('selectField',
         var listScroller = $element.find('.list-group-scrollable');
         var list = $element.find('.list-group');
 
+        var scrollToValue = function(value) {
+          $timeout(
+            function() {
+              var listItems = this.find('.list-group-item');
+              var matchingListItem;
+
+              for (var index = 0; index < listItems.length; index++) {
+                var listItem = listItems[index];
+                var option = $(listItem).scope().option;
+
+                if (option && option[$scope.valueAttribute] === value) {
+                  matchingListItem = listItem;
+
+                  break;
+                }
+              }
+
+              if (matchingListItem) {
+                listScroller.scrollTop(0);
+
+                var scrollerTop = listScroller.scrollTop();// + listScroller.offset().top;
+                var scrollerHeight = listScroller.outerHeight();
+                var itemTop = $(matchingListItem).position().top;
+                var itemHeight = $(matchingListItem).outerHeight();
+
+                if (scrollerHeight === 0) {
+                  listScroller.scrollTop(itemTop);
+                } else if (itemTop < scrollerTop) {
+                  listScroller.scrollTop(itemTop);
+                } else if (scrollerTop + scrollerHeight < itemTop + itemHeight) {
+                  listScroller.scrollTop(itemTop - scrollerHeight + itemHeight);
+                }
+              }
+            }.bind($element), MIN_TIMEOUT_INTERVAL);
+        };
+
         var clickToOpen = function(event) {
           if ($scope.disable || $scope.model.disabled) {
             return;
@@ -1111,39 +1147,11 @@ angular.module('formFor').directive('selectField',
           $scope.isOpen = true;
 
           if ($scope.isOpen) {
-            // TODO Auto-focus input field if filterable
-
             setListVerticalDirection();
-
-            var value = $scope.model.bindable;
-
-            $timeout(
-              angular.bind(
-                $element,
-                function() {
-                  var listItems = this.find('.list-group-item');
-                  var matchingListItem;
-
-                  for (var index = 0; index < listItems.length; index++) {
-                    var listItem = listItems[index];
-                    var option = $(listItem).scope().option;
-
-                    if (option && option[$scope.valueAttribute] === value) {
-                      matchingListItem = listItem;
-
-                      break;
-                    }
-                  }
-
-                  if (matchingListItem) {
-                    listScroller.scrollTop(0);
-
-                    var top = $(matchingListItem).offset().top - listScroller.offset().top;
-
-                    listScroller.scrollTop(top);
-                  }
-                }));
+            scrollToValue($scope.model.bindable);
           }
+
+          $scope.$$phase || $scope.$digest();
         };
 
         $scope.$watch('isOpen', function(value) {
@@ -1161,12 +1169,6 @@ angular.module('formFor').directive('selectField',
         /*****************************************************************************************
          * The following code controls the directionality of the drop-down (or drop-up) menu
          *****************************************************************************************/
-
-        var css = {
-          position: 'absolute',
-          width: '100%',
-          zIndex: 2000
-        };
 
         var shouldDropUp = function() {
           switch ($attributes.direction) {
@@ -1189,28 +1191,19 @@ angular.module('formFor').directive('selectField',
           if (shouldDropUp()) {
             $scope.dropUp = true;
 
-            css.top = 'auto';
-            css.bottom = (toggleButton.outerHeight() - 1) + 'px';
+            listContainer.css({
+              bottom: (toggleButton.outerHeight() - 1) + 'px',
+              top: 'auto'
+            });
           } else {
             $scope.dropUp = false;
 
-            css.bottom = 'auto';
-            css.top = '100%';
+            listContainer.css({
+              bottom: 'auto',
+              top: '100%'
+            });
           }
-
-          listContainer.css(css);
         };
-
-        list.css({
-          marginBottom: 0 // Override Bootstrap's default marginBottom: 20px
-        });
-
-        listScroller.css({
-          maxHeight: MAX_HEIGHT,
-          overflowY: 'scroll'
-        });
-
-        $element.css('position', 'relative');
 
         /*****************************************************************************************
          * The following code responds to keyboard events when the drop-down is visible
@@ -1252,21 +1245,27 @@ angular.module('formFor').directive('selectField',
             case 38: // Up arrow
               $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
 
+              scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
+
               // Don't allow up/down arrows to scroll the window
               event.preventDefault();
               break;
             case 40: // Down arrow
               $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
 
+              scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
+
               // Don't allow up/down arrows to scroll the window
               event.preventDefault();
               break;
 
-            // Tabbing (in or out) should not re-open the menu.
-            // But all other key events should (they potentially indicate a changed type-ahead filter value).
+            // Tabbing (in or out) should close the menu.
             case 9:
             case 16:
+              $scope.isOpen = false;
               break;
+
+            // But all other key events should (they potentially indicate a changed type-ahead filter value).
             default:
               $scope.isOpen = true;
               break;
