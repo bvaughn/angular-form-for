@@ -1,0 +1,8 @@
+<button ng-class="buttonClass || 'btn btn-default'"
+        ng-disabled="disable || model.disabled"
+        tabindex="{{tabIndex}}">
+
+  <i ng-if="icon" ng-class="icon"></i>
+
+  <span ng-bind-html="bindableLabel"></span>
+</button>

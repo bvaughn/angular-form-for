@@ -56,6 +56,7 @@
 angular.module('formFor').directive('selectField',
   function($document, $log, $timeout, $window, FieldHelper) {
     var MAX_HEIGHT = 250;
+    var MIN_TIMEOUT_INTERVAL = 10;
 
     return {
       require: '^formFor',
@@ -67,8 +68,7 @@ angular.module('formFor').directive('selectField',
         filter: '=?',
         filterDebounce: '@?',
         help: '@?',
-        options: '=',
-        placeholder: '@?'
+        options: '='
       },
       link: function($scope, $element, $attributes, formForController) {
         $window = $($window);
@@ -85,6 +85,7 @@ angular.module('formFor').directive('selectField',
 
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
+        $scope.placeholder = $attributes.placeholder || 'Select';
         $scope.tabIndex = $attributes.tabIndex || 0;
 
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
@@ -96,6 +97,9 @@ angular.module('formFor').directive('selectField',
          *****************************************************************************************/
 
         $scope.emptyOption = {};
+        $scope.emptyOption[$scope.labelAttribute] = '';
+        $scope.emptyOption[$scope.valueAttribute] = null;
+
         $scope.filteredOptions = [];
 
         var sanitize = function(value) {
@@ -147,16 +151,6 @@ angular.module('formFor').directive('selectField',
 
             return;
           }
-
-          angular.forEach($scope.options,
-            function(option) {
-              if (option[$scope.valueAttribute] === $scope.model.bindable) {
-                matchingOption = option;
-              }
-            });
-
-          $scope.selectedOption = matchingOption;
-          $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
         };
 
         $scope.$watch('model.bindable', updateDefaultOption);
@@ -168,21 +162,33 @@ angular.module('formFor').directive('selectField',
 
         var toggleButton = $element.find('.select-field-toggle-button');
 
+        $scope.close = function() {
+          $timeout(function() {
+            $scope.isOpen = false;
+          }, MIN_TIMEOUT_INTERVAL);
+        };
+
+        $scope.open = function() {
+          $timeout(function() {
+            $scope.isOpen = true;
+          }, MIN_TIMEOUT_INTERVAL);
+        };
+
         $scope.$watch('model.bindable', function(value) {
           var matchingOption;
 
-          for (var index = 0; index < $scope.filteredOptions.length; index++) {
-            var option = $scope.filteredOptions[index];
-
-            if (option[$scope.valueAttribute] === value) {
-              matchingOption = option;
-
-              break;
-            }
-          };
+          angular.forEach($scope.options,
+            function(option) {
+              if (option[$scope.valueAttribute] === $scope.model.bindable) {
+                matchingOption = option;
+              }
+            });
 
           $scope.selectedOption = matchingOption;
           $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+
+          // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
+          $scope.filter = $scope.selectedOptionLabel;
         });
 
         $scope.selectOption = function(option) {
@@ -204,7 +210,7 @@ angular.module('formFor').directive('selectField',
             return;
           }
 
-          $scope.isOpen = !$scope.isOpen;
+          $scope.isOpen = true;
 
           if ($scope.isOpen) {
             // TODO Auto-focus input field if filterable
@@ -243,13 +249,15 @@ angular.module('formFor').directive('selectField',
         };
 
         $scope.$watch('isOpen', function(value) {
-          if ($scope.isOpen) {
-            toggleButton.off('click', clickToOpen);
-            $document.on('click', clickWatcher);
-          } else {
-            toggleButton.on('click', clickToOpen);
-            $document.off('click', clickWatcher);
-          }
+          $timeout(function() {
+            if ($scope.isOpen) {
+              toggleButton.off('click', clickToOpen);
+              $document.on('click', clickWatcher);
+            } else {
+              toggleButton.on('click', clickToOpen);
+              $document.off('click', clickWatcher);
+            }
+          }, MIN_TIMEOUT_INTERVAL);
         });
 
         /*****************************************************************************************
@@ -354,6 +362,15 @@ angular.module('formFor').directive('selectField',
 
               // Don't allow up/down arrows to scroll the window
               event.preventDefault();
+              break;
+
+            // Tabbing (in or out) should not re-open the menu.
+            // But all other key events should (they potentially indicate a changed type-ahead filter value).
+            case 9:
+            case 16:
+              break;
+            default:
+              $scope.isOpen = true;
               break;
           }
         };

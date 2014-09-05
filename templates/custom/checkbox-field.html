@@ -4,9 +4,9 @@
   <field-error error="model.error" left-aligned="true"></field-error>
 
   <label>
-    <input  type="checkbox" ng-model="model.bindable"
+    <input  type="checkbox" class="field-input"
             tabindex="{{tabIndex}}"
-            class="field-input"
+            ng-model="model.bindable"
             ng-disabled="disable || model.disabled">
 
     <span class="checkbox-field-input" ng-class="{'is-checked': model.bindable}"></span>

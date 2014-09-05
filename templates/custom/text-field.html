@@ -1,4 +1,4 @@
-<div  class="form-group field text-field"
+<div  class="field text-field"
       ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
 
   <field-label  ng-if="label"
@@ -18,7 +18,7 @@
     <input  ng-if="!multiline"
             type="{{type}}"
             tabindex="{{tabIndex}}"
-            class="form-control text-field-input"
+            class="text-field-input"
             ng-class="{'has-icon-before': iconBefore, 'has-icon-after': iconAfter}"
             ng-disabled="disable || model.disabled"
             placeholder="{{placeholder}}"
@@ -26,10 +26,9 @@
             form-for-debounce="{{debounce}}"
             ng-click="onFocus()" />
 
-
     <textarea ng-if="multiline"
               tabindex="{{tabIndex}}"
-              class="form-control text-field-input"
+              class="text-field-input"
               ng-class="{'has-icon-before': iconBefore, 'has-icon-after': iconAfter}"
               ng-disabled="disable || model.disabled"
               placeholder="{{placeholder}}"

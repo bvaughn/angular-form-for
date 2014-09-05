@@ -41,7 +41,8 @@ var concatJS = function() {
 
   var sources =
     es.merge(
-      gulp.src('templates/**/*.html')
+      gulp.src('templates/custom/**/*.html')
+      //gulp.src('templates/bootstrap/**/*.html')
         .pipe(templateCache('templates.js', {
           module: 'formFor.templates',
           standalone: true,

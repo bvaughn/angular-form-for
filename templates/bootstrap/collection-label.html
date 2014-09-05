@@ -1,0 +1,9 @@
+<div class="collection-label" ng-class="{'text-danger': model.error}">
+  <field-label  ng-if="label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
+
+  <small ng-if="model.error" class="text-danger" ng-bind="model.error"></small>
+</div>

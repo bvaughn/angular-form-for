@@ -1,0 +1,47 @@
+<div  class="form-group"
+      ng-class="{ 'disabled': disable || model.disabled,
+                  'has-error': model.error }">
+
+  <field-label  ng-if="label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
+
+  <field-error error="model.error"></field-error>
+
+  <!-- Filtered dropdowns use a type-ahead style component -->
+  <div ng-show="enableFiltering" class="input-group">
+    <input  type="text" class="form-control filter-text-input"
+            tabindex="{{tabIndex}}"
+            placeholder="{{placeholder}}"
+            ng-model="filter"
+            ng-blur="close()"
+            ng-focus="open()"
+            ng-keydown="keyDown($event)">
+
+    <ul class="dropdown-menu" ng-class="{show: isOpen}">
+      <li ng-repeat="option in filteredOptions"
+          ng-class="{active: option === selectedOption || $index === mouseOverIndex}">
+
+        <a  ng-bind="option[labelAttribute]"
+            ng-click="selectOption(option)"
+            ng-mouseenter="mouseOver($index)">
+        </a>
+      </li>
+    </ul>
+
+    <span class="input-group-addon toggle-button">
+      <i class="caret"></i>
+    </span>
+  </div>
+
+  <!-- Unfiltered dropdowns use a regular [Bootstrap] select -->
+  <select ng-if="!enableFiltering && filteredOptions.length"
+          class="form-control"
+          tabindex="{{tabIndex}}"
+          ng-disabled="disable || model.disabled"
+          ng-model="model.bindable"
+          ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
+  </select>
+</div>

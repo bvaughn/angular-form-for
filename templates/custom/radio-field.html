@@ -1,0 +1,23 @@
+<span class="field radio-field"
+      ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
+
+  <field-error error="model.error" left-aligned="true"></field-error>
+
+  <label>
+    <input  type="radio" class="field-input"
+            tabindex="{{tabIndex}}"
+            ng-model="model.bindable"
+            ng-value="value"
+            ng-checked="checked"
+            ng-disabled="disable || model.disabled">
+
+    <span class="radio-field-input" ng-class="{'is-selected': checked}"
+          ng-click="click()"></span>
+
+    <field-label  ng-if="label"
+                  label="{{label}}"
+                  help="{{help}}"
+                  ng-click="click()">
+    </field-label>
+  </label>
+</span>

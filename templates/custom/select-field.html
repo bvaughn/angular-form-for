@@ -1,4 +1,4 @@
-<div  class="form-group field select-field"
+<div  class="field select-field"
       ng-class="{ 'direction-down': !dropUp,
                   'direction-up': dropUp,
                   'disabled': disable || model.disabled,
@@ -13,7 +13,7 @@
 
   <field-error error="model.error"></field-error>
 
-  <button class="form-control select-field-toggle-button"
+  <button class="select-field-toggle-button"
           tabindex="{{tabIndex}}"
           ng-keydown="keyDown($event)"
           ng-class="{open: isOpen, disabled: disable || model.disabled}"
@@ -35,7 +35,7 @@
       <div  ng-show="enableFiltering" class="input-group filter-input-group"
             ng-click="$event.stopPropagation()">
         <input  type="text"
-                class="form-control text-field-input filter-text-input"
+                class="text-field-input filter-text-input"
                 tabindex="{{tabIndex}}"
                 ng-model="filter"
                 ng-keydown="keyDown($event)"
