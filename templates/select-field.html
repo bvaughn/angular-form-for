@@ -13,11 +13,14 @@
 
   <field-error error="model.error"></field-error>
 
-  <div  class="form-control select-field-toggle-button"
-        ng-class="{open: isOpen, disabled: disable || model.disabled}"
-        ng-disabled="disable || model.disabled">
+  <button class="form-control select-field-toggle-button"
+          tabindex="{{tabIndex}}"
+          ng-keydown="keyDown($event)"
+          ng-class="{open: isOpen, disabled: disable || model.disabled}"
+          ng-click="$event.preventDefault();"
+          ng-disabled="disable || model.disabled">
 
-    <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
+    <span ng-if="selectedOptionLabel" class="pull-left" ng-bind="selectedOptionLabel"></span>
 
     <span ng-if="!selectedOptionLabel">
       <span ng-if="placeholder" ng-bind="placeholder"></span>
@@ -25,7 +28,7 @@
     </span>
 
     <span class="fa fa-caret-down pull-right select-field-toggle-caret"></span>
-  </div>
+  </button>
 
   <div ng-show="isOpen" class="list-group-container">
     <div class="list-group">
@@ -33,6 +36,7 @@
             ng-click="$event.stopPropagation()">
         <input  type="text"
                 class="form-control text-field-input filter-text-input"
+                tabindex="{{tabIndex}}"
                 ng-model="filter"
                 ng-keydown="keyDown($event)"
                 form-for-debounce="{{filterDebounce}}" />

@@ -16,6 +16,7 @@
  * @param {String} label Optional field label displayed after the radio input.
  * (Although not required, it is strongly suggested that you specify a value for this attribute.)
  * HTML is allowed for this attribute
+ * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
  * @param {Object} Value to be assigned to model if this radio component is selected.
  *
  * @example
@@ -62,6 +63,7 @@ angular.module('formFor').directive('radioField',
         activeRadio.scopes.push($scope);
 
         $scope.label = FieldHelper.getLabel($attributes, $scope.value);
+        $scope.tabIndex = $attributes.tabIndex || 0;
 
         var $input = $element.find('input');
 

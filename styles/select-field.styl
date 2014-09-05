@@ -38,7 +38,6 @@ select-field {
 
   &:not(.disabled):not(.open):hover {
     background: linear-gradient(top, white, lighten($color-fill-2, 3));
-    border-color: lighten($color-fill-4, 5);
   }
 
   &.blank-selected {
@@ -49,6 +48,10 @@ select-field {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom: none;
+  }
+
+  &:focus {
+    border-color: $border-color-focused;
   }
 
   &.disabled {

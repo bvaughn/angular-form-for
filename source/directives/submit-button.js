@@ -11,6 +11,7 @@
  * @param {String} icon Optional CSS class to display as a button icon.
  * @param {String} label Button label.
  * HTML is allowed for this attribute.
+ * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
  *
  * @example
  * // Here is a simple submit button with an icon:
@@ -36,6 +37,7 @@ angular.module('formFor').directive('submitButton',
       },
       link: function($scope, $element, $attributes, formForController) {
         $scope['buttonClass'] = $attributes.buttonClass;
+        $scope.tabIndex = $attributes.tabIndex || 0;
 
         $scope.$watch('label', function(value) {
           $scope.bindableLabel = $sce.trustAsHtml(value);

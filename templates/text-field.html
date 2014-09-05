@@ -17,6 +17,7 @@
 
     <input  ng-if="!multiline"
             type="{{type}}"
+            tabindex="{{tabIndex}}"
             class="form-control text-field-input"
             ng-class="{'has-icon-before': iconBefore, 'has-icon-after': iconAfter}"
             ng-disabled="disable || model.disabled"
@@ -27,6 +28,7 @@
 
 
     <textarea ng-if="multiline"
+              tabindex="{{tabIndex}}"
               class="form-control text-field-input"
               ng-class="{'has-icon-before': iconBefore, 'has-icon-after': iconAfter}"
               ng-disabled="disable || model.disabled"

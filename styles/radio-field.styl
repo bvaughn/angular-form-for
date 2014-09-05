@@ -49,13 +49,21 @@ radio-field {
     }
   }
 
+  // Should remain tabbable but hidden from user
+  // Note that display:none and visibility:hidden prevent tabbing
   .field-input {
-    display: none;
+    opacity: 0;
+    position: absolute;
   }
 
   &.has-error {
     .radio-field-input {
       border-color: $border-color-error;
     }
+  }
+
+  // Pass through a focused style from <input> to our faux input
+  .field-input:focus + .radio-field-input {
+    border-color: $border-color-focused;
   }
 }

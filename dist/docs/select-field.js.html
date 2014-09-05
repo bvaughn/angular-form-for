@@ -57,6 +57,7 @@
  * The text "Select" will be displayed if no placeholder is provided.
  * @param {attribute} prevent-default-option Optional attribute to override default selection of the first list option.
  * Without this attribute, lists with `allow-blank` will default select the first option in the options array.
+ * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
  * @param {String} valueAttribute Optional override for value key in options array.
  * Defaults to "value".
  *
@@ -112,6 +113,7 @@ angular.module('formFor').directive('selectField',
 
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
+        $scope.tabIndex = $attributes.tabIndex || 0;
 
         $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
 
@@ -192,6 +194,8 @@ angular.module('formFor').directive('selectField',
          * The following code deals with toggling/collapsing the drop-down and selecting values.
          *****************************************************************************************/
 
+        var toggleButton = $element.find('.select-field-toggle-button');
+
         $scope.$watch('model.bindable', function(value) {
           var matchingOption;
 
@@ -209,46 +213,22 @@ angular.module('formFor').directive('selectField',
           $scope.selectedOptionLabel = matchingOption &amp;&amp; matchingOption[$scope.labelAttribute];
         });
 
-        var oneClick = function(target, handler) {
-          $timeout(function() { // Delay to avoid processing the same click event that trigger the toggle-open
-            target.one('click', handler);
-          }, 1);
-        };
-
-        var removeClickWatch = function() {
-          $document.off('click', clickWatcher);
-        };
-
-        var addClickToOpen = function() {
-          oneClick($element.find('.select-field-toggle-button'), clickToOpen);
-        };
-
         $scope.selectOption = function(option) {
           $scope.model.bindable = option &amp;&amp; option[$scope.valueAttribute];
           $scope.isOpen = false;
-
-          removeClickWatch();
-
-          addClickToOpen();
         };
 
         var clickWatcher = function(event) {
           $scope.isOpen = false;
           $scope.$apply();
-
-          removeClickWatch();
-
-          addClickToOpen();
         };
 
         var listContainer = $element.find('.list-group-container');
         var listScroller = $element.find('.list-group-scrollable');
         var list = $element.find('.list-group');
 
-        var clickToOpen = function() {
+        var clickToOpen = function(event) {
           if ($scope.disable || $scope.model.disabled) {
-            addClickToOpen();
-
             return;
           }
 
@@ -258,8 +238,6 @@ angular.module('formFor').directive('selectField',
             // TODO Auto-focus input field if filterable
 
             setListVerticalDirection();
-
-            oneClick($document, clickWatcher);
 
             var value = $scope.model.bindable;
 
@@ -292,18 +270,24 @@ angular.module('formFor').directive('selectField',
           }
         };
 
-        addClickToOpen();
+        $scope.$watch('isOpen', function(value) {
+          if ($scope.isOpen) {
+            toggleButton.off('click', clickToOpen);
+            $document.on('click', clickWatcher);
+          } else {
+            toggleButton.on('click', clickToOpen);
+            $document.off('click', clickWatcher);
+          }
+        });
 
         /*****************************************************************************************
          * The following code controls the directionality of the drop-down (or drop-up) menu
          *****************************************************************************************/
 
-        var toggleButton = $element.find('.select-field-toggle-button');
-
         var css = {
           position: 'absolute',
           width: '100%',
-          zIndex: 1050
+          zIndex: 2000
         };
 
         var shouldDropUp = function() {
@@ -345,7 +329,8 @@ angular.module('formFor').directive('selectField',
 
         listScroller.css({
           maxHeight: MAX_HEIGHT,
-          overflowY: 'scroll'
+          overflowY: 'scroll',
+          backgroundColor: '#FFFFFF'
         });
 
         $element.css('position', 'relative');
@@ -353,6 +338,8 @@ angular.module('formFor').directive('selectField',
         /*****************************************************************************************
          * The following code responds to keyboard events when the drop-down is visible
          *****************************************************************************************/
+
+        var filterText = $element.find('.filter-text-input');
 
         $scope.mouseOver = function(index) {
           $scope.mouseOverIndex = index;
@@ -364,30 +351,53 @@ angular.module('formFor').directive('selectField',
           switch (event.keyCode) {
             case 27: // Escape key
               $scope.isOpen = false;
+
+              // Return focus to toggle button on close (to prevent interrupting tab order)
+              $timeout(toggleButton.focus.bind(toggleButton));
               break;
             case 13: // Enter key
-              $scope.selectOption($scope.mouseOverOption);
-              $scope.isOpen = false;
+              if ($scope.isOpen) {
+                $scope.selectOption($scope.mouseOverOption);
+                $scope.isOpen = false;
+
+                // Return focus to toggle button on close (to prevent interrupting tab order)
+                $timeout(toggleButton.focus.bind(toggleButton));
+
+              } else {
+                $scope.isOpen = true;
+
+                setListVerticalDirection();
+              }
 
               // Don't bubble up and submit the parent form
               event.preventDefault();
-              event.stopPropagation();
               break;
             case 38: // Up arrow
               $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
+
+              // Don't allow up/down arrows to scroll the window
+              event.preventDefault();
               break;
             case 40: // Down arrow
               $scope.mouseOver( $scope.mouseOverIndex &lt; $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
+
+              // Don't allow up/down arrows to scroll the window
+              event.preventDefault();
               break;
           }
         };
 
         $scope.$watchCollection('[isOpen, filteredOptions.length]', function() {
           $scope.mouseOver(-1); // Reset hover anytime our list opens/closes or our collection is refreshed.
+
+          // Pass focus through to filter field when select is opened
+          if ($scope.isOpen &amp;&amp; $scope.enableFiltering) {
+            $timeout(filterText.focus.bind(filterText));
+          }
         });
 
         $scope.$on('$destroy', function() {
-          removeClickWatch();
+          $document.off('click', clickWatcher);
         });
       }
     };

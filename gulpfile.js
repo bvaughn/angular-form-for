@@ -97,4 +97,12 @@ gulp.task('docs', shell.task([
     '-r ' + CONFIG.sourceDir                      // source code directory
 ]));
 
-gulp.task('build', ['clean', 'lintJs', 'test', 'createCompressedJs', 'createUncompressedJs', 'compileCss', 'docs']);
+gulp.task('build', [
+  'clean',
+  'lintJs',
+  'test',
+  'createCompressedJs',
+  'createUncompressedJs',
+  'compileCss',
+  'docs'
+]);

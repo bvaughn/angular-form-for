@@ -4,13 +4,14 @@
   <field-error error="model.error" left-aligned="true"></field-error>
 
   <label>
-    <span  class="radio-field-input" ng-class="{'is-selected': checked}"
-          ng-click="click()"></span>
-
     <input  type="radio" ng-model="model.bindable" ng-value="value"
+            tabindex="{{tabIndex}}"
             class="field-input"
             ng-checked="checked"
             ng-disabled="disable || model.disabled">
+
+    <span  class="radio-field-input" ng-class="{'is-selected': checked}"
+          ng-click="click()"></span>
 
     <field-label  ng-if="label"
                   label="{{label}}"

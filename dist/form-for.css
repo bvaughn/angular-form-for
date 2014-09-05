@@ -46,10 +46,14 @@ checkbox-field {
   opacity: 0.5;
 }
 .checkbox-field .field-input {
-  display: none;
+  opacity: 0;
+  position: absolute;
 }
 .checkbox-field.has-error .checkbox-field-input {
   border-color: #e35256;
+}
+.checkbox-field .field-input:focus + .checkbox-field-input {
+  border-color: #666;
 }
 
 field-label {
@@ -289,10 +293,14 @@ radio-field {
   opacity: 0.5;
 }
 .radio-field .field-input {
-  display: none;
+  opacity: 0;
+  position: absolute;
 }
 .radio-field.has-error .radio-field-input {
   border-color: #e35256;
+}
+.radio-field .field-input:focus + .radio-field-input {
+  border-color: #666;
 }
 
 select-field {
@@ -335,7 +343,6 @@ select-field {
   background: -webkit-linear-gradient(top, #fff, #f7f7f7);
   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f7f7f7));
   background: linear-gradient(to bottom, #fff, #f7f7f7);
-  border-color: #b7b7b7;
 }
 .select-field-toggle-button.blank-selected {
   color: #848b88;
@@ -345,6 +352,9 @@ select-field {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: none;
+}
+.select-field-toggle-button:focus {
+  border-color: #666;
 }
 .select-field-toggle-button.disabled {
   opacity: 0.5;
@@ -454,7 +464,8 @@ submit-field {
   white-space: nowrap;
 }
 .submit-button:not(.disabled):not(:disabled):hover,
-.submit-button:not(.disabled):not(:disabled):active {
+.submit-button:not(.disabled):not(:disabled):active,
+.submit-button:not(.disabled):not(:disabled):focus {
   background-color: #007fca;
   color: #fff;
 }
@@ -515,7 +526,7 @@ text-field {
   color: #aaa;
 }
 .text-field-input:focus {
-  border-color: #999;
+  border-color: #666;
 }
 .text-field-input.has-icon-before {
   padding-left: 40px;
@@ -571,7 +582,7 @@ type-ahead-field {
           box-sizing: border-box;
 }
 .type-ahead-field-input:focus {
-  border-color: #999;
+  border-color: #666;
 }
 .type-ahead-field-input.has-icon-before {
   padding-left: 40px;

@@ -18,6 +18,7 @@
  * @param {String} labelAttribute Optional override for label key in options array. Defaults to "label".
  * @param {Array} options Set of options, each containing a label and value key. The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.
  * @param {String} placeholder Optional placeholder text to display if input is empty.
+ * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
  * @param {String} valueAttribute Optional override for value key in options array. Defaults to "value".
  *
  * @example
@@ -69,6 +70,7 @@ angular.module('formFor').directive('typeAheadField',
 
         $scope.debounce = $attributes.debounce || FormForConfiguration.defaultDebounceDuration;
         $scope.labelAttribute = $attributes.labelAttribute || 'label';
+        $scope.tabIndex = $attributes.tabIndex || 0;
         $scope.valueAttribute = $attributes.valueAttribute || 'value';
 
         // Typeahead doesn't handle null values very well so we need to guard against that.
