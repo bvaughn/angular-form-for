@@ -10,7 +10,6 @@ module.exports = function(config) {
     },
     // See https://github.com/karma-runner/karma-ng-html2js-preprocessor
     ngHtml2JsPreprocessor: {
-      moduleName: 'formFor.templates'
     },
     files: [
       'bower_components/jquery/dist/jquery.js',

@@ -20,7 +20,7 @@
           ng-click="$event.preventDefault();"
           ng-disabled="disable || model.disabled">
 
-    <span ng-if="selectedOptionLabel" class="pull-left" ng-bind="selectedOptionLabel"></span>
+    <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
 
     <span ng-if="!selectedOptionLabel">
       <span ng-if="placeholder" ng-bind="placeholder"></span>

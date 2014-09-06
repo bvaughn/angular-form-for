@@ -3,6 +3,7 @@ var es = require('event-stream');
 var pipe = es.pipe.bind(es);
 var concat = require('gulp-concat');
 var shell = require('gulp-shell');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var CONFIG = {
   distDir: 'dist',
@@ -34,32 +35,33 @@ gulp.task('compileCss', function() {
     .pipe(gulp.dest(CONFIG.distDir));
 });
 
-var concatJS = function() {
-  var order = require('gulp-order');
+var getTemplates = function(templatesDirectory, moduleName, outputFile) {
   var templateCache = require('gulp-angular-templatecache');
-  var ngAnnotate = require('gulp-ng-annotate');
 
-  var sources =
-    es.merge(
-      gulp.src('templates/custom/**/*.html')
-      //gulp.src('templates/bootstrap/**/*.html')
-        .pipe(templateCache('templates.js', {
-          module: 'formFor.templates',
-          standalone: true,
-          root: 'form-for/templates/'
-        })),
-      jsSources.pipe(concat('form-for.js')));
-
-  return sources
-    .pipe(order([
-      'templates.js',
-      'form-for.js'
-    ]))
-    .pipe(ngAnnotate());
+  return gulp.src(templatesDirectory)
+    .pipe(
+      templateCache('templates.js',
+      {
+        module: moduleName,
+        standalone: true,
+        root: 'form-for/templates/' // Relative path for Directive :templateUrls
+      }))
+    .pipe(ngAnnotate())
+    .pipe(concat(outputFile))
+    .pipe(gulp.dest(CONFIG.distDir))
 };
 
+gulp.task('createBootstrapTemplates', function() {
+  return getTemplates('templates/bootstrap/**/*.html', 'formFor.bootstrapTemplates', 'form-for.bootstrap-templates.js');
+});
+
+gulp.task('createCustomTemplates', function() {
+  return getTemplates('templates/custom/**/*.html', 'formFor.customTemplates', 'form-for.custom-templates.js');
+});
+
 gulp.task('createUncompressedJs', function() {
-  return concatJS()
+  return jsSources.pipe(concat('form-for.js'))
+    .pipe(ngAnnotate())
     .pipe(concat('form-for.js'))
     .pipe(gulp.dest(CONFIG.distDir));
 });
@@ -67,7 +69,8 @@ gulp.task('createUncompressedJs', function() {
 gulp.task('createCompressedJs', function() {
   var uglify = require('gulp-uglify');
 
-  return concatJS()
+  return jsSources.pipe(concat('form-for.js'))
+    .pipe(ngAnnotate())
     .pipe(uglify())
     .pipe(concat('form-for.min.js'))
     .pipe(gulp.dest(CONFIG.distDir));
@@ -87,7 +90,7 @@ gulp.task('test', function(done) {
     .pipe(karma({
       configFile: 'karma.conf.js',
       action: 'run'
-    }))
+    }));
 });
 
 gulp.task('docs', shell.task([
@@ -104,6 +107,8 @@ gulp.task('build', [
   'test',
   'createCompressedJs',
   'createUncompressedJs',
+  'createBootstrapTemplates',
+  'createCustomTemplates',
   'compileCss',
   'docs'
 ]);

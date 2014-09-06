@@ -1,1 +1,1 @@
-angular.module('formFor', ['formFor.templates']);
+angular.module('formFor', []);
