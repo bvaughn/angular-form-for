@@ -55,9 +55,21 @@
   </p>
 
   <ul>
-    <li>It must register with the formFor controller's <em>registerFormField</em> method.</li>
-    <li>It must read/write to the <em>bindable</em> attribute of the object returned by registerFormField.</li>
-    <li>It should observe a <em>disabledByForm</em> attribute to be managed by formFor.</li>
+    <li>
+      It must register with the formFor controller's <code>registerFormField</code> method.
+      <ul>
+        <li><em>The simplest way of doing this is to use <code>FieldHelper.manageFieldRegistration</code> as shown above.</em></li>
+      </ul>
+    </li>
+    <li>
+      The <code>registerFormField</code> method will return an object containing several keys.
+      Your view should use these keys as follows:
+      <ul>
+        <li>Read/write to the <em>bindable</em> attribute.</li>
+        <li>Observe the <em>disabled</em> attribute.</li>
+        <li>Display the <em>error</em> message (if one exists).</li>
+      </ul>
+    </li>
   </ul>
 
   <ul class="pager">
