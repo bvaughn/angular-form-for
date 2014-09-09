@@ -82,10 +82,9 @@ angular.module('formForDocumentation').value('currentTemplates', {
 });
 
 angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
-  var map = {
-    bootstrap: ['formFor.bootstrapTemplates', '../bower_components/angular-form-for/dist/form-for.bootstrap-templates.js'],
-    custom: ['formFor.customTemplates', '../bower_components/angular-form-for/dist/form-for.custom-templates.js']
-  };
+  var map = {};
+  map['default'] = ['formFor.defaultTemplates', '../bower_components/angular-form-for/dist/form-for.default-templates.js'];
+  map['bootstrap'] = ['formFor.bootstrapTemplates', '../bower_components/angular-form-for/dist/form-for.bootstrap-templates.js'];
 
   return {
     restrict: 'E',

@@ -54,7 +54,8 @@
   </div>
 
   <p>
-    formFor is incredibly flexible, offering a wide range of configuration options.
+    formFor is a form-creation and validation library built on top of <a href="https://angularjs.org/">Angular JS 1.2</a>.
+    It is incredibly flexible, offering a wide range of configuration options.
     Check out the demos and documentation to learn more!
   </p>
 
@@ -67,21 +68,22 @@
   <p>You can install this plugin with either <a href="http://bower.io/" target="_blank">Bower</a>
   or <a href="https://www.npmjs.org/" target="_blank">NPM</a>:</p>
 
-  <pre class="language-bash"><code>bower install angular-form-for --save
-  npm install angular-form-for --save</code></pre>
+  <prism class="tab-content" source="app/samples/bower-npm-install"></prism>
 
   <p>
     This will download an angular-form-for folder into your bower/node components directory.
     Inside of that folder there will be a dist folder with the formFor JavaScript and CSS files.
-    By default formFor is compatible with <a href="https://github.com/bvaughn/angular-form-for/blob/master/getbootstrap.com" target="_blank">Bootstrap</a> 3.2.x styles.
-    A separate, formFor only CSS stylehseet is included for those not using Bootstrap.
   </p>
 
   <p>
     Lastly just include the formFor module in your Angular application like so:
   </p>
 
-  <pre class="language-javascript"><code>angular.module('myAngularApp', ['formFor']);</code></pre>
+  <prism class="tab-content" parser="javascript" source="app/samples/module-definition.js"></prism>
+
+  <p>
+    For more information about templating options see <a ui-sref="app.templateOverrides">Templates and Overrides</a>.
+  </p>
 
   <h1>License</h1>
 

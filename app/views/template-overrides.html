@@ -1,37 +1,70 @@
 <div class="container">
-  <h1>Override templates</h1>
+  <h1>Templates and Overrides</h1>
+
   <p>
-  The formFor distribution includes HTML templates for fields. You can override the template HTML using
-  <a href="https://docs.angularjs.org/api/ng/service/$templateCache" target="_blank">Angular's $templateCache</a>.
+    The formFor library offers several options for HTML templates.
+    These options are separated into modules that are included with each formFor release (as of version 1.3.x).
+  </p>
+
+  <h2>Bootstrap Templates</h2>
+
+  <p>
+    formFor includes a set of HTML templates that are compatible with the <a href="http://getbootstrap.com/">Twitter Bootstrap</a> framework.
+    To use these templates:
+  </p>
+
+  <ol>
+    <li>Include <code>form-for.bootstrap-templates.js</code></li>
+    <li>Require the <code>formFor.bootstrapTemplates</code> module as a dependency.</li>
+  </ol>
+
+  <h2>Default Templates</h2>
+
+  <p>
+    formFor also provides a set of HTML templates and CSS styles that define a custom look-and-feel.
+    To use these templates:
+  </p>
+
+  <ol>
+    <li>Include <code>form-for.default-templates.js</code> and (optionally) <code>form-for.css</code></li>
+    <li>Require the <code>formFor.defaultTemplates</code> module as a dependency.</li>
+  </ol>
+
+  <h2>Custom Templates</h2>
+
+  <p>
+    You can also choose to implement your own template HTML using
+    <a href="https://docs.angularjs.org/api/ng/service/$templateCache" target="_blank">Angular's $templateCache</a>.
   </p>
 
   <p>
-  For instance to override the markup used by the <code>&lt;text-field&gt;</code> directive you could use either of the following approaches:
+    For instance to override the markup used by the <code>&lt;text-field&gt;</code> directive you could use either of the following approaches:
   </p>
 
-  <h2>Define a simple inline template</h2>
+  <h3>Define a simple inline template</h3>
 
   <prism parser="javascript">$templateCache.put('form-for/templates/text-field.html', '<div>Your custom HTML here</div>');</prism>
 
-  <h2>Load an external template</h2>
+  <h3>Load an external template</h3>
 
   <prism parser="javascript">$http.get('your/custom/template.html').success(function(html) {
     $templateCache.put('form-for/templates/text-field.html', html);
   });</prism>
 
   <p>
-  The key thing to note is the template URL format used by formFor components.
+    The key thing to note is the template URL format used by formFor components.
   </p>
 
-  <h2>Override styles</h2>
+  <h3>Override styles</h3>
 
   <p>
-  The formFor distribution includes optional, default stylesheets. You can choose to provide your own stylesheets instead simply by not including the styles bundled with formFor.
+    The formFor distribution includes optional, default stylesheets.
+    You can choose to provide your own stylesheets instead simply by not including the styles bundled with formFor.
   </p>
 
   <p>
-  For a complete list of configurable styles, check out the formFor
-  <a href="https://github.com/bvaughn/angular-form-for/tree/master/templates" target="_blank">templates</a>.
+    For a complete list of configurable styles, check out the formFor
+    <a href="https://github.com/bvaughn/angular-form-for/tree/master/templates" target="_blank">templates</a>.
   </p>
 
   <ul class="pager">
