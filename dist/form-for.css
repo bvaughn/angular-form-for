@@ -56,6 +56,10 @@ checkbox-field {
   border-color: #666;
 }
 
+.collection-label {
+  position: relative;
+}
+
 field-label {
   display: inline-block;
 }
@@ -103,10 +107,12 @@ field-label {
   top: 100%;
   border-radius: 4px;
   background-color: #e35256;
+  background-color: rgba(227,82,86,0.95);
   color: #fff;
   padding: 7px 15px;
   z-index: 1000;
   margin: 0;
+  pointer-events: none;
 }
 .field-error::before {
   content: '';
@@ -114,6 +120,7 @@ field-label {
   position: absolute;
   bottom: 100%;
   border-bottom-color: #e35256;
+  border-bottom-color: rgba(227,82,86,0.95);
 }
 .field-error:not(.left-aligned) {
   right: 3px;

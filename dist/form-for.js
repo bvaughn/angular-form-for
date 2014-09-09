@@ -1234,17 +1234,25 @@ angular.module('formFor').directive('selectField',
               event.preventDefault();
               break;
             case 38: // Up arrow
-              $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
+              if ($scope.isOpen) {
+                $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
 
-              scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
+                scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
+              } else {
+                $scope.isOpen = true;
+              }
 
               // Don't allow up/down arrows to scroll the window
               event.preventDefault();
               break;
             case 40: // Down arrow
-              $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
+              if ($scope.isOpen) {
+                $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
 
-              scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
+                scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
+              } else {
+                $scope.isOpen = true;
+              }
 
               // Don't allow up/down arrows to scroll the window
               event.preventDefault();

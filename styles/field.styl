@@ -1,5 +1,7 @@
 @require '_variables';
 
+error-field-background-color = rgba(red, .95);
+
 .field {
   display: block;
   position: relative;
@@ -16,10 +18,12 @@
   top: 100%;
   border-radius: 4px;
   background-color: red;
+  background-color: error-field-background-color;
   color: white;
   padding: 7px 15px;
   z-index: 1000;
   margin: 0;
+  pointer-events: none;
 
   &::before {
     content: '';
@@ -27,6 +31,7 @@
     position: absolute;
     bottom: 100%;
     border-bottom-color: red;
+    border-bottom-color: error-field-background-color;
   }
 
   &:not(.left-aligned) {
