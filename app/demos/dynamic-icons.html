@@ -14,8 +14,11 @@
               icon-before="{{bindableBeforeIcon}}" icon-after="{{bindableAfterIcon}}">
   </text-field>
 
-  <div class="btn btn-default" ng-click="formController.resetErrors()">
-    Clear validation errors
-  </div>
-  <submit-button button-class="btn btn-primary" label="Sign Up"></submit-button>
+  <p>
+    <div class="btn btn-default" ng-click="formController.resetErrors()">
+      Clear validation errors
+    </div>
+
+    <submit-button button-class="btn btn-primary" label="Sign Up"></submit-button>
+  </p>
 </form>

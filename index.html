@@ -37,7 +37,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bower_components/angular-form-for/dist/form-for.css">
+    <!--
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/sandstone/bootstrap.min.css">
+    -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.css">
 
     <link rel="stylesheet" href="app/css/prism.css">
@@ -46,12 +49,17 @@
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular-route.min.js"></script>
-    <script src="//rawgit.com/bvaughn/angular-form-for/1.2.16/dist/form-for.min.js"></script>
+    <!--
+    <script src="http://rawgit.com/bvaughn/angular-form-for/1.2.16/dist/form-for.js"></script>
+    -->
+    <script src="../bower_components/angular-form-for/dist/form-for.bootstrap-templates.js"></script>
+    <script src="../bower_components/angular-form-for/dist/form-for.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
 
     <script src="app/bower/toastr.js"></script>
     <script src="app/bower/angular-flashr.js"></script>
+    <script src="app/bower/ocLazyLoad.js"></script>
 
     <script src="app/scripts/prism.js"></script>
     <script src="app/scripts/app.js"></script>
@@ -66,7 +74,7 @@
     <script src="app/demos/simple-form.js"></script>
   </head>
   <body>
-    <div class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <a href="#/index" class="navbar-brand">
@@ -88,7 +96,7 @@
         <div class="navbar-collapse collapse" id="navbar-main">
           <ul class="nav navbar-nav">
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" id="themes">
+              <a class="dropdown-toggle" data-toggle="dropdown">
                 Demos
                 <i class="fa fa-caret-down"></i>
               </a>
@@ -102,7 +110,7 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" id="themes">
+              <a class="dropdown-toggle" data-toggle="dropdown">
                 Guides
                 <i class="fa fa-caret-down"></i>
               </a>

@@ -1,23 +1,39 @@
 <form form-for="formData">
-  <select-field label="Filtered, local options"
-                attribute="localOption" options="localOptions"
+  <select-field label="Filtered, locale options" direction="{{selectFieldDirection}}"
+                attribute="localeOption" options="localeOptions"
                 enable-filtering>
   </select-field>
 
-  <select-field label="Filtered, local options"
-                attribute="localOption" options="remoteOptions"
+  <select-field label="Filtered, locale options" direction="{{selectFieldDirection}}"
+                attribute="remoteLocaleOption" options="remoteOptions"
                 enable-filtering filter="filterText">
   </select-field>
 
-  <select-field label="Field with pre-selected value"
-                attribute="preselectedLocalOption" options="localOptions">
+  <select-field label="Field with pre-selected value" direction="{{selectFieldDirection}}"
+                allow-blank
+                attribute="preselectedLocaleOption" options="localeOptions">
   </select-field>
 
-  <select-field label="Field with no pre-selected" prevent-default-option
-                attribute="unspecifiedLocalOption" options="localOptions">
+  <select-field label="Field with no pre-selected" prevent-default-option direction="{{selectFieldDirection}}"
+                attribute="unspecifiedLocaleOption" options="localeOptions">
   </select-field>
 
-  <select-field label="Field with no options"
+  <select-field label="Field with no options" direction="{{selectFieldDirection}}"
                 attribute="unselectableOption">
   </select-field>
+
+  <div class="btn-group" ng-init="selectFieldDirection = 'auto'">
+    <span class="btn btn-default" ng-class="{active: selectFieldDirection === 'auto'}"
+          ng-click="selectFieldDirection = 'auto'">
+      Drop Auto
+    </span>
+    <span class="btn btn-default" ng-class="{active: selectFieldDirection === 'up'}"
+          ng-click="selectFieldDirection = 'up'">
+      Drop Up
+    </span>
+    <span class="btn btn-default" ng-class="{active: selectFieldDirection === 'down'}"
+          ng-click="selectFieldDirection = 'down'">
+      Drop Down
+    </span>
+  </div>
 </form>

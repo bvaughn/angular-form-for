@@ -34,6 +34,9 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
           fields: {
             name: {
               required: true
+            },
+            frequency: {
+              required: true
             }
           }
         }

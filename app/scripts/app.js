@@ -1,4 +1,4 @@
-angular.module('formForDocumentation', ['flashr', 'formFor', 'ngRoute', 'ui.bootstrap']).
+angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'formFor.bootstrapTemplates', 'ngRoute', 'ui.bootstrap']).
   config(function($routeProvider) {
     $routeProvider.when('/index', {templateUrl: 'app/views/index.html', controller: 'IndexController'});
 

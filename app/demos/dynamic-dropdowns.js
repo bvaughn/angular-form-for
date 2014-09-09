@@ -1,10 +1,10 @@
 angular.module('formForDocumentation').controller('DynamicDropdownsDemoController',
   function($scope, $timeout) {
     $scope.formData = {
-      preselectedLocalOption: 'en'
+      preselectedLocaleOption: 'es'
     };
 
-    $scope.localOptions = [
+    $scope.localeOptions = [
       {value: 'ar', label: 'Arabic'},
       {value: 'zh', label: 'Chinese'},
       {value: 'nl', label: 'Dutch'},

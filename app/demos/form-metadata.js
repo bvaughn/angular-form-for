@@ -25,6 +25,15 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       },
       password: {
         required: true
+      },
+      checkSomething: {
+        required: true
+      },
+      gender: {
+        required: true
+      },
+      selectSomething: {
+        required: true
       }
     };
 
