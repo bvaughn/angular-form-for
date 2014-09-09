@@ -3,7 +3,7 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app', {
       'abstract': true,
       url: '',
-      templateUrl: 'app/views/_layout.html'
+      templateUrl: 'app/views/partials/layout.html'
     });
 
     // Reports
