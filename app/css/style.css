@@ -1,3 +1,10 @@
+text-field, select-field, checkbox-field {
+  margin-bottom: 5px;
+}
+radio-field {
+  margin-right: 5px;
+}
+
 .btn-and-tooltip-group {
   position: relative;
   display: inline-block;
@@ -247,4 +254,16 @@ validate-field-button {
   display: inline-block;
   margin-right: 1px;
   float: right;
+}
+
+.template-toggler {
+}
+.template-toggler .template-toggler-link {
+  color: #0075ba;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.template-toggler .template-toggler-link:hover {
+  text-decoration: none;
 }

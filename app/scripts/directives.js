@@ -76,3 +76,46 @@ angular.module('formForDocumentation').directive('resetFieldButton', function() 
     }
   };
 });
+
+angular.module('formForDocumentation').value('currentTemplates', {
+  key: 'bootstrap'
+});
+
+angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $route, currentTemplates) {
+  var map = {
+    bootstrap: ['formFor.bootstrapTemplates', '../bower_components/angular-form-for/dist/form-for.bootstrap-templates.js'],
+    custom: ['formFor.customTemplates', '../bower_components/angular-form-for/dist/form-for.custom-templates.js']
+  };
+
+  return {
+    restrict: 'E',
+    templateUrl: 'app/templates/template-toggler.html',
+    scope: {
+    },
+    link: function($scope) {
+      $scope.current = currentTemplates.key;
+
+      $scope.load = function(key) {
+        $scope.current = currentTemplates.key = key;
+
+        var module = map[key][0];
+        var url = map[key][1];
+
+        var modules = $ocLazyLoad.getModules();
+        var index = modules.indexOf(module);
+
+        if (index >= 0) {
+          modules.splice(index, 1);
+        }
+
+        $ocLazyLoad.load({
+          name: module,
+          cache: false,
+          files: [url]
+        }).then($route.reload);
+
+        return false;
+      }
+    }
+  };
+});
