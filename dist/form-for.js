@@ -999,7 +999,7 @@ angular.module('formFor').directive('selectField',
 
         $scope.emptyOption = {};
         $scope.emptyOption[$scope.labelAttribute] = '';
-        $scope.emptyOption[$scope.valueAttribute] = '';
+        $scope.emptyOption[$scope.valueAttribute] = undefined;
 
         $scope.filteredOptions = [];
 
@@ -1028,10 +1028,6 @@ angular.module('formFor').directive('selectField',
 
           if ($scope.allowBlank) {
             $scope.filteredOptions.unshift($scope.emptyOption);
-
-            if (!$scope.selectedOption) {
-              $scope.selectedOption = $scope.emptyOption;
-            }
           }
         };
 

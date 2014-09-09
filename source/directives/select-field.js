@@ -98,7 +98,7 @@ angular.module('formFor').directive('selectField',
 
         $scope.emptyOption = {};
         $scope.emptyOption[$scope.labelAttribute] = '';
-        $scope.emptyOption[$scope.valueAttribute] = null;
+        $scope.emptyOption[$scope.valueAttribute] = undefined;
 
         $scope.filteredOptions = [];
 
