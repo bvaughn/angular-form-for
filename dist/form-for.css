@@ -156,6 +156,9 @@ field-label {
   -webkit-background-clip: padding;
   background-clip: padding-box;
   border-radius: 6px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-style: none;
 }
 .popover.top {
   margin-top: -15px;
