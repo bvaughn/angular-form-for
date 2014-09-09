@@ -53,7 +53,7 @@ select-field {
   }
 }
 
-.list-group-container {
+.select-field-list-container {
   z-index: 1050; // Needs to be higher than .has-error
   position: absolute;
   width: 100%;
@@ -64,16 +64,16 @@ select-field {
   box-sizing: border-box;
 }
 
-.list-group-scrollable {
+.select-field-list-scrollable {
   max-height: 200px;
   overflow: auto;
 }
 
-.list-group {
+.select-field-list {
   padding: 0;
   list-style: none;
 
-  .list-group-item {
+  .select-field-list-item {
     display: block;
     padding: 6px 9px;
 
@@ -122,7 +122,7 @@ select-field {
         border-top: none;
       }
     }
-    .list-group-container {
+    .select-field-list-container {
       border-top-left-radius: $border-radius;
       border-top-right-radius: $border-radius;
     }
@@ -135,7 +135,7 @@ select-field {
         border-bottom: none;
       }
     }
-    .list-group-container {
+    .select-field-list-container {
       border-bottom-left-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
     }

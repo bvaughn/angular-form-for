@@ -30,8 +30,8 @@
     <span class="fa fa-caret-down pull-right select-field-toggle-caret"></span>
   </button>
 
-  <div ng-show="isOpen" class="list-group-container">
-    <div class="list-group">
+  <div ng-show="isOpen" class="select-field-list-container">
+    <div class="select-field-list">
       <div  ng-show="enableFiltering" class="input-group filter-input-group"
             ng-click="$event.stopPropagation()">
         <input  type="text"
@@ -46,23 +46,23 @@
         </span>
       </div>
 
-      <div class="list-group-scrollable">
-        <a  class="list-group-item"
-            ng-repeat="option in filteredOptions"
-            ng-value="option[valueAttribute]"
-            ng-click="selectOption(option)"
-            ng-mouseenter="mouseOver($index)"
-            ng-class="{ active: option[valueAttribute] === selectedOption[valueAttribute],
-                        hover: $index === mouseOverIndex}">
+      <div class="select-field-list-scrollable">
+        <span class="select-field-list-item"
+              ng-repeat="option in filteredOptions"
+              ng-value="option[valueAttribute]"
+              ng-click="selectOption(option)"
+              ng-mouseenter="mouseOver($index)"
+              ng-class="{ active: option[valueAttribute] === selectedOption[valueAttribute],
+                          hover: $index === mouseOverIndex}">
 
           <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->
           <strong ng-if="$index === mouseOverIndex" ng-bind="option[labelAttribute]"></strong>
           <span ng-if="$index !== mouseOverIndex" ng-bind="option[labelAttribute]"></span>
           <spgn ng-if="!option[labelAttribute]">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->
-        </a>
+        </span>
 
-        <a  ng-if="!options" class="list-group-item"
-            ng-include src="'form-for/templates/select-field-loading-indicator.html'"></a>
+        <span ng-if="!options" class="select-field-list-item"
+              ng-include src="'form-for/templates/select-field-loading-indicator.html'"></span>
       </div>
     </div>
   </div>

@@ -54,6 +54,9 @@ angular.module('formFor').directive('radioField',
           FieldHelper.manageFieldRegistration($scope, formForController);
 
           nameToActiveRadioMap[$scope.attribute] = mainRadioDatum;
+        } else {
+          // Only the primary <radio> input should show error message text
+          $scope.hideErrorMessage = true;
         }
 
         // TODO How to handle errors?

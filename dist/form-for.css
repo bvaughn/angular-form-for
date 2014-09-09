@@ -367,7 +367,7 @@ select-field {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
-.list-group-container {
+.select-field-list-container {
   z-index: 1050;
   position: absolute;
   width: 100%;
@@ -380,26 +380,26 @@ select-field {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.list-group-scrollable {
+.select-field-list-scrollable {
   max-height: 200px;
   overflow: auto;
 }
-.list-group {
+.select-field-list {
   padding: 0;
   list-style: none;
 }
-.list-group .list-group-item {
+.select-field-list .select-field-list-item {
   display: block;
   padding: 6px 9px;
 }
-.list-group .list-group-item strong {
+.select-field-list .select-field-list-item strong {
   font-weight: inherit;
 }
-.list-group .list-group-item:hover,
-.list-group .list-group-item.hover {
+.select-field-list .select-field-list-item:hover,
+.select-field-list .select-field-list-item.hover {
   background-color: #ebf6ff;
 }
-.list-group .list-group-item.active {
+.select-field-list .select-field-list-item.active {
   font-weight: bold;
 }
 .filter-input-group {
@@ -429,7 +429,7 @@ select-field {
   border-top-right-radius: 0;
   border-top: none;
 }
-.select-field.direction-up .list-group-container {
+.select-field.direction-up .select-field-list-container {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
@@ -438,7 +438,7 @@ select-field {
   border-bottom-right-radius: 0;
   border-bottom: none;
 }
-.select-field.direction-down .list-group-container {
+.select-field.direction-down .select-field-list-container {
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
 }
@@ -549,10 +549,11 @@ text-field {
 .text-field-input.has-icon-after {
   padding-right: 40px;
 }
-.input-group {
+.text-field-input-wrapper {
   position: relative;
+  width: 100%;
 }
-.input-group .input-group-addon {
+.text-field-input-wrapper .text-field-input-icon {
   position: absolute;
   top: 50%;
   width: 20px;
@@ -561,10 +562,10 @@ text-field {
   margin-top: -0.5em;
   color: #848b88;
 }
-.input-group .input-group-addon.input-group-addon-before {
+.text-field-input-wrapper .text-field-input-icon.text-field-input-icon-before {
   left: 10px;
 }
-.input-group .input-group-addon.input-group-addon-after {
+.text-field-input-wrapper .text-field-input-icon.text-field-input-icon-after {
   right: 10px;
 }
 .text-field.disabled .text-field-input {

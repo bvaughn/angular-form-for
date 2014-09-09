@@ -844,6 +844,9 @@ angular.module('formFor').directive('radioField',
           FieldHelper.manageFieldRegistration($scope, formForController);
 
           nameToActiveRadioMap[$scope.attribute] = mainRadioDatum;
+        } else {
+          // Only the primary <radio> input should show error message text
+          $scope.hideErrorMessage = true;
         }
 
         // TODO How to handle errors?
@@ -996,7 +999,7 @@ angular.module('formFor').directive('selectField',
 
         $scope.emptyOption = {};
         $scope.emptyOption[$scope.labelAttribute] = '';
-        $scope.emptyOption[$scope.valueAttribute] = null;
+        $scope.emptyOption[$scope.valueAttribute] = '';
 
         $scope.filteredOptions = [];
 
@@ -1025,6 +1028,10 @@ angular.module('formFor').directive('selectField',
 
           if ($scope.allowBlank) {
             $scope.filteredOptions.unshift($scope.emptyOption);
+
+            if (!$scope.selectedOption) {
+              $scope.selectedOption = $scope.emptyOption;
+            }
           }
         };
 
@@ -1099,14 +1106,14 @@ angular.module('formFor').directive('selectField',
           $scope.$apply();
         };
 
-        var listContainer = $element.find('.list-group-container');
-        var listScroller = $element.find('.list-group-scrollable');
-        var list = $element.find('.list-group');
+        var listContainer = $element.find('.select-field-list-container');
+        var listScroller = $element.find('.select-field-list-scrollable');
+        var list = $element.find('.select-field-list');
 
         var scrollToValue = function(value) {
           $timeout(
             function() {
-              var listItems = this.find('.list-group-item');
+              var listItems = this.find('.select-field-list-item');
               var matchingListItem;
 
               for (var index = 0; index < listItems.length; index++) {

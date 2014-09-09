@@ -1,7 +1,7 @@
 <span class="field radio-field"
       ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
 
-  <field-error error="model.error" left-aligned="true"></field-error>
+  <field-error ng-if="!hideErrorMessage" error="model.error" left-aligned="true"></field-error>
 
   <label>
     <input  type="radio"

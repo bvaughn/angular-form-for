@@ -201,14 +201,14 @@ angular.module('formFor').directive('selectField',
           $scope.$apply();
         };
 
-        var listContainer = $element.find('.list-group-container');
-        var listScroller = $element.find('.list-group-scrollable');
-        var list = $element.find('.list-group');
+        var listContainer = $element.find('.select-field-list-container');
+        var listScroller = $element.find('.select-field-list-scrollable');
+        var list = $element.find('.select-field-list');
 
         var scrollToValue = function(value) {
           $timeout(
             function() {
-              var listItems = this.find('.list-group-item');
+              var listItems = this.find('.select-field-list-item');
               var matchingListItem;
 
               for (var index = 0; index < listItems.length; index++) {
