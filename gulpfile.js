@@ -55,8 +55,8 @@ gulp.task('createBootstrapTemplates', function() {
   return getTemplates('templates/bootstrap/**/*.html', 'formFor.bootstrapTemplates', 'form-for.bootstrap-templates.js');
 });
 
-gulp.task('createCustomTemplates', function() {
-  return getTemplates('templates/custom/**/*.html', 'formFor.customTemplates', 'form-for.custom-templates.js');
+gulp.task('createDefaultTemplates', function() {
+  return getTemplates('templates/default/**/*.html', 'formFor.defaultTemplates', 'form-for.default-templates.js');
 });
 
 gulp.task('createUncompressedJs', function() {
@@ -108,7 +108,7 @@ gulp.task('build', [
   'createCompressedJs',
   'createUncompressedJs',
   'createBootstrapTemplates',
-  'createCustomTemplates',
+  'createDefaultTemplates',
   'compileCss',
   'docs'
 ]);

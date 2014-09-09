@@ -84,7 +84,7 @@ field-label {
 .field-label {
   position: relative;
   cursor: inherit;
-  font-weight: normal;
+  font-weight: bold;
 }
 .field-label:hover .help-icon-stack .help-background-icon {
   color: #8a918e;
