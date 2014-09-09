@@ -81,7 +81,7 @@ angular.module('formForDocumentation').value('currentTemplates', {
   key: 'bootstrap'
 });
 
-angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $route, currentTemplates) {
+angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
   var map = {
     bootstrap: ['formFor.bootstrapTemplates', '../bower_components/angular-form-for/dist/form-for.bootstrap-templates.js'],
     custom: ['formFor.customTemplates', '../bower_components/angular-form-for/dist/form-for.custom-templates.js']
@@ -112,7 +112,9 @@ angular.module('formForDocumentation').directive('templateToggler', function($oc
           name: module,
           cache: false,
           files: [url]
-        }).then($route.reload);
+        }).then(function() {
+          $state.go($state.current, $stateParams, {reload: true});
+        });
 
         return false;
       }

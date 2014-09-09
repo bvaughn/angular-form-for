@@ -1,0 +1,77 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a ui-sref="app.index" class="navbar-brand">
+        <span class="hidden-sm">
+          <img class="nav-header-logo" src="app/images/form-for-logo.svg">
+          Angular formFor
+        </span>
+        <span class="visible-sm">
+          <img class="nav-header-logo" src="app/images/form-for-logo.svg">
+          formFor
+        </span>
+      </a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            Demos
+            <i class="fa fa-caret-down"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="themes">
+            <li><a ui-sref="app.simpleForm">Simple Form</a></li>
+            <li><a ui-sref="app.advancedForm">Advanced Form</a></li>
+            <li><a ui-sref="app.dynamicForm">Dynamic Dropdowns</a></li>
+            <li><a ui-sref="app.collectionsForm">Collections</a></li>
+            <li><a ui-sref="app.formMetadata">Form Metadata</a></li>
+            <li><a ui-sref="app.dynamicIcons">Dynamic Icons</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            Guides
+            <i class="fa fa-caret-down"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="themes">
+            <li><a ui-sref="app.overview">Overview</a></li>
+            <li><a ui-sref="app.inputTypes">Input Types</a></li>
+            <li><a ui-sref="app.validationTypes">Validation Types</a></li>
+            <li><a ui-sref="app.templateOverrides">Template Overrides</a></li>
+            <li><a ui-sref="app.ie8Support">IE8 Support</a></li>
+          </ul>
+        </li>
+        <form class="navbar-form navbar-left navbar-search-form"
+              action="//github.com/bvaughn/angular-form-for/search?" method="GET" target="_blank">
+          <input name="q" type="text" class="form-control navbar-search" placeholder="Search">
+        </form>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="//rawgit.com/bvaughn/angular-form-for/master/dist/docs/form-for.html" target="_blank">
+            <span class="hidden-sm">
+              Documentation
+              <i class="fa fa-book"></i>
+            </span>
+            <span class="visible-sm">
+              Docs
+              <i class="fa fa-book"></i>
+            </span>
+          </a>
+        </li>
+        <li><a href="//github.com/bvaughn/angular-form-for" target="_blank">Code <i class="fa fa-code"></i></a></li>
+        <li><a href="//github.com/bvaughn/angular-form-for/issues" target="_blank">Issues <i class="fa fa-bug"></i></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="header-padding"></div>
+
+<div ui-view></div>
