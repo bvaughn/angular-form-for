@@ -160,7 +160,7 @@ angular.module('formFor').directive('selectField',
          * The following code deals with toggling/collapsing the drop-down and selecting values.
          *****************************************************************************************/
 
-        var toggleButton = $element.find('.select-field-toggle-button');
+        var toggleButton = $element.find('[toggle-button]');
 
         $scope.close = function() {
           $timeout(function() {

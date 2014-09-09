@@ -13,7 +13,8 @@
 
   <field-error error="model.error"></field-error>
 
-  <button class="select-field-toggle-button"
+  <button toggle-button
+          class="select-field-toggle-button"
           tabindex="{{tabIndex}}"
           ng-keydown="keyDown($event)"
           ng-class="{open: isOpen, disabled: disable || model.disabled}"
