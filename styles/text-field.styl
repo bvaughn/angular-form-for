@@ -23,10 +23,6 @@ text-field {
 
   placeholder-color($color-fill-4);
 
-  &:focus {
-    border-color: $border-color-focused;
-  }
-
   &.has-icon-before {
     padding-left: 40px;
   }
@@ -67,6 +63,13 @@ text-field {
   &.has-error {
     .text-field-input {
       border-color: $border-color-error;
+    }
+  }
+
+  .text-field-input {
+    &:focus {
+      border-color: $border-color-focused;
+      box-shadow: $box-shadow-focused;
     }
   }
 }

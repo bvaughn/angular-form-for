@@ -48,10 +48,6 @@ select-field {
     background: white;
   }
 
-  &:focus {
-    border-color: $border-color-focused;
-  }
-
   &.disabled {
     opacity: $opacity-disabled;
   }
@@ -63,6 +59,8 @@ select-field {
   width: 100%;
   background-color: white;
   border: $border;
+  border-color: $border-color-focused;
+  box-shadow: $box-shadow-focused;
   box-sizing: border-box;
 }
 
@@ -85,7 +83,7 @@ select-field {
 
     &:hover,
     &.hover {
-      background-color: $color-blue-hover;
+      background-color: light-blue;
     }
     &.active {
       font-weight: bold;
@@ -97,6 +95,11 @@ select-field {
   line-height: 1em;
   margin: 10px 10px 5px;
   padding: 0;
+
+  .text-field-input {
+    border-color: $border-color-focused;
+    box-shadow: $box-shadow-focused;
+  }
 }
 
 .select-field {
@@ -122,7 +125,6 @@ select-field {
     .list-group-container {
       border-top-left-radius: $border-radius;
       border-top-right-radius: $border-radius;
-      box-shadow: $box-shadow-up;
     }
   }
   &.direction-down {
@@ -136,7 +138,6 @@ select-field {
     .list-group-container {
       border-bottom-left-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
-      box-shadow: $box-shadow;
     }
   }
 
@@ -153,6 +154,14 @@ select-field {
       .field-error {
         display: none;
       }
+    }
+  }
+
+  .select-field-toggle-button {
+    &:focus,
+    &.open {
+      border-color: $border-color-focused;
+      box-shadow: $box-shadow-focused;
     }
   }
 }

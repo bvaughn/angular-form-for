@@ -38,7 +38,7 @@ angular.module('formFor').service('FormForConfiguration',
     return {
 
       autoGenerateLabels: false,
-      defaultDebounceDuration: 1000,
+      defaultDebounceDuration: 500,
       defaultSubmitComplete: angular.noop,
       defaultSubmitError: angular.noop,
       defaultValidationFailed: angular.noop,
@@ -80,7 +80,7 @@ angular.module('formFor').service('FormForConfiguration',
        * This setting can be overridden on a per-input basis (see textField).
        * @memberof FormForConfiguration
        * @param {int} duration Debounce duration (in ms).
-       * Defaults to 1000ms.
+       * Defaults to 500ms.
        * To disable debounce (update only on blur) pass false.
        */
       setDefaultDebounceDuration: function(value) {
