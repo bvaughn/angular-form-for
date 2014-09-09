@@ -374,7 +374,16 @@ angular.module('formFor').directive('formFor',
          * • required: Input should display a 'required' indicator if this value is true.
          */
         controller.registerFormField = function(fieldName) {
+          if (!fieldName) {
+            throw Error('Invalid field name "' + fieldName + '" provided.');
+          }
+
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+          if ($scope.fields.hasOwnProperty(bindableFieldName)) {
+            throw Error('Field "' + fieldName + '" has already eben registered. Field names must be unique.');
+          }
+
           var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
 
           // Store information about this field that we'll need for validation and binding purposes.
