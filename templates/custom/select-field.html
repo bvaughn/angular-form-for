@@ -52,7 +52,8 @@
             ng-value="option[valueAttribute]"
             ng-click="selectOption(option)"
             ng-mouseenter="mouseOver($index)"
-            ng-class="{active: option === selectedOption, hover: $index === mouseOverIndex}">
+            ng-class="{ active: option[valueAttribute] === selectedOption[valueAttribute],
+                        hover: $index === mouseOverIndex}">
 
           <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->
           <strong ng-if="$index === mouseOverIndex" ng-bind="option[labelAttribute]"></strong>
