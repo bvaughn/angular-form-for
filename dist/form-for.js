@@ -1063,18 +1063,6 @@ angular.module('formFor').directive('selectField',
 
         var toggleButton = $element.find('[toggle-button]');
 
-        $scope.close = function() {
-          $timeout(function() {
-            $scope.isOpen = false;
-          }, MIN_TIMEOUT_INTERVAL);
-        };
-
-        $scope.open = function() {
-          $timeout(function() {
-            $scope.isOpen = true;
-          }, MIN_TIMEOUT_INTERVAL);
-        };
-
         $scope.$watch('model.bindable', function(value) {
           var matchingOption;
 
