@@ -33,16 +33,16 @@
 
   <div ng-show="isOpen" class="select-field-list-container">
     <div class="select-field-list">
-      <div  ng-show="enableFiltering" class="input-group filter-input-group"
+      <div  ng-show="enableFiltering" class="text-field-input-wrapper filter-input-group"
             ng-click="$event.stopPropagation()">
         <input  type="text"
-                class="text-field-input filter-text-input"
+                class="text-field-input has-icon-after filter-text-input"
                 tabindex="{{tabIndex}}"
                 ng-model="filter"
                 ng-keydown="keyDown($event)"
                 form-for-debounce="{{filterDebounce}}" />
 
-        <span class="input-group-addon input-group-addon-after">
+        <span class="text-field-input-icon text-field-input-icon-after">
           <i class="fa fa-search text-field-icon"></i>
         </span>
       </div>
