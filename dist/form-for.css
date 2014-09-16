@@ -6,7 +6,6 @@ checkbox-field {
   display: inline-block;
   height: 20px;
   width: 20px;
-  background-image: -webkit-gradient(linear, left bottom, left top, from(#f9f9f9), to(#fff));
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border-radius: 4px;
@@ -54,8 +53,7 @@ checkbox-field {
 }
 .checkbox-field .field-input:focus + .checkbox-field-input {
   border-color: #66afe9;
-  -webkit-box-shadow: 0 0 2px rgba(102,175,233,0.65);
-          box-shadow: 0 0 2px rgba(102,175,233,0.65);
+  box-shadow: 0 0 2px rgba(102,175,233,0.65);
 }
 
 .collection-label {
@@ -152,11 +150,8 @@ field-label {
   white-space: normal;
   background-color: #ebf6ff;
   color: #252726;
-  -webkit-background-clip: padding-box;
-  -webkit-background-clip: padding;
   background-clip: padding-box;
   border-radius: 6px;
-  -webkit-box-shadow: none;
   box-shadow: none;
   border-style: none;
 }
@@ -269,7 +264,6 @@ radio-field {
   display: inline-block;
   height: 20px;
   width: 20px;
-  background-image: -webkit-gradient(linear, left bottom, left top, from(#f9f9f9), to(#fff));
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border-radius: 15px;
@@ -313,8 +307,7 @@ radio-field {
 }
 .radio-field .field-input:focus + .radio-field-input {
   border-color: #66afe9;
-  -webkit-box-shadow: 0 0 2px rgba(102,175,233,0.65);
-          box-shadow: 0 0 2px rgba(102,175,233,0.65);
+  box-shadow: 0 0 2px rgba(102,175,233,0.65);
 }
 
 select-field {
@@ -324,7 +317,6 @@ select-field {
 .select-field-toggle-button {
   position: relative;
   background: -webkit-linear-gradient(top, #fff, #efefef);
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efefef));
   background: linear-gradient(to bottom, #fff, #efefef);
   border-radius: 6px;
   border: 1px solid #aaa;
@@ -339,7 +331,6 @@ select-field {
   width: 100%;
   margin-top: 5px;
   text-align: left;
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -356,7 +347,6 @@ select-field {
 }
 .select-field-toggle-button:not(.disabled):not(.open):hover {
   background: -webkit-linear-gradient(top, #fff, #f7f7f7);
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f7f7f7));
   background: linear-gradient(to bottom, #fff, #f7f7f7);
 }
 .select-field-toggle-button.blank-selected {
@@ -377,9 +367,7 @@ select-field {
   background-color: #fff;
   border: 1px solid #aaa;
   border-color: #66afe9;
-  -webkit-box-shadow: 0 0 2px rgba(102,175,233,0.65);
   box-shadow: 0 0 2px rgba(102,175,233,0.65);
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -412,7 +400,6 @@ select-field {
 }
 .filter-input-group .text-field-input {
   border-color: #66afe9;
-  -webkit-box-shadow: 0 0 2px rgba(102,175,233,0.65);
   box-shadow: 0 0 2px rgba(102,175,233,0.65);
 }
 .select-field {
@@ -457,7 +444,6 @@ select-field {
 .select-field .select-field-toggle-button:focus,
 .select-field .select-field-toggle-button.open {
   border-color: #66afe9;
-  -webkit-box-shadow: 0 0 2px rgba(102,175,233,0.65);
   box-shadow: 0 0 2px rgba(102,175,233,0.65);
 }
 
@@ -493,7 +479,6 @@ submit-field {
 .submit-button:active {
   -webkit-transition: none;
   transition: none;
-  -webkit-box-shadow: inset 0 4px 2px rgba(0,0,0,0.1);
   box-shadow: inset 0 4px 2px rgba(0,0,0,0.1);
 }
 .submit-button.disabled,
@@ -502,7 +487,6 @@ submit-field {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
   cursor: default;
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 .submit-button-icon {
@@ -515,8 +499,7 @@ text-field {
 .text-field-input {
   border-radius: 4px;
   border: 1px solid #aaa;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-          box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
   color: inherit;
   display: block;
   font-family: inherit;
@@ -527,9 +510,8 @@ text-field {
   padding: 6px 9px;
   width: 100%;
   margin-top: 5px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
 }
 .text-field-input::-webkit-input-placeholder {
   color: #aaa;
@@ -579,6 +561,5 @@ text-field {
 }
 .text-field .text-field-input:focus {
   border-color: #66afe9;
-  -webkit-box-shadow: 0 0 2px rgba(102,175,233,0.65);
-          box-shadow: 0 0 2px rgba(102,175,233,0.65);
+  box-shadow: 0 0 2px rgba(102,175,233,0.65);
 }

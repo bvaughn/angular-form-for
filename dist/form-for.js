@@ -391,7 +391,7 @@ angular.module('formFor').directive('formFor',
           var fieldDatum = {
             bindableWrapper: {
               bindable: null,
-              disabled: false,
+              disabled: $scope.disable,
               error: null,
               pristine: true,
               required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules)
