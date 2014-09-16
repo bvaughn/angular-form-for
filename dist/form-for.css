@@ -333,7 +333,7 @@ radio-field {
 .radio-field.has-error .radio-field-input {
   border-color: #e35256;
 }
-.radio-field.has-error .field-input:focus + .checkbox-field-input {
+.radio-field.has-error .field-input:focus + .radio-field-input {
   border-color: #e35256;
   -webkit-box-shadow: 0 0 4px #e35256;
           box-shadow: 0 0 4px #e35256;
