@@ -479,16 +479,6 @@ select-field {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
-.filter-input-group {
-  line-height: 1em;
-  margin: 10px 10px 5px;
-  padding: 0;
-}
-.filter-input-group .text-field-input {
-  border-color: #66afe9;
-  -webkit-box-shadow: 0 0 4px #66afe9;
-  box-shadow: 0 0 4px #66afe9;
-}
 .select-field {
   position: relative;
   vertical-align: middle;
