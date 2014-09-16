@@ -25,7 +25,7 @@
  * <radio-field label="Male" attribute="gender" value="m"></radio-field>
  */
 angular.module('formFor').directive('radioField',
-  function($log, FieldHelper) {
+  function($log, $FormForGUID, FieldHelper) {
     var nameToActiveRadioMap = {};
 
     return {
@@ -59,8 +59,8 @@ angular.module('formFor').directive('radioField',
           $scope.hideErrorMessage = true;
         }
 
-        // TODO How to handle errors?
-        // Main scope should listen and bucket brigade to others!
+        // TODO Document
+        $scope.uid = $FormForGUID.create();
 
         var activeRadio = nameToActiveRadioMap[$scope.attribute];
         activeRadio.scopes.push($scope);

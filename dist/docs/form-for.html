@@ -419,7 +419,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line297">line 297</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line300">line 300</a>
     </li></ul></dd>
     
 
@@ -448,7 +448,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line227" class="name-link"><h4 class="name" id="controller.registerCollectionLabel"><span class="type-signature">(static) </span>controller.registerCollectionLabel<span class="signature">(fieldName)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
+      <a href="form-for.js.html#line230" class="name-link"><h4 class="name" id="controller.registerCollectionLabel"><span class="type-signature">(static) </span>controller.registerCollectionLabel<span class="signature">(fieldName)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
     
 
     
@@ -538,7 +538,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line227">line 227</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -595,7 +595,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line108" class="name-link"><h4 class="name" id="controller.registerFormField"><span class="type-signature">(static) </span>controller.registerFormField<span class="signature">(fieldName)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
+      <a href="form-for.js.html#line110" class="name-link"><h4 class="name" id="controller.registerFormField"><span class="type-signature">(static) </span>controller.registerFormField<span class="signature">(fieldName)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
     
 
     
@@ -685,7 +685,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line108">line 108</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -716,7 +716,9 @@ For more information refer to the Validation Types page.</p></td>
 • bindable: Input should 2-way bind against this attribute in order to sync data with formFor.
 • disabled: Input should disable itself if this value becomes true; typically this means the form is being submitted.
 • error: Input should display the string contained in this field (if one exists); this means the input value is invalid.
-• required: Input should display a 'required' indicator if this value is true.</p>
+• uid: Unique identifier for field; can be used for WCAG compatibility (aria-* attributes).
+• required: Input should display a 'required' indicator if this value is true.
+• pristine: Field has been modified since initialization (or last reset via resetField/resetFields).</p>
 </div>
 
 
@@ -744,7 +746,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line209" class="name-link"><h4 class="name" id="controller.registerSubmitButton"><span class="type-signature">(static) </span>controller.registerSubmitButton<span class="signature">(submitButtonScope)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
+      <a href="form-for.js.html#line212" class="name-link"><h4 class="name" id="controller.registerSubmitButton"><span class="type-signature">(static) </span>controller.registerSubmitButton<span class="signature">(submitButtonScope)</span><span class="type-signature"> &rarr; {Object}</span></h4></a>
     
 
     
@@ -834,7 +836,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line209">line 209</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -890,7 +892,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line279" class="name-link"><h4 class="name" id="controller.resetErrors"><span class="type-signature">(static) </span>controller.resetErrors<span class="signature">()</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line282" class="name-link"><h4 class="name" id="controller.resetErrors"><span class="type-signature">(static) </span>controller.resetErrors<span class="signature">()</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -932,7 +934,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line279">line 279</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line282">line 282</a>
     </li></ul></dd>
     
 
@@ -965,7 +967,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line262" class="name-link"><h4 class="name" id="controller.resetField"><span class="type-signature">(static) </span>controller.resetField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line265" class="name-link"><h4 class="name" id="controller.resetField"><span class="type-signature">(static) </span>controller.resetField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -1055,7 +1057,7 @@ For more information refer to the Validation Types page.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line262">line 262</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -1088,7 +1090,7 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line305" class="name-link"><h4 class="name" id="controller.validateField"><span class="type-signature">(static) </span>controller.validateField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line308" class="name-link"><h4 class="name" id="controller.validateField"><span class="type-signature">(static) </span>controller.validateField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -1179,7 +1181,7 @@ If the field fails validation an error message will automatically be shown.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line305">line 305</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line308">line 308</a>
     </li></ul></dd>
     
 
@@ -1212,7 +1214,7 @@ If the field fails validation an error message will automatically be shown.</p>
 
     
     
-      <a href="form-for.js.html#line333" class="name-link"><h4 class="name" id="controller.validateForm"><span class="type-signature">(static) </span>controller.validateForm<span class="signature">()</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line336" class="name-link"><h4 class="name" id="controller.validateForm"><span class="type-signature">(static) </span>controller.validateForm<span class="signature">()</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -1255,7 +1257,7 @@ This method returns a promise that is resolved or rejected with a field to error
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line333">line 333</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line336">line 336</a>
     </li></ul></dd>
     
 
@@ -1288,7 +1290,7 @@ This method returns a promise that is resolved or rejected with a field to error
 
     
     
-      <a href="form-for.js.html#line190" class="name-link"><h4 class="name" id="this.unregisterFormField"><span class="type-signature">(static) </span>this.unregisterFormField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line193" class="name-link"><h4 class="name" id="this.unregisterFormField"><span class="type-signature">(static) </span>this.unregisterFormField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -1378,7 +1380,7 @@ This method returns a promise that is resolved or rejected with a field to error
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line190">line 190</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line193">line 193</a>
     </li></ul></dd>
     
 

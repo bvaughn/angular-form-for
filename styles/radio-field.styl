@@ -2,6 +2,7 @@
 
 radio-field {
   display: inline-block;
+  position: relative;
 }
 
 .radio-field-input {
@@ -54,17 +55,26 @@ radio-field {
   .field-input {
     opacity: 0;
     position: absolute;
-  }
-
-  &.has-error {
-    .radio-field-input {
-      border-color: $border-color-error;
-    }
+    z-index: 2;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
   }
 
   // Pass through a focused style from <input> to our faux input
   .field-input:focus + .radio-field-input {
     border-color: $border-color-focused;
     box-shadow: $box-shadow-focused;
+  }
+
+  &.has-error {
+    .radio-field-input {
+      border-color: $border-color-error;
+    }
+
+    .field-input:focus + .checkbox-field-input {
+      border-color: $border-color-error;
+      box-shadow: $box-shadow-error-focused;
+    }
   }
 }

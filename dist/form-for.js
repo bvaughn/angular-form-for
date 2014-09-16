@@ -1,6 +1,26 @@
 angular.module('formFor', []);
 
 /**
+ * Helper directive for input elements.
+ * Observes the $scope :model attribute and updates aria-* elements accordingly.
+ */
+angular.module('formFor').directive('ariaManager', function() {
+  return {
+    restrict: 'A',
+    link: function($scope, $elements, $attributes) {
+      $scope.$watch('model.uid', function(uid) {
+        $attributes.$set('ariaDescribedby', uid + '-error');
+        $attributes.$set('ariaLabelledby', uid + '-label');
+      });
+
+      $scope.$watch('model.error', function(error) {
+        $attributes.$set('ariaInvalid', !!error);
+      });
+    }
+  }
+});
+
+/**
  * @ngdoc Directives
  * @name checkbox-field
  *
@@ -105,6 +125,7 @@ angular.module('formFor').directive('collectionLabel',
  *
  * @param {String} error Error messages to display (or null if field is valid OR pristine)
  * @param {Boolean} leftAligned Apply additional 'left-aligned' class to error message (useful for checkbox and radio items)
+ * @param {String} uid Optional UID for HTML element containing the error message string
  *
  * @example
  * // To display a field error:
@@ -118,7 +139,8 @@ angular.module('formFor').directive('fieldError',
       templateUrl: 'form-for/templates/field-error.html',
       scope: {
         error: '=',
-        leftAligned: '@?'
+        leftAligned: '@?',
+        uid: '@'
       }
     };
   }]);
@@ -129,11 +151,13 @@ angular.module('formFor').directive('fieldError',
  * @description
  * This component is only intended for internal use by the formFor module.
  *
+ * @param {String} inputUid ID of the associated input field element; used as the :for attribute of the inner <label>
  * @param {String} help Optional help tooltip to display on hover.
  * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
  * @param {String} label Field label string. This string can contain HTML markup.
  * @param {String} required Optional attribute specifies that this field is a required field.
  * If a required label has been provided via FormForConfiguration then field label will display that value for required fields.
+ * @param {String} uid Optional UID for HTML element containing the label string
  *
  * @example
  * // To display a simple label with a help tooltip:
@@ -147,9 +171,11 @@ angular.module('formFor').directive('fieldLabel',
       restrict: 'EA',
       templateUrl: 'form-for/templates/field-label.html',
       scope: {
+        inputUid: '@',
         help: '@?',
         label: '@',
-        required: '@?'
+        required: '@?',
+        uid: '@'
       },
       controller: ["$scope", function($scope) {
         $scope.$watch('label', function(value) {
@@ -301,7 +327,7 @@ angular.module('formFor').directive('formForDebounce', ["$log", "$sniffer", "$ti
  * For more information refer to the Validation Types page.
  */
 angular.module('formFor').directive('formFor',
-  ["$injector", "$log", "$parse", "$q", "$sce", "FormForConfiguration", "$FormForStateHelper", "NestedObjectHelper", "ModelValidator", function($injector, $log, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
+  ["$injector", "$log", "$parse", "$q", "$sce", "FormForConfiguration", "$FormForStateHelper", "$FormForGUID", "NestedObjectHelper", "ModelValidator", function($injector, $log, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, $FormForGUID, NestedObjectHelper, ModelValidator) {
     return {
       require: 'form', // We don't need the ngForm controller, but we do rely on the form-submit hook
       restrict: 'A',
@@ -371,7 +397,9 @@ angular.module('formFor').directive('formFor',
          * • bindable: Input should 2-way bind against this attribute in order to sync data with formFor.
          * • disabled: Input should disable itself if this value becomes true; typically this means the form is being submitted.
          * • error: Input should display the string contained in this field (if one exists); this means the input value is invalid.
+         * • uid: Unique identifier for field; can be used for WCAG compatibility (aria-* attributes).
          * • required: Input should display a 'required' indicator if this value is true.
+         * • pristine: Field has been modified since initialization (or last reset via resetField/resetFields).
          */
         controller.registerFormField = function(fieldName) {
           if (!fieldName) {
@@ -394,7 +422,8 @@ angular.module('formFor').directive('formFor',
               disabled: false,
               error: null,
               pristine: true,
-              required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules)
+              required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules),
+              uid: $FormForGUID.create()
             },
             fieldName: fieldName,
             unwatchers: [],
@@ -815,7 +844,7 @@ angular.module('formFor').directive('formFor',
  * <radio-field label="Male" attribute="gender" value="m"></radio-field>
  */
 angular.module('formFor').directive('radioField',
-  ["$log", "FieldHelper", function($log, FieldHelper) {
+  ["$log", "$FormForGUID", "FieldHelper", function($log, $FormForGUID, FieldHelper) {
     var nameToActiveRadioMap = {};
 
     return {
@@ -849,8 +878,8 @@ angular.module('formFor').directive('radioField',
           $scope.hideErrorMessage = true;
         }
 
-        // TODO How to handle errors?
-        // Main scope should listen and bucket brigade to others!
+        // TODO Document
+        $scope.uid = $FormForGUID.create();
 
         var activeRadio = nameToActiveRadioMap[$scope.attribute];
         activeRadio.scopes.push($scope);
@@ -912,7 +941,6 @@ angular.module('formFor').directive('radioField',
  * Dot notation (ex "address.street") is supported.
  * @param {Boolean} disable Disable input element.
  * (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).
- * @param {String} direction Specifies the select-field menu's vertical direction ('down', 'up', 'auto').
  * This attribute defaults to 'auto' which means that the menu will drop up or down based on its position within the viewport.
  * @param {Boolean} enableFiltering Enable filtering of list via a text input at the top of the dropdown.
  * @param {String} filter Two-way bindable filter string.
@@ -956,7 +984,6 @@ angular.module('formFor').directive('radioField',
  */
 angular.module('formFor').directive('selectField',
   ["$document", "$log", "$timeout", "$window", "FieldHelper", function($document, $log, $timeout, $window, FieldHelper) {
-    var MAX_HEIGHT = 250;
     var MIN_TIMEOUT_INTERVAL = 10;
 
     return {
@@ -993,6 +1020,26 @@ angular.module('formFor').directive('selectField',
 
         FieldHelper.manageFieldRegistration($scope, formForController);
 
+        $scope.close = function() {
+          $timeout(function() {
+            $scope.isOpen = false;
+
+            $timeout(toggleButton.focus.bind(toggleButton));
+          });
+        };
+
+        $scope.open = function() {
+          if ($scope.disable || $scope.model.disabled) {
+            return;
+          }
+
+          $timeout(function() {
+            $scope.isOpen = true;
+
+            $timeout(toggleButton.focus.bind(select));
+          });
+        };
+
         /*****************************************************************************************
          * The following code pertains to filtering visible options.
          *****************************************************************************************/
@@ -1000,6 +1047,10 @@ angular.module('formFor').directive('selectField',
         $scope.emptyOption = {};
         $scope.emptyOption[$scope.labelAttribute] = '';
         $scope.emptyOption[$scope.valueAttribute] = undefined;
+
+        $scope.placeholderOption = {};
+        $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
+        $scope.placeholderOption[$scope.valueAttribute] = undefined;
 
         $scope.filteredOptions = [];
 
@@ -1026,7 +1077,9 @@ angular.module('formFor').directive('selectField',
             });
           }
 
-          if ($scope.allowBlank) {
+          if (!$scope.selectedOption) {
+            $scope.filteredOptions.unshift($scope.placeholderOption);
+          } else if ($scope.allowBlank) {
             $scope.filteredOptions.unshift($scope.emptyOption);
           }
         };
@@ -1080,208 +1133,84 @@ angular.module('formFor').directive('selectField',
           $scope.filter = $scope.selectedOptionLabel;
         });
 
-        $scope.selectOption = function(option) {
-          $scope.model.bindable = option && option[$scope.valueAttribute];
-          $scope.isOpen = false;
-        };
-
-        var clickWatcher = function(event) {
-          $scope.isOpen = false;
-          $scope.$apply();
-        };
-
-        var listContainer = $element.find('.select-field-list-container');
-        var listScroller = $element.find('.select-field-list-scrollable');
-        var list = $element.find('.select-field-list');
-
-        var scrollToValue = function(value) {
-          $timeout(
-            function() {
-              var listItems = this.find('.select-field-list-item');
-              var matchingListItem;
-
-              for (var index = 0; index < listItems.length; index++) {
-                var listItem = listItems[index];
-                var option = $(listItem).scope().option;
-
-                if (option && option[$scope.valueAttribute] === value) {
-                  matchingListItem = listItem;
-
-                  break;
-                }
-              }
-
-              if (matchingListItem) {
-                listScroller.scrollTop(0);
-
-                var scrollerTop = listScroller.scrollTop();// + listScroller.offset().top;
-                var scrollerHeight = listScroller.outerHeight();
-                var itemTop = $(matchingListItem).position().top;
-                var itemHeight = $(matchingListItem).outerHeight();
-
-                if (scrollerHeight === 0) {
-                  listScroller.scrollTop(itemTop);
-                } else if (itemTop < scrollerTop) {
-                  listScroller.scrollTop(itemTop);
-                } else if (scrollerTop + scrollerHeight < itemTop + itemHeight) {
-                  listScroller.scrollTop(itemTop - scrollerHeight + itemHeight);
-                }
-              }
-            }.bind($element), MIN_TIMEOUT_INTERVAL);
-        };
-
-        var clickToOpen = function(event) {
-          if ($scope.disable || $scope.model.disabled) {
-            return;
-          }
-
-          $scope.isOpen = true;
-
-          if ($scope.isOpen) {
-            setListVerticalDirection();
-            scrollToValue($scope.model.bindable);
-          }
-
-          $scope.$$phase || $scope.$digest();
-        };
-
         $scope.$watch('isOpen', function(value) {
           $timeout(function() {
             if ($scope.isOpen) {
-              toggleButton.off('click', clickToOpen);
-              $document.on('click', clickWatcher);
+              toggleButton.off('click', $scope.open);
+              $document.on('click', $scope.close);
             } else {
-              toggleButton.on('click', clickToOpen);
-              $document.off('click', clickWatcher);
+              toggleButton.on('click', $scope.open);
+              $document.off('click', $scope.close);
             }
           }, MIN_TIMEOUT_INTERVAL);
         });
 
-        /*****************************************************************************************
-         * The following code controls the directionality of the drop-down (or drop-up) menu
-         *****************************************************************************************/
-
-        var shouldDropUp = function() {
-          switch ($attributes.direction) {
-            case 'up':
-              return true;
-              break;
-            case 'down':
-              return false;
-              break;
-            case 'auto':
-            default:
-              var offset = toggleButton.offset().top - $window.scrollTop();
-
-              return offset + toggleButton.outerHeight() + MAX_HEIGHT > $window.height();
-              break;
-          }
-        };
-
-        var setListVerticalDirection = function() {
-          if (shouldDropUp()) {
-            $scope.dropUp = true;
-
-            listContainer.css({
-              bottom: (toggleButton.outerHeight() - 1) + 'px',
-              top: 'auto'
-            });
-          } else {
-            $scope.dropUp = false;
-
-            listContainer.css({
-              bottom: 'auto',
-              top: '100%'
-            });
-          }
-        };
+        $scope.$on('$destroy', function() {
+          $document.off('click', $scope.close);
+        });
 
         /*****************************************************************************************
          * The following code responds to keyboard events when the drop-down is visible
          *****************************************************************************************/
 
-        var filterText = $element.find('.filter-text-input');
+        var filterText = $element.find('[filter-text-input]');
+        var select = $element.find('select');
 
         $scope.mouseOver = function(index) {
           $scope.mouseOverIndex = index;
           $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
         };
 
+        $scope.selectOption = function(option) {
+          $scope.model.bindable = option && option[$scope.valueAttribute];
+        };
+
         // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
         $scope.keyDown = function(event) {
           switch (event.keyCode) {
             case 27: // Escape key
-              $scope.isOpen = false;
-
-              // Return focus to toggle button on close (to prevent interrupting tab order)
-              $timeout(toggleButton.focus.bind(toggleButton));
+              $scope.close();
               break;
             case 13: // Enter key
               if ($scope.isOpen) {
                 $scope.selectOption($scope.mouseOverOption);
-                $scope.isOpen = false;
-
-                // Return focus to toggle button on close (to prevent interrupting tab order)
-                $timeout(toggleButton.focus.bind(toggleButton));
-
+                $scope.close();
               } else {
-                $scope.isOpen = true;
-
-                setListVerticalDirection();
+                $scope.open();
               }
-
-              // Don't bubble up and submit the parent form
-              event.preventDefault();
               break;
             case 38: // Up arrow
               if ($scope.isOpen) {
                 $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
-
-                scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
               } else {
-                $scope.isOpen = true;
+                $scope.open();
               }
-
-              // Don't allow up/down arrows to scroll the window
-              event.preventDefault();
               break;
             case 40: // Down arrow
               if ($scope.isOpen) {
                 $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
-
-                scrollToValue($scope.mouseOverOption && $scope.mouseOverOption.value);
               } else {
-                $scope.isOpen = true;
+                $scope.open();
               }
-
-              // Don't allow up/down arrows to scroll the window
-              event.preventDefault();
               break;
-
-            // Tabbing (in or out) should close the menu.
-            case 9:
+            case 9: // Tabbing (in or out) should close the menu.
             case 16:
-              $scope.isOpen = false;
+              $scope.close();
               break;
-
-            // But all other key events should (they potentially indicate a changed type-ahead filter value).
-            default:
-              $scope.isOpen = true;
+            default: // But all other key events should (they potentially indicate a changed type-ahead filter value).
+              $scope.open();
               break;
           }
         };
 
         $scope.$watchCollection('[isOpen, filteredOptions.length]', function() {
-          $scope.mouseOver(-1); // Reset hover anytime our list opens/closes or our collection is refreshed.
+          // Reset hover anytime our list opens/closes or our collection is refreshed.
+          $scope.mouseOver(-1);
 
           // Pass focus through to filter field when select is opened
           if ($scope.isOpen && $scope.enableFiltering) {
             $timeout(filterText.focus.bind(filterText));
           }
-        });
-
-        $scope.$on('$destroy', function() {
-          $document.off('click', clickWatcher);
         });
       }
     };
@@ -1778,6 +1707,18 @@ angular.module('formFor').service('FormForConfiguration',
       }
     };
   });
+
+/**
+ * UID generator for formFor input fields.
+ * @see http://stackoverflow.com/questions/6248666/how-to-generate-short-uid-like-ax4j9z-in-js
+ */
+angular.module('formFor').service('$FormForGUID', function() {
+  return {
+    create: function() {
+      return ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).slice(-4);
+    }
+  };
+});
 
 /*
  * Organizes state management for form-submission and field validity.

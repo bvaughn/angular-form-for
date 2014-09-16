@@ -1,20 +1,25 @@
 <span class="field radio-field"
       ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
 
-  <field-error ng-if="!hideErrorMessage" error="model.error" left-aligned="true"></field-error>
+  <field-error  ng-if="!hideErrorMessage"
+                error="model.error"
+                left-aligned="true"
+                uid="{{uid}}-error">
+  </field-error>
 
-  <label>
-    <input  type="radio"
-            tabindex="{{tabIndex}}"
-            ng-model="model.bindable"
-            ng-value="value"
-            ng-checked="checked"
-            ng-disabled="disable || model.disabled">
+  <input  aria-manager
+          type="radio"
+          id="{{uid}}"
+          tabindex="{{tabIndex}}"
+          ng-model="model.bindable"
+          ng-value="value"
+          ng-checked="checked"
+          ng-disabled="disable || model.disabled">
 
-    <field-label  ng-if="label"
-                  label="{{label}}"
-                  help="{{help}}"
-                  ng-click="click()">
-    </field-label>
-  </label>
+  <field-label  ng-if="label"
+                input-uid="{{uid}}"
+                uid="{{uid}}-label"
+                label="{{label}}"
+                help="{{help}}">
+  </field-label>
 </span>
