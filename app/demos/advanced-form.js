@@ -5,7 +5,6 @@ angular.module('formForDocumentation').controller('AdvancedFormDemoController',
     // Simulate a delay in loading remote data
     $timeout(function() {
       $scope.formData = {
-        gender: 3,
         password: 'password'
       };
     },1000);
