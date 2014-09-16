@@ -248,6 +248,8 @@ angular.module('formFor').directive('selectField',
               } else {
                 $scope.open();
               }
+
+              event.preventDefault();
               break;
             case 38: // Up arrow
               if ($scope.isOpen) {

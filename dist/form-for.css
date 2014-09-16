@@ -514,7 +514,6 @@ select-field {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  max-height: 200px;
   overflow: auto;
 }
 .select-field-list {
