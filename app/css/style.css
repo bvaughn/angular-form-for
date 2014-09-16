@@ -254,6 +254,8 @@ validate-field-button {
   display: inline-block;
   margin-right: 1px;
   float: right;
+  position: relative;
+  z-index: 2;
 }
 
 .template-toggler {
