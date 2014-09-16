@@ -3,20 +3,26 @@
                   'has-error': model.error }">
 
   <field-label  ng-if="label"
+                input-uid="{{model.uid}}"
+                iud="{{model.uid}}-label"
                 label="{{label}}"
                 help="{{help}}"
                 required="{{model.required}}">
   </field-label>
 
-  <field-error error="model.error"></field-error>
+  <field-error  error="model.error"
+                uid="{{model.uid}}-error">
+  </field-error>
 
   <!-- Filtered dropdowns use a type-ahead style component -->
   <div ng-show="enableFiltering" class="input-group">
-    <input  type="text" class="form-control filter-text-input"
+    <input  aria-manager filter-text-input
+            id="{{model.uid}}"
+            type="text" class="form-control filter-text-input"
             tabindex="{{tabIndex}}"
             placeholder="{{placeholder}}"
+            ng-disabled="disable || model.disabled"
             ng-model="filter"
-            ng-blur="close()"
             ng-focus="open()"
             ng-keydown="keyDown($event)">
 
@@ -37,7 +43,9 @@
   </div>
 
   <!-- Unfiltered dropdowns use a regular [Bootstrap] select -->
-  <select ng-if="!enableFiltering && filteredOptions.length"
+  <select aria-manager
+          ng-if="!enableFiltering && filteredOptions.length"
+          id="{{model.uid}}"
           class="form-control"
           tabindex="{{tabIndex}}"
           ng-disabled="disable || model.disabled"

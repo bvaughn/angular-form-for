@@ -1,20 +1,25 @@
 <div  class="field checkbox-field"
       ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
 
-  <field-error error="model.error" left-aligned="true"></field-error>
+  <field-error  error="model.error"
+                left-aligned="true"
+                uid="{{model.uid}}-error">
+  </field-error>
 
-  <label>
-    <input  type="checkbox" class="field-input"
-            tabindex="{{tabIndex}}"
-            ng-model="model.bindable"
-            ng-disabled="disable || model.disabled">
+  <input  aria-manager
+          id="{{model.uid}}"
+          type="checkbox"
+          class="field-input"
+          tabindex="{{tabIndex}}"
+          ng-model="model.bindable"
+          ng-disabled="disable || model.disabled">
 
-    <span class="checkbox-field-input" ng-class="{'is-checked': model.bindable}"></span>
+  <span class="checkbox-field-input" ng-class="{'is-checked': model.bindable}"></span>
 
-    <field-label  ng-if="label"
-                  label="{{label}}"
-                  help="{{help}}"
-                  ng-click="toggle()">
-    </field-label>
-  </label>
+  <field-label  ng-if="label"
+                input-uid="{{model.uid}}"
+                uid="{{model.uid}}-label"
+                label="{{label}}"
+                help="{{help}}">
+  </field-label>
 </div>

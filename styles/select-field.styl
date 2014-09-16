@@ -1,29 +1,17 @@
 @import 'nib'
 
 @require '_variables';
+@require 'text-field';
 
 select-field {
   display: block;
   position: relative;
 }
 
-.select-field-toggle-button {
+.select-field-wrapper {
   position: relative;
-  background: linear-gradient(top, white, $color-fill-2);
-  border-radius: $border-radius;
-  border: $border;
-  color: inherit;
-  display: block;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: 1.5;
   margin: 0;
-  outline: none;
-  padding: 6px 9px;
-  width: 100%;
   margin-top: $padding-small;
-  text-align: left;
-  box-sizing: border-box;
 
   &:after {
     content: "\f0dc";
@@ -37,58 +25,40 @@ select-field {
     text-align: center;
   }
 
-  &:not(.disabled):not(.open):hover {
-    background: linear-gradient(top, white, lighten($color-fill-2, 3));
-  }
-
-  &.blank-selected {
-    color: $color-text-1;
-  }
-  &.open {
-    background: white;
-  }
-
   &.disabled {
     opacity: $opacity-disabled;
   }
 }
 
-.select-field-list-container {
-  z-index: 1050; // Needs to be higher than .has-error
-  position: absolute;
+.select-field-select {
   width: 100%;
-  background-color: white;
-  border: $border;
-  border-color: $border-color-focused;
-  box-shadow: $box-shadow-focused;
+  height: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  background: linear-gradient(top, white, $color-fill-2);
+  text-align: left;
   box-sizing: border-box;
-}
+  color: inherit;
+  display: block;
+  border-radius: $border-radius;
+  border: $border;
+  appearance: none;
+  padding: 6px 9px;
 
-.select-field-list-scrollable {
-  max-height: 200px;
-  overflow: auto;
-}
-
-.select-field-list {
-  padding: 0;
-  list-style: none;
-
-  .select-field-list-item {
-    display: block;
-    padding: 6px 9px;
-
-    strong {
-      font-weight: inherit;
-    }
-
-    &:hover,
-    &.hover {
-      background-color: light-blue;
-    }
-    &.active {
-      font-weight: bold;
-    }
+  &:focus {
+    background-color: white;
+    outline: none;
+    border-color: $border-color-focused;
+    box-shadow: $box-shadow-focused;
   }
+
+  &:disabled {
+    opacity: $opacity-disabled;
+  }
+}
+
+.select-field-placeholder {
+
 }
 
 .filter-input-group {
@@ -108,46 +78,17 @@ select-field {
   cursor: pointer;
   user-select: none;
 
-  .select-field-toggle-button {
-    .select-field-toggle-caret {
-      display: none;
-    }
-  }
-
-  &.direction-up {
-    .select-field-toggle-button {
-      &.open {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        border-top: none;
-      }
-    }
-    .select-field-list-container {
-      border-top-left-radius: $border-radius;
-      border-top-right-radius: $border-radius;
-    }
-  }
-  &.direction-down {
-    .select-field-toggle-button {
-      &.open {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border-bottom: none;
-      }
-    }
-    .select-field-list-container {
-      border-bottom-left-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-    }
-  }
-
   &.disabled {
     cursor: default;
   }
 
   &.has-error {
-    .select-field-toggle-button {
+    .select-field-select {
       border-color: $border-color-error;
+
+      &:focus {
+        box-shadow: $box-shadow-error-focused;
+      }
     }
 
     &.open {
@@ -156,12 +97,45 @@ select-field {
       }
     }
   }
+}
 
-  .select-field-toggle-button {
-    &:focus,
-    &.open {
-      border-color: $border-color-focused;
-      box-shadow: $box-shadow-focused;
+.select-field-filter-text-input {
+  @extend .text-field-input;
+}
+
+.select-field-list-container {
+  z-index: 1050; // Needs to be higher than .has-error
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  background-color: white;
+  border: $border;
+  border-color: $border-color-focused;
+  box-shadow: $box-shadow-focused;
+  box-sizing: border-box;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.select-field-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  .select-field-list-item {
+    display: block;
+    padding: 6px 9px;
+
+    strong {
+      font-weight: inherit;
+    }
+
+    &:hover,
+    &.hover {
+      background-color: light-blue;
+    }
+    &.active {
+      font-weight: bold;
     }
   }
 }

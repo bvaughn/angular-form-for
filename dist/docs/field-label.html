@@ -43,7 +43,7 @@
 
     
     
-      <a href="field-label.js.html#line1" class="name-link"><h4 class="name" id="field-label"><span class="type-signature"></span>field-label<span class="signature">(help, label, required)</span><span class="type-signature"></span></h4></a>
+      <a href="field-label.js.html#line1" class="name-link"><h4 class="name" id="field-label"><span class="type-signature"></span>field-label<span class="signature">(inputUid, help, label, required, uid)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -82,6 +82,29 @@
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>inputUid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ID of the associated input field element; used as the :for attribute of the inner <label></p></td>
+        </tr>
+
     
 
         <tr>
@@ -151,6 +174,29 @@ By default this makes use of the Angular Bootstrap tooltip directive and the Fon
 
             <td class="description last"><p>Optional attribute specifies that this field is a required field.
 If a required label has been provided via FormForConfiguration then field label will display that value for required fields.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>uid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional UID for HTML element containing the label string</p></td>
         </tr>
 
     

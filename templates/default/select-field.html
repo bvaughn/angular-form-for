@@ -1,70 +1,61 @@
 <div  class="field select-field"
-      ng-class="{ 'direction-down': !dropUp,
-                  'direction-up': dropUp,
-                  'disabled': disable || model.disabled,
+      ng-class="{ 'disabled': disable || model.disabled,
                   'has-error': model.error,
                   'open': isOpen }">
 
   <field-label  ng-if="label"
+                input-uid="{{model.uid}}"
+                iud="{{model.uid}}-label"
                 label="{{label}}"
                 help="{{help}}"
                 required="{{model.required}}">
   </field-label>
 
-  <field-error error="model.error"></field-error>
+  <field-error  error="model.error"
+                uid="{{model.uid}}-error">
+  </field-error>
 
-  <button toggle-button type="button"
-          class="select-field-toggle-button"
-          tabindex="{{tabIndex}}"
-          ng-keydown="keyDown($event)"
-          ng-class="{open: isOpen, disabled: disable || model.disabled}"
-          ng-click="$event.preventDefault();"
-          ng-disabled="disable || model.disabled">
+  <!-- Filtered dropdowns use a type-ahead style component -->
+  <div ng-show="enableFiltering" class="text-field-input-wrapper">
+    <input  aria-manager filter-text-input
+            id="{{model.uid}}"
+            type="text" class="select-field-filter-text-input"
+            tabindex="{{tabIndex}}"
+            placeholder="{{placeholder}}"
+            ng-disabled="disable || model.disabled"
+            ng-model="filter"
+            ng-focus="open()"
+            ng-keydown="keyDown($event)">
 
-    <span ng-if="selectedOptionLabel" ng-bind="selectedOptionLabel"></span>
-
-    <span ng-if="!selectedOptionLabel">
-      <span ng-if="placeholder" ng-bind="placeholder"></span>
-      <span ng-if="!placeholder">Select</span>
+    <span class="text-field-input-icon text-field-input-icon-after" toggle-button>
+      <i class="text-field-icon caret"></i>
     </span>
 
-    <span class="fa fa-caret-down pull-right select-field-toggle-caret"></span>
-  </button>
-
-  <div ng-show="isOpen" class="select-field-list-container">
-    <div class="select-field-list">
-      <div  ng-show="enableFiltering" class="text-field-input-wrapper filter-input-group"
-            ng-click="$event.stopPropagation()">
-        <input  type="text"
-                class="text-field-input has-icon-after filter-text-input"
-                tabindex="{{tabIndex}}"
-                ng-model="filter"
-                ng-keydown="keyDown($event)"
-                form-for-debounce="{{filterDebounce}}" />
-
-        <span class="text-field-input-icon text-field-input-icon-after">
-          <i class="fa fa-search text-field-icon"></i>
-        </span>
-      </div>
-
-      <div class="select-field-list-scrollable">
-        <span class="select-field-list-item"
-              ng-repeat="option in filteredOptions"
-              ng-value="option[valueAttribute]"
-              ng-click="selectOption(option)"
-              ng-mouseenter="mouseOver($index)"
-              ng-class="{ active: option[valueAttribute] === selectedOption[valueAttribute],
-                          hover: $index === mouseOverIndex}">
-
-          <!-- Bootstrap leaves us no way to style a non-:hover element so we fall back to <strong> -->
-          <strong ng-if="$index === mouseOverIndex" ng-bind="option[labelAttribute]"></strong>
-          <span ng-if="$index !== mouseOverIndex" ng-bind="option[labelAttribute]"></span>
-          <spgn ng-if="!option[labelAttribute]">&nbsp;</spgn> <!-- Gracefully handle empty/null names -->
-        </span>
-
-        <span ng-if="!options" class="select-field-list-item"
-              ng-include src="'form-for/templates/select-field-loading-indicator.html'"></span>
-      </div>
+    <div  ng-show="isOpen"
+          class="select-field-list-container">
+      <ul class="select-field-list" ng-class="{show: isOpen}">
+        <li ng-repeat="option in filteredOptions"
+            class="select-field-list-item"
+            ng-class="{ active: option === selectedOption,
+                        hover: $index === mouseOverIndex}"
+            ng-bind="option[labelAttribute]"
+            ng-click="selectOption(option)"
+            ng-mouseenter="mouseOver($index)">
+        </li>
+      </ul>
     </div>
+  </div>
+
+  <!-- Unfiltered dropdowns use a regular [Bootstrap] select -->
+  <div ng-if="!enableFiltering" class="select-field-wrapper">
+    <select aria-manager
+            id="{{model.uid}}"
+            class="select-field-select"
+            tabindex="{{tabIndex}}"
+            placeholder="{{placeholder}}"
+            ng-disabled="disable || model.disabled"
+            ng-model="model.bindable"
+            ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
+    </select>
   </div>
 </div>

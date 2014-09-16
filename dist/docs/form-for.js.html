@@ -61,7 +61,7 @@
  * For more information refer to the Validation Types page.
  */
 angular.module('formFor').directive('formFor',
-  function($injector, $log, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, NestedObjectHelper, ModelValidator) {
+  function($injector, $log, $parse, $q, $sce, FormForConfiguration, $FormForStateHelper, $FormForGUID, NestedObjectHelper, ModelValidator) {
     return {
       require: 'form', // We don't need the ngForm controller, but we do rely on the form-submit hook
       restrict: 'A',
@@ -131,7 +131,9 @@ angular.module('formFor').directive('formFor',
          * • bindable: Input should 2-way bind against this attribute in order to sync data with formFor.
          * • disabled: Input should disable itself if this value becomes true; typically this means the form is being submitted.
          * • error: Input should display the string contained in this field (if one exists); this means the input value is invalid.
+         * • uid: Unique identifier for field; can be used for WCAG compatibility (aria-* attributes).
          * • required: Input should display a 'required' indicator if this value is true.
+         * • pristine: Field has been modified since initialization (or last reset via resetField/resetFields).
          */
         controller.registerFormField = function(fieldName) {
           if (!fieldName) {
@@ -154,7 +156,8 @@ angular.module('formFor').directive('formFor',
               disabled: $scope.disable,
               error: null,
               pristine: true,
-              required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules)
+              required: ModelValidator.isFieldRequired(fieldName, $scope.$validationRules),
+              uid: $FormForGUID.create()
             },
             fieldName: fieldName,
             unwatchers: [],

@@ -19,6 +19,13 @@ Using *formFor* a sign-up form may look like this:
 But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options.
 Check out [the website](http://bvaughn.github.io/angular-form-for/) to learn more!
 
+## Compatibility
+
+The current release of *formFor* is compatible with Angular Angular 1.2.
+(1.3 support will be added in a future release once Angular 1.3 is out of beta.)
+
+Angular 1.2.22+ is recommended due to [a `$parse` defect](https://github.com/angular/angular.js/issues/2845) that existed in previous releases.
+
 ## Installation
 
 You can install this plugin with either [Bower](http://bower.io/) or [NPM](https://www.npmjs.org/):
