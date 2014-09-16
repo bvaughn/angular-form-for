@@ -474,6 +474,11 @@ select-field {
   -webkit-box-shadow: 0 0 4px #66afe9;
   box-shadow: 0 0 4px #66afe9;
 }
+.select-field-select:disabled {
+  opacity: 0.5;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}
 .filter-input-group {
   line-height: 1em;
   margin: 10px 10px 5px;

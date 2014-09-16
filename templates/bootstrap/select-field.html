@@ -21,6 +21,7 @@
             type="text" class="form-control filter-text-input"
             tabindex="{{tabIndex}}"
             placeholder="{{placeholder}}"
+            ng-disabled="disable || model.disabled"
             ng-model="filter"
             ng-focus="open()"
             ng-keydown="keyDown($event)">
