@@ -269,3 +269,7 @@ validate-field-button {
 .template-toggler .template-toggler-link:hover {
   text-decoration: none;
 }
+
+a {
+  font-weight: 500;
+}

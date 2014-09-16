@@ -2,23 +2,46 @@
   <h1>Validation Types </h1>
 
   <p>
-    formFor supports the following types of validation:
+    formFor supports the following validation rules:
   </p>
 
   <dl>
-    <dt>required <small>Boolean</small></dt>
+    <dt>required <code>Boolean</code></dt>
     <dd>A truthy value must be specified for this field.</dd>
-    <dt>minlength <small>int</small></dt>
+    <dt>minlength <code>int</code></dt>
     <dd>Field must contain at least this many characters.</dd>
-    <dt>maxlength <small>int</small></dt>
+    <dt>maxlength <code>int</code></dt>
     <dd>Field must contain no more than this many characters.</dd>
-    <dt>pattern <small>RegExp</small></dt>
+    <dt>pattern <code>RegExp</code></dt>
     <dd>Field must match this regular expression.</dd>
-    <dt>type <small>String</small></dt>
+    <dt>type <code>String</code></dt>
     <dd>Enumeration for common validation types. Supported types include integer, number, positive, negative, and email. You can also stack types (ex. positive </integer, negative number).
-    <dt>custom <small>Function</small></dt>
+    <dt>custom <code>Function</code></dt>
     <dd>Field must be approved by this custom validation function (see below for more details).</dd>
   </dl>
+
+  <p class="alert alert-info">
+    Continue reading for validation syntax examples or
+    refer to the <a href="#/demo/advanced-form">advanced form demo</a> for an example of validations.
+  </p>
+
+  <h2>Validating collections</h2>
+
+  <p>
+    formFor also supports the following validation rules as they apply to collections:
+  </p>
+
+  <dl>
+    <dt>min <code>int</code></dt>
+    <dd>Collection must contain at least this many items.</dd>
+    <dt>max <code>int</code></dt>
+    <dd>Collection may contain no more than this many items.</dd>
+  </dl>
+
+  <p class="alert alert-info">
+    Continue reading for validation syntax examples or
+    refer to the <a href="#/demo/collections-form">collections form demo</a> for an example of validations.
+  </p>
 
   <h2>Defining validations</h2>
 
