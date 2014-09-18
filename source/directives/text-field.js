@@ -76,7 +76,6 @@ angular.module('formFor').directive('textField',
           return;
         }
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
         $scope.tabIndex = $attributes.tabIndex || 0;
@@ -87,6 +86,7 @@ angular.module('formFor').directive('textField',
           });
         }
 
+        FieldHelper.manageLabel($scope, $attributes);
         FieldHelper.manageFieldRegistration($scope, formForController);
 
         // Update $scope.iconAfter based on the field state (see class-level documentation for more)

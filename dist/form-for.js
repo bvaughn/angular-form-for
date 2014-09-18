@@ -63,7 +63,6 @@ angular.module('formFor').directive('checkboxField',
           return;
         }
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
         $scope.tabIndex = $attributes.tabIndex || 0;
 
         var $input = $element.find('input');
@@ -74,6 +73,7 @@ angular.module('formFor').directive('checkboxField',
           }
         };
 
+        FieldHelper.manageLabel($scope, $attributes);
         FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
@@ -884,7 +884,8 @@ angular.module('formFor').directive('radioField',
         var activeRadio = nameToActiveRadioMap[$scope.attribute];
         activeRadio.scopes.push($scope);
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.value);
+        FieldHelper.manageLabel($scope, $attributes);
+
         $scope.tabIndex = $attributes.tabIndex || 0;
 
         var $input = $element.find('input');
@@ -1016,8 +1017,7 @@ angular.module('formFor').directive('selectField',
         $scope.placeholder = $attributes.placeholder || 'Select';
         $scope.tabIndex = $attributes.tabIndex || 0;
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
-
+        FieldHelper.manageLabel($scope, $attributes);
         FieldHelper.manageFieldRegistration($scope, formForController);
 
         // Helper method for setting focus on an item after a delay
@@ -1374,7 +1374,6 @@ angular.module('formFor').directive('textField',
           return;
         }
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
         $scope.tabIndex = $attributes.tabIndex || 0;
@@ -1385,6 +1384,7 @@ angular.module('formFor').directive('textField',
           });
         }
 
+        FieldHelper.manageLabel($scope, $attributes);
         FieldHelper.manageFieldRegistration($scope, formForController);
 
         // Update $scope.iconAfter based on the field state (see class-level documentation for more)
@@ -1477,18 +1477,20 @@ angular.module('formFor').service('FieldHelper',
 
     /**
      * Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
+     * Also watches for changes in the (attributes) label and updates $scope accordingly.
      * @memberof FieldHelper
+     * @param {Hash} $scope Directive link $scope
      * @param {Hash} $attributes Directive link $attributes
-     * @param {Object} valueToHumanize Default value (if no override specified on $attributes)
-     * @returns {String} Label to display (or null if no label)
      */
-    this.getLabel = function($attributes, valueToHumanize) {
+    this.manageLabel = function($scope, $attributes) {
       if ($attributes.hasOwnProperty('label')) {
-        return $attributes.label;
+        $attributes.$observe('label', function(label) {
+          $scope.label = label;
+        });
       }
 
       if (FormForConfiguration.autoGenerateLabels) {
-        return StringUtil.humanize(valueToHumanize);
+        $scope.label = StringUtil.humanize($scope.attribute);
       }
     };
 

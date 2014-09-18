@@ -114,8 +114,7 @@ angular.module('formFor').directive('selectField',
         $scope.placeholder = $attributes.placeholder || 'Select';
         $scope.tabIndex = $attributes.tabIndex || 0;
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
-
+        FieldHelper.manageLabel($scope, $attributes);
         FieldHelper.manageFieldRegistration($scope, formForController);
 
         // Helper method for setting focus on an item after a delay

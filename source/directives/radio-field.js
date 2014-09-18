@@ -65,7 +65,8 @@ angular.module('formFor').directive('radioField',
         var activeRadio = nameToActiveRadioMap[$scope.attribute];
         activeRadio.scopes.push($scope);
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.value);
+        FieldHelper.manageLabel($scope, $attributes);
+
         $scope.tabIndex = $attributes.tabIndex || 0;
 
         var $input = $element.find('input');

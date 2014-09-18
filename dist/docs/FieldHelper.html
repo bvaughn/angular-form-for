@@ -138,175 +138,7 @@
 
     
     
-      <a href="field-helper.js.html#line17" class="name-link"><h4 class="name" id="this.getLabel"><span class="type-signature">(static) </span>this.getLabel<span class="signature">($attributes, valueToHumanize)</span><span class="type-signature"> &rarr; {String}</span></h4></a>
-    
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>$attributes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Hash</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Directive link $attributes</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>valueToHumanize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Default value (if no override specified on $attributes)</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="field-helper.js.html">services/field-helper.js</a>, <a href="field-helper.js.html#line17">line 17</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Label to display (or null if no label)</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">String</span>
-
-
-    </dd>
-</dl>
-
-        
-
-    
-</dd>
-
-        
-            
-<dt>
-
-    
-    
-      <a href="field-helper.js.html#line34" class="name-link"><h4 class="name" id="this.manageFieldRegistration"><span class="type-signature">(static) </span>this.manageFieldRegistration<span class="signature">($scope, formForController)</span><span class="type-signature"></span></h4></a>
+      <a href="field-helper.js.html#line36" class="name-link"><h4 class="name" id="this.manageFieldRegistration"><span class="type-signature">(static) </span>this.manageFieldRegistration<span class="signature">($scope, formForController)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -420,7 +252,154 @@ This method also unregisters the field on $scope $destroy.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="field-helper.js.html">services/field-helper.js</a>, <a href="field-helper.js.html#line34">line 34</a>
+        <a href="field-helper.js.html">services/field-helper.js</a>, <a href="field-helper.js.html#line36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+
+    
+    
+      <a href="field-helper.js.html#line17" class="name-link"><h4 class="name" id="this.manageLabel"><span class="type-signature">(static) </span>this.manageLabel<span class="signature">($scope, $attributes)</span><span class="type-signature"></span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
+Also watches for changes in the (attributes) label and updates $scope accordingly.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$scope</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Hash</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Directive link $scope</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$attributes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Hash</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Directive link $attributes</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="field-helper.js.html">services/field-helper.js</a>, <a href="field-helper.js.html#line17">line 17</a>
     </li></ul></dd>
     
 

@@ -9,18 +9,20 @@ angular.module('formFor').service('FieldHelper',
 
     /**
      * Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
+     * Also watches for changes in the (attributes) label and updates $scope accordingly.
      * @memberof FieldHelper
+     * @param {Hash} $scope Directive link $scope
      * @param {Hash} $attributes Directive link $attributes
-     * @param {Object} valueToHumanize Default value (if no override specified on $attributes)
-     * @returns {String} Label to display (or null if no label)
      */
-    this.getLabel = function($attributes, valueToHumanize) {
+    this.manageLabel = function($scope, $attributes) {
       if ($attributes.hasOwnProperty('label')) {
-        return $attributes.label;
+        $attributes.$observe('label', function(label) {
+          $scope.label = label;
+        });
       }
 
       if (FormForConfiguration.autoGenerateLabels) {
-        return StringUtil.humanize(valueToHumanize);
+        $scope.label = StringUtil.humanize($scope.attribute);
       }
     };
 

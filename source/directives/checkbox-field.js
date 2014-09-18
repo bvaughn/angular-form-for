@@ -41,7 +41,6 @@ angular.module('formFor').directive('checkboxField',
           return;
         }
 
-        $scope.label = FieldHelper.getLabel($attributes, $scope.attribute);
         $scope.tabIndex = $attributes.tabIndex || 0;
 
         var $input = $element.find('input');
@@ -52,6 +51,7 @@ angular.module('formFor').directive('checkboxField',
           }
         };
 
+        FieldHelper.manageLabel($scope, $attributes);
         FieldHelper.manageFieldRegistration($scope, formForController);
       }
     };
