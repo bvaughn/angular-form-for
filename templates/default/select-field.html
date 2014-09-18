@@ -17,17 +17,18 @@
 
   <!-- Filtered dropdowns use a type-ahead style component -->
   <div ng-show="enableFiltering" class="text-field-input-wrapper">
-    <input  aria-manager filter-text-input
+    <input  aria-manager
             id="{{model.uid}}"
             type="text" class="select-field-filter-text-input"
             tabindex="{{tabIndex}}"
             placeholder="{{placeholder}}"
             ng-disabled="disable || model.disabled"
             ng-model="filter"
+            ng-click="filterTextClick($event)"
             ng-focus="open()"
             ng-keydown="keyDown($event)">
 
-    <span class="text-field-input-icon text-field-input-icon-after" toggle-button>
+    <span class="text-field-input-icon text-field-input-icon-after" ng-click="setFilterFocus()">
       <i class="text-field-icon fa fa-caret-down"></i>
     </span>
 

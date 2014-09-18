@@ -999,7 +999,7 @@ angular.module('formFor').directive('selectField',
         options: '='
       },
       link: function($scope, $element, $attributes, formForController) {
-        $window = $($window);
+        $window = angular.element($window);
 
         if (!$scope.attribute) {
           $log.error('Missing required field "attribute"');
@@ -1020,11 +1020,16 @@ angular.module('formFor').directive('selectField',
 
         FieldHelper.manageFieldRegistration($scope, formForController);
 
+        // Helper method for setting focus on an item after a delay
+        var setDelayedFocus = function($target) {
+          var target = $target[0];
+
+          $timeout(target.focus.bind(target));
+        };
+
         $scope.close = function() {
           $timeout(function() {
             $scope.isOpen = false;
-
-            $timeout(toggleButton.focus.bind(toggleButton));
           });
         };
 
@@ -1035,8 +1040,6 @@ angular.module('formFor').directive('selectField',
 
           $timeout(function() {
             $scope.isOpen = true;
-
-            $timeout(toggleButton.focus.bind(select));
           });
         };
 
@@ -1114,8 +1117,6 @@ angular.module('formFor').directive('selectField',
          * The following code deals with toggling/collapsing the drop-down and selecting values.
          *****************************************************************************************/
 
-        var toggleButton = $element.find('[toggle-button]');
-
         $scope.$watch('model.bindable', function(value) {
           var matchingOption;
 
@@ -1133,28 +1134,55 @@ angular.module('formFor').directive('selectField',
           $scope.filter = $scope.selectedOptionLabel;
         });
 
+        var documentClick = function(event) {
+          // See filterTextClick() for why we check this property.
+          if (event.ignoreFor === $scope.model.uid) {
+            return;
+          }
+
+          $scope.close();
+        };
+
+        $scope.filterTextClick = function() {
+          // We can't stop the event from propagating or we might prevent other inputs from closing on blur.
+          // But we can't let it proceed as normal or it may result in the $document click handler closing a newly-opened input.
+          // Instead we tag it for this particular instance of <select-field> to ignore.
+          if ($scope.isOpen) {
+            event.ignoreFor = $scope.model.uid;
+          }
+        };
+
+        var pendingTimeout;
+
         $scope.$watch('isOpen', function(value) {
-          $timeout(function() {
+          if (pendingTimeout) {
+            $timeout.cancel(pendingTimeout);
+          }
+          pendingTimeout = $timeout(function() {
+            pendingTimeout = null;
+
             if ($scope.isOpen) {
-              toggleButton.off('click', $scope.open);
-              $document.on('click', $scope.close);
+              $document.on('click', documentClick);
             } else {
-              toggleButton.on('click', $scope.open);
-              $document.off('click', $scope.close);
+              $document.off('click', documentClick);
             }
           }, MIN_TIMEOUT_INTERVAL);
         });
 
         $scope.$on('$destroy', function() {
-          $document.off('click', $scope.close);
+          $document.off('click', documentClick);
         });
 
         /*****************************************************************************************
          * The following code responds to keyboard events when the drop-down is visible
          *****************************************************************************************/
 
-        var filterText = $element.find('[filter-text-input]');
+        var filterText = $element.find('input');
         var select = $element.find('select');
+
+        $scope.setFilterFocus = function() {
+          setDelayedFocus(filterText);
+        };
 
         $scope.mouseOver = function(index) {
           $scope.mouseOverIndex = index;
@@ -1211,7 +1239,7 @@ angular.module('formFor').directive('selectField',
 
           // Pass focus through to filter field when select is opened
           if ($scope.isOpen && $scope.enableFiltering) {
-            $timeout(filterText.focus.bind(filterText));
+            setDelayedFocus(filterText);
           }
         });
       }
@@ -1353,7 +1381,7 @@ angular.module('formFor').directive('textField',
 
         if ($attributes.hasOwnProperty('autofocus')) {
           $timeout(function() {
-            $element.find( $scope.multiline ? 'textarea' : 'input' ).focus();
+            $element.find( $scope.multiline ? 'textarea' : 'input' )[0].focus();
           });
         }
 

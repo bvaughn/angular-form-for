@@ -16,13 +16,14 @@
 
   <!-- Filtered dropdowns use a type-ahead style component -->
   <div ng-show="enableFiltering" class="input-group">
-    <input  aria-manager filter-text-input
+    <input  aria-manager
             id="{{model.uid}}"
             type="text" class="form-control filter-text-input"
             tabindex="{{tabIndex}}"
             placeholder="{{placeholder}}"
             ng-disabled="disable || model.disabled"
             ng-model="filter"
+            ng-click="filterTextClick($event)"
             ng-focus="open()"
             ng-keydown="keyDown($event)">
 
@@ -37,7 +38,7 @@
       </li>
     </ul>
 
-    <span class="input-group-addon" toggle-button>
+    <span class="input-group-addon" ng-click="setFilterFocus()">
       <i class="caret"></i>
     </span>
   </div>

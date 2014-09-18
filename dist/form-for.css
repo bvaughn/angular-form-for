@@ -498,8 +498,15 @@ select-field {
   -webkit-box-shadow: 0 0 4px #e35256;
   box-shadow: 0 0 4px #e35256;
 }
-.select-field.has-error.open .field-error {
+.select-field.open .field-error {
   display: none;
+}
+.select-field.open .select-field-filter-text-input {
+  border-color: #66afe9;
+  -webkit-box-shadow: 0 0 4px #66afe9;
+  box-shadow: 0 0 4px #66afe9;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .select-field-list-container {
   z-index: 1050;
@@ -508,6 +515,9 @@ select-field {
   width: 100%;
   background-color: #fff;
   border: 1px solid #aaa;
+  border-radius: 6px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   border-color: #66afe9;
   -webkit-box-shadow: 0 0 4px #66afe9;
   box-shadow: 0 0 4px #66afe9;

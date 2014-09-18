@@ -57,6 +57,10 @@ select-field {
   }
 }
 
+.select-field-filter-text-input {
+  @extend .text-field-input;
+}
+
 .select-field {
   position: relative;
   vertical-align: middle;
@@ -75,17 +79,20 @@ select-field {
         box-shadow: $box-shadow-error-focused;
       }
     }
+  }
 
-    &.open {
-      .field-error {
-        display: none;
-      }
+  &.open {
+    .field-error {
+      display: none;
+    }
+
+    .select-field-filter-text-input {
+      border-color: $border-color-focused;
+      box-shadow: $box-shadow-focused;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
   }
-}
-
-.select-field-filter-text-input {
-  @extend .text-field-input;
 }
 
 .select-field-list-container {
@@ -95,6 +102,9 @@ select-field {
   width: 100%;
   background-color: white;
   border: $border;
+  border-radius: $border-radius;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   border-color: $border-color-focused;
   box-shadow: $box-shadow-focused;
   box-sizing: border-box;

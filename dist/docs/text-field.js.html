@@ -111,7 +111,7 @@ angular.module('formFor').directive('textField',
 
         if ($attributes.hasOwnProperty('autofocus')) {
           $timeout(function() {
-            $element.find( $scope.multiline ? 'textarea' : 'input' ).focus();
+            $element.find( $scope.multiline ? 'textarea' : 'input' )[0].focus();
           });
         }
 
