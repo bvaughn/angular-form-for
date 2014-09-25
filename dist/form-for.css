@@ -54,13 +54,16 @@ checkbox-field {
   content: "\f00c";
 }
 .form-for-field > input[type="checkbox"]:disabled {
+  opacity: 0;
   cursor: default;
   pointer-events: none;
 }
-.form-for-field > input[type="checkbox"]:disabled +label,
-.form-for-field > input[type="checkbox"]:disabled +label:before {
+.form-for-field > input[type="checkbox"]:disabled +label {
   cursor: default;
   opacity: 0.5;
+}
+.form-for-field > input[type="checkbox"]:disabled +label:before {
+  cursor: default;
 }
 .form-for-field > input[type="checkbox"]:invalid +label:before,
 .form-for-field.invalid > input[type="checkbox"] +label:before {
@@ -189,13 +192,16 @@ radio-field {
   content: "\f111";
 }
 .form-for-field > input[type="radio"]:disabled {
+  opacity: 0;
   cursor: default;
   pointer-events: none;
 }
-.form-for-field > input[type="radio"]:disabled +label,
-.form-for-field > input[type="radio"]:disabled +label:before {
+.form-for-field > input[type="radio"]:disabled +label {
   cursor: default;
   opacity: 0.5;
+}
+.form-for-field > input[type="radio"]:disabled +label:before {
+  cursor: default;
 }
 .form-for-field > input[type="radio"]:invalid +label:before,
 .form-for-field.invalid > input[type="radio"] +label:before {

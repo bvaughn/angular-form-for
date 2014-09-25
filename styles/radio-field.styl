@@ -33,13 +33,17 @@ radio-field {
     }
 
     &:disabled {
+      opacity: 0;
       cursor: default;
       pointer-events: none;
 
-      +label,
-      +label:before {
+      +label {
         cursor: default;
         opacity: $opacity-disabled;
+
+        &:before {
+          cursor: default;
+        }
       }
     }
   }
