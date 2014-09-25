@@ -83,8 +83,8 @@ angular.module('formForDocumentation').value('currentTemplates', {
 
 angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
   var map = {};
-  map['default'] = ['formFor.defaultTemplates', 'http://rawgit.com/bvaughn/angular-form-for/1.5.0/dist/form-for.default-templates.js'];
-  map['bootstrap'] = ['formFor.bootstrapTemplates', 'http://rawgit.com/bvaughn/angular-form-for/1.5.0/dist/form-for.bootstrap-templates.js'];
+  map['default'] = ['formFor.defaultTemplates', 'http://rawgit.com/bvaughn/angular-form-for/1.5.1/dist/form-for.default-templates.js'];
+  map['bootstrap'] = ['formFor.bootstrapTemplates', 'http://rawgit.com/bvaughn/angular-form-for/1.5.1/dist/form-for.bootstrap-templates.js'];
 
   return {
     restrict: 'E',
