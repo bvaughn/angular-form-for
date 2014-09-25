@@ -9,6 +9,7 @@ angular.module('formForDocumentation').
         required: true
       },
       email: {
+        required: true,
         type: 'email'
       },
       password: {
