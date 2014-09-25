@@ -228,6 +228,12 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({number: '1a'}, 'number', model.rules)).toBeRejected();
     });
 
+    it('number should not require input unless the required flag is also present', function() {
+      expect(ModelValidator.validateField({number: ''}, 'number', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({number: undefined}, 'number', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({number: null}, 'number', model.rules)).toBeResolved();
+    });
+
     it('integer should accept integer input', function() {
       expect(ModelValidator.validateField({integer: 123}, 'integer', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({integer: -123}, 'integer', model.rules)).toBeResolved();
@@ -246,6 +252,12 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({integer: '.-11'}, 'integer', model.rules)).toBeRejected();
     });
 
+    it('integer should not require input unless the required flag is also present', function() {
+      expect(ModelValidator.validateField({integer: ''}, 'integer', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({integer: undefined}, 'integer', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({integer: null}, 'integer', model.rules)).toBeResolved();
+    });
+
     it('positive should accept positive numeric input', function() {
       expect(ModelValidator.validateField({positive: 123}, 'positive', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({positive: 1.23}, 'positive', model.rules)).toBeResolved();
@@ -260,6 +272,12 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({positive: '-1.23'}, 'positive', model.rules)).toBeRejected();
     });
 
+    it('positive should not require input unless the required flag is also present', function() {
+      expect(ModelValidator.validateField({positive: ''}, 'positive', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({positive: undefined}, 'positive', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({positive: null}, 'positive', model.rules)).toBeResolved();
+    });
+
     it('negative should accept negative numeric input', function() {
       expect(ModelValidator.validateField({negative: -123}, 'negative', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({negative: -1.23}, 'negative', model.rules)).toBeResolved();
@@ -272,6 +290,12 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({negative: 1.23}, 'negative', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({negative: '123'}, 'negative', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({negative: '1.23'}, 'negative', model.rules)).toBeRejected();
+    });
+
+    it('negative should not require input unless the required flag is also present', function() {
+      expect(ModelValidator.validateField({negative: ''}, 'negative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({negative: undefined}, 'negative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({negative: null}, 'negative', model.rules)).toBeResolved();
     });
 
     it('email should accept email input', function() {
@@ -291,11 +315,17 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({email: 'abc.com'}, 'email', model.rules)).toBeRejected();
     });
 
+    it('email should not require input unless the required flag is also present', function() {
+      expect(ModelValidator.validateField({email: ''}, 'email', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({email: undefined}, 'email', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({email: null}, 'email', model.rules)).toBeResolved();
+    });
+
     it('should allow custom error messages for failed email validations', function() {
       model.rules = { email: { type: { rule: 'email', message: 'foobar email' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({email: null}, 'email', model.rules),
+        ModelValidator.validateField({email: 'invalid'}, 'email', model.rules),
         'foobar email');
     });
 
@@ -303,7 +333,7 @@ describe('ModelValidator', function() {
       model.rules = { integer: { type: { rule: 'integer', message: 'foobar integer' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({integer: null}, 'integer', model.rules),
+        ModelValidator.validateField({integer: 'invalid'}, 'integer', model.rules),
         'foobar integer');
     });
 
@@ -311,7 +341,7 @@ describe('ModelValidator', function() {
       model.rules = { negative: { type: { rule: 'negative', message: 'foobar negative' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({negative: null}, 'negative', model.rules),
+        ModelValidator.validateField({negative: 'invalid'}, 'negative', model.rules),
         'foobar negative');
     });
 
@@ -319,7 +349,7 @@ describe('ModelValidator', function() {
       model.rules = { number: { type: { rule: 'number', message: 'foobar number' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({number: null}, 'number', model.rules),
+        ModelValidator.validateField({number: 'invalid'}, 'number', model.rules),
         'foobar number');
     });
 
@@ -327,7 +357,7 @@ describe('ModelValidator', function() {
       model.rules = { positive: { type: { rule: 'positive', message: 'foobar positive' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({positive: null}, 'positive', model.rules),
+        ModelValidator.validateField({positive: 'invalid'}, 'positive', model.rules),
         'foobar positive');
     });
   });
