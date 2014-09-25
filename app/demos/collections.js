@@ -5,7 +5,7 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
         {
           name: 'Creating forms',
           frequency: 'daily',
-          paid: false,
+          paid: 'false',
           recommend: true
         }
       ]

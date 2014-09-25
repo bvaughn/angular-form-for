@@ -29,7 +29,7 @@ angular.module('formForDocumentation').service('UserSignUp', function($q, $timeo
           message: 'You must accept the TOS'
         }
       },
-      email: {
+      signupEmail: {
         required: true,
         pattern: /\w+@\w+\.\w+/,
         custom: function(value) {
