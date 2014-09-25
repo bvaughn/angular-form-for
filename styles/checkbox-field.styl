@@ -1,3 +1,4 @@
+@require '_mixins';
 @require '_variables';
 
 checkbox-field {
@@ -5,78 +6,50 @@ checkbox-field {
   position: relative;
 }
 
-.checkbox-field-input {
-  vertical-align: middle;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  background-image: linear-gradient(to top, $color-fill-1, white);
-  border-radius: 4px;
-  border: $border;
-  position: relative;
-  margin-right: $padding-small;
-  cursor: inherit;
-  vertical-align: middle;
+.form-for-field {
+  > input[type="checkbox"] {
+    @extend $form-for-hidden-input
 
-  &.is-checked {
-    &::before {
-      content: "\f00c";
-      font-family: FontAwesome;
+    +label {
+      cursor: pointer;
       display: inline-block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 19px;
-      line-height: 18px;
-      text-align: center;
-      color: $color-text-1;
-    }
-  }
-}
 
-.checkbox-field {
-  cursor: pointer;
+      &:before {
+        @extend $form-for-toggle-ui
 
-  .field-label {
-    vertical-align: middle;
-  }
-
-  label {
-    cursor: inherit;
-  }
-
-  &.disabled {
-    cursor: default;
-
-    .checkbox-field-input {
-      opacity: $opacity-disabled;
-    }
-  }
-
-  // Should remain tabbable but hidden from user
-  // Note that display:none and visibility:hidden prevent tabbing
-  .field-input {
-    opacity: 0;
-    position: absolute;
-    z-index: 2;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-
-  // Pass through a focused style from <input> to our faux input
-  .field-input:focus + .checkbox-field-input {
-    border-color: $border-color-focused;
-    box-shadow: $box-shadow-focused;
-  }
-
-  &.has-error {
-    .checkbox-field-input {
-      border-color: $border-color-error;
+        border-radius: 4px;
+        content: " "; // Hidden
+      }
     }
 
-    .field-input:focus + .checkbox-field-input {
-      border-color: $border-color-error;
+    &:focus + label:before {
+      border-color: $border-color-focused;
+      box-shadow: $box-shadow-focused;
+    }
+
+    &:checked + label:before {
+      content: "\f00c";
+    }
+
+    &:disabled {
+      cursor: default;
+      pointer-events: none;
+
+      +label,
+      +label:before {
+        cursor: default;
+        opacity: $opacity-disabled;
+      }
+    }
+  }
+
+  > input[type="checkbox"]:invalid,
+  &.invalid > input[type="checkbox"] {
+    +label:before {
+      border-color: red;
+    }
+
+    &:focus + label:before {
       box-shadow: $box-shadow-error-focused;
     }
   }

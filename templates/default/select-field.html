@@ -1,8 +1,4 @@
-<div  class="field select-field"
-      ng-class="{ 'disabled': disable || model.disabled,
-                  'has-error': model.error,
-                  'open': isOpen }">
-
+<div class="form-for-field with-icon-after" ng-class="{'invalid': model.error}">
   <field-label  ng-if="label"
                 input-uid="{{model.uid}}"
                 iud="{{model.uid}}-label"
@@ -11,52 +7,43 @@
                 required="{{model.required}}">
   </field-label>
 
-  <field-error  error="model.error"
-                uid="{{model.uid}}-error">
-  </field-error>
+  <field-error uid="{{model.uid}}-error" error="model.error"></field-error>
+
+  <!-- Unfiltered dropdowns use a regular <select> -->
+  <select ng-if="!enableFiltering" aria-manager
+          id="{{model.uid}}"
+          class="select-field-select"
+          tabindex="{{tabIndex}}"
+          placeholder="{{placeholder}}"
+          ng-disabled="disable || model.disabled"
+          ng-model="model.bindable"
+          ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
+  </select>
+
+  <i ng-if="!enableFiltering" class="form-for-select-arrows"></i>
 
   <!-- Filtered dropdowns use a type-ahead style component -->
-  <div ng-show="enableFiltering" class="text-field-input-wrapper">
-    <input  aria-manager
-            id="{{model.uid}}"
-            type="text" class="select-field-filter-text-input"
-            tabindex="{{tabIndex}}"
-            placeholder="{{placeholder}}"
-            ng-disabled="disable || model.disabled"
-            ng-model="filter"
-            ng-click="filterTextClick($event)"
-            ng-focus="open()"
-            ng-keydown="keyDown($event)">
+  <input  ng-show="enableFiltering"
+          aria-manager
+          id="{{model.uid}}"
+          type="search"
+          tabindex="{{tabIndex}}"
+          placeholder="{{placeholder}}"
+          ng-disabled="disable || model.disabled"
+          ng-model="filter"
+          ng-click="filterTextClick($event)"
+          ng-focus="open()"
+          ng-keydown="keyDown($event)">
 
-    <span class="text-field-input-icon text-field-input-icon-after" ng-click="setFilterFocus()">
-      <i class="text-field-icon fa fa-caret-down"></i>
-    </span>
+  <ul ng-if="enableFiltering">
+    <li ng-repeat="option in filteredOptions"
+        ng-class="{ 'form-for-typeahead-list-item-active': option === selectedOption,
+                    'form-for-typeahead-list-item-hover':  $index === mouseOverIndex}"
+        ng-bind="option[labelAttribute]"
+        ng-click="selectOption(option)"
+        ng-mouseenter="mouseOver($index)">
+    </li>
+  </ul>
 
-    <div  ng-show="isOpen"
-          class="select-field-list-container">
-      <ul class="select-field-list" ng-class="{show: isOpen}">
-        <li ng-repeat="option in filteredOptions"
-            class="select-field-list-item"
-            ng-class="{ active: option === selectedOption,
-                        hover: $index === mouseOverIndex}"
-            ng-bind="option[labelAttribute]"
-            ng-click="selectOption(option)"
-            ng-mouseenter="mouseOver($index)">
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Unfiltered dropdowns use a regular [Bootstrap] select -->
-  <div ng-if="!enableFiltering" class="select-field-wrapper">
-    <select aria-manager
-            id="{{model.uid}}"
-            class="select-field-select"
-            tabindex="{{tabIndex}}"
-            placeholder="{{placeholder}}"
-            ng-disabled="disable || model.disabled"
-            ng-model="model.bindable"
-            ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
-    </select>
-  </div>
+  <i ng-if="enableFiltering" class="form-for-input-icon-right fa fa-search"></i>
 </div>

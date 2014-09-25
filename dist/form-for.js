@@ -169,6 +169,7 @@ angular.module('formFor').directive('fieldLabel',
   ["$sce", "FormForConfiguration", function( $sce, FormForConfiguration ) {
     return {
       restrict: 'EA',
+      replace: true, // Necessary for sibling selectors
       templateUrl: 'form-for/templates/field-label.html',
       scope: {
         inputUid: '@',
@@ -878,7 +879,8 @@ angular.module('formFor').directive('radioField',
           $scope.hideErrorMessage = true;
         }
 
-        // TODO Document
+        // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
+        // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
         $scope.uid = $FormForGUID.create();
 
         var activeRadio = nameToActiveRadioMap[$scope.attribute];

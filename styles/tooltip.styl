@@ -1,0 +1,53 @@
+@require '_variables';
+
+.form-for-tooltip {
+  display: inline-flex;
+  align-items: center;
+  height: 15px;
+  width: 15px;
+}
+
+.form-for-tooltip-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  border-radius: 15px;
+  line-height: 15px;
+  background-color: $color-text-1;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: default;
+
+  &:hover {
+    background-color: tooltip-icon-background-color-hover;
+  }
+}
+
+.form-for-tooltip-popover {
+  display: none;
+  position: relative;
+  z-index: 2;
+  flex: 0 0 350px;
+  width: 350px;
+  border-radius: $border-radius;
+  padding: 15px;
+  margin-left: 15px;
+  background-color: light-blue;
+  color: $color-text-3;
+  border-bottom: 1px solid rgba(0,0,0,.15);
+  font-weight: 400;
+
+  &:before {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    margin-top: -10px;
+    content: '';
+    border: 10px solid transparent;
+    border-right-color: light-blue;
+    color: $color-text-3;
+  }
+}

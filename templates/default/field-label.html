@@ -1,16 +1,10 @@
-<label  id="{{uid}}"
-        for="{{inputUid}}"
-        class="field-label"
-        popover="{{help}}"
-        popover-trigger="mouseenter"
-        popover-placement="right">
-
+<label id="{{uid}}" for="{{inputUid}}" class="field-label">
   <span ng-bind-html="bindableLabel"></span>
 
-  <span ng-if="help" class="fa-stack help-icon-stack">
-    <i class="fa fa-stack-2x fa-circle help-background-icon"></i>
-    <i class="fa fa-stack-1x fa-inverse fa-question help-foreground-icon"></i>
+  <span ng-if="help" class="form-for-tooltip">
+    <div class="form-for-tooltip-icon">?</div>
+    <div class="form-for-tooltip-popover" ng-bind="help"></div>
   </span>
 
-  <span class="field-label-required-label" ng-if="requiredLabel" ng-bind="requiredLabel"></span>
+  <span ng-if="requiredLabel" class="field-label-required-label" ng-bind="requiredLabel"></span>
 </label>

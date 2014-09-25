@@ -50,6 +50,7 @@ angular.module('formFor').directive('fieldLabel',
   function( $sce, FormForConfiguration ) {
     return {
       restrict: 'EA',
+      replace: true, // Necessary for sibling selectors
       templateUrl: 'form-for/templates/field-label.html',
       scope: {
         inputUid: '@',

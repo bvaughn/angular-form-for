@@ -1,135 +1,125 @@
-@import 'nib'
-
+@require '_mixins';
 @require '_variables';
-@require 'text-field';
 
 select-field {
   display: block;
-  position: relative;
 }
 
-.select-field-wrapper {
-  position: relative;
-  margin: 0;
-  margin-top: $padding-small;
+/************************* Select *************************/
 
-  &:after {
-    content: "\f0dc";
-    font-family: FontAwesome;
-    color: $color-text-1;
-    line-height: 2.3em;
-    position: absolute;
-    right: 10px;
-    top: 0;
-    width: 20px;
-    text-align: center;
-  }
+.form-for-field {
+  > select {
+    @extend $form-for-input
 
-  &.disabled {
-    opacity: $opacity-disabled;
-  }
-}
+    background: linear-gradient(top, white, $color-fill-2);
+    padding-right: 30px;
 
-.select-field-select {
-  width: 100%;
-  height: 100%;
-  font-family: inherit;
-  font-size: inherit;
-  background: linear-gradient(top, white, $color-fill-2);
-  text-align: left;
-  box-sizing: border-box;
-  color: inherit;
-  display: block;
-  border-radius: $border-radius;
-  border: $border;
-  appearance: none;
-  padding: 6px 9px;
+    &:focus {
+      background: white;
+      outline: none;
+      border-color: $border-color-focused;
+      box-shadow: $box-shadow-focused;
+    }
 
-  &:focus {
-    background-color: white;
-    outline: none;
-    border-color: $border-color-focused;
-    box-shadow: $box-shadow-focused;
-  }
+    &:disabled {
+      opacity: $opacity-disabled;
+      pointer-events: none;
 
-  &:disabled {
-    opacity: $opacity-disabled;
-  }
-}
-
-.select-field-filter-text-input {
-  @extend .text-field-input;
-}
-
-.select-field {
-  position: relative;
-  vertical-align: middle;
-  cursor: pointer;
-  user-select: none;
-
-  &.disabled {
-    cursor: default;
-  }
-
-  &.has-error {
-    .select-field-select {
-      border-color: $border-color-error;
-
-      &:focus {
-        box-shadow: $box-shadow-error-focused;
+      +[c-field--select-arrows] {
+        opacity: $opacity-disabled;
       }
     }
   }
 
-  &.open {
-    .field-error {
-      display: none;
-    }
+  &.invalid > select {
+    border-color: red;
 
-    .select-field-filter-text-input {
-      border-color: $border-color-focused;
-      box-shadow: $box-shadow-focused;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+    &:focus {
+      box-shadow: $box-shadow-error-focused;
     }
+  }
+
+  .form-for-select-arrows:after {
+    display: block;
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+    width: 20px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    font-style: normal;
+    content: "\f0dc";
+    font-family: FontAwesome;
+    color: $color-text-1;
+    pointer-events: none;
   }
 }
 
-.select-field-list-container {
-  z-index: 1050; // Needs to be higher than .has-error
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  background-color: white;
-  border: $border;
-  border-radius: $border-radius;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-color: $border-color-focused;
-  box-shadow: $box-shadow-focused;
-  box-sizing: border-box;
-  overflow: auto;
-}
+/************************* Typeahead *************************/
 
-.select-field-list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
+.form-for-field {
+  > input[type="search"] {
+    @extend $form-for-input
 
-  .select-field-list-item {
-    display: block;
-    padding: 6px 9px;
+    box-shadow: inset 0 1px 4px rgba(0,0,0, 0.15);
 
-    strong {
-      font-weight: inherit;
+    +ul {
+      display: none; // Hidden until focused
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: 4; // Needs to be higher than .has-error
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      background-color: white;
+      border: $border;
+      border-color: $border-color-focused;
+      border-radius: $border-radius;
+      border-top: none;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      box-sizing: border-box;
+      overflow: auto;
     }
 
-    &:hover,
-    &.hover {
-      background-color: light-blue;
+    &:focus {
+      border-color: $border-color-focused;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: $box-shadow-focused;
+
+      +ul {
+        display: block;
+
+        li {
+          padding: 6px 9px;
+
+          strong {
+            font-weight: inherit;
+          }
+
+          &.form-for-typeahead-list-item-active {
+            font-weight: 600;
+          }
+
+          &.form-for-typeahead-list-item-hover,
+          &:hover {
+            background-color: light-blue;
+          }
+        }
+      }
     }
-    &.active {
-      font-weight: bold;
+  }
+
+  &.invalid > input[type="search"],
+  > input[type="search"]:invalid {
+    border-color: red;
+
+    +ul {
+      border-color: red;
     }
   }
 }

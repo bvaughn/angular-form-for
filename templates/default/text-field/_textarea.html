@@ -1,13 +1,9 @@
 <textarea aria-manager
-
           id="{{model.uid}}"
-          class="text-field-input"
-          ng-class="{'has-icon-before': iconBefore, 'has-icon-after': iconAfter}"
-          ng-disabled="disable || model.disabled"
-
           tabindex="{{tabIndex}}"
           placeholder="{{placeholder}}"
           ng-model="model.bindable"
+          ng-disabled="disable || model.disabled"
           form-for-debounce="{{debounce}}"
           ng-click="onFocus()">
 </textarea>

@@ -1,3 +1,7 @@
+@require '_variables';
+
+/****** Vender prefixes ******/
+
 placeholder-color($color) {
   &::-webkit-input-placeholder {
     color: $color;
@@ -14,4 +18,70 @@ placeholder-color($color) {
     /* IE 10+ */
     color: $color;
   }
+}
+
+user-select(val) {
+  -ms-user-select: val;
+  -moz-user-select: val;
+  -webkit-user-select: val;
+}
+
+appearance(val) {
+  -ms-appearance: val;
+  -moz-appearance: val;
+  -webkit-appearance: val;
+}
+
+/****** Shared base classes ******/
+
+$form-for-input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  line-height: 1.5;
+  padding: 6px 9px;
+
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  color: inherit;
+
+  border: $border;
+  border-radius: $border-radius;
+
+  appearance: none;
+  outline: none;
+}
+
+// Should be hidden from user but remain tabbable and clickable
+// Note that display:none and visibility:hidden prevent tab/mouse interaction
+$form-for-hidden-input {
+  position: absolute;
+  opacity: 0; // Hidden but clickable
+  z-index: 2; // Float above the styled, faux-input so mouse clicks will toggle selected state
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin: 0;
+}
+
+$form-for-toggle-ui {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: 0;
+  left: 0;
+  width: 19px;
+  padding-left: 1px; // Visually centers better
+  line-height: 19px;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  background-image: linear-gradient(to top, $color-fill-1, white);
+  border: $border;
+  position: relative;
+  margin-right: 5px;
+  cursor: pointer;
+  vertical-align: middle;
+  font-family: FontAwesome;
 }

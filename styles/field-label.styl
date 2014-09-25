@@ -4,25 +4,6 @@ field-label {
   display: inline-block;
 }
 
-.help-icon-stack {
-  position: relative;
-  font-size: .8em;
-
-  .help-background-icon,
-  .help-foreground-icon {
-    text-align: center;
-  }
-
-  .help-background-icon {
-    color: $color-text-1;
-  }
-  .help-foreground-icon {
-    color: white;
-    position: absolute;
-    left: 0;
-  }
-}
-
 .field-label {
   position: relative;
   cursor: inherit;
@@ -30,9 +11,9 @@ field-label {
   user-select: none;
 
   &:hover {
-    .help-icon-stack {
-      .help-background-icon {
-        color: lighten($color-text-1, 5%);
+    .form-for-tooltip {
+      .form-for-tooltip-popover {
+        display: inline-block;
       }
     }
   }

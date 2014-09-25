@@ -1,6 +1,4 @@
-<div  class="field checkbox-field"
-      ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
-
+<div class="form-for-field" ng-class="{'invalid': model.error}">
   <field-error  error="model.error"
                 left-aligned="true"
                 uid="{{model.uid}}-error">
@@ -9,12 +7,10 @@
   <input  aria-manager
           id="{{model.uid}}"
           type="checkbox"
-          class="field-input"
           tabindex="{{tabIndex}}"
           ng-model="model.bindable"
+          ng-checked="checked"
           ng-disabled="disable || model.disabled">
-
-  <span class="checkbox-field-input" ng-class="{'is-checked': model.bindable}"></span>
 
   <field-label  ng-if="label"
                 input-uid="{{model.uid}}"

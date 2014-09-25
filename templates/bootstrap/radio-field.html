@@ -8,12 +8,12 @@
   </field-error>
 
   <input  aria-manager
-          type="radio"
           id="{{uid}}"
+          type="radio"
+          name="{{attribute}}"
           tabindex="{{tabIndex}}"
           ng-model="model.bindable"
           ng-value="value"
-          ng-checked="checked"
           ng-disabled="disable || model.disabled">
 
   <field-label  ng-if="label"
