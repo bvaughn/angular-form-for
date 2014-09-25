@@ -19,33 +19,9 @@
       <i class="text-field-icon" ng-class="iconBefore"></i>
     </span>
 
-    <input  aria-manager
+    <span ng-if="!multiline" ng-include src="'form-for/templates/text-field/_input.html'"></span>
 
-            ng-if="!multiline"
-            id="{{model.uid}}"
-            class="form-control"
-            ng-disabled="disable || model.disabled"
-
-            type="{{type}}"
-            tabindex="{{tabIndex}}"
-            placeholder="{{placeholder}}"
-            ng-model="model.bindable"
-            form-for-debounce="{{debounce}}"
-            ng-click="onFocus()" />
-
-    <textarea aria-manager
-
-              ng-if="multiline"
-              id="{{model.uid}}"
-              class="form-control"
-              ng-disabled="disable || model.disabled"
-
-              tabindex="{{tabIndex}}"
-              placeholder="{{placeholder}}"
-              ng-model="model.bindable"
-              form-for-debounce="{{debounce}}"
-              ng-click="onFocus()">
-    </textarea>
+    <span ng-if="multiline" ng-include src="'form-for/templates/text-field/_textarea.html'"></span>
 
     <span ng-if="iconAfter" class="input-group-addon"
           ng-click="onIconAfterClick()">

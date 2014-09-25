@@ -1,0 +1,13 @@
+<input  aria-manager
+
+        id="{{model.uid}}"
+        class="text-field-input"
+        ng-class="{'has-icon-before': iconBefore, 'has-icon-after': iconAfter}"
+        ng-disabled="disable || model.disabled"
+
+        type="{{type}}"
+        tabindex="{{tabIndex}}"
+        placeholder="{{placeholder}}"
+        ng-model="model.bindable"
+        form-for-debounce="{{debounce}}"
+        ng-click="onFocus()" />
