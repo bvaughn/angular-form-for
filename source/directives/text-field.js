@@ -19,6 +19,7 @@
  * @param {String} help Optional help tooltip to display on hover.
  * By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.
  * @param {Function} focused Optional function to be invoked on text input focus.
+ * @param {Function} blurred Optional function to be invoked on text input blur.
  * @param {String} iconAfter Optional CSS class to display as an icon after the input field.
  * An object with the following keys may also be provided: pristine, valid, invalid
  * In this case the icon specified by a particular state will be shown based on the field's validation status.
@@ -64,6 +65,7 @@ angular.module('formFor').directive('textField',
         debounce: '@?',
         disable: '=',
         focused: '&?',
+        blurred: '&?',
         help: '@?',
         iconAfterClicked: '&?',
         iconBeforeClicked: '&?',
@@ -162,6 +164,11 @@ angular.module('formFor').directive('textField',
         $scope.onFocus = function() {
           if ($attributes.hasOwnProperty('focused')) {
             $scope.focused();
+          }
+        };
+        $scope.onBlur = function() {
+          if ($attributes.hasOwnProperty('blurred')) {
+            $scope.blurred();
           }
         };
       }
