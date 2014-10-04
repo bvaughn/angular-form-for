@@ -37,6 +37,14 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       }
     };
 
+    $scope.onFocus = function() {
+      $scope.focused = true;
+    };
+
+    $scope.onBlur = function() {
+      $scope.focused = false;
+    };
+
     $scope.manuallyTriggerValidations = function() {
       $scope.formController.validateForm().then(
         function() {

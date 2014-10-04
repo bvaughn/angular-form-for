@@ -11,6 +11,7 @@
   <validate-field-button form-controller="formController" field-name="plainText"></validate-field-button>
   <disable-field-button is-disabled="disablePlainText"></disable-field-button>
   <text-field attribute="plainText" disable="disablePlainText"
+              focused="onFocus()" blurred="onBlur()" label="Plain Text ({{focused ? 'focused' : 'blurred'}})"
               icon-after="{pristine: 'fa fa-user', invalid: 'fa fa-times', valid: 'fa fa-check'}">
   </text-field>
 
