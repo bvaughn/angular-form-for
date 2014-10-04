@@ -31,15 +31,20 @@ angular.module('formFor').service('FieldHelper',
      * This method also unregisters the field on $scope $destroy.
      * @memberof FieldHelper
      * @param {$scope} $scope Input field $scope
+     * @param {$attributes} $attributes Input field $attributes element
      * @param {Object} formForController Controller object for parent formFor
      */
-    this.manageFieldRegistration = function($scope, formForController) {
+    this.manageFieldRegistration = function($scope, $attributes, formForController) {
       $scope.$watch('attribute', function(newValue, oldValue) {
         if ($scope.model) {
           formForController.unregisterFormField(oldValue);
         }
 
         $scope.model = formForController.registerFormField($scope.attribute);
+
+        if ($attributes.uid) { // Optional override ~ issue #57
+          $scope.model.uid = $attributes.uid;
+        }
       });
 
       $scope.$on('$destroy', function() {

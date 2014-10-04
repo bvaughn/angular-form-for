@@ -1,6 +1,6 @@
 {
   "name": "angular-form-for",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Set of Angular directives to simplify creating and validating HTML forms.",
   "keywords": [
     "angular",

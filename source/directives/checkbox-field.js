@@ -16,6 +16,8 @@
  * @param {String} label Optional field label displayed after the checkbox input.
  * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
  * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
+ * @param {String} uid Optional ID to assign to the inner <input type="checkbox"> element;
+ * A unique ID will be auto-generated if no value is provided.
  *
  * @example
  * // To display a simple TOS checkbox you might use the following markup:
@@ -52,7 +54,7 @@ angular.module('formFor').directive('checkboxField',
         };
 
         FieldHelper.manageLabel($scope, $attributes);
-        FieldHelper.manageFieldRegistration($scope, formForController);
+        FieldHelper.manageFieldRegistration($scope, $attributes, formForController);
       }
     };
   });

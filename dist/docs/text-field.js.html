@@ -64,6 +64,8 @@
  * @param {String} type Optional HTML input-type (ex.
  * text, password, etc.).
  * Defaults to "text".
+ * @param {String} uid Optional ID to assign to the inner &lt;input type="checkbox"> element;
+ * A unique ID will be auto-generated if no value is provided.
  *
  * @example
  * // To create a password input you might use the following markup:
@@ -117,7 +119,7 @@ angular.module('formFor').directive('textField',
         }
 
         FieldHelper.manageLabel($scope, $attributes);
-        FieldHelper.manageFieldRegistration($scope, formForController);
+        FieldHelper.manageFieldRegistration($scope, $attributes, formForController);
 
         // Update $scope.iconAfter based on the field state (see class-level documentation for more)
         if ($attributes.iconAfter) {

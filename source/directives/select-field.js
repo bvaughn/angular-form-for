@@ -29,6 +29,8 @@
  * @param {attribute} prevent-default-option Optional attribute to override default selection of the first list option.
  * Without this attribute, lists with `allow-blank` will default select the first option in the options array.
  * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
+ * @param {String} uid Optional ID to assign to the inner <input type="checkbox"> element;
+ * A unique ID will be auto-generated if no value is provided.
  * @param {String} valueAttribute Optional override for value key in options array.
  * Defaults to "value".
  *
@@ -87,7 +89,7 @@ angular.module('formFor').directive('selectField',
         $scope.tabIndex = $attributes.tabIndex || 0;
 
         FieldHelper.manageLabel($scope, $attributes);
-        FieldHelper.manageFieldRegistration($scope, formForController);
+        FieldHelper.manageFieldRegistration($scope, $attributes, formForController);
 
         // Helper method for setting focus on an item after a delay
         var setDelayedFocus = function($target) {
