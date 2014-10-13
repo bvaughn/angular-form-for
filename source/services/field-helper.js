@@ -13,8 +13,10 @@ angular.module('formFor').service('FieldHelper',
      * @memberof FieldHelper
      * @param {Hash} $scope Directive link $scope
      * @param {Hash} $attributes Directive link $attributes
+     * @param {Boolean} humanizeValueAttribute Fall back to a humanized version of the :value attribute if no label is provided;
+     * By default, a humanized version of the :attribute attribute will be used.
      */
-    this.manageLabel = function($scope, $attributes) {
+    this.manageLabel = function($scope, $attributes, humanizeValueAttribute) {
       if ($attributes.hasOwnProperty('label')) {
         $attributes.$observe('label', function(label) {
           $scope.label = label;
@@ -22,7 +24,10 @@ angular.module('formFor').service('FieldHelper',
       }
 
       if (FormForConfiguration.autoGenerateLabels) {
-        $scope.label = StringUtil.humanize($scope.attribute);
+        $scope.label =
+          humanizeValueAttribute ?
+            StringUtil.humanize($scope.value) :
+            StringUtil.humanize($scope.attribute);
       }
     };
 
