@@ -307,6 +307,20 @@ angular.module('formFor').directive('formFor',
         controller.resetFields = controller.resetErrors;
 
         /**
+         * Manually set a validation error message for a given field.
+         * This method should only be used when formFor's :validateOn attribute has been set to "manual".
+         * @memberof form-for
+         * @param {String} fieldName Field name within formFor data object (ex. billing.address)
+         * @param {String} error Error message to display (or null to clear the visible error)
+         */
+        controller.setFieldError = function(fieldName, error) {
+          var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+          $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+          $scope.formForStateHelper.setFieldError(bindableFieldName, error);
+        };
+
+        /**
          * Force validation for an individual field.
          * If the field fails validation an error message will automatically be shown.
          * @memberof form-for

@@ -1116,7 +1116,154 @@ For more information refer to the Validation Types page.</p></td>
 
     
     
-      <a href="form-for.js.html#line315" class="name-link"><h4 class="name" id="controller.validateField"><span class="type-signature">(static) </span>controller.validateField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line316" class="name-link"><h4 class="name" id="controller.setFieldError"><span class="type-signature">(static) </span>controller.setFieldError<span class="signature">(fieldName, error)</span><span class="type-signature"></span></h4></a>
+    
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Manually set a validation error message for a given field.
+This method should only be used when formFor's :validateOn attribute has been set to &quot;manual&quot;.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fieldName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Field name within formFor data object (ex. billing.address)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Error message to display (or null to clear the visible error)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line316">line 316</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+
+    
+    
+      <a href="form-for.js.html#line329" class="name-link"><h4 class="name" id="controller.validateField"><span class="type-signature">(static) </span>controller.validateField<span class="signature">(fieldName)</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -1207,7 +1354,7 @@ If the field fails validation an error message will automatically be shown.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line315">line 315</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -1240,7 +1387,7 @@ If the field fails validation an error message will automatically be shown.</p>
 
     
     
-      <a href="form-for.js.html#line343" class="name-link"><h4 class="name" id="controller.validateForm"><span class="type-signature">(static) </span>controller.validateForm<span class="signature">()</span><span class="type-signature"></span></h4></a>
+      <a href="form-for.js.html#line357" class="name-link"><h4 class="name" id="controller.validateForm"><span class="type-signature">(static) </span>controller.validateForm<span class="signature">()</span><span class="type-signature"></span></h4></a>
     
 
     
@@ -1283,7 +1430,7 @@ This method returns a promise that is resolved or rejected with a field to error
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line343">line 343</a>
+        <a href="form-for.js.html">directives/form-for.js</a>, <a href="form-for.js.html#line357">line 357</a>
     </li></ul></dd>
     
 
