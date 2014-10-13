@@ -250,6 +250,7 @@ pre[class*="language-"] {
 
 disable-field-button,
 reset-field-button,
+.set-field-error-button,
 validate-field-button {
   display: inline-block;
   margin-right: 1px;

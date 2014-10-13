@@ -39,6 +39,12 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       }
     };
 
+    $scope.setFieldError = function() {
+      var error = window.prompt('Enter a custom validation error message:', '');
+
+      $scope.formController.setFieldError('plainText', error);
+    };
+
     $scope.onFocus = function() {
       $scope.focused = true;
     };
