@@ -4,8 +4,19 @@
   The right-aligned buttons demonstrate how you can disable individual input controls with formFor.
 </p>
 
-<form form-for="formData" validation-rules="validationRules" submit-with="submit(data)"
+<form form-for="formData" validation-rules="validationRules" submit-with="submit(data)" validate-on="formData.validateOn"
       controller="formController" valid="formIsValid" disable="formIsDisabled">
+
+  <p>
+    Validate this form on..
+  </p>
+
+  <fieldset>
+    <radio-field value="" label="Default (no setting)" attribute="validateOn" disable="disableRadio"></radio-field>
+    <radio-field value="change" attribute="validateOn" disable="disableRadio"></radio-field>
+    <radio-field value="manual" attribute="validateOn" disable="disableRadio"></radio-field>
+    <radio-field value="submit" attribute="validateOn" disable="disableRadio"></radio-field>
+  </fieldset>
 
   <reset-field-button form-controller="formController" field-name="plainText"></reset-field-button>
   <validate-field-button form-controller="formController" field-name="plainText"></validate-field-button>
@@ -34,8 +45,6 @@
     <reset-field-button form-controller="formController" field-name="gender"></reset-field-button>
     <validate-field-button form-controller="formController" field-name="gender"></validate-field-button>
     <disable-field-button is-disabled="disableRadio"></disable-field-button>
-    <radio-field value="left" attribute="gender" disable="disableRadio"></radio-field>
-    <radio-field value="right" attribute="gender" disable="disableRadio"></radio-field>
   </fieldset>
 
   <disable-field-button is-disabled="disableButton"></disable-field-button>

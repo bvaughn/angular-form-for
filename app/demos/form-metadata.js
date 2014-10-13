@@ -2,7 +2,9 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
   function($scope, FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
-    $scope.formData = {};
+    $scope.formData = {
+      validateOn: 'manual'
+    };
     $scope.formController = {};
 
     $scope.options = [
