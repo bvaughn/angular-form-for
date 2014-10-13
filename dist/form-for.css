@@ -23,6 +23,7 @@
   text-align: center;
   vertical-align: middle;
   display: inline-block;
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#f9f9f9), to(#fff));
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border: 1px solid #aaa;
@@ -46,7 +47,8 @@ checkbox-field {
 }
 .form-for-field > input[type="checkbox"]:focus + label:before {
   border-color: #66afe9;
-  box-shadow: 0 0 4px #66afe9;
+  -webkit-box-shadow: 0 0 4px #66afe9;
+          box-shadow: 0 0 4px #66afe9;
 }
 .form-for-field > input[type="checkbox"]:checked + label:before {
   content: "\f00c";
@@ -69,7 +71,8 @@ checkbox-field {
 }
 .form-for-field > input[type="checkbox"]:invalid:focus + label:before,
 .form-for-field.invalid > input[type="checkbox"]:focus + label:before {
-  box-shadow: 0 0 4px #e35256;
+  -webkit-box-shadow: 0 0 4px #e35256;
+          box-shadow: 0 0 4px #e35256;
 }
 
 .collection-label {
@@ -157,6 +160,7 @@ field-label {
   text-align: center;
   vertical-align: middle;
   display: inline-block;
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#f9f9f9), to(#fff));
   background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border: 1px solid #aaa;
@@ -181,7 +185,8 @@ radio-field {
 }
 .form-for-field > input[type="radio"]:focus + label:before {
   border-color: #66afe9;
-  box-shadow: 0 0 4px #66afe9;
+  -webkit-box-shadow: 0 0 4px #66afe9;
+          box-shadow: 0 0 4px #66afe9;
 }
 .form-for-field > input[type="radio"]:checked + label:before {
   content: "\f111";
@@ -204,14 +209,16 @@ radio-field {
 }
 .form-for-field > input[type="radio"]:invalid:focus + label:before,
 .form-for-field.invalid > input[type="radio"]:focus + label:before {
-  box-shadow: 0 0 4px #e35256;
+  -webkit-box-shadow: 0 0 4px #e35256;
+          box-shadow: 0 0 4px #e35256;
 }
 
 .form-for-field > select,
 .form-for-field > input[type="search"] {
   display: block;
-  -moz-box-sizing: border-box;
-       box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
   width: 100%;
   line-height: 1.5;
   padding: 6px 9px;
@@ -231,6 +238,7 @@ select-field {
 }
 /************************* Select *************************/
 .form-for-field > select {
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efefef));
   background: -webkit-linear-gradient(top, #fff, #efefef);
   background: linear-gradient(top, #fff, #efefef);
   padding-right: 30px;
@@ -239,7 +247,8 @@ select-field {
   background: #fff;
   outline: none;
   border-color: #66afe9;
-  box-shadow: 0 0 4px #66afe9;
+  -webkit-box-shadow: 0 0 4px #66afe9;
+          box-shadow: 0 0 4px #66afe9;
 }
 .form-for-field > select:disabled {
   opacity: 0.5;
@@ -252,7 +261,8 @@ select-field {
   border-color: #e35256;
 }
 .form-for-field.invalid > select:focus {
-  box-shadow: 0 0 4px #e35256;
+  -webkit-box-shadow: 0 0 4px #e35256;
+          box-shadow: 0 0 4px #e35256;
 }
 .form-for-field .form-for-select-arrows:after {
   display: block;
@@ -271,7 +281,8 @@ select-field {
 }
 /************************* Typeahead *************************/
 .form-for-field > input[type="search"] {
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+  -webkit-box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+          box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
 }
 .form-for-field > input[type="search"] +ul {
   display: none;
@@ -290,15 +301,17 @@ select-field {
   border-top: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  -moz-box-sizing: border-box;
-       box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
   overflow: auto;
 }
 .form-for-field > input[type="search"]:focus {
   border-color: #66afe9;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  box-shadow: 0 0 4px #66afe9;
+  -webkit-box-shadow: 0 0 4px #66afe9;
+          box-shadow: 0 0 4px #66afe9;
 }
 .form-for-field > input[type="search"]:focus +ul {
   display: block;
@@ -357,6 +370,7 @@ submit-field {
 .submit-button:active {
   -webkit-transition: none;
   transition: none;
+  -webkit-box-shadow: inset 0 4px 2px rgba(0,0,0,0.1);
   box-shadow: inset 0 4px 2px rgba(0,0,0,0.1);
 }
 .submit-button.disabled,
@@ -365,6 +379,7 @@ submit-field {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
   cursor: default;
+  -webkit-box-shadow: none;
   box-shadow: none;
 }
 .submit-button-icon {
@@ -374,8 +389,9 @@ submit-field {
 .form-for-field input,
 .form-for-field textarea {
   display: block;
-  -moz-box-sizing: border-box;
-       box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
   width: 100%;
   line-height: 1.5;
   padding: 6px 9px;
@@ -395,12 +411,14 @@ text-field {
 }
 .form-for-field input,
 .form-for-field textarea {
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+  -webkit-box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
+          box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
 }
 .form-for-field input:focus,
 .form-for-field textarea:focus {
   border-color: #66afe9;
-  box-shadow: 0 0 4px #66afe9;
+  -webkit-box-shadow: 0 0 4px #66afe9;
+          box-shadow: 0 0 4px #66afe9;
 }
 .form-for-field input:disabled,
 .form-for-field textarea:disabled {
@@ -417,7 +435,8 @@ text-field {
 .form-for-field.invalid textarea:focus,
 .form-for-field input:invalid:focus,
 .form-for-field textarea:invalid:focus {
-  box-shadow: 0 0 4px #e35256;
+  -webkit-box-shadow: 0 0 4px #e35256;
+          box-shadow: 0 0 4px #e35256;
 }
 .form-for-field.with-icon-before input,
 .form-for-field.with-icon-before textarea {

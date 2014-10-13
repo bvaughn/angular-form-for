@@ -28,6 +28,10 @@
  * This function should accept a named parameter data (the model object) and should return a promise to be resolved/rejected based on the result of the submission.
  * In the event of a rejection, the promise can return an error string or a map of field-names to specific errors.
  * See below for an example.
+ * @param {String} validateOn Controls form validation behavior.
+ * Acceptable values include: change, submit, manual.
+ * Forms validate on-change by default, which is to say that validation is run anytime a field-value is changed.
+ * To defver validation until the form is submitted, use "submit" and to disable auto-validation entirely use "manual".
  * @param {Function} validationFailed Optional callback to be invoked whenever a form-submit is blocked due to a failed validation.
  * @param {Object} validationRules Set of client-side validation rules (keyed by form field names) to apply to form-data before submitting.
  * For more information refer to the Validation Types page.
@@ -46,6 +50,7 @@ angular.module('formFor').directive('formFor',
         submitError: '&?',
         submitWith: '&?',
         valid: '=?',
+        validateOn: '=?',
         validationFailed: '&?',
         validationRules: '=?'
       },
@@ -167,7 +172,9 @@ angular.module('formFor').directive('formFor',
 
               fieldDatum.bindableWrapper.bindable = newValue;
 
-              controller.validateField(fieldName);
+              if (!$scope.validateOn || $scope.validateOn === 'change') {
+                controller.validateField(fieldName);
+              }
 
               // Changes in form-data should also trigger validations.
               // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
@@ -243,7 +250,7 @@ angular.module('formFor').directive('formFor',
             // The initial $watch should not trigger a visible validation...
             if (!watcherInitialized) {
               watcherInitialized = true;
-            } else {
+            } else if (!$scope.validateOn || $scope.validateOn === 'change') {
               ModelValidator.validateCollection($scope.formFor, fieldName, $scope.$validationRules).then(
                 function() {
                   $scope.formForStateHelper.setFieldError(bindableFieldName, null);
@@ -452,13 +459,25 @@ angular.module('formFor').directive('formFor',
           });
         };
       },
+
       link: function($scope, $element, $attributes) {
         $element.on('submit', // Override form submit to trigger overall validation.
           function() {
             $scope.formForStateHelper.setFormSubmitted(true);
             $scope.disable = true;
 
-            $scope.controller.validateForm().then(
+            var validationPromise;
+
+            // By default formFor validates on-change,
+            // But we need to [re-]validate on submit as well to handle pristine fields.
+            // The only case we don't want to validate for is 'manual'.
+            if ($scope.validateOn === 'manual') {
+              validationPromise = $q.resolve();
+            } else {
+              validationPromise = $scope.controller.validateForm();
+            }
+
+            validationPromise.then(
               function(response) {
                 var promise;
 
@@ -489,9 +508,11 @@ angular.module('formFor').directive('formFor',
                     // If the remote response returned inline-errors update our error map.
                     // This is unecessary if a string was returned.
                     if (angular.isObject(errorMessageOrErrorMap)) {
-                      // TODO Questionable: Maybe server should be forced to return fields/collections constraints?
-                      $scope.updateCollectionErrors(errorMessageOrErrorMap);
-                      $scope.updateFieldErrors(errorMessageOrErrorMap);
+                      if ($scope.validateOn !== 'manual') {
+                        // TODO Questionable: Maybe server should be forced to return fields/collections constraints?
+                        $scope.updateCollectionErrors(errorMessageOrErrorMap);
+                        $scope.updateFieldErrors(errorMessageOrErrorMap);
+                      }
                     }
 
                     // $scope.submitError is wrapped with a virtual function so we must check via attributes
