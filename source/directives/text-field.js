@@ -80,6 +80,9 @@ angular.module('formFor').directive('textField',
           return;
         }
 
+        // Expose textField attributes to textField template partials for easier customization (see issue #61)
+        $scope.attributes = $attributes;
+
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
         $scope.tabIndex = $attributes.tabIndex || 0;
