@@ -3,7 +3,7 @@
                   'has-error': model.error }">
 
   <field-label  ng-if="label"
-                input-uid="{{model.uid}}"
+                input-uid="{{enableFiltering ? model.uid + '-filter' : model.uid}}"
                 iud="{{model.uid}}-label"
                 label="{{label}}"
                 help="{{help}}"
@@ -17,7 +17,7 @@
   <!-- Filtered dropdowns use a type-ahead style component -->
   <div ng-show="enableFiltering" class="input-group">
     <input  aria-manager
-            id="{{model.uid}}"
+            id="{{model.uid}}-filter"
             type="search" class="form-control filter-text-input"
             tabindex="{{tabIndex}}"
             placeholder="{{placeholder}}"

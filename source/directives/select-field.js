@@ -249,7 +249,6 @@ angular.module('formFor').directive('selectField',
          *****************************************************************************************/
 
         var filterText = $element.find('input');
-        var select = $element.find('select');
 
         $scope.setFilterFocus = function() {
           setDelayedFocus(filterText);
