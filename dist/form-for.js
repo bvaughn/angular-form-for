@@ -2064,6 +2064,10 @@ angular.module('formFor').service('ModelValidator',
         if (rules.required) {
           var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
 
+          if (angular.isString(value)) {
+            value = value.replace(/\s/g, ''); // Disallow an all-whitespace string for required fields
+          }
+
           if (!!value !== required) {
             return $q.reject(
               angular.isObject(rules.required) ?

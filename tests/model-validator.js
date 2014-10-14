@@ -93,6 +93,10 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({required: ''}, 'required', model.rules)).toBeRejected();
     });
 
+    it('should reject a value containing only whitespace', function() {
+      expect(ModelValidator.validateField({required: ' '}, 'required', model.rules)).toBeRejected();
+    });
+
     it('should allow a non-empty value', function() {
       expect(ModelValidator.validateField({required: '1'}, 'required', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({required: true}, 'required', model.rules)).toBeResolved();
