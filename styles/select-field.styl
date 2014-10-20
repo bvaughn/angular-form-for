@@ -56,6 +56,12 @@ select-field {
   }
 }
 
+@-moz-document url-prefix() {
+  .form-for-select-arrows {
+    display: none; // Fix Firefox double arrows
+  }
+}
+
 /************************* Typeahead *************************/
 
 .form-for-field {
