@@ -2079,7 +2079,7 @@ angular.module('formFor').service('ModelValidator',
         if (rules.minlength) {
           var minlength = angular.isObject(rules.minlength) ? rules.minlength.rule : rules.minlength;
 
-          if (value.length < minlength) {
+          if (value && value.length < minlength) {
             return $q.reject(
               angular.isObject(rules.minlength) ?
                 rules.minlength.message :
