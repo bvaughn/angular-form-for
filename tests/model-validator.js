@@ -127,13 +127,13 @@ describe('ModelValidator', function() {
       };
     });
 
-    it('should reject null or undefined value', function() {
-      expect(ModelValidator.validateField({minlengthField: null}, 'minlengthField', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({minlengthField: undefined}, 'minlengthField', model.rules)).toBeRejected();
+    it('should not reject null or undefined value', function() {
+      expect(ModelValidator.validateField({minlengthField: null}, 'minlengthField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({minlengthField: undefined}, 'minlengthField', model.rules)).toBeResolved();
     });
 
-    it('should reject an empty string', function() {
-      expect(ModelValidator.validateField({minlengthField: ''}, 'minlengthField', model.rules)).toBeRejected();
+    it('should not reject an empty string', function() {
+      expect(ModelValidator.validateField({minlengthField: ''}, 'minlengthField', model.rules)).toBeResolved();
     });
 
     it('should reject a string less than the required minimum length', function() {
@@ -415,11 +415,11 @@ describe('ModelValidator', function() {
       };
     });
 
-    it('should reject values rejected by the custom validator', function() {
+    it('should allow values accepted by the custom validator', function() {
       expect(ModelValidator.validateField({customField: 'allowed'}, 'customField', model.rules)).toBeResolved();
     });
 
-    it('should allow values accepted by the custom validator', function() {
+    it('should reject values rejected by the custom validator', function() {
       expect(ModelValidator.validateField({customField: null}, 'customField', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({customField: undefined}, 'customField', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({customField: ''}, 'customField', model.rules)).toBeRejected();
