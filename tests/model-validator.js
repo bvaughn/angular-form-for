@@ -306,6 +306,7 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({email: 'abc@abc.com'}, 'email', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({email: 'abc.def@abc.com'}, 'email', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({email: 'abc+def@abc.com'}, 'email', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({email: 'abc+def@abc.co.il'}, 'email', model.rules)).toBeResolved();
     });
 
     it('email should reject non-email', function() {
