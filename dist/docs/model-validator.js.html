@@ -262,7 +262,7 @@ angular.module('formFor').service('ModelValidator',
                 FormForConfiguration.validationFailedForPositiveTypeMessage);
           }
 
-          if (type.indexOf('email') >= 0 &amp;&amp; stringValue &amp;&amp; !stringValue.match(/^[\w\.\+]+@\w+\.\w+$/)) {
+          if (type.indexOf('email') >= 0 &amp;&amp; stringValue &amp;&amp; !stringValue.match(/^.+@.+$/)) {
             return $q.reject(
               angular.isObject(rules.type) ?
                 rules.type.message :
