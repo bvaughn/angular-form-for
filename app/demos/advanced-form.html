@@ -4,7 +4,7 @@
   <text-field label="Username" attribute="username" icon-after="fa fa-user" placeholder="brian" help="This username will be visible to others"></text-field>
   <text-field label="Password" attribute="password" icon-before="fa fa-key" type="password" placeholder="Pick a good one" help="Strong passwords usually have mixed-case letters and numbers"></text-field>
 
-  <text-field label="Comments" attribute="comments" multiline placeholder="Go ahead, say anything."></text-field>
+  <text-field label="Comments" attribute="comments" multiline rows="4" placeholder="Go ahead, say anything."></text-field>
 
   <h4>Gender</h4>
   <radio-field attribute="gender" label="{{gender.label}}" value="{{gender.value}}" ng-repeat="gender in genders"></radio-field>
