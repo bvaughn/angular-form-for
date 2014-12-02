@@ -32,6 +32,7 @@
  * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
  * @param {attribute} multiline The presence of this attribute enables multi-line input.
  * @param {String} placeholder Optional placeholder text to display if input is empty.
+ * @param {int} rows Optional number of rows for a multline `<textarea>`; defaults to 3.
  * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
  * @param {String} type Optional HTML input-type (ex.
  * text, password, etc.).
@@ -71,7 +72,8 @@ angular.module('formFor').directive('textField',
         help: '@?',
         iconAfterClicked: '&?',
         iconBeforeClicked: '&?',
-        placeholder: '@?'
+        placeholder: '@?',
+        rows: '=?'
       },
       link: function($scope, $element, $attributes, formForController) {
         if (!$scope.attribute) {
@@ -83,6 +85,7 @@ angular.module('formFor').directive('textField',
         // Expose textField attributes to textField template partials for easier customization (see issue #61)
         $scope.attributes = $attributes;
 
+        $scope.rows = $scope.rows || 3;
         $scope.type = $attributes.type || 'text';
         $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes.multiline !== 'false';
         $scope.tabIndex = $attributes.tabIndex || 0;
