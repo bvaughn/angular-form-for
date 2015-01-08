@@ -10,7 +10,8 @@
           tabindex="{{tabIndex}}"
           ng-model="model.bindable"
           ng-checked="checked"
-          ng-disabled="disable || model.disabled">
+          ng-disabled="disable || model.disabled"
+          ng-change="changed()">
 
   <field-label  ng-if="label"
                 input-uid="{{model.uid}}"

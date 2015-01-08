@@ -18,6 +18,7 @@
  * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
  * @param {String} uid Optional ID to assign to the inner <input type="checkbox"> element;
  * A unique ID will be auto-generated if no value is provided.
+ * @param {Function} changed Optional function to be invoked on checkbox change.
  *
  * @example
  * // To display a simple TOS checkbox you might use the following markup:
@@ -34,7 +35,8 @@ angular.module('formFor').directive('checkboxField',
       scope: {
         attribute: '@',
         disable: '=',
-        help: '@?'
+        help: '@?',
+        changed: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
         if (!$scope.attribute) {
