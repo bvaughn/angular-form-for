@@ -169,7 +169,7 @@ angular.module('formFor').service('ModelValidator',
           var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
 
           if (angular.isString(value)) {
-            value = value.replace(/\s/g, ''); // Disallow an all-whitespace string for required fields
+            value = value.replace(/\s+$/, ''); // Disallow an all-whitespace at the end of the string
           }
 
           if (!!value !== required) {
