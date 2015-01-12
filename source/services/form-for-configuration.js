@@ -25,6 +25,7 @@ angular.module('formFor').service('FormForConfiguration',
       validationFailedForEmailTypeMessage: 'Invalid email format',
       validationFailedForIntegerTypeMessage: 'Must be an integer',
       validationFailedForNegativeTypeMessage: 'Must be negative',
+      validationFailedForNonNegativeTypeMessage: 'Must be non-negative',
       validationFailedForNumericTypeMessage: 'Must be numeric',
       validationFailedForPositiveTypeMessage: 'Must be positive',
 
@@ -198,6 +199,16 @@ angular.module('formFor').service('FormForConfiguration',
        */
       setValidationFailedForNegativeTypeMessage: function(value) {
         this.validationFailedForNegativeTypeMessage = value;
+      },
+
+      /**
+       * Override the default error message for failed type = 'nonNegative' validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
+      setValidationFailedForNonNegativeTypeMessage: function(value) {
+        this.validationFailedForNonNegativeTypeMessage = value;
       },
 
       /**

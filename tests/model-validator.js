@@ -210,6 +210,7 @@ describe('ModelValidator', function() {
         email: { type: 'email' },
         integer: { type: 'integer' },
         negative: { type: 'negative' },
+        nonNegative: { type: 'nonNegative' },
         number: { type: 'number' },
         positive: { type: 'positive' }
       };
@@ -269,17 +270,41 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({positive: '1.23'}, 'positive', model.rules)).toBeResolved();
     });
 
-    it('positive should reject negative numeric input', function() {
+    it('positive should reject non-positive numeric input', function() {
       expect(ModelValidator.validateField({positive: -123}, 'positive', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({positive: -1.23}, 'positive', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({positive: 0}, 'positive', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({positive: '-123'}, 'positive', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({positive: '-1.23'}, 'positive', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({positive: '0'}, 'positive', model.rules)).toBeRejected();
     });
 
     it('positive should not require input unless the required flag is also present', function() {
       expect(ModelValidator.validateField({positive: ''}, 'positive', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({positive: undefined}, 'positive', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({positive: null}, 'positive', model.rules)).toBeResolved();
+    });
+
+    iit('non-negative should accept positive numeric input', function() {
+      expect(ModelValidator.validateField({nonNegative: 123}, 'nonNegative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({nonNegative: 1.23}, 'nonNegative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({nonNegative: 0}, 'nonNegative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({nonNegative: '123'}, 'nonNegative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({nonNegative: '1.23'}, 'nonNegative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({nonNegative: '0'}, 'nonNegative', model.rules)).toBeResolved();
+    });
+
+    it('non-negative should reject negative numeric input', function() {
+      expect(ModelValidator.validateField({nonNegative: -123}, 'nonNegative', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({nonNegative: -1.23}, 'nonNegative', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({nonNegative: '-123'}, 'nonNegative', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({nonNegative: '-1.23'}, 'nonNegative', model.rules)).toBeRejected();
+    });
+
+    it('non-negative should not require input unless the required flag is also present', function() {
+      expect(ModelValidator.validateField({nonNegative: ''}, 'nonNegative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({nonNegative: undefined}, 'nonNegative', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({nonNegative: null}, 'nonNegative', model.rules)).toBeResolved();
     });
 
     it('negative should accept negative numeric input', function() {
@@ -914,6 +939,12 @@ describe('ModelValidator', function() {
       FormForConfiguration.setValidationFailedForNegativeTypeMessage('custom type negative');
 
       testCustomValidationFailureMessage('type', 'negative integer', '1', 'custom type negative');
+    });
+
+    it('should allow overrides for type non-negative', function() {
+      FormForConfiguration.setValidationFailedForNonNegativeTypeMessage('custom type non-negative');
+
+      testCustomValidationFailureMessage('type', 'nonNegative integer', '1', 'custom type non-negative');
     });
 
     it('should allow overrides for type positive', function() {
