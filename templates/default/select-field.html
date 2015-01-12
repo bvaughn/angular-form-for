@@ -10,11 +10,21 @@
   <field-error uid="{{model.uid}}-error" error="model.error"></field-error>
 
   <!-- Unfiltered dropdowns use a regular <select> -->
-  <select ng-if="!enableFiltering" aria-manager
+  <select ng-if="!enableFiltering && !multiple" aria-manager
           id="{{model.uid}}"
           class="select-field-select"
           tabindex="{{tabIndex}}"
           placeholder="{{placeholder}}"
+          ng-disabled="disable || model.disabled"
+          ng-model="model.bindable"
+          ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
+  </select>
+
+  <!-- Binding to the 'multiple' attribute is not supported, even with ng-attr-multiple. -->
+  <select ng-if="!enableFiltering && multiple" aria-manager multiple
+          id="{{model.uid}}"
+          class="select-field-select"
+          tabindex="{{tabIndex}}"
           ng-disabled="disable || model.disabled"
           ng-model="model.bindable"
           ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">

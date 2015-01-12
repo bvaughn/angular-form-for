@@ -40,6 +40,7 @@ angular.module('formFor').directive('ariaManager', function() {
  * @param {int} tabIndex Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
  * @param {String} uid Optional ID to assign to the inner <input type="checkbox"> element;
  * A unique ID will be auto-generated if no value is provided.
+ * @param {Function} changed Optional function to be invoked on checkbox change.
  *
  * @example
  * // To display a simple TOS checkbox you might use the following markup:
@@ -56,7 +57,8 @@ angular.module('formFor').directive('checkboxField',
       scope: {
         attribute: '@',
         disable: '=',
-        help: '@?'
+        help: '@?',
+        changed: '@?'
       },
       link: function($scope, $element, $attributes, formForController) {
         if (!$scope.attribute) {
@@ -994,6 +996,7 @@ angular.module('formFor').directive('radioField',
  * (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.
  * @param {String} labelAttribute Optional override for label key in options array.
  * Defaults to "label".
+ * @param {Boolean} multiple Drop-down list should allow multiple selections.
  * @param {Array} options Set of options, each containing a label and value key.
  * The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.
  * @param {String} placeholder Optional placeholder text to display if no value has been selected.
@@ -1040,6 +1043,7 @@ angular.module('formFor').directive('selectField',
         filter: '=?',
         filterDebounce: '@?',
         help: '@?',
+        multiple: '=?',
         options: '='
       },
       link: function($scope, $element, $attributes, formForController) {
@@ -1123,7 +1127,7 @@ angular.module('formFor').directive('selectField',
             });
           }
 
-          if (!$scope.selectedOption) {
+          if (!$scope.selectedOption && !$scope.multiple) {
             $scope.filteredOptions.unshift($scope.placeholderOption);
           } else if ($scope.allowBlank) {
             $scope.filteredOptions.unshift($scope.emptyOption);
@@ -2068,7 +2072,7 @@ angular.module('formFor').service('ModelValidator',
           var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
 
           if (angular.isString(value)) {
-            value = value.replace(/\s/g, ''); // Disallow an all-whitespace string for required fields
+            value = value.replace(/\s+$/, ''); // Disallow an all-whitespace at the end of the string
           }
 
           if (!!value !== required) {
