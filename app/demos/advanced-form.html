@@ -9,6 +9,10 @@
   <h4>Gender</h4>
   <radio-field attribute="gender" label="{{gender.label}}" value="{{gender.value}}" ng-repeat="gender in genders"></radio-field>
 
+  <h4>Select Menus</h4>
+  <select-field attribute="hobbies" label="Hobbies" options="hobbies"></select-field>
+  <select-field attribute="hobbiesMulti" label="Hobbies (multi)" options="hobbies" multiple="true"></select-field>
+
   <h4>Type validations</h4>
   <text-field label="Email" attribute="email"></text-field>
   <text-field label="Negative integer" attribute="negativeInteger"></text-field>

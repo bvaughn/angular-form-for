@@ -15,6 +15,13 @@ angular.module('formForDocumentation').controller('AdvancedFormDemoController',
       {label: 'Unspecified', value: '3'}
     ];
 
+    $scope.hobbies = [
+      {value: 'art', label: 'Art'},
+      {value: 'music', label: 'Music'},
+      {value: 'running', label: 'Running'},
+      {value: 'video_games', label: 'Video Games'}
+    ];
+
     $scope.submitFailed = function(error) {
       flashr.now.info(error);
     };
