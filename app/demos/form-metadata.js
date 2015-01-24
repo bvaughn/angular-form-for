@@ -53,8 +53,8 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       $scope.focused = false;
     };
 
-    $scope.manuallyTriggerValidations = function() {
-      $scope.formController.validateForm().then(
+    $scope.manuallyTriggerValidations = function(showErrors) {
+      $scope.formController.validateForm(showErrors).then(
         function() {
           flashr.now.success('Your form is valid');
         },
