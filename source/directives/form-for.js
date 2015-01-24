@@ -353,8 +353,9 @@ angular.module('formFor').directive('formFor',
          * Validate all registered form-fields.
          * This method returns a promise that is resolved or rejected with a field to error message map.
          * @memberof form-for
+         * @param {Boolean} showErrors Mark fields with errors as invalid (visually) after validation
          */
-        controller.validateForm = function() {
+        controller.validateForm = function(showErrors) {
           // Reset errors before starting new validation.
           $scope.updateCollectionErrors({});
           $scope.updateFieldErrors({});
@@ -395,6 +396,23 @@ angular.module('formFor').directive('formFor',
               // If all collections are valid (or no collections exist) this will be an empty array.
               if (angular.isArray(errors[0]) && errors[0].length === 0) {
                 errors.splice(0,1);
+              }
+
+              // Errors won't be shown for clean fields, so mark errored fields as dirty.
+              if (showErrors) {
+                angular.forEach(errors, function(errorObjectOrArray) {
+                  var flattenedFields = NestedObjectHelper.flattenObjectKeys(errorObjectOrArray);
+
+                  angular.forEach(flattenedFields, function(fieldName) {
+                    var error = NestedObjectHelper.readAttribute(errorObjectOrArray, fieldName);
+
+                    if (error) {
+                      var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+                      $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+                    }
+                  });
+                });
               }
 
               deferred.reject(errors);

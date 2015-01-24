@@ -652,8 +652,9 @@ angular.module('formFor').directive('formFor',
          * Validate all registered form-fields.
          * This method returns a promise that is resolved or rejected with a field to error message map.
          * @memberof form-for
+         * @param {Boolean} showErrors Mark fields with errors as invalid (visually) after validation
          */
-        controller.validateForm = function() {
+        controller.validateForm = function(showErrors) {
           // Reset errors before starting new validation.
           $scope.updateCollectionErrors({});
           $scope.updateFieldErrors({});
@@ -694,6 +695,23 @@ angular.module('formFor').directive('formFor',
               // If all collections are valid (or no collections exist) this will be an empty array.
               if (angular.isArray(errors[0]) && errors[0].length === 0) {
                 errors.splice(0,1);
+              }
+
+              // Errors won't be shown for clean fields, so mark errored fields as dirty.
+              if (showErrors) {
+                angular.forEach(errors, function(errorObjectOrArray) {
+                  var flattenedFields = NestedObjectHelper.flattenObjectKeys(errorObjectOrArray);
+
+                  angular.forEach(flattenedFields, function(fieldName) {
+                    var error = NestedObjectHelper.readAttribute(errorObjectOrArray, fieldName);
+
+                    if (error) {
+                      var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
+
+                      $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+                    }
+                  });
+                });
               }
 
               deferred.reject(errors);
@@ -1614,6 +1632,7 @@ angular.module('formFor').service('FormForConfiguration',
       validationFailedForEmailTypeMessage: 'Invalid email format',
       validationFailedForIntegerTypeMessage: 'Must be an integer',
       validationFailedForNegativeTypeMessage: 'Must be negative',
+      validationFailedForNonNegativeTypeMessage: 'Must be non-negative',
       validationFailedForNumericTypeMessage: 'Must be numeric',
       validationFailedForPositiveTypeMessage: 'Must be positive',
 
@@ -1787,6 +1806,16 @@ angular.module('formFor').service('FormForConfiguration',
        */
       setValidationFailedForNegativeTypeMessage: function(value) {
         this.validationFailedForNegativeTypeMessage = value;
+      },
+
+      /**
+       * Override the default error message for failed type = 'nonNegative' validations.
+       * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+       * @memberof FormForConfiguration
+       * @param {String} value Custom error message string
+       */
+      setValidationFailedForNonNegativeTypeMessage: function(value) {
+        this.validationFailedForNonNegativeTypeMessage = value;
       },
 
       /**
@@ -2108,40 +2137,68 @@ angular.module('formFor').service('ModelValidator',
         if (rules.type) {
           var type = angular.isObject(rules.type) ? rules.type.rule : rules.type;
           var stringValue = value.toString();
+          var numericValue = Number(value);
 
-          if (type.indexOf('integer') >= 0 && stringValue && !stringValue.match(/^\-*[0-9]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForIntegerTypeMessage);
-          }
+          if (type) {
+            var types = type.split(' ');
 
-          if (type.indexOf('number') >= 0 && stringValue && !stringValue.match(/^\-*[0-9\.]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForNumericTypeMessage);
-          }
+            for (type in types) {
+              switch (type) {
+                case 'integer':
+                  if (isNaN(numericValue) || numericValue % 1 !== 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForIntegerTypeMessage);
+                  }
+                  break;
 
-          if (type.indexOf('negative') >= 0 && stringValue && !stringValue.match(/^\-[0-9\.]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForNegativeTypeMessage);
-          }
+                case 'number':
+                  if (isNaN(numericValue)) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForNumericTypeMessage);
+                  }
+                  break;
 
-          if (type.indexOf('positive') >= 0 && stringValue && !stringValue.match(/^[0-9\.]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForPositiveTypeMessage);
-          }
+                case 'negative':
+                  if (isNaN(numericValue) || numericValue >= 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedNegativeTypeMessage);
+                  }
+                  break;
 
-          if (type.indexOf('email') >= 0 && stringValue && !stringValue.match(/^.+@.+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForEmailTypeMessage);
+                case 'nonNegative':
+                  if (isNaN(numericValue) || numericValue < 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForNonNegativeTypeMessage);
+                  }
+                  break;
+
+                case 'positive':
+                  if (isNaN(numericValue) || numericValue <= 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForPositiveTypeMessage);
+                  }
+                  break;
+
+                case 'email':
+                  if (stringValue && !stringValue.match(/^.+@.+$/)) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForEmailTypeMessage);
+                  }
+                  break;
+              }
+            }
           }
         }
 

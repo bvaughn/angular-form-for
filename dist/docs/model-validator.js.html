@@ -233,40 +233,68 @@ angular.module('formFor').service('ModelValidator',
         if (rules.type) {
           var type = angular.isObject(rules.type) ? rules.type.rule : rules.type;
           var stringValue = value.toString();
+          var numericValue = Number(value);
 
-          if (type.indexOf('integer') >= 0 &amp;&amp; stringValue &amp;&amp; !stringValue.match(/^\-*[0-9]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForIntegerTypeMessage);
-          }
+          if (type) {
+            var types = type.split(' ');
 
-          if (type.indexOf('number') >= 0 &amp;&amp; stringValue &amp;&amp; !stringValue.match(/^\-*[0-9\.]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForNumericTypeMessage);
-          }
+            for (type in types) {
+              switch (type) {
+                case 'integer':
+                  if (isNaN(numericValue) || numericValue % 1 !== 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForIntegerTypeMessage);
+                  }
+                  break;
 
-          if (type.indexOf('negative') >= 0 &amp;&amp; stringValue &amp;&amp; !stringValue.match(/^\-[0-9\.]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForNegativeTypeMessage);
-          }
+                case 'number':
+                  if (isNaN(numericValue)) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForNumericTypeMessage);
+                  }
+                  break;
 
-          if (type.indexOf('positive') >= 0 &amp;&amp; stringValue &amp;&amp; !stringValue.match(/^[0-9\.]+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForPositiveTypeMessage);
-          }
+                case 'negative':
+                  if (isNaN(numericValue) || numericValue >= 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedNegativeTypeMessage);
+                  }
+                  break;
 
-          if (type.indexOf('email') >= 0 &amp;&amp; stringValue &amp;&amp; !stringValue.match(/^.+@.+$/)) {
-            return $q.reject(
-              angular.isObject(rules.type) ?
-                rules.type.message :
-                FormForConfiguration.validationFailedForEmailTypeMessage);
+                case 'nonNegative':
+                  if (isNaN(numericValue) || numericValue &lt; 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForNonNegativeTypeMessage);
+                  }
+                  break;
+
+                case 'positive':
+                  if (isNaN(numericValue) || numericValue &lt;= 0) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForPositiveTypeMessage);
+                  }
+                  break;
+
+                case 'email':
+                  if (stringValue &amp;&amp; !stringValue.match(/^.+@.+$/)) {
+                    return $q.reject(
+                      angular.isObject(rules.type) ?
+                        rules.type.message :
+                        FormForConfiguration.validationFailedForEmailTypeMessage);
+                  }
+                  break;
+              }
+            }
           }
         }
 
