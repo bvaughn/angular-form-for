@@ -120,7 +120,7 @@ angular.module('formFor').directive('formFor',
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
           if ($scope.fields.hasOwnProperty(bindableFieldName)) {
-            throw Error('Field "' + fieldName + '" has already eben registered. Field names must be unique.');
+            throw Error('Field "' + fieldName + '" has already been registered. Field names must be unique.');
           }
 
           var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
