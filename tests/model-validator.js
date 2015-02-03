@@ -285,7 +285,7 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({positive: null}, 'positive', model.rules)).toBeResolved();
     });
 
-    iit('non-negative should accept positive numeric input', function() {
+    it('non-negative should accept positive numeric input', function() {
       expect(ModelValidator.validateField({nonNegative: 123}, 'nonNegative', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({nonNegative: 1.23}, 'nonNegative', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({nonNegative: 0}, 'nonNegative', model.rules)).toBeResolved();
