@@ -177,6 +177,14 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
+     * Helper function for determining if numeric input has been provided.
+     * This is to guard against the fact that `new Number('') == 0`.
+     */
+    this.isConsideredNumeric_ = function(stringValue, numericValue) {
+      return stringValue &amp;&amp; !isNaN(numericValue);
+    };
+
+    /**
      * Validates a value against the related rule-set (within validationRules).
      * This method returns a promise to be resolved on successful validation.
      * If validation fails the promise will be rejected with an error message.
@@ -191,7 +199,12 @@ angular.module('formFor').service('ModelValidator',
       var value = NestedObjectHelper.readAttribute(model, fieldName);
 
       if (rules) {
-        value = value || '';
+        // Don't turn falsy (but non-null) values like 0 or false to ''
+        if (value === undefined || value === null) {
+          value = "";
+        } else {
+          value = value;
+        }
 
         if (rules.required) {
           var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
@@ -200,7 +213,7 @@ angular.module('formFor').service('ModelValidator',
             value = value.replace(/\s+$/, ''); // Disallow an all-whitespace at the end of the string
           }
 
-          if (!!value !== required) {
+          if (required &amp;&amp; !value) {
             return $q.reject(
               angular.isObject(rules.required) ?
                 rules.required.message :
@@ -238,10 +251,11 @@ angular.module('formFor').service('ModelValidator',
           if (type) {
             var types = type.split(' ');
 
-            for (type in types) {
+            for (var index in types) {
+              type = types[index];
               switch (type) {
                 case 'integer':
-                  if (isNaN(numericValue) || numericValue % 1 !== 0) {
+                  if (stringValue &amp;&amp; (isNaN(numericValue) || numericValue % 1 !== 0)) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
@@ -250,7 +264,7 @@ angular.module('formFor').service('ModelValidator',
                   break;
 
                 case 'number':
-                  if (isNaN(numericValue)) {
+                  if (stringValue &amp;&amp; isNaN(numericValue)) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
@@ -259,16 +273,16 @@ angular.module('formFor').service('ModelValidator',
                   break;
 
                 case 'negative':
-                  if (isNaN(numericValue) || numericValue >= 0) {
+                  if (this.isConsideredNumeric_(stringValue, numericValue) &amp;&amp; numericValue >= 0) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
-                        FormForConfiguration.validationFailedNegativeTypeMessage);
+                        FormForConfiguration.validationFailedForNegativeTypeMessage);
                   }
                   break;
 
                 case 'nonNegative':
-                  if (isNaN(numericValue) || numericValue &lt; 0) {
+                  if (this.isConsideredNumeric_(stringValue, numericValue) &amp;&amp; numericValue &lt; 0) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
@@ -277,7 +291,7 @@ angular.module('formFor').service('ModelValidator',
                   break;
 
                 case 'positive':
-                  if (isNaN(numericValue) || numericValue &lt;= 0) {
+                  if (this.isConsideredNumeric_(stringValue, numericValue) &amp;&amp; numericValue &lt;= 0) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
@@ -357,7 +371,7 @@ angular.module('formFor').service('ModelValidator',
 
 <nav>
   <ul class="list-group">
-    <li><h3>Directives</h3><ul class="list-unstyled"><a class="list-group-item" href="checkbox-field.html">checkbox-field</a><a class="list-group-item" href="collection-label.html">collection-label</a><a class="list-group-item" href="field-error.html">field-error</a><a class="list-group-item" href="field-label.html">field-label</a><a class="list-group-item" href="form-for.html">form-for</a><a class="list-group-item" href="form-for-debounce.html">form-for-debounce</a><a class="list-group-item" href="radio-field.html">radio-field</a><a class="list-group-item" href="select-field.html">select-field</a><a class="list-group-item" href="submit-button.html">submit-button</a><a class="list-group-item" href="text-field.html">text-field</a></ul></li><li><h3>Services</h3><ul class="list-unstyled"><a class="list-group-item" href="FieldHelper.html">FieldHelper</a><a class="list-group-item" href="FormForConfiguration.html">FormForConfiguration</a><a class="list-group-item" href="ModelValidator.html">ModelValidator</a><a class="list-group-item" href="NestedObjectHelper.html">NestedObjectHelper</a><a class="list-group-item" href="StringUtil.html">StringUtil</a></ul></li><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
+    <li><h3>Directives</h3><ul class="list-unstyled"><a class="list-group-item" href="checkbox-field.html">checkbox-field</a><a class="list-group-item" href="collection-label.html">collection-label</a><a class="list-group-item" href="field-error.html">field-error</a><a class="list-group-item" href="field-label.html">field-label</a><a class="list-group-item" href="form-for.html">form-for</a><a class="list-group-item" href="form-for-debounce.html">form-for-debounce</a><a class="list-group-item" href="radio-field.html">radio-field</a><a class="list-group-item" href="select-field.html">select-field</a><a class="list-group-item" href="submit-button.html">submit-button</a><a class="list-group-item" href="text-field.html">text-field</a></ul></li><li><h3>Services</h3><ul class="list-unstyled"><a class="list-group-item" href="FieldHelper.html">FieldHelper</a><a class="list-group-item" href="FormForConfiguration.html">FormForConfiguration</a><a class="list-group-item" href="ModelValidator.html">ModelValidator</a><a class="list-group-item" href="NestedObjectHelper.html">NestedObjectHelper</a><a class="list-group-item" href="StringUtil.html">StringUtil</a></ul></li><h3>Global</h3><ul><li><a href="global.html#isCollectionRequired">isCollectionRequired</a></li><li><a href="global.html#isConsideredNumeric_">isConsideredNumeric_</a></li><li><a href="global.html#isFieldRequired">isFieldRequired</a></li></ul>
   </ul>
 </nav>
 

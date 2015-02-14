@@ -419,7 +419,7 @@ angular.module('formFor').directive('formFor',
           var bindableFieldName = NestedObjectHelper.flattenAttribute(fieldName);
 
           if ($scope.fields.hasOwnProperty(bindableFieldName)) {
-            throw Error('Field "' + fieldName + '" has already eben registered. Field names must be unique.');
+            throw Error('Field "' + fieldName + '" has already been registered. Field names must be unique.');
           }
 
           var rules = NestedObjectHelper.readAttribute($scope.$validationRules, fieldName);
@@ -2081,6 +2081,14 @@ angular.module('formFor').service('ModelValidator',
     };
 
     /**
+     * Helper function for determining if numeric input has been provided.
+     * This is to guard against the fact that `new Number('') == 0`.
+     */
+    this.isConsideredNumeric_ = function(stringValue, numericValue) {
+      return stringValue && !isNaN(numericValue);
+    };
+
+    /**
      * Validates a value against the related rule-set (within validationRules).
      * This method returns a promise to be resolved on successful validation.
      * If validation fails the promise will be rejected with an error message.
@@ -2095,7 +2103,12 @@ angular.module('formFor').service('ModelValidator',
       var value = NestedObjectHelper.readAttribute(model, fieldName);
 
       if (rules) {
-        value = value || '';
+        // Don't turn falsy (but non-null) values like 0 or false to ''
+        if (value === undefined || value === null) {
+          value = "";
+        } else {
+          value = value;
+        }
 
         if (rules.required) {
           var required = angular.isObject(rules.required) ? rules.required.rule : rules.required;
@@ -2104,7 +2117,7 @@ angular.module('formFor').service('ModelValidator',
             value = value.replace(/\s+$/, ''); // Disallow an all-whitespace at the end of the string
           }
 
-          if (!!value !== required) {
+          if (required && !value) {
             return $q.reject(
               angular.isObject(rules.required) ?
                 rules.required.message :
@@ -2142,10 +2155,11 @@ angular.module('formFor').service('ModelValidator',
           if (type) {
             var types = type.split(' ');
 
-            for (type in types) {
+            for (var index in types) {
+              type = types[index];
               switch (type) {
                 case 'integer':
-                  if (isNaN(numericValue) || numericValue % 1 !== 0) {
+                  if (stringValue && (isNaN(numericValue) || numericValue % 1 !== 0)) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
@@ -2154,7 +2168,7 @@ angular.module('formFor').service('ModelValidator',
                   break;
 
                 case 'number':
-                  if (isNaN(numericValue)) {
+                  if (stringValue && isNaN(numericValue)) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
@@ -2163,16 +2177,16 @@ angular.module('formFor').service('ModelValidator',
                   break;
 
                 case 'negative':
-                  if (isNaN(numericValue) || numericValue >= 0) {
+                  if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue >= 0) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
-                        FormForConfiguration.validationFailedNegativeTypeMessage);
+                        FormForConfiguration.validationFailedForNegativeTypeMessage);
                   }
                   break;
 
                 case 'nonNegative':
-                  if (isNaN(numericValue) || numericValue < 0) {
+                  if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue < 0) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
@@ -2181,7 +2195,7 @@ angular.module('formFor').service('ModelValidator',
                   break;
 
                 case 'positive':
-                  if (isNaN(numericValue) || numericValue <= 0) {
+                  if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue <= 0) {
                     return $q.reject(
                       angular.isObject(rules.type) ?
                         rules.type.message :
