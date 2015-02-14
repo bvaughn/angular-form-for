@@ -116,6 +116,20 @@ describe('ModelValidator', function() {
         ModelValidator.validateField({requiredField: null}, 'requiredField', model.rules),
         'foobar');
     });
+
+    it('should not reject a truthy value when required is false', function() {
+      model.rules = {
+        requiredField: {
+          required: {
+            rule: false,
+            message: 'foobar'
+          }
+        }
+      };
+
+      expect(ModelValidator.validateField({requiredField: '1'}, 'requiredField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({requiredField: ''}, 'requiredField', model.rules)).toBeResolved();
+    });
   });
 
   describe('validateField minlength', function() {
@@ -370,7 +384,7 @@ describe('ModelValidator', function() {
       model.rules = { negative: { type: { rule: 'negative', message: 'foobar negative' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({negative: 'invalid'}, 'negative', model.rules),
+        ModelValidator.validateField({negative: 1}, 'negative', model.rules),
         'foobar negative');
     });
 
@@ -386,7 +400,7 @@ describe('ModelValidator', function() {
       model.rules = { positive: { type: { rule: 'positive', message: 'foobar positive' } } };
 
       verifyPromiseRejectedWithMessage(
-        ModelValidator.validateField({positive: 'invalid'}, 'positive', model.rules),
+        ModelValidator.validateField({positive: -1}, 'positive', model.rules),
         'foobar positive');
     });
   });
@@ -944,7 +958,7 @@ describe('ModelValidator', function() {
     it('should allow overrides for type non-negative', function() {
       FormForConfiguration.setValidationFailedForNonNegativeTypeMessage('custom type non-negative');
 
-      testCustomValidationFailureMessage('type', 'nonNegative integer', '1', 'custom type non-negative');
+      testCustomValidationFailureMessage('type', 'nonNegative integer', '-1', 'custom type non-negative');
     });
 
     it('should allow overrides for type positive', function() {
