@@ -1,114 +1,105 @@
 var gulp = require('gulp');
-var es = require('event-stream');
-var pipe = es.pipe.bind(es);
-var concat = require('gulp-concat');
-var shell = require('gulp-shell');
-var ngAnnotate = require('gulp-ng-annotate');
+var karma = require('gulp-karma');
+var runSequence = require('run-sequence');
 
-var CONFIG = {
-  distDir: 'dist',
-  sourceDir: 'source',
-  stylesDir: 'styles',
-  testDir: 'tests'
-};
+var sources = [
+  'source/**/*.ts'
+];
+var testFiles = []; // Declared in the karma.conf.js
+var distDirectory = 'dist';
 
-var jsSources = es.merge(
-  gulp.src(CONFIG.sourceDir + '/**/module.js'), // Defines the formFor module; must be loaded first
-  gulp.src([CONFIG.sourceDir + '/**/*.js', '!' + CONFIG.sourceDir + '/**/module.js']));
+/**
+ * Main task: cleans, builds, run tests, and bundles up for distribution.
+ */
+gulp.task('all', function(callback) {
+  runSequence(
+    'clean',
+    'build',
+    'test',
+    callback);
+});
+
+gulp.task('build', function(callback) {
+  runSequence(
+    'compile',
+    'uglify',
+    'map',
+    callback);
+});
+
+gulp.task('compile', function() {
+  return buildHelper(sources, distDirectory , 'angular-form-for.js');
+});
 
 gulp.task('clean', function() {
-  var rm = require('gulp-rimraf');
+  var clean = require('gulp-clean');
 
-  pipe(
-    gulp.src(['dist'], {read: false}),
-    rm());
+  return gulp.src(distDirectory ).pipe(clean());
 });
 
-gulp.task('compileCss', function() {
-  var stylus = require('gulp-stylus');
-  var autoprefixer = require('autoprefixer-stylus');
-  var nib = require('nib');
+gulp.task('map', function() {
+  var shell = require('gulp-shell');
 
-  return gulp.src(CONFIG.stylesDir + '/**/*.styl')
-    .pipe(stylus({use: [nib(), autoprefixer()]}))
-    .pipe(concat('form-for.css'))
-    .pipe(gulp.dest(CONFIG.distDir));
+  console.log('CWD: ' + process.cwd() + '/dist');
+
+  return shell.task(
+    'uglifyjs --compress --mangle --source-map angular-form-for.min.js.map --source-map-root . -o angular-form-for.min.js -- angular-form-for.js',
+    {cwd: process.cwd() + '/dist'}
+  )();
 });
 
-var getTemplates = function(templatesDirectory, moduleName, outputFile) {
-  var templateCache = require('gulp-angular-templatecache');
-
-  return gulp.src(templatesDirectory)
-    .pipe(
-      templateCache('templates.js',
-      {
-        module: moduleName,
-        standalone: true,
-        root: 'form-for/templates/' // Relative path for Directive :templateUrls
-      }))
-    .pipe(ngAnnotate())
-    .pipe(concat(outputFile))
-    .pipe(gulp.dest(CONFIG.distDir))
-};
-
-gulp.task('createBootstrapTemplates', function() {
-  return getTemplates('templates/bootstrap/**/*.html', 'formFor.bootstrapTemplates', 'form-for.bootstrap-templates.js');
-});
-
-gulp.task('createDefaultTemplates', function() {
-  return getTemplates('templates/default/**/*.html', 'formFor.defaultTemplates', 'form-for.default-templates.js');
-});
-
-gulp.task('createUncompressedJs', function() {
-  return jsSources.pipe(concat('form-for.js'))
-    .pipe(ngAnnotate())
-    .pipe(concat('form-for.js'))
-    .pipe(gulp.dest(CONFIG.distDir));
-});
-
-gulp.task('createCompressedJs', function() {
-  var uglify = require('gulp-uglify');
-
-  return jsSources.pipe(concat('form-for.js'))
-    .pipe(ngAnnotate())
-    .pipe(uglify())
-    .pipe(concat('form-for.min.js'))
-    .pipe(gulp.dest(CONFIG.distDir));
-});
-
-gulp.task('lintJs', function() {
-  var jshint = require('gulp-jshint');
-
-  return jsSources
-    .pipe(jshint());
-});
-
-gulp.task('test', function(done) {
-  var karma = require('gulp-karma');
-
-  return gulp.src('noop') // See http://stackoverflow.com/questions/22413767/angular-testing-with-karma-module-is-not-defined
+gulp.task('test', function() {
+  // Be sure to return the stream
+  return gulp.src(testFiles)
     .pipe(karma({
       configFile: 'karma.conf.js',
       action: 'run'
+    }))
+    .on('error', function(error) {
+      // Make sure failed tests cause gulp to exit non-zero
+      throw error;
+    });
+});
+
+gulp.task('test:watch', function() {
+  return gulp.src(testFiles)
+    .pipe(karma({
+      configFile: 'karma.conf.js',
+      action: 'watch'
     }));
 });
 
-gulp.task('docs', shell.task([
-  'node_modules/jsdoc/jsdoc.js ' +
-    '-c node_modules/angular-jsdoc/conf.json ' +  // config file
-    '-t docs/template ' +                         // template file
-    '-d ' + CONFIG.distDir + '/docs '+            // output directory
-    '-r ' + CONFIG.sourceDir                      // source code directory
-]));
+gulp.task('uglify', function() {
+  var fs = require('fs');
+  var uglifyJs = require('uglify-js2');
 
-gulp.task('build', [
-  'clean',
-  'lintJs',
-  'test',
-  'createCompressedJs',
-  'createUncompressedJs',
-  'createBootstrapTemplates',
-  'createDefaultTemplates',
-  'compileCss',
-  'docs'
-]);
+  var code = fs.readFileSync('dist/angular-form-for.js', 'utf8');
+
+  var parsed = uglifyJs.parse(code);
+  parsed.figure_out_scope();
+
+  var compressed = parsed.transform(uglifyJs.Compressor());
+  compressed.figure_out_scope();
+  compressed.compute_char_frequency();
+  compressed.mangle_names();
+
+  var finalCode = compressed.print_to_string();
+
+  fs.writeFileSync('dist/angular-form-for.min.js', finalCode);
+});
+
+var buildHelper = function(sources, directory, outputFile) {
+  var typeScriptCompiler = require('gulp-tsc');
+  var uglify = require('gulp-uglify');
+  var rename = require('gulp-rename');
+
+  return gulp
+    .src(sources)
+    .pipe(typeScriptCompiler({
+      module: "CommonJS",
+      emitError: false,
+      out: outputFile,
+      target: 'ES5'
+    }))
+    .pipe(gulp.dest(directory));
+};

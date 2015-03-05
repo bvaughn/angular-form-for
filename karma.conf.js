@@ -18,9 +18,8 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/jasmine-object-matchers/dist/jasmine-object-matchers.js',
       'bower_components/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
-      'source/**/module.js', // Defines the formFor module; must be loaded first
-      'source/**/*.js',
-      'tests/**/*.js',
+      'dist/**/*.js',
+      'tests/services/model-validator.js',
       'templates/**/*.html'
     ],
     exclude: [],
