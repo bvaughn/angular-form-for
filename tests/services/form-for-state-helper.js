@@ -6,9 +6,9 @@ describe('$FormForStateHelper', function() {
   var formForStateHelper;
 
   beforeEach(inject(function ($injector) {
-    var $FormForStateHelper = $injector.get('$FormForStateHelper');
+    var $parse = $injector.get('$parse');
 
-    formForStateHelper = new $FormForStateHelper({});
+    formForStateHelper = new formFor.FormForStateHelper($parse, {});
   }));
 
   describe('get/set field errors', function() {

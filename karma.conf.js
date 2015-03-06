@@ -19,6 +19,7 @@ module.exports = function(config) {
       'bower_components/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
       'dist/angular-form-for.js',
       // TODO Widen up once more tests pass
+      'tests/services/form-for-state-helper.js',
       'tests/services/model-validator.js',
       'tests/services/nested-object-helper.js',
       'tests/services/promise-utils.js',

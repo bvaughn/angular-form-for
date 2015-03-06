@@ -1079,7 +1079,7 @@ var formFor;
         function FormForStateHelper($parse, $scope) {
             this.$scope_ = $scope;
             this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
-            this.$scope_.errorMap = this.$scope_.errorMap || {};
+            this.$scope_.errorMap = $scope.errorMap || {};
             this.$scope_.valid = true;
             this.fieldNameToModifiedStateMap_ = {};
             this.formSubmitted_ = false;

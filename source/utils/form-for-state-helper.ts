@@ -19,7 +19,7 @@ module formFor {
       this.$scope_ = $scope;
       this.nestedObjectHelper_ = new NestedObjectHelper($parse);
 
-      this.$scope_.errorMap = this.$scope_.errorMap || {};
+      this.$scope_.errorMap = $scope.errorMap || {};
       this.$scope_.valid = true;
 
       this.fieldNameToModifiedStateMap_ = {};
