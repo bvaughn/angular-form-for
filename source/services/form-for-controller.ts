@@ -1,5 +1,7 @@
 /**
  * Controller exposed via the FormFor directive's scope.
+ *
+ * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
  */
 class FormForController {
 
