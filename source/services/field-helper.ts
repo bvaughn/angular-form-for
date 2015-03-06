@@ -60,6 +60,3 @@ class FieldHelper {
     });
   }
 };
-
-angular.module('formFor').service('FieldHelper',
-  (FormForConfiguration) => new FieldHelper(FormForConfiguration));

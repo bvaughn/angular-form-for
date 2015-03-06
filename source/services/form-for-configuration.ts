@@ -260,5 +260,3 @@ class FormForConfiguration {
     this.validationFailedForPositiveTypeMessage_ = value;
   }
 };
-
-angular.module('formFor').service('FormForConfiguration', () => new FormForConfiguration());

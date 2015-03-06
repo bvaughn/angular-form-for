@@ -485,7 +485,3 @@ class ModelValidator {
     return null;
   }
 };
-
-angular.module('formFor').service('ModelValidator',
-  ($interpolate, $parse, $q, FormForConfiguration) =>
-    new ModelValidator($interpolate, $parse, $q, FormForConfiguration));

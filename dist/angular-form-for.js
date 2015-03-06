@@ -1,5 +1,5 @@
 /// <reference path="../definitions/angular.d.ts" />
-angular.module('formFor', []);
+angular.module('formFor', []).service('FormForConfiguration', function () { return new FormForConfiguration(); }).service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); }).service('ModelValidator', function ($interpolate, $parse, $q, FormForConfiguration) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration); });
 var FormFor = (function () {
     function FormFor() {
     }
@@ -109,7 +109,6 @@ var FieldHelper = (function () {
     return FieldHelper;
 })();
 ;
-angular.module('formFor').service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); });
 /// <reference path="../../definitions/angular.d.ts" />
 /**
  * This service can be used to configure default behavior for all instances of formFor within a project.
@@ -371,7 +370,6 @@ var FormForConfiguration = (function () {
     return FormForConfiguration;
 })();
 ;
-angular.module('formFor').service('FormForConfiguration', function () { return new FormForConfiguration(); });
 /// <reference path="../../definitions/angular.d.ts" />
 /**
  * Helper utility to simplify working with nested objects.
@@ -905,7 +903,6 @@ var ModelValidator = (function () {
     return ModelValidator;
 })();
 ;
-angular.module('formFor').service('ModelValidator', function ($interpolate, $parse, $q, FormForConfiguration) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration); });
 /**
  * Controller exposed via the FormFor directive's scope.
  *
