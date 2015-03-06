@@ -3,14 +3,14 @@ describe('PromiseUtils', function() {
 
   beforeEach(module('formFor'));
 
-  var promiseUtils;
   var $q;
   var $rootScope;
+  var promiseUtils;
 
   beforeEach(inject(function ($injector) {
-    promiseUtils = $injector.get('PromiseUtils');
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
+    promiseUtils = new PromiseUtils($q);
   }));
 
   afterEach(inject(function() {

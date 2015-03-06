@@ -7,7 +7,7 @@ describe('ModelValidator', function() {
   var $rootScope;
   var FormForConfiguration;
   var ModelValidator;
-  var PromiseUtils;
+  var promiseUtils;
   var model;
 
   beforeEach(inject(function ($injector) {
@@ -16,7 +16,7 @@ describe('ModelValidator', function() {
 
     FormForConfiguration = $injector.get('FormForConfiguration');
     ModelValidator = $injector.get('ModelValidator');
-    PromiseUtils = $injector.get('PromiseUtils');
+    promiseUtils = new PromiseUtils($q);
     model = {
       rules: {}
     };
@@ -450,7 +450,7 @@ describe('ModelValidator', function() {
       model.rules = {
         customField: {
           custom: function(value) {
-            return value === 'allowed' ? PromiseUtils.resolve() : $q.reject();
+            return value === 'allowed' ? promiseUtils.resolve() : $q.reject();
           }
         }
       };
@@ -476,7 +476,7 @@ describe('ModelValidator', function() {
             valueParameter = value;
             formDataParameter = formData;
 
-            return PromiseUtils.resolve();
+            return promiseUtils.resolve();
           }
         }
       };
@@ -814,7 +814,7 @@ describe('ModelValidator', function() {
         },
         baz: {
           custom: function(value) {
-            return value === 'allowed' ? PromiseUtils.resolve() : $q.reject();
+            return value === 'allowed' ? promiseUtils.resolve() : $q.reject();
           }
         }
       };
@@ -838,7 +838,7 @@ describe('ModelValidator', function() {
         },
         baz: {
           custom: function(value) {
-            return value === 'allowed' ? PromiseUtils.resolve() : $q.reject();
+            return value === 'allowed' ? promiseUtils.resolve() : $q.reject();
           }
         }
       };

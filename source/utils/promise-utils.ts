@@ -1,5 +1,7 @@
 /**
  * Supplies $q service with additional methods.
+ *
+ * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
  */
 class PromiseUtils {
 
@@ -78,5 +80,3 @@ class PromiseUtils {
       return deferred.promise;
     }
 };
-
-angular.module('formFor').service('PromiseUtils', ($q) => new PromiseUtils($q));

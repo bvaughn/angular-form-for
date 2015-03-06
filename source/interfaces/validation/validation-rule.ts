@@ -1,4 +1,4 @@
-/// <reference path="../../definitions/angular.d.ts" />
+/// <reference path="../../../definitions/angular.d.ts" />
 
 /**
  * Describes rules for validating a single form-field.

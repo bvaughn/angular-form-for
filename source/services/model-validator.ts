@@ -1,7 +1,7 @@
 /// <reference path="../../definitions/angular.d.ts" />
 /// <reference path="form-for-configuration.ts" />
 /// <reference path="../utils/nested-object-helper.ts" />
-/// <reference path="promise-utils.ts" />
+/// <reference path="../utils/promise-utils.ts" />
 
 /**
  * Model validation service.
@@ -18,22 +18,20 @@ class ModelValidator {
    * Constructor.
    *
    * @param $interpolate Injector-supplied $interpolate service
+   * @param $parse Injecter-supplied $parse service
    * @param $q Injector-supplied $q service
    * @param formForConfiguration
-   * @param nestedObjectHelper
-   * @param promiseUtils
    */
   constructor($interpolate:ng.IInterpolateService,
               $parse:ng.IParseService,
               $q:ng.IQService,
-              formForConfiguration:FormForConfiguration,
-              promiseUtils:PromiseUtils) {
+              formForConfiguration:FormForConfiguration) {
     this.$interpolate_ = $interpolate;
     this.$q_ = $q;
     this.formForConfiguration_ = formForConfiguration;
-    this.promiseUtils_ = promiseUtils;
 
     this.nestedObjectHelper_ = new NestedObjectHelper($parse);
+    this.promiseUtils_ = new PromiseUtils($q);
   }
 
   /**
@@ -489,5 +487,5 @@ class ModelValidator {
 };
 
 angular.module('formFor').service('ModelValidator',
-  ($interpolate, $parse, $q, FormForConfiguration, PromiseUtils) =>
-    new ModelValidator($interpolate, $parse, $q, FormForConfiguration, PromiseUtils));
+  ($interpolate, $parse, $q, FormForConfiguration) =>
+    new ModelValidator($interpolate, $parse, $q, FormForConfiguration));

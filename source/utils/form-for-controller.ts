@@ -20,15 +20,14 @@ class FormForController {
   constructor($parse:ng.IParseService,
               $q:ng.IQService,
               $scope:FormForScope,
-              modelValidator:ModelValidator,
-              promiseUtils:PromiseUtils) {
+              modelValidator:ModelValidator) {
     this.$parse_ = $parse;
     this.$q_ = $q;
     this.$scope_ = $scope;
     this.modelValidator_ = modelValidator;
-    this.promiseUtils_ = promiseUtils;
 
     this.nestedObjectHelper_ = new NestedObjectHelper($parse);
+    this.promiseUtils_ = new PromiseUtils($q);
   }
 
   /**
@@ -350,7 +349,3 @@ class FormForController {
     return deferred.promise;
   }
 };
-
-angular.module('formFor').service('FormForController',
-  ($parse, $q, $scope, ModelValidator, PromiseUtils) =>
-    new FormForController($parse, $q, $scope, ModelValidator, PromiseUtils));
