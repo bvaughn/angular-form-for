@@ -19,14 +19,14 @@ class FormForController {
               $q:ng.IQService,
               $scope:FormForScope,
               modelValidator:ModelValidator,
-              nestedObjectHelper:NestedObjectHelper,
               promiseUtils:PromiseUtils) {
     this.$parse_ = $parse;
     this.$q_ = $q;
     this.$scope_ = $scope;
     this.modelValidator_ = modelValidator;
     this.promiseUtils_ = promiseUtils;
-    this.nestedObjectHelper_ = nestedObjectHelper;
+
+    this.nestedObjectHelper_ = new NestedObjectHelper($parse);
   }
 
   /**
@@ -350,5 +350,5 @@ class FormForController {
 };
 
 angular.module('formFor').service('FormForController',
-  ($parse, $q, $scope, ModelValidator, NestedObjectHelper, PromiseUtils) =>
-    new FormForController($parse, $q, $scope, ModelValidator, NestedObjectHelper, PromiseUtils));
+  ($parse, $q, $scope, ModelValidator, PromiseUtils) =>
+    new FormForController($parse, $q, $scope, ModelValidator, PromiseUtils));

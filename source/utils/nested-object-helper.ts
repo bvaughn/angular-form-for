@@ -3,7 +3,7 @@
 /**
  * Helper utility to simplify working with nested objects.
  *
- * TODO Don't expose this to the $injector either
+ * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
  */
 class NestedObjectHelper {
 
@@ -134,5 +134,3 @@ class NestedObjectHelper {
     }
   }
 };
-
-angular.module('formFor').service('NestedObjectHelper', ($parse) => new NestedObjectHelper($parse));

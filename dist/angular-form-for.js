@@ -389,13 +389,13 @@ var FormForController = (function () {
      *
      * @param $scope formFor directive $scope
      */
-    function FormForController($parse, $q, $scope, modelValidator, nestedObjectHelper, promiseUtils) {
+    function FormForController($parse, $q, $scope, modelValidator, promiseUtils) {
         this.$parse_ = $parse;
         this.$q_ = $q;
         this.$scope_ = $scope;
         this.modelValidator_ = modelValidator;
         this.promiseUtils_ = promiseUtils;
-        this.nestedObjectHelper_ = nestedObjectHelper;
+        this.nestedObjectHelper_ = new NestedObjectHelper($parse);
     }
     /**
      * Collection headers should register themselves using this function in order to be notified of validation errors.
@@ -641,12 +641,12 @@ var FormForController = (function () {
     return FormForController;
 })();
 ;
-angular.module('formFor').service('FormForController', function ($parse, $q, $scope, ModelValidator, NestedObjectHelper, PromiseUtils) { return new FormForController($parse, $q, $scope, ModelValidator, NestedObjectHelper, PromiseUtils); });
+angular.module('formFor').service('FormForController', function ($parse, $q, $scope, ModelValidator, PromiseUtils) { return new FormForController($parse, $q, $scope, ModelValidator, PromiseUtils); });
 /// <reference path="../../definitions/angular.d.ts" />
 /**
  * Helper utility to simplify working with nested objects.
  *
- * TODO Don't expose this to the $injector either
+ * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
  */
 var NestedObjectHelper = (function () {
     /**
@@ -755,7 +755,6 @@ var NestedObjectHelper = (function () {
     return NestedObjectHelper;
 })();
 ;
-angular.module('formFor').service('NestedObjectHelper', function ($parse) { return new NestedObjectHelper($parse); });
 /**
  * Supplies $q service with additional methods.
  */
@@ -825,7 +824,7 @@ var PromiseUtils = (function () {
 angular.module('formFor').service('PromiseUtils', function ($q) { return new PromiseUtils($q); });
 /// <reference path="../../definitions/angular.d.ts" />
 /// <reference path="form-for-configuration.ts" />
-/// <reference path="nested-object-helper.ts" />
+/// <reference path="../utils/nested-object-helper.ts" />
 /// <reference path="promise-utils.ts" />
 /**
  * Model validation service.
@@ -840,12 +839,12 @@ var ModelValidator = (function () {
      * @param nestedObjectHelper
      * @param promiseUtils
      */
-    function ModelValidator($interpolate, $q, formForConfiguration, nestedObjectHelper, promiseUtils) {
+    function ModelValidator($interpolate, $parse, $q, formForConfiguration, promiseUtils) {
         this.$interpolate_ = $interpolate;
         this.$q_ = $q;
         this.formForConfiguration_ = formForConfiguration;
-        this.nestedObjectHelper_ = nestedObjectHelper;
         this.promiseUtils_ = promiseUtils;
+        this.nestedObjectHelper_ = new NestedObjectHelper($parse);
     }
     /**
      * Determines if the specified collection is required (requires a minimum number of items).
@@ -1176,10 +1175,12 @@ var ModelValidator = (function () {
     return ModelValidator;
 })();
 ;
-angular.module('formFor').service('ModelValidator', function ($interpolate, $q, FormForConfiguration, NestedObjectHelper, PromiseUtils) { return new ModelValidator($interpolate, $q, FormForConfiguration, NestedObjectHelper, PromiseUtils); });
+angular.module('formFor').service('ModelValidator', function ($interpolate, $parse, $q, FormForConfiguration, PromiseUtils) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration, PromiseUtils); });
 /**
  * UID generator for formFor input fields.
  * @see http://stackoverflow.com/questions/6248666/how-to-generate-short-uid-like-ax4j9z-in-js
+ *
+ * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
  */
 var FormForGUID = (function () {
     function FormForGUID() {

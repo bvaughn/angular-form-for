@@ -3,29 +3,31 @@ describe('NestedObjectHelper', function() {
 
   beforeEach(module('formFor'));
 
-  var NestedObjectHelper;
+  var nestedObjectHelper;
 
   beforeEach(inject(function ($injector) {
-    NestedObjectHelper = $injector.get('NestedObjectHelper');
+    var $parse = $injector.get('$parse');
+
+    nestedObjectHelper = new NestedObjectHelper($parse);
   }));
 
   describe('flattenAttribute', function() {
     it('should strip dot notation syntax from a string containing it', function() {
-      expect(NestedObjectHelper.flattenAttribute('foo.bar.baz')).not.toMatch(/\./);
+      expect(nestedObjectHelper.flattenAttribute('foo.bar.baz')).not.toMatch(/\./);
     });
 
     it('should not adjust a string without dot notation', function() {
-      expect(NestedObjectHelper.flattenAttribute('foo')).toMatch('foo');
+      expect(nestedObjectHelper.flattenAttribute('foo')).toMatch('foo');
     });
 
     it('should handle array notation', function() {
-      expect(NestedObjectHelper.flattenAttribute('foo[1].bar')).toMatch('foo___1___bar');
+      expect(nestedObjectHelper.flattenAttribute('foo[1].bar')).toMatch('foo___1___bar');
     });
   });
 
   describe('flattenObjectKeys', function() {
     it('should iterate over all of the keys in a shallow object', function() {
-      var keys = NestedObjectHelper.flattenObjectKeys({
+      var keys = nestedObjectHelper.flattenObjectKeys({
         foo: 1,
         bar: 'two',
         baz: true
@@ -37,7 +39,7 @@ describe('NestedObjectHelper', function() {
     });
 
     it('should iterate over all of the keys in a deep object', function() {
-      var keys = NestedObjectHelper.flattenObjectKeys({
+      var keys = nestedObjectHelper.flattenObjectKeys({
         foo: 1,
         deep: {
           bar: 'two',
@@ -62,15 +64,15 @@ describe('NestedObjectHelper', function() {
     };
 
     it('should read shallow attributes', function() {
-      expect(NestedObjectHelper.readAttribute(object, 'foo')).toBe(123);
+      expect(nestedObjectHelper.readAttribute(object, 'foo')).toBe(123);
     });
 
     it('should read deep attributes using dot notation', function() {
-      expect(NestedObjectHelper.readAttribute(object, 'bar.baz')).toBe(456);
+      expect(nestedObjectHelper.readAttribute(object, 'bar.baz')).toBe(456);
     });
 
     it('should handle attributes that are missing', function() {
-      expect(NestedObjectHelper.readAttribute(object, 'fake')).toBeFalsy();
+      expect(nestedObjectHelper.readAttribute(object, 'fake')).toBeFalsy();
     });
 
     it('should handle array notation when array is empty or non-existent', function() {
@@ -78,8 +80,8 @@ describe('NestedObjectHelper', function() {
         empty: []
       };
 
-      expect(NestedObjectHelper.readAttribute(object, 'empty[0]')).toBeFalsy();
-      expect(NestedObjectHelper.readAttribute(object, 'nonexistent[0]')).toBeFalsy();
+      expect(nestedObjectHelper.readAttribute(object, 'empty[0]')).toBeFalsy();
+      expect(nestedObjectHelper.readAttribute(object, 'nonexistent[0]')).toBeFalsy();
     });
 
     it('should handle array notation by reading values from an array at the specified index', function() {
@@ -87,7 +89,7 @@ describe('NestedObjectHelper', function() {
         array: ['one']
       };
 
-      expect(NestedObjectHelper.readAttribute(object, 'array[0]')).toMatch('one');
+      expect(nestedObjectHelper.readAttribute(object, 'array[0]')).toMatch('one');
     });
   });
 
@@ -100,25 +102,25 @@ describe('NestedObjectHelper', function() {
     };
 
     it('should write shallow attributes', function() {
-      NestedObjectHelper.writeAttribute(object, 'foo', 'new value');
+      nestedObjectHelper.writeAttribute(object, 'foo', 'new value');
 
       expect(object.foo).toMatch('new value');
     });
 
     it('should write deep attributes using dot notation', function() {
-      NestedObjectHelper.writeAttribute(object, 'bar.baz', 'woohoo');
+      nestedObjectHelper.writeAttribute(object, 'bar.baz', 'woohoo');
 
       expect(object.bar.baz).toMatch('woohoo');
     });
 
     it('should handle attributes that are missing', function() {
-      NestedObjectHelper.writeAttribute(object, 'nonexistent', 'brand new');
+      nestedObjectHelper.writeAttribute(object, 'nonexistent', 'brand new');
 
       expect(object.nonexistent).toMatch('brand new');
     });
 
     it('should handle array notation by creating arrays that do not yet exist', function() {
-      NestedObjectHelper.writeAttribute(object, 'collection[0]', 'first item');
+      nestedObjectHelper.writeAttribute(object, 'collection[0]', 'first item');
 
       expect(object.collection).toBeTruthy();
       expect(object.collection[0]).toMatch('first item');
@@ -127,7 +129,7 @@ describe('NestedObjectHelper', function() {
     it('should handle array notation by creating indexes that do not yet exist', function() {
       object.collection = ['one'];
 
-      NestedObjectHelper.writeAttribute(object, 'collection[1]', 'two');
+      nestedObjectHelper.writeAttribute(object, 'collection[1]', 'two');
 
       expect(object.collection).toBeTruthy();
       expect(object.collection[0]).toMatch('one');
@@ -137,7 +139,7 @@ describe('NestedObjectHelper', function() {
     it('should handle array notation with nested objects for indexes that do not yet exist', function() {
       object.collection = [];
 
-      NestedObjectHelper.writeAttribute(object, 'collection[0].number', 'one');
+      nestedObjectHelper.writeAttribute(object, 'collection[0].number', 'one');
 
       expect(object.collection).toBeTruthy();
       expect(object.collection[0].number).toMatch('one');
@@ -146,7 +148,7 @@ describe('NestedObjectHelper', function() {
     it('should handle array notation by writing values to an array at the specified index', function() {
       object.collection = ['old'];
 
-      NestedObjectHelper.writeAttribute(object, 'collection[0]', 'new');
+      nestedObjectHelper.writeAttribute(object, 'collection[0]', 'new');
 
       expect(object.collection).toBeTruthy();
       expect(object.collection[0]).toMatch('new');
@@ -158,8 +160,8 @@ describe('NestedObjectHelper', function() {
         bar: 'BAR'
       }];
 
-      NestedObjectHelper.writeAttribute(object, 'collection[0].bar', 'RAB');
-      NestedObjectHelper.writeAttribute(object, 'collection[0].baz', 'BAZ');
+      nestedObjectHelper.writeAttribute(object, 'collection[0].bar', 'RAB');
+      nestedObjectHelper.writeAttribute(object, 'collection[0].baz', 'BAZ');
 
       expect(object.collection).toBeTruthy();
       expect(object.collection[0].foo).toMatch('FOO');
