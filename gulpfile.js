@@ -69,6 +69,9 @@ gulp.task('test:watch', function() {
     }));
 });
 
+// TODO Bundle templates
+// TODO Compile and bundle Stylus styles
+
 gulp.task('uglify', function() {
   var fs = require('fs');
   var uglifyJs = require('uglify-js2');
