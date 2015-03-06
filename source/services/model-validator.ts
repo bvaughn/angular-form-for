@@ -1,4 +1,8 @@
 /// <reference path="../../definitions/angular.d.ts" />
+/// <reference path="form-for-configuration.ts" />
+/// <reference path="nested-object-helper.ts" />
+/// <reference path="promise-utils.ts" />
+
 
 /**
  * Model validation service.
@@ -6,21 +10,30 @@
 class ModelValidator {
 
   private $interpolate_:ng.IInterpolateService;
-  private $q_:ExtendedQService;
+  private $q_:ng.IQService;
   private formForConfiguration_:FormForConfiguration;
   private nestedObjectHelper_:NestedObjectHelper;
+  private promiseUtils_:PromiseUtils;
 
   /**
    * Constructor.
    *
-   * @param $q Injector-supplied $q service, decorated with a few additional formFor-added methods.
+   * @param $interpolate Injector-supplied $interpolate service
+   * @param $q Injector-supplied $q service
+   * @param formForConfiguration
+   * @param nestedObjectHelper
+   * @param promiseUtils
    */
-  constructor($interpolate:ng.IInterpolateService, $q:ExtendedQService,
-              formForConfiguration:FormForConfiguration, nestedObjectHelper:NestedObjectHelper) {
+  constructor($interpolate:ng.IInterpolateService,
+              $q:ng.IQService,
+              formForConfiguration:FormForConfiguration,
+              nestedObjectHelper:NestedObjectHelper,
+              promiseUtils:PromiseUtils) {
     this.$interpolate_ = $interpolate;
     this.$q_ = $q;
     this.formForConfiguration_ = formForConfiguration;
     this.nestedObjectHelper_ = nestedObjectHelper;
+    this.promiseUtils_ = promiseUtils;
   }
 
   /**
@@ -75,7 +88,7 @@ class ModelValidator {
    * @return Promise to be resolved or rejected based on validation success or failure.
    */
   public validateAll(formData:Object, validationRuleSet:ValidationRuleSet):ng.IPromise<string> {
-    var fieldNames:Array<string> = this.nestedObjectHelper_.flattenObjectKeys(validationRuleSet);
+    var fieldNames:Array<string> = this.nestedObjectHelper_.flattenObjectKeys(formData);
 
     return this.validateFields(formData, fieldNames, validationRuleSet);
   }
@@ -97,11 +110,11 @@ class ModelValidator {
       collection = collection || [];
 
       return this.validateCollectionMinLength_(collection, validationRules.collection) ||
-             this.validateCollectionMinLength_(collection, validationRules.collection) ||
-             this.$q_.resolve();
+             this.validateCollectionMaxLength_(collection, validationRules.collection) ||
+             this.promiseUtils_.resolve();
     }
 
-    return this.$q_.resolve();
+    return this.promiseUtils_.resolve();
   }
 
   /**
@@ -129,8 +142,10 @@ class ModelValidator {
              this.validateFieldType_(value, validationRules)             ||
              this.validateFieldPattern_(value, validationRules)          ||
              this.validateFieldCustom_(value, formData, validationRules) ||
-             this.$q_.resolve();
+             this.promiseUtils_.resolve();
     }
+
+    return this.promiseUtils_.resolve();
   }
 
   /**
@@ -163,7 +178,7 @@ class ModelValidator {
 
         promise.then(
           angular.noop,
-          function(error) {
+          (error) => {
             this.nestedObjectHelper_.writeAttribute(errorMap, fieldName, error);
           });
 
@@ -172,9 +187,9 @@ class ModelValidator {
     }, this);
 
     // Wait until all validations have finished before proceeding; bundle up the error messages if any failed.
-    this.$q_.waitForAll(promises).then(
+    this.promiseUtils_.waitForAll(promises).then(
       deferred.resolve,
-      function() {
+      () => {
         deferred.reject(errorMap);
       });
 
@@ -265,7 +280,7 @@ class ModelValidator {
     return null;
   }
 
-  private validateFieldCustom_(formData:any, value:any, validationRules:ValidationRules):any {
+  private validateFieldCustom_(value:any, formData:any, validationRules:ValidationRules):any {
     if (validationRules.custom) {
       var defaultErrorMessage:string;
       var validationFunction:CustomValidationFunction;
@@ -291,14 +306,14 @@ class ModelValidator {
 
       if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
         return returnValue.then(
-          function(reason:any) {
-            return this.$q_.resolve(reason);
+          (reason:any) => {
+            return this.promiseUtils_.resolve(reason);
           },
-          function(reason:any) {
+          (reason:any) => {
             return this.$q_.reject(reason || defaultErrorMessage);
           });
       } else if (returnValue) {
-        return this.$q_.resolve(returnValue);
+        return this.promiseUtils_.resolve(returnValue);
       } else {
         return this.$q_.reject(defaultErrorMessage);
       }
@@ -416,7 +431,7 @@ class ModelValidator {
       var stringValue:string = value.toString();
       var numericValue:number = Number(value);
 
-      if (type) {
+      if (typesString) {
         var types:Array<ValidationFieldType> = typesString.split(' ');
 
         for (var i:number = 0, length:number = types.length; i < length; i++) {
@@ -474,5 +489,5 @@ class ModelValidator {
 };
 
 angular.module('formFor').service('ModelValidator',
-  ($interpolate, $q, FormForConfiguration, NestedObjectHelper) =>
-    new ModelValidator($interpolate, $q, FormForConfiguration, NestedObjectHelper));
+  ($interpolate, $q, FormForConfiguration, NestedObjectHelper, PromiseUtils) =>
+    new ModelValidator($interpolate, $q, FormForConfiguration, NestedObjectHelper, PromiseUtils));

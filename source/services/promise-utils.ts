@@ -1,7 +1,18 @@
 /**
- * Describes an extended $q service with additional mixed-in methods.
+ * Supplies $q service with additional methods.
  */
-interface ExtendedQService extends ng.IQService {
+class PromiseUtils {
+
+  private $q_:ng.IQService;
+
+  /**
+   * Constructor.
+   *
+   * @param $q Injector-supplied $q service
+   */
+  constructor($q:ng.IQService) {
+    this.$q_ = $q;
+  }
 
   /**
    * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
@@ -9,7 +20,12 @@ interface ExtendedQService extends ng.IQService {
    * @param data Value to resolve the promise with
    * @returns A resolved promise
    */
-  resolve(data?:any):ng.IPromise<any>;
+  resolve(data?:any):ng.IPromise<any> {
+    var deferred:ng.IDeferred<any> = this.$q_.defer();
+    deferred.resolve(data);
+
+    return deferred.promise;
+  }
 
   /**
    * Similar to $q.all but waits for all promises to resolve/reject before resolving/rejecting.
@@ -17,22 +33,7 @@ interface ExtendedQService extends ng.IQService {
    * @param promises Array of Promises
    * @returns A promise to be resolved or rejected once all of the observed promises complete
    */
-  waitForAll(promises:ng.IPromise<any>[]):ng.IPromise<any>;
-};
-
-/**
- * Factory function that extends the $q delegate.
- */
-function extendedQService($q:ng.IQService):Object {
-  return {
-    resolve: function(data:any):ng.IPromise<any> {
-      var deferred:ng.IDeferred<any> = this.$q_.defer();
-      deferred.resolve(data);
-
-      return deferred.promise;
-    },
-
-    waitForAll: function(promises:ng.IPromise<any>[]):ng.IPromise<any> {
+  waitForAll(promises:ng.IPromise<any>[]):ng.IPromise<any> {
       var deferred:ng.IDeferred<any> = this.$q_.defer();
       var results:Object = {};
       var counter:number = 0;
@@ -76,10 +77,6 @@ function extendedQService($q:ng.IQService):Object {
 
       return deferred.promise;
     }
-  };
-}
+};
 
-angular.module('formFor').config(
-  function($provide) {
-    $provide.decorator('$q', ($q) => extendedQService($q));
-  });
+angular.module('formFor').service('PromiseUtils', ($q) => new PromiseUtils($q));

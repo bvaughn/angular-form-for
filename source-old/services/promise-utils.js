@@ -71,6 +71,8 @@ var qDecorator = function($delegate) {
 
     return deferred.promise;
   };
+
+  return $delegate;
 };
 
 angular.module('formFor').config(

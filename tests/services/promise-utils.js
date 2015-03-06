@@ -1,12 +1,14 @@
-describe('qDecorator', function() {
+describe('PromiseUtils', function() {
   'use strict';
 
   beforeEach(module('formFor'));
 
+  var promiseUtils;
   var $q;
   var $rootScope;
 
   beforeEach(inject(function ($injector) {
+    promiseUtils = $injector.get('PromiseUtils');
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
   }));
@@ -17,7 +19,7 @@ describe('qDecorator', function() {
 
   describe('resolve', function() {
     it('should function like reject', function() {
-      expect($q.resolve(true)).toBeResolvedWith(true);
+      expect(promiseUtils.resolve(true)).toBeResolvedWith(true);
     });
   });
 
@@ -32,7 +34,7 @@ describe('qDecorator', function() {
 
       resolution = rejection = null;
 
-      waitForAll = $q.waitForAll([deferred1.promise, deferred2.promise, deferred3.promise]);
+      waitForAll = promiseUtils.waitForAll([deferred1.promise, deferred2.promise, deferred3.promise]);
       waitForAll.then(
         function(data) {
           resolution = data;
@@ -43,7 +45,7 @@ describe('qDecorator', function() {
     });
 
     it('should resolve immediately if sent an empty collecton of promises', function() {
-      waitForAll = $q.waitForAll([]);
+      waitForAll = promiseUtils.waitForAll([]);
 
       expect(waitForAll).toBeResolved();
     });

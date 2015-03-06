@@ -1,3 +1,5 @@
+/// <reference path="../definitions/angular.d.ts" />
+angular.module('formFor', []);
 /**
  * Constraints that can be applied to a form field.
  * These constraints can be combined (e.g. "positive integer").
@@ -44,56 +46,6 @@ var ValidationFieldType;
 ;
 /// <reference path="../../definitions/angular.d.ts" />
 ;
-;
-/**
- * Factory function that extends the $q delegate.
- */
-function extendedQService($q) {
-    return {
-        resolve: function (data) {
-            var deferred = this.$q_.defer();
-            deferred.resolve(data);
-            return deferred.promise;
-        },
-        waitForAll: function (promises) {
-            var deferred = this.$q_.defer();
-            var results = {};
-            var counter = 0;
-            var errored = false;
-            function udpateResult(key, data) {
-                if (!results.hasOwnProperty(key)) {
-                    results[key] = data;
-                    counter--;
-                }
-                checkForDone();
-            }
-            function checkForDone() {
-                if (counter === 0) {
-                    if (errored) {
-                        deferred.reject(results);
-                    }
-                    else {
-                        deferred.resolve(results);
-                    }
-                }
-            }
-            angular.forEach(promises, function (promise, key) {
-                counter++;
-                promise.then(function (data) {
-                    udpateResult(key, data);
-                }, function (data) {
-                    errored = true;
-                    udpateResult(key, data);
-                });
-            });
-            checkForDone(); // Handle empty Array
-            return deferred.promise;
-        }
-    };
-}
-angular.module('formFor').config(function ($provide) {
-    $provide.decorator('$q', function ($q) { return extendedQService($q); });
-});
 /// <reference path="../../definitions/angular.d.ts" />
 /**
  * This service can be used to configure default behavior for all instances of formFor within a project.
@@ -357,350 +309,6 @@ var FormForConfiguration = (function () {
 angular.module('formFor').service('FormForConfiguration', function () { return new FormForConfiguration(); });
 /// <reference path="../../definitions/angular.d.ts" />
 /**
- * Model validation service.
- */
-var ModelValidator = (function () {
-    /**
-     * Constructor.
-     *
-     * @param $q Injector-supplied $q service, decorated with a few additional formFor-added methods.
-     */
-    function ModelValidator($interpolate, $q, formForConfiguration, nestedObjectHelper) {
-        this.$interpolate_ = $interpolate;
-        this.$q_ = $q;
-        this.formForConfiguration_ = formForConfiguration;
-        this.nestedObjectHelper_ = nestedObjectHelper;
-    }
-    /**
-     * Determines if the specified collection is required (requires a minimum number of items).
-     *
-     * @param fieldName Name of field containing the collection.
-     * @param validationRuleSet Map of field names to validation rules
-     */
-    ModelValidator.prototype.isCollectionRequired = function (fieldName, validationRuleSet) {
-        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
-        if (validationRules && validationRules.collection && validationRules.collection.min) {
-            if (angular.isObject(validationRules.collection.min)) {
-                return validationRules.collection.min.rule > 0;
-            }
-            else {
-                return validationRules.collection.min > 0;
-            }
-        }
-        return false;
-    };
-    /**
-     * Determines if the specified field is flagged as required.
-     *
-     * @param fieldName Name of field in question.
-     * @param validationRuleSet Map of field names to validation rules
-     */
-    ModelValidator.prototype.isFieldRequired = function (fieldName, validationRuleSet) {
-        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
-        if (validationRules && validationRules.required) {
-            if (angular.isObject(validationRules.required)) {
-                return validationRules.required.rule;
-            }
-            else {
-                return !!validationRules.required;
-            }
-        }
-        return false;
-    };
-    /**
-     * Validates the model against all rules in the validationRules.
-     * This method returns a promise to be resolved on successful validation,
-     * or rejected with a map of field-name to error-message.
-     *
-     * @param formData Form-data object model is contained within
-     * @param validationRuleSet Map of field names to validation rules
-     * @return Promise to be resolved or rejected based on validation success or failure.
-     */
-    ModelValidator.prototype.validateAll = function (formData, validationRuleSet) {
-        var fieldNames = this.nestedObjectHelper_.flattenObjectKeys(validationRuleSet);
-        return this.validateFields(formData, fieldNames, validationRuleSet);
-    };
-    /**
-     * Validate the properties of a collection (but not the items within the collection).
-     * This method returns a promise to be resolved on successful validation or rejected with an error message.
-     *
-     * @param formData Form-data object model is contained within
-     * @param fieldName Name of collection to validate
-     * @param validationRuleSet Map of field names to validation rules
-     * @return Promise to be resolved or rejected based on validation success or failure.
-     */
-    ModelValidator.prototype.validateCollection = function (formData, fieldName, validationRuleSet) {
-        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
-        var collection = this.nestedObjectHelper_.readAttribute(formData, fieldName);
-        if (validationRules && validationRules.collection) {
-            collection = collection || [];
-            return this.validateCollectionMinLength_(collection, validationRules.collection) || this.validateCollectionMinLength_(collection, validationRules.collection) || this.$q_.resolve();
-        }
-        return this.$q_.resolve();
-    };
-    /**
-     * Validates a value against the related rule-set (within validationRules).
-     * This method returns a promise to be resolved on successful validation.
-     * If validation fails the promise will be rejected with an error message.
-     *
-     * @param formData Form-data object model is contained within.
-     * @param fieldName Name of field used to associate the rule-set map with a given value.
-     * @param validationRuleSet Map of field names to validation rules
-     * @return Promise to be resolved or rejected based on validation success or failure.
-     */
-    ModelValidator.prototype.validateField = function (formData, fieldName, validationRuleSet) {
-        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
-        var value = this.nestedObjectHelper_.readAttribute(formData, fieldName);
-        if (validationRules) {
-            if (value === undefined || value === null) {
-                value = ""; // Escape falsy values liked null or undefined, but not ones like 0
-            }
-            return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules) || this.$q_.resolve();
-        }
-    };
-    /**
-     * Validates the values in model with the rules defined in the current validationRules.
-     * This method returns a promise to be resolved on successful validation,
-     * or rejected with a map of field-name to error-message.
-     *
-     * @param formData Form-data object model is contained within
-     * @param fieldNames White-list set of fields to validate for the given model.
-     *                   Values outside of this list will be ignored.
-     * @param validationRuleSet Map of field names to validation rules
-     * @return Promise to be resolved or rejected based on validation success or failure.
-     */
-    ModelValidator.prototype.validateFields = function (formData, fieldNames, validationRuleSet) {
-        var _this = this;
-        var deferred = this.$q_.defer();
-        var promises = [];
-        var errorMap = {};
-        angular.forEach(fieldNames, function (fieldName) {
-            var validationRules = _this.getRulesFor_(fieldName, validationRuleSet);
-            if (validationRules) {
-                var promise;
-                if (validationRules.collection) {
-                    promise = _this.validateCollection(formData, fieldName, validationRuleSet);
-                }
-                else {
-                    promise = _this.validateField(formData, fieldName, validationRuleSet);
-                }
-                promise.then(angular.noop, function (error) {
-                    this.nestedObjectHelper_.writeAttribute(errorMap, fieldName, error);
-                });
-                promises.push(promise);
-            }
-        }, this);
-        // Wait until all validations have finished before proceeding; bundle up the error messages if any failed.
-        this.$q_.waitForAll(promises).then(deferred.resolve, function () {
-            deferred.reject(errorMap);
-        });
-        return deferred.promise;
-    };
-    // Helper methods ////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Strip array brackets from field names so that model values can be mapped to rules.
-     * e.g. "foo[0].bar" should be validated against "foo.collection.fields.bar"
-     *
-     * @private
-     */
-    ModelValidator.prototype.getRulesFor_ = function (fieldName, validationRuleSet) {
-        var expandedFieldName = fieldName.replace(/\[[^\]]+\]/g, '.collection.fields');
-        return this.nestedObjectHelper_.readAttribute(validationRuleSet, expandedFieldName);
-    };
-    ModelValidator.prototype.getFieldTypeFailureMessage_ = function (validationRules, failureType) {
-        return angular.isObject(validationRules.type) ? validationRules.type.message : this.formForConfiguration_.getFailedValidationMessage(failureType);
-    };
-    /**
-     * Determining if numeric input has been provided.
-     * This guards against the fact that `new Number('') == 0`.
-     * @private
-     */
-    ModelValidator.prototype.isConsideredNumeric_ = function (stringValue, numericValue) {
-        return stringValue && !isNaN(numericValue);
-    };
-    // Validation helper methods /////////////////////////////////////////////////////////////////////////////////////////
-    ModelValidator.prototype.validateCollectionMinLength_ = function (collection, validationRuleCollection) {
-        if (validationRuleCollection.min) {
-            var min = angular.isObject(validationRuleCollection.min) ? validationRuleCollection.min.rule : validationRuleCollection.min;
-            if (collection.length < min) {
-                var failureMessage;
-                if (angular.isObject(validationRuleCollection.min)) {
-                    failureMessage = validationRuleCollection.min.message;
-                }
-                else {
-                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.COLLECTION_MIN_SIZE))({ num: min });
-                }
-                return this.$q_.reject(failureMessage);
-            }
-        }
-        return null;
-    };
-    ModelValidator.prototype.validateCollectionMaxLength_ = function (collection, validationRuleCollection) {
-        if (validationRuleCollection.max) {
-            var max = angular.isObject(validationRuleCollection.max) ? validationRuleCollection.max.rule : validationRuleCollection.max;
-            if (collection.length > max) {
-                var failureMessage;
-                if (angular.isObject(validationRuleCollection.max)) {
-                    failureMessage = validationRuleCollection.max.message;
-                }
-                else {
-                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.COLLECTION_MAX_SIZE))({ num: max });
-                }
-                return this.$q_.reject(failureMessage);
-            }
-        }
-        return null;
-    };
-    ModelValidator.prototype.validateFieldCustom_ = function (formData, value, validationRules) {
-        if (validationRules.custom) {
-            var defaultErrorMessage;
-            var validationFunction;
-            if (angular.isFunction(validationRules.custom)) {
-                defaultErrorMessage = this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.CUSTOM);
-                validationFunction = validationRules.custom;
-            }
-            else {
-                defaultErrorMessage = validationRules.custom.message;
-                validationFunction = validationRules.custom.rule;
-            }
-            try {
-                var returnValue = validationFunction(value, formData);
-            }
-            catch (error) {
-                return this.$q_.reject(error.message || defaultErrorMessage);
-            }
-            if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
-                return returnValue.then(function (reason) {
-                    return this.$q_.resolve(reason);
-                }, function (reason) {
-                    return this.$q_.reject(reason || defaultErrorMessage);
-                });
-            }
-            else if (returnValue) {
-                return this.$q_.resolve(returnValue);
-            }
-            else {
-                return this.$q_.reject(defaultErrorMessage);
-            }
-        }
-        return null;
-    };
-    ModelValidator.prototype.validateFieldMaxLength_ = function (value, validationRules) {
-        if (validationRules.maxlength) {
-            var maxlength = angular.isObject(validationRules.maxlength) ? validationRules.maxlength.rule : validationRules.maxlength;
-            if (value.length > maxlength) {
-                var failureMessage;
-                if (angular.isObject(validationRules.maxlength)) {
-                    failureMessage = validationRules.maxlength.message;
-                }
-                else {
-                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.MAX_LENGTH))({ num: maxlength });
-                }
-                return this.$q_.reject(failureMessage);
-            }
-        }
-        return null;
-    };
-    ModelValidator.prototype.validateFieldMinLength_ = function (value, validationRules) {
-        if (validationRules.minlength) {
-            var minlength = angular.isObject(validationRules.minlength) ? validationRules.minlength.rule : validationRules.minlength;
-            if (value && value.length < minlength) {
-                var failureMessage;
-                if (angular.isObject(validationRules.minlength)) {
-                    failureMessage = validationRules.minlength.message;
-                }
-                else {
-                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.MIN_LENGTH))({ num: minlength });
-                }
-                return this.$q_.reject(failureMessage);
-            }
-        }
-        return null;
-    };
-    ModelValidator.prototype.validateFieldRequired_ = function (value, validationRules) {
-        if (validationRules.required) {
-            var required = angular.isObject(validationRules.required) ? validationRules.required.rule : validationRules.required;
-            var sanitizedValue = value;
-            if (angular.isString(value)) {
-                value = value.replace(/\s+$/, ''); // Disallow an all-whitespace string
-            }
-            if (required && !value) {
-                var failureMessage;
-                if (angular.isObject(validationRules.required)) {
-                    failureMessage = validationRules.required.message;
-                }
-                else {
-                    failureMessage = this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.REQUIRED);
-                }
-                return this.$q_.reject(failureMessage);
-            }
-        }
-        return null;
-    };
-    ModelValidator.prototype.validateFieldPattern_ = function (value, validationRules) {
-        if (validationRules.pattern) {
-            var isRegExp = validationRules.pattern instanceof RegExp;
-            var regExp = isRegExp ? validationRules.pattern : validationRules.pattern.rule;
-            if (!regExp.exec(value)) {
-                var failureMessage = isRegExp ? this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.PATTERN) : validationRules.pattern.message;
-                return this.$q_.reject(failureMessage);
-            }
-        }
-        return null;
-    };
-    ModelValidator.prototype.validateFieldType_ = function (value, validationRules) {
-        if (validationRules.type) {
-            // String containing 0+ ValidationRuleFieldType enums
-            var typesString = angular.isObject(validationRules.type) ? validationRules.type.rule : validationRules.type;
-            var stringValue = value.toString();
-            var numericValue = Number(value);
-            if (type) {
-                var types = typesString.split(' ');
-                for (var i = 0, length = types.length; i < length; i++) {
-                    var type = types[i];
-                    switch (type) {
-                        case ValidationFieldType.INTEGER:
-                            if (stringValue && (isNaN(numericValue) || numericValue % 1 !== 0)) {
-                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_INTEGER));
-                            }
-                            break;
-                        case ValidationFieldType.NUMBER:
-                            if (stringValue && isNaN(numericValue)) {
-                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NUMERIC));
-                            }
-                            break;
-                        case ValidationFieldType.NEGATIVE:
-                            if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue >= 0) {
-                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NEGATIVE));
-                            }
-                            break;
-                        case ValidationFieldType.NON_NEGATIVE:
-                            if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue < 0) {
-                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NON_NEGATIVE));
-                            }
-                            break;
-                        case ValidationFieldType.POSITIVE:
-                            if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue <= 0) {
-                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_POSITIVE));
-                            }
-                            break;
-                        case ValidationFieldType.EMAIL:
-                            if (stringValue && !stringValue.match(/^.+@.+$/)) {
-                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_EMAIL));
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-        return null;
-    };
-    return ModelValidator;
-})();
-;
-angular.module('formFor').service('ModelValidator', function ($interpolate, $q, FormForConfiguration, NestedObjectHelper) { return new ModelValidator($interpolate, $q, FormForConfiguration, NestedObjectHelper); });
-/// <reference path="../../definitions/angular.d.ts" />
-/**
  * Helper utility to simplify working with nested objects.
  */
 var NestedObjectHelper = (function () {
@@ -719,7 +327,7 @@ var NestedObjectHelper = (function () {
      * @param fieldName Attribute (or dot-notation path) to read
      * @returns Modified field name safe to use as an object key
      */
-    NestedObjectHelper.prototype.flattenAttributes = function (fieldName) {
+    NestedObjectHelper.prototype.flattenAttribute = function (fieldName) {
         return fieldName.replace(/\[([^\]]+)\]\.{0,1}/g, '___$1___').replace(/\./g, '___');
     };
     /**
@@ -811,3 +419,424 @@ var NestedObjectHelper = (function () {
 })();
 ;
 angular.module('formFor').service('NestedObjectHelper', function ($parse) { return new NestedObjectHelper($parse); });
+/**
+ * Supplies $q service with additional methods.
+ */
+var PromiseUtils = (function () {
+    /**
+     * Constructor.
+     *
+     * @param $q Injector-supplied $q service
+     */
+    function PromiseUtils($q) {
+        this.$q_ = $q;
+    }
+    /**
+     * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
+     *
+     * @param data Value to resolve the promise with
+     * @returns A resolved promise
+     */
+    PromiseUtils.prototype.resolve = function (data) {
+        var deferred = this.$q_.defer();
+        deferred.resolve(data);
+        return deferred.promise;
+    };
+    /**
+     * Similar to $q.all but waits for all promises to resolve/reject before resolving/rejecting.
+     *
+     * @param promises Array of Promises
+     * @returns A promise to be resolved or rejected once all of the observed promises complete
+     */
+    PromiseUtils.prototype.waitForAll = function (promises) {
+        var deferred = this.$q_.defer();
+        var results = {};
+        var counter = 0;
+        var errored = false;
+        function udpateResult(key, data) {
+            if (!results.hasOwnProperty(key)) {
+                results[key] = data;
+                counter--;
+            }
+            checkForDone();
+        }
+        function checkForDone() {
+            if (counter === 0) {
+                if (errored) {
+                    deferred.reject(results);
+                }
+                else {
+                    deferred.resolve(results);
+                }
+            }
+        }
+        angular.forEach(promises, function (promise, key) {
+            counter++;
+            promise.then(function (data) {
+                udpateResult(key, data);
+            }, function (data) {
+                errored = true;
+                udpateResult(key, data);
+            });
+        });
+        checkForDone(); // Handle empty Array
+        return deferred.promise;
+    };
+    return PromiseUtils;
+})();
+;
+angular.module('formFor').service('PromiseUtils', function ($q) { return new PromiseUtils($q); });
+/// <reference path="../../definitions/angular.d.ts" />
+/// <reference path="form-for-configuration.ts" />
+/// <reference path="nested-object-helper.ts" />
+/// <reference path="promise-utils.ts" />
+/**
+ * Model validation service.
+ */
+var ModelValidator = (function () {
+    /**
+     * Constructor.
+     *
+     * @param $interpolate Injector-supplied $interpolate service
+     * @param $q Injector-supplied $q service
+     * @param formForConfiguration
+     * @param nestedObjectHelper
+     * @param promiseUtils
+     */
+    function ModelValidator($interpolate, $q, formForConfiguration, nestedObjectHelper, promiseUtils) {
+        this.$interpolate_ = $interpolate;
+        this.$q_ = $q;
+        this.formForConfiguration_ = formForConfiguration;
+        this.nestedObjectHelper_ = nestedObjectHelper;
+        this.promiseUtils_ = promiseUtils;
+    }
+    /**
+     * Determines if the specified collection is required (requires a minimum number of items).
+     *
+     * @param fieldName Name of field containing the collection.
+     * @param validationRuleSet Map of field names to validation rules
+     */
+    ModelValidator.prototype.isCollectionRequired = function (fieldName, validationRuleSet) {
+        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+        if (validationRules && validationRules.collection && validationRules.collection.min) {
+            if (angular.isObject(validationRules.collection.min)) {
+                return validationRules.collection.min.rule > 0;
+            }
+            else {
+                return validationRules.collection.min > 0;
+            }
+        }
+        return false;
+    };
+    /**
+     * Determines if the specified field is flagged as required.
+     *
+     * @param fieldName Name of field in question.
+     * @param validationRuleSet Map of field names to validation rules
+     */
+    ModelValidator.prototype.isFieldRequired = function (fieldName, validationRuleSet) {
+        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+        if (validationRules && validationRules.required) {
+            if (angular.isObject(validationRules.required)) {
+                return validationRules.required.rule;
+            }
+            else {
+                return !!validationRules.required;
+            }
+        }
+        return false;
+    };
+    /**
+     * Validates the model against all rules in the validationRules.
+     * This method returns a promise to be resolved on successful validation,
+     * or rejected with a map of field-name to error-message.
+     *
+     * @param formData Form-data object model is contained within
+     * @param validationRuleSet Map of field names to validation rules
+     * @return Promise to be resolved or rejected based on validation success or failure.
+     */
+    ModelValidator.prototype.validateAll = function (formData, validationRuleSet) {
+        var fieldNames = this.nestedObjectHelper_.flattenObjectKeys(formData);
+        return this.validateFields(formData, fieldNames, validationRuleSet);
+    };
+    /**
+     * Validate the properties of a collection (but not the items within the collection).
+     * This method returns a promise to be resolved on successful validation or rejected with an error message.
+     *
+     * @param formData Form-data object model is contained within
+     * @param fieldName Name of collection to validate
+     * @param validationRuleSet Map of field names to validation rules
+     * @return Promise to be resolved or rejected based on validation success or failure.
+     */
+    ModelValidator.prototype.validateCollection = function (formData, fieldName, validationRuleSet) {
+        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+        var collection = this.nestedObjectHelper_.readAttribute(formData, fieldName);
+        if (validationRules && validationRules.collection) {
+            collection = collection || [];
+            return this.validateCollectionMinLength_(collection, validationRules.collection) || this.validateCollectionMaxLength_(collection, validationRules.collection) || this.promiseUtils_.resolve();
+        }
+        return this.promiseUtils_.resolve();
+    };
+    /**
+     * Validates a value against the related rule-set (within validationRules).
+     * This method returns a promise to be resolved on successful validation.
+     * If validation fails the promise will be rejected with an error message.
+     *
+     * @param formData Form-data object model is contained within.
+     * @param fieldName Name of field used to associate the rule-set map with a given value.
+     * @param validationRuleSet Map of field names to validation rules
+     * @return Promise to be resolved or rejected based on validation success or failure.
+     */
+    ModelValidator.prototype.validateField = function (formData, fieldName, validationRuleSet) {
+        var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+        var value = this.nestedObjectHelper_.readAttribute(formData, fieldName);
+        if (validationRules) {
+            if (value === undefined || value === null) {
+                value = ""; // Escape falsy values liked null or undefined, but not ones like 0
+            }
+            return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules) || this.promiseUtils_.resolve();
+        }
+        return this.promiseUtils_.resolve();
+    };
+    /**
+     * Validates the values in model with the rules defined in the current validationRules.
+     * This method returns a promise to be resolved on successful validation,
+     * or rejected with a map of field-name to error-message.
+     *
+     * @param formData Form-data object model is contained within
+     * @param fieldNames White-list set of fields to validate for the given model.
+     *                   Values outside of this list will be ignored.
+     * @param validationRuleSet Map of field names to validation rules
+     * @return Promise to be resolved or rejected based on validation success or failure.
+     */
+    ModelValidator.prototype.validateFields = function (formData, fieldNames, validationRuleSet) {
+        var _this = this;
+        var deferred = this.$q_.defer();
+        var promises = [];
+        var errorMap = {};
+        angular.forEach(fieldNames, function (fieldName) {
+            var validationRules = _this.getRulesFor_(fieldName, validationRuleSet);
+            if (validationRules) {
+                var promise;
+                if (validationRules.collection) {
+                    promise = _this.validateCollection(formData, fieldName, validationRuleSet);
+                }
+                else {
+                    promise = _this.validateField(formData, fieldName, validationRuleSet);
+                }
+                promise.then(angular.noop, function (error) {
+                    _this.nestedObjectHelper_.writeAttribute(errorMap, fieldName, error);
+                });
+                promises.push(promise);
+            }
+        }, this);
+        // Wait until all validations have finished before proceeding; bundle up the error messages if any failed.
+        this.promiseUtils_.waitForAll(promises).then(deferred.resolve, function () {
+            deferred.reject(errorMap);
+        });
+        return deferred.promise;
+    };
+    // Helper methods ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Strip array brackets from field names so that model values can be mapped to rules.
+     * e.g. "foo[0].bar" should be validated against "foo.collection.fields.bar"
+     *
+     * @private
+     */
+    ModelValidator.prototype.getRulesFor_ = function (fieldName, validationRuleSet) {
+        var expandedFieldName = fieldName.replace(/\[[^\]]+\]/g, '.collection.fields');
+        return this.nestedObjectHelper_.readAttribute(validationRuleSet, expandedFieldName);
+    };
+    ModelValidator.prototype.getFieldTypeFailureMessage_ = function (validationRules, failureType) {
+        return angular.isObject(validationRules.type) ? validationRules.type.message : this.formForConfiguration_.getFailedValidationMessage(failureType);
+    };
+    /**
+     * Determining if numeric input has been provided.
+     * This guards against the fact that `new Number('') == 0`.
+     * @private
+     */
+    ModelValidator.prototype.isConsideredNumeric_ = function (stringValue, numericValue) {
+        return stringValue && !isNaN(numericValue);
+    };
+    // Validation helper methods /////////////////////////////////////////////////////////////////////////////////////////
+    ModelValidator.prototype.validateCollectionMinLength_ = function (collection, validationRuleCollection) {
+        if (validationRuleCollection.min) {
+            var min = angular.isObject(validationRuleCollection.min) ? validationRuleCollection.min.rule : validationRuleCollection.min;
+            if (collection.length < min) {
+                var failureMessage;
+                if (angular.isObject(validationRuleCollection.min)) {
+                    failureMessage = validationRuleCollection.min.message;
+                }
+                else {
+                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.COLLECTION_MIN_SIZE))({ num: min });
+                }
+                return this.$q_.reject(failureMessage);
+            }
+        }
+        return null;
+    };
+    ModelValidator.prototype.validateCollectionMaxLength_ = function (collection, validationRuleCollection) {
+        if (validationRuleCollection.max) {
+            var max = angular.isObject(validationRuleCollection.max) ? validationRuleCollection.max.rule : validationRuleCollection.max;
+            if (collection.length > max) {
+                var failureMessage;
+                if (angular.isObject(validationRuleCollection.max)) {
+                    failureMessage = validationRuleCollection.max.message;
+                }
+                else {
+                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.COLLECTION_MAX_SIZE))({ num: max });
+                }
+                return this.$q_.reject(failureMessage);
+            }
+        }
+        return null;
+    };
+    ModelValidator.prototype.validateFieldCustom_ = function (value, formData, validationRules) {
+        var _this = this;
+        if (validationRules.custom) {
+            var defaultErrorMessage;
+            var validationFunction;
+            if (angular.isFunction(validationRules.custom)) {
+                defaultErrorMessage = this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.CUSTOM);
+                validationFunction = validationRules.custom;
+            }
+            else {
+                defaultErrorMessage = validationRules.custom.message;
+                validationFunction = validationRules.custom.rule;
+            }
+            try {
+                var returnValue = validationFunction(value, formData);
+            }
+            catch (error) {
+                return this.$q_.reject(error.message || defaultErrorMessage);
+            }
+            if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
+                return returnValue.then(function (reason) {
+                    return _this.promiseUtils_.resolve(reason);
+                }, function (reason) {
+                    return _this.$q_.reject(reason || defaultErrorMessage);
+                });
+            }
+            else if (returnValue) {
+                return this.promiseUtils_.resolve(returnValue);
+            }
+            else {
+                return this.$q_.reject(defaultErrorMessage);
+            }
+        }
+        return null;
+    };
+    ModelValidator.prototype.validateFieldMaxLength_ = function (value, validationRules) {
+        if (validationRules.maxlength) {
+            var maxlength = angular.isObject(validationRules.maxlength) ? validationRules.maxlength.rule : validationRules.maxlength;
+            if (value.length > maxlength) {
+                var failureMessage;
+                if (angular.isObject(validationRules.maxlength)) {
+                    failureMessage = validationRules.maxlength.message;
+                }
+                else {
+                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.MAX_LENGTH))({ num: maxlength });
+                }
+                return this.$q_.reject(failureMessage);
+            }
+        }
+        return null;
+    };
+    ModelValidator.prototype.validateFieldMinLength_ = function (value, validationRules) {
+        if (validationRules.minlength) {
+            var minlength = angular.isObject(validationRules.minlength) ? validationRules.minlength.rule : validationRules.minlength;
+            if (value && value.length < minlength) {
+                var failureMessage;
+                if (angular.isObject(validationRules.minlength)) {
+                    failureMessage = validationRules.minlength.message;
+                }
+                else {
+                    failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.MIN_LENGTH))({ num: minlength });
+                }
+                return this.$q_.reject(failureMessage);
+            }
+        }
+        return null;
+    };
+    ModelValidator.prototype.validateFieldRequired_ = function (value, validationRules) {
+        if (validationRules.required) {
+            var required = angular.isObject(validationRules.required) ? validationRules.required.rule : validationRules.required;
+            var sanitizedValue = value;
+            if (angular.isString(value)) {
+                value = value.replace(/\s+$/, ''); // Disallow an all-whitespace string
+            }
+            if (required && !value) {
+                var failureMessage;
+                if (angular.isObject(validationRules.required)) {
+                    failureMessage = validationRules.required.message;
+                }
+                else {
+                    failureMessage = this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.REQUIRED);
+                }
+                return this.$q_.reject(failureMessage);
+            }
+        }
+        return null;
+    };
+    ModelValidator.prototype.validateFieldPattern_ = function (value, validationRules) {
+        if (validationRules.pattern) {
+            var isRegExp = validationRules.pattern instanceof RegExp;
+            var regExp = isRegExp ? validationRules.pattern : validationRules.pattern.rule;
+            if (!regExp.exec(value)) {
+                var failureMessage = isRegExp ? this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.PATTERN) : validationRules.pattern.message;
+                return this.$q_.reject(failureMessage);
+            }
+        }
+        return null;
+    };
+    ModelValidator.prototype.validateFieldType_ = function (value, validationRules) {
+        if (validationRules.type) {
+            // String containing 0+ ValidationRuleFieldType enums
+            var typesString = angular.isObject(validationRules.type) ? validationRules.type.rule : validationRules.type;
+            var stringValue = value.toString();
+            var numericValue = Number(value);
+            if (typesString) {
+                var types = typesString.split(' ');
+                for (var i = 0, length = types.length; i < length; i++) {
+                    var type = types[i];
+                    switch (type) {
+                        case ValidationFieldType.INTEGER:
+                            if (stringValue && (isNaN(numericValue) || numericValue % 1 !== 0)) {
+                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_INTEGER));
+                            }
+                            break;
+                        case ValidationFieldType.NUMBER:
+                            if (stringValue && isNaN(numericValue)) {
+                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NUMERIC));
+                            }
+                            break;
+                        case ValidationFieldType.NEGATIVE:
+                            if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue >= 0) {
+                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NEGATIVE));
+                            }
+                            break;
+                        case ValidationFieldType.NON_NEGATIVE:
+                            if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue < 0) {
+                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NON_NEGATIVE));
+                            }
+                            break;
+                        case ValidationFieldType.POSITIVE:
+                            if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue <= 0) {
+                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_POSITIVE));
+                            }
+                            break;
+                        case ValidationFieldType.EMAIL:
+                            if (stringValue && !stringValue.match(/^.+@.+$/)) {
+                                return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_EMAIL));
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        return null;
+    };
+    return ModelValidator;
+})();
+;
+angular.module('formFor').service('ModelValidator', function ($interpolate, $q, FormForConfiguration, NestedObjectHelper, PromiseUtils) { return new ModelValidator($interpolate, $q, FormForConfiguration, NestedObjectHelper, PromiseUtils); });

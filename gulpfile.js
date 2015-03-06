@@ -90,8 +90,6 @@ gulp.task('uglify', function() {
 
 var buildHelper = function(sources, directory, outputFile) {
   var typeScriptCompiler = require('gulp-tsc');
-  var uglify = require('gulp-uglify');
-  var rename = require('gulp-rename');
 
   return gulp
     .src(sources)

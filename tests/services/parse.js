@@ -1,4 +1,4 @@
-describe('qDecorator', function() {
+describe('$parse', function() {
   'use strict';
 
   beforeEach(module('formFor'));

@@ -1,4 +1,4 @@
-describe('qDecorator', function() {
+describe('StringUtil', function() {
   'use strict';
 
   beforeEach(module('formFor'));

@@ -23,7 +23,7 @@ class NestedObjectHelper {
    * @param fieldName Attribute (or dot-notation path) to read
    * @returns Modified field name safe to use as an object key
    */
-  public flattenAttributes(fieldName:string):string {
+  public flattenAttribute(fieldName:string):string {
     return fieldName.replace(/\[([^\]]+)\]\.{0,1}/g, '___$1___').replace(/\./g, '___');
   }
 
