@@ -1,7 +1,5 @@
 /**
- * Constraints that can be applied to a form field.
- * These constraints can be combined (e.g. "positive integer").
- *
+ * Identifies a validation failure type.
  */
 enum ValidationFailureType {
   COLLECTION_MAX_SIZE = <any>"COLLECTION_MAX_SIZE",

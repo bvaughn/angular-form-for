@@ -2,6 +2,8 @@
 
 /**
  * Helper utility to simplify working with nested objects.
+ *
+ * TODO Don't expose this to the $injector either
  */
 class NestedObjectHelper {
 

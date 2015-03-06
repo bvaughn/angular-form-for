@@ -2,6 +2,8 @@
 
 /**
  * Describes rules for validating a single form-field.
+ *
+ * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
  */
 interface ValidationRules {
 

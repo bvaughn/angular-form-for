@@ -1,5 +1,7 @@
 /**
  * Associates a boolean validation rule with a custom failure message.
+ *
+ * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
  */
 interface ValidationRuleBoolean {
 

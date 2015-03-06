@@ -28,6 +28,8 @@ class FormForConfiguration {
 
   // Getters and setters ///////////////////////////////////////////////////////////////////////////////////////////////
 
+  // TODO Add better documentation
+
   public get autoGenerateLabels():boolean {
     return this.autoGenerateLabels_;
   }

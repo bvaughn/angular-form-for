@@ -39,7 +39,7 @@ class PromiseUtils {
       var counter:number = 0;
       var errored:boolean = false;
 
-      function udpateResult(key, data) {
+      function udpateResult(key:string, data:any):void {
         if (!results.hasOwnProperty(key)) {
           results[key] = data;
 
@@ -49,7 +49,7 @@ class PromiseUtils {
         checkForDone();
       }
 
-      function checkForDone() {
+      function checkForDone():void {
         if (counter === 0) {
           if (errored) {
             deferred.reject(results);
@@ -59,14 +59,14 @@ class PromiseUtils {
         }
       }
 
-      angular.forEach(promises, (promise, key) => {
+      angular.forEach(promises, (promise:ng.IPromise<any>, key:string) => {
         counter++;
 
         promise.then(
-          function(data) {
+          (data:any) => {
             udpateResult(key, data);
           },
-          function(data) {
+          (data:any) => {
             errored = true;
 
             udpateResult(key, data);

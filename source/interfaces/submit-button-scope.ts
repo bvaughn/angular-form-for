@@ -1,0 +1,4 @@
+interface SubmitButtonScope {
+
+  disabled:boolean;
+};

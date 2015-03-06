@@ -3,7 +3,6 @@
 /// <reference path="nested-object-helper.ts" />
 /// <reference path="promise-utils.ts" />
 
-
 /**
  * Model validation service.
  */
@@ -42,7 +41,7 @@ class ModelValidator {
    * @param fieldName Name of field containing the collection.
    * @param validationRuleSet Map of field names to validation rules
    */
-  public isCollectionRequired(fieldName:string, validationRuleSet:ValidationRuleSet):Boolean {
+  public isCollectionRequired(fieldName:string, validationRuleSet:ValidationRuleSet):boolean {
     var validationRules:ValidationRules = this.getRulesFor_(fieldName, validationRuleSet);
 
     if (validationRules &&
@@ -64,7 +63,7 @@ class ModelValidator {
    * @param fieldName Name of field in question.
    * @param validationRuleSet Map of field names to validation rules
    */
-  public isFieldRequired(fieldName:string, validationRuleSet:ValidationRuleSet):Boolean {
+  public isFieldRequired(fieldName:string, validationRuleSet:ValidationRuleSet):boolean {
     var validationRules:ValidationRules = this.getRulesFor_(fieldName, validationRuleSet);
 
     if (validationRules && validationRules.required) {
