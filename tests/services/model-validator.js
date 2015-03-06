@@ -16,7 +16,7 @@ describe('ModelValidator', function() {
 
     FormForConfiguration = $injector.get('FormForConfiguration');
     ModelValidator = $injector.get('ModelValidator');
-    promiseUtils = new PromiseUtils($q);
+    promiseUtils = new formFor.PromiseUtils($q);
     model = {
       rules: {}
     };

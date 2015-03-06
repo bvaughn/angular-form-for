@@ -1,18 +1,21 @@
-/**
- * Associates a boolean validation rule with a custom failure message.
- *
- * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
- */
-interface ValidationRuleBoolean {
+module formFor {
 
   /**
-   * This rule is active.
-   * If the condition it applies to is not met, the field should be considered invalid.
+   * Associates a boolean validation rule with a custom failure message.
+   *
+   * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
    */
-  rule:boolean;
+  export interface ValidationRuleBoolean {
 
-  /**
-   * Custom error message to be shown for failed validations.
-   */
-  message:string;
+    /**
+     * This rule is active.
+     * If the condition it applies to is not met, the field should be considered invalid.
+     */
+    rule:boolean;
+
+    /**
+     * Custom error message to be shown for failed validations.
+     */
+    message:string;
+  };
 };

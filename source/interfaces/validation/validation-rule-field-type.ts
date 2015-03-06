@@ -1,18 +1,21 @@
-/**
- * Associates a field-type validation rule with a custom failure message.
- *
- * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
- */
-interface ValidationRuleFieldType {
+module formFor {
 
   /**
-   * The required field type.
-   * If the condition it applies to is not met, the field should be considered invalid.
+   * Associates a field-type validation rule with a custom failure message.
+   *
+   * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
    */
-  rule:ValidationFieldType;
+  export interface ValidationRuleFieldType {
 
-  /**
-   * Custom error message to be shown for failed validations.
-   */
-  message:string;
+    /**
+     * The required field type.
+     * If the condition it applies to is not met, the field should be considered invalid.
+     */
+    rule:ValidationFieldType;
+
+    /**
+     * Custom error message to be shown for failed validations.
+     */
+    message:string;
+  };
 };

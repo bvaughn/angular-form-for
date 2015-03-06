@@ -1,27 +1,30 @@
-/**
- * Wrapper object containing using information about a formFor field.
- *
- * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
- */
-interface FieldDatum {
+module formFor {
 
   /**
-   * Shared between formFor and field directives.
+   * Wrapper object containing using information about a formFor field.
+   *
+   * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
    */
-  bindableWrapper:BindableFieldWrapper;
+  export interface FieldDatum {
 
-  /**
-   * Uniquely identifies a form field.
-   */
-  fieldName:string;
+    /**
+     * Shared between formFor and field directives.
+     */
+    bindableWrapper:BindableFieldWrapper;
 
-  /**
-   * Helper utility class used by formFor and its directives.
-   */
-  formForStateHelper:FormForStateHelper;
+    /**
+     * Uniquely identifies a form field.
+     */
+    fieldName:string;
 
-  /**
-   * Callbacks for removing $scope.$watch watchers.
-   */
-  unwatchers:Array<Function>;
+    /**
+     * Helper utility class used by formFor and its directives.
+     */
+    formForStateHelper:FormForStateHelper;
+
+    /**
+     * Callbacks for removing $scope.$watch watchers.
+     */
+    unwatchers:Array<Function>;
+  };
 };

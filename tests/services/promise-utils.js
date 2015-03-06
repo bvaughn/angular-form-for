@@ -10,7 +10,7 @@ describe('PromiseUtils', function() {
   beforeEach(inject(function ($injector) {
     $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
-    promiseUtils = new PromiseUtils($q);
+    promiseUtils = new formFor.PromiseUtils($q);
   }));
 
   afterEach(inject(function() {

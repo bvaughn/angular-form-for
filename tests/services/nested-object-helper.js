@@ -8,7 +8,7 @@ describe('NestedObjectHelper', function() {
   beforeEach(inject(function ($injector) {
     var $parse = $injector.get('$parse');
 
-    nestedObjectHelper = new NestedObjectHelper($parse);
+    nestedObjectHelper = new formFor.NestedObjectHelper($parse);
   }));
 
   describe('flattenAttribute', function() {
