@@ -9,7 +9,6 @@ module formFor {
   export class ModelValidator {
 
     private $interpolate_:ng.IInterpolateService;
-    private $q_:ng.IQService;
     private formForConfiguration_:FormForConfiguration;
     private nestedObjectHelper_:NestedObjectHelper;
     private promiseUtils_:PromiseUtils;
@@ -27,7 +26,6 @@ module formFor {
                 $q:ng.IQService,
                 formForConfiguration:FormForConfiguration) {
       this.$interpolate_ = $interpolate;
-      this.$q_ = $q;
       this.formForConfiguration_ = formForConfiguration;
 
       this.nestedObjectHelper_ = new NestedObjectHelper($parse);
@@ -159,7 +157,7 @@ module formFor {
      * @return Promise to be resolved or rejected based on validation success or failure.
      */
     public validateFields(formData:Object, fieldNames:Array<string>, validationRuleSet:ValidationRuleSet):ng.IPromise<any> {
-      var deferred:ng.IDeferred<any> = this.$q_.defer();
+      var deferred:ng.IDeferred<any> = this.promiseUtils_.defer();
       var promises:Array<ng.IPromise<any>> = [];
       var errorMap:ValidationErrorMap = {};
 
@@ -221,7 +219,7 @@ module formFor {
      * This guards against the fact that `new Number('') == 0`.
      * @private
      */
-    private isConsideredNumeric_(stringValue:string, numericValue:number):boolean {
+    private static isConsideredNumeric_(stringValue:string, numericValue:number):boolean {
       return stringValue && !isNaN(numericValue);
     }
 
@@ -246,7 +244,7 @@ module formFor {
                   ValidationFailureType.COLLECTION_MIN_SIZE))({num: min});
           }
 
-          return this.$q_.reject(failureMessage);
+          return this.promiseUtils_.reject(failureMessage);
         }
       }
 
@@ -272,7 +270,7 @@ module formFor {
                   ValidationFailureType.COLLECTION_MAX_SIZE))({num: max});
           }
 
-          return this.$q_.reject(failureMessage);
+          return this.promiseUtils_.reject(failureMessage);
         }
       }
 
@@ -300,7 +298,7 @@ module formFor {
         try {
           var returnValue:any = validationFunction(value, formData);
         } catch (error) {
-          return this.$q_.reject(error.message || defaultErrorMessage);
+          return this.promiseUtils_.reject(error.message || defaultErrorMessage);
         }
 
         if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
@@ -309,12 +307,12 @@ module formFor {
               return this.promiseUtils_.resolve(reason);
             },
             (reason:any) => {
-              return this.$q_.reject(reason || defaultErrorMessage);
+              return this.promiseUtils_.reject(reason || defaultErrorMessage);
             });
         } else if (returnValue) {
           return this.promiseUtils_.resolve(returnValue);
         } else {
-          return this.$q_.reject(defaultErrorMessage);
+          return this.promiseUtils_.reject(defaultErrorMessage);
         }
       }
 
@@ -339,7 +337,7 @@ module formFor {
                   ValidationFailureType.MAX_LENGTH))({num: maxlength});
           }
 
-          return this.$q_.reject(failureMessage);
+          return this.promiseUtils_.reject(failureMessage);
         }
       }
 
@@ -364,7 +362,7 @@ module formFor {
                   ValidationFailureType.MIN_LENGTH))({num: minlength});
           }
 
-          return this.$q_.reject(failureMessage);
+          return this.promiseUtils_.reject(failureMessage);
         }
       }
 
@@ -376,8 +374,6 @@ module formFor {
         var required:boolean = angular.isObject(validationRules.required) ?
           (<ValidationRuleBoolean> validationRules.required).rule :
           <boolean> validationRules.required;
-
-        var sanitizedValue:any = value;
 
         if (angular.isString(value)) {
           value = value.replace(/\s+$/, ''); // Disallow an all-whitespace string
@@ -394,7 +390,7 @@ module formFor {
                 ValidationFailureType.REQUIRED);
           }
 
-          return this.$q_.reject(failureMessage);
+          return this.promiseUtils_.reject(failureMessage);
         }
       }
 
@@ -413,7 +409,7 @@ module formFor {
             this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.PATTERN) :
             (<ValidationRuleRegExp> validationRules.pattern).message;
 
-          return this.$q_.reject(failureMessage);
+          return this.promiseUtils_.reject(failureMessage);
         }
       }
 
@@ -439,42 +435,42 @@ module formFor {
             switch (type) {
               case ValidationFieldType.INTEGER:
                 if (stringValue && (isNaN(numericValue) || numericValue % 1 !== 0)) {
-                  return this.$q_.reject(
+                  return this.promiseUtils_.reject(
                     this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_INTEGER));
                 }
                 break;
 
               case ValidationFieldType.NUMBER:
                 if (stringValue && isNaN(numericValue)) {
-                  return this.$q_.reject(
+                  return this.promiseUtils_.reject(
                     this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NUMERIC));
                 }
                 break;
 
               case ValidationFieldType.NEGATIVE:
-                if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue >= 0) {
-                  return this.$q_.reject(
+                if (ModelValidator.isConsideredNumeric_(stringValue, numericValue) && numericValue >= 0) {
+                  return this.promiseUtils_.reject(
                     this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NEGATIVE));
                 }
                 break;
 
               case ValidationFieldType.NON_NEGATIVE:
-                if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue < 0) {
-                  return this.$q_.reject(
+                if (ModelValidator.isConsideredNumeric_(stringValue, numericValue) && numericValue < 0) {
+                  return this.promiseUtils_.reject(
                     this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_NON_NEGATIVE));
                 }
                 break;
 
               case ValidationFieldType.POSITIVE:
-                if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue <= 0) {
-                  return this.$q_.reject(
+                if (ModelValidator.isConsideredNumeric_(stringValue, numericValue) && numericValue <= 0) {
+                  return this.promiseUtils_.reject(
                     this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_POSITIVE));
                 }
                 break;
 
               case ValidationFieldType.EMAIL:
                 if (stringValue && !stringValue.match(/^.+@.+$/)) {
-                  return this.$q_.reject(
+                  return this.promiseUtils_.reject(
                     this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_EMAIL));
                 }
                 break;
@@ -485,9 +481,9 @@ module formFor {
 
       return null;
     }
-  };
+  }
 
   angular.module('formFor').service('ModelValidator',
     ($interpolate, $parse, $q, FormForConfiguration) =>
       new ModelValidator($interpolate, $parse, $q, FormForConfiguration));
-};
+}

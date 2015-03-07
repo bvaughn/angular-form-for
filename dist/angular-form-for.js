@@ -2,16 +2,1030 @@
 angular.module('formFor', []);
 var formFor;
 (function (formFor) {
-    var FormFor = (function () {
-        function FormFor() {
+    /**
+     * Helper directive for input elements.
+     * Observes the $scope :model attribute and updates aria-* elements accordingly.
+     */
+    var AriaManager = (function () {
+        function AriaManager() {
+            this.restrict = 'A';
         }
+        AriaManager.prototype.link = function ($scope, $element, $attributes) {
+            $scope.$watch('model.uid', function (uid) {
+                $attributes.$set('ariaDescribedby', uid + '-error');
+                $attributes.$set('ariaLabelledby', uid + '-label');
+            });
+            $scope.$watch('model.error', function (error) {
+                $attributes.$set('ariaInvalid', !!error);
+            });
+        };
+        return AriaManager;
+    })();
+    formFor.AriaManager = AriaManager;
+    angular.module('formFor').directive('ariaManager', function () { return new AriaManager(); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Renders a checkbox <code>input</code> with optional label.
+     * This type of component is well-suited for boolean attributes.
+     *
+     * @example
+     * // To display a simple TOS checkbox you might use the following markup:
+     * <checkbox-field label="I agree with the TOS"
+     *                 attribute="accepted">
+     * </checkbox-field>
+     */
+    var CheckboxField = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $log $injector-supplied $log service
+         * @param FormForConfiguration
+         */
+        function CheckboxField($log, FormForConfiguration) {
+            this.require = '^formFor';
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/checkbox-field.html';
+            this.scope = {
+                attribute: '@',
+                disable: '=',
+                help: '@?',
+                changed: '@?'
+            };
+            this.$log_ = $log;
+            this.fieldHelper_ = new formFor.FieldHelper(FormForConfiguration);
+        }
+        CheckboxField.prototype.link = function ($scope, $element, $attributes, formForController) {
+            if (!$scope['attribute']) {
+                this.$log_.error('Missing required field "attribute"');
+                return;
+            }
+            $scope.tabIndex = $attributes['tabIndex'] || 0;
+            $scope.toggle = function toggle() {
+                if (!$scope.disable && !$scope.model.disabled) {
+                    $scope.model.bindable = !$scope.model.bindable;
+                }
+            };
+            this.fieldHelper_.manageLabel($scope, $attributes, false);
+            this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+        };
+        return CheckboxField;
+    })();
+    formFor.CheckboxField = CheckboxField;
+    angular.module('formFor').directive('checkboxField', function ($log, FormForConfiguration) { return new CheckboxField($log, FormForConfiguration); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Header label for collections.
+     * This component displays header text as well as collection validation errors.
+     *
+     * @example
+     * // To display a simple collection header:
+     * <collection-label  label="Hobbies" attribute="hobbies">
+     * </collection-label>
+     */
+    var CollectionLabel = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $sce $injector-supplied $sce service
+         */
+        function CollectionLabel($sce) {
+            this.require = '^formFor';
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/collection-label.html';
+            this.scope = {
+                attribute: '@',
+                help: '@?',
+                label: '@'
+            };
+            this.$sce_ = $sce;
+        }
+        CollectionLabel.prototype.link = function ($scope, $element, $attributes, formForController) {
+            $scope.$watch('label', function (value) {
+                $scope.bindableLabel = this.$sce_.trustAsHtml(value);
+            });
+            $scope.model = formForController.registerCollectionLabel($scope.attribute);
+        };
+        return CollectionLabel;
+    })();
+    formFor.CollectionLabel = CollectionLabel;
+    angular.module('formFor').directive('collectionLabel', function ($sce) { return new CollectionLabel($sce); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Displays a standard formFor field validation error message.
+     *
+     * @example
+     * // To display a field error:
+     * <field-error error="This is an error message">
+     * </field-error>
+     */
+    var FieldError = (function () {
+        function FieldError() {
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/field-error.html';
+            this.scope = {
+                error: '=',
+                leftAligned: '@?',
+                uid: '@'
+            };
+        }
+        return FieldError;
+    })();
+    formFor.FieldError = FieldError;
+    angular.module('formFor').directive('fieldError', function () { return new FieldError(); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * This component is only intended for internal use by the formFor module.
+     *
+     * @example
+     * // To display a simple label with a help tooltip:
+     * <field-label label="Username"
+     *              help="This will be visible to other users">
+     * </field-label>
+     */
+    var FieldLabel = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $sce $injector-supplied $sce service
+         * @param formForConfiguration
+         */
+        function FieldLabel($sce, formForConfiguration) {
+            this.replace = true; // Necessary for CSS sibling selectors
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/field-label.html';
+            this.scope = {
+                inputUid: '@',
+                help: '@?',
+                label: '@',
+                required: '@?',
+                uid: '@'
+            };
+            this.$sce_ = $sce;
+            this.formForConfiguration_ = formForConfiguration;
+        }
+        FieldLabel.prototype.controller = function ($scope) {
+            $scope.$watch('label', function (value) {
+                $scope.bindableLabel = this.$sce_.trustAsHtml(value);
+            });
+            $scope.$watch('required', function (required) {
+                $scope.requiredLabel = $scope.$eval(required) ? this.formForConfiguration_.requiredLabel : null;
+            });
+        };
+        return FieldLabel;
+    })();
+    formFor.FieldLabel = FieldLabel;
+    angular.module('formFor').directive('fieldLabel', function ($sce, FormForConfiguration) { return new FieldLabel($sce, FormForConfiguration); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Angular introduced debouncing (via ngModelOptions) in version 1.3.
+     * As of the time of this writing, that version is still in beta.
+     * This component adds debouncing behavior for Angular 1.2.x.
+     * It is primarily intended for use with &lt;input type=text&gt; and &lt;textarea&gt; elements.
+     *
+     * @example
+     * // To configure this component to debounce with a 2 second delay:
+     * <input type="text"
+     *        ng-model="username"
+     *        form-for-debounce="2000" />
+     *
+     * // To disable the debounce interval and configure an input to update only on blur:
+     * <input type="text"
+     *        ng-model="username"
+     *        form-for-debounce="false" />
+     */
+    var FormForDebounce = (function () {
+        function FormForDebounce($log, $sniffer, $timeout, formForConfiguration) {
+            this.priority = 99;
+            this.require = 'ngModel';
+            this.restrict = 'A';
+            /**
+             * Scope.
+             *
+             * @param formForDebounce Debounce duration in milliseconds.
+             *                        By default this value is 1000ms.
+             *                        To disable the debounce interval (to update on blur) a value of false should be specified.
+             */
+            this.scope = {
+                formForDebounce: '@'
+            };
+            this.$log_ = $log;
+            this.$sniffer_ = $sniffer;
+            this.$timeout_ = $timeout;
+            this.formForConfiguration_ = formForConfiguration;
+        }
+        FormForDebounce.prototype.link = function ($scope, $element, $attributes, ngModelController) {
+            var _this = this;
+            if ($attributes['type'] === 'radio' || $attributes['type'] === 'checkbox') {
+                this.$log_.warn("formForDebounce should only be used with <input type=text> and <textarea> elements");
+                return;
+            }
+            var durationAttributeValue = $attributes['formForDebounce'];
+            var duration = this.formForConfiguration_.defaultDebounceDuration;
+            // Debounce can be configured for blur-only by passing a value of 'false'.
+            if (durationAttributeValue !== undefined) {
+                if (durationAttributeValue.toString() === 'false') {
+                    duration = false;
+                }
+                else {
+                    durationAttributeValue = parseInt(durationAttributeValue);
+                    if (angular.isNumber(durationAttributeValue) && !isNaN(durationAttributeValue)) {
+                        duration = durationAttributeValue;
+                    }
+                }
+            }
+            // Older IEs do not have 'input' events - and trying to access them can cause TypeErrors.
+            // Angular's ngModel falls back to 'keydown' and 'paste' events in this case, so we must also.
+            if (this.$sniffer_.hasEvent('input')) {
+                $element.off('input');
+            }
+            else {
+                $element.off('keydown');
+                if (this.$sniffer_.hasEvent('paste')) {
+                    $element.off('paste');
+                }
+            }
+            var debounceTimeoutId;
+            if (duration !== false) {
+                var inputChangeHandler = function () {
+                    _this.$timeout_.cancel(debounceTimeoutId);
+                    debounceTimeoutId = _this.$timeout_(function () {
+                        $scope.$apply(function () {
+                            ngModelController.$setViewValue($element.val());
+                        });
+                    }, duration);
+                };
+                if (this.$sniffer_.hasEvent('input')) {
+                    $element.on('input', undefined, inputChangeHandler);
+                }
+                else {
+                    $element.on('keydown', undefined, inputChangeHandler);
+                    if (this.$sniffer_.hasEvent('paste')) {
+                        $element.on('paste', undefined, inputChangeHandler);
+                    }
+                }
+            }
+            $element.on('blur', undefined, function () {
+                $scope.$apply(function () {
+                    ngModelController.$setViewValue($element.val());
+                });
+            });
+            $scope.$on('$destroy', function () {
+                if (debounceTimeoutId) {
+                    _this.$timeout_.cancel(debounceTimeoutId);
+                }
+            });
+        };
+        return FormForDebounce;
+    })();
+    formFor.FormForDebounce = FormForDebounce;
+    angular.module('formFor').directive('formForDebounce', function ($log, $sniffer, $timeout, formForConfiguration) { return new FormForDebounce($log, $sniffer, $timeout, formForConfiguration); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * This directive should be paired with an Angular ngForm object,
+     * and should contain at least one of the formFor field types described below.
+     * At a high level, it operates on a bindable form-data object and runs validations each time a change is detected.
+     */
+    var FormFor = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $injector The $injector!
+         */
+        function FormFor($injector) {
+            // We don't need the ngForm controller, but we do rely on the form-submit hook
+            this.require = 'form';
+            this.restrict = 'A';
+            this.scope = {
+                controller: '=?',
+                disable: '=?',
+                formFor: '=',
+                service: '@',
+                submitComplete: '&?',
+                submitError: '&?',
+                submitWith: '&?',
+                valid: '=?',
+                validateOn: '=?',
+                validationFailed: '&?',
+                validationRules: '=?'
+            };
+            this.$injector_ = $injector;
+            this.$log_ = $injector.get('$log');
+            this.$parse_ = $injector.get('$parse');
+            this.$sce_ = $injector.get('$sce');
+            this.formForConfiguration_ = $injector.get('FormForConfiguration');
+            this.nestedObjectHelper_ = $injector.get('NestedObjectHelper');
+            this.modelValidator_ = $injector.get('ModelValidator');
+            var $q = $injector.get('$q');
+            this.promiseUtils_ = new formFor.PromiseUtils($q);
+        }
+        FormFor.prototype.controller = function ($scope) {
+            var _this = this;
+            if (!$scope.formFor) {
+                this.$log_.error('The form data object specified by <form form-for=""> is null or undefined.');
+            }
+            $scope.fields = {};
+            $scope.collectionLabels = {};
+            $scope.buttons = [];
+            if ($scope.service) {
+                $scope.$service = this.$injector_.get($scope.service);
+            }
+            // Validation rules can come through 2 ways:
+            // As part of the validation service or as a direct binding (specified via an HTML attribute binding).
+            if ($scope.validationRules) {
+                $scope.$validationRuleset = $scope.validationRules;
+            }
+            else if ($scope.$service) {
+                $scope.$validationRuleset = $scope.$service.validationRules;
+            }
+            var formForController = new formFor.FormForController(this.$parse_, this.promiseUtils_, $scope, this.modelValidator_);
+            // Expose controller methods to the shared, bindable $scope.controller
+            if ($scope.controller) {
+                angular.copy(formForController, $scope.controller);
+            }
+            else {
+                $scope.controller = formForController;
+            }
+            // Disable all child inputs if the form becomes disabled.
+            $scope.$watch('disable', function (value) {
+                angular.forEach($scope.fields, function (fieldDatum) {
+                    fieldDatum.bindableWrapper.disabled = value;
+                });
+                angular.forEach($scope.buttons, function (buttonWrapper) {
+                    buttonWrapper.disabled = value;
+                });
+            });
+            // Track field validity and dirty state.
+            $scope.formForStateHelper = new formFor.FormForStateHelper(this.$parse_, $scope);
+            // Watch for any validation changes or changes in form-state that require us to notify the user.
+            // Rather than using a deep-watch, FormForStateHelper exposes a bindable attribute 'watchable'.
+            // This attribute is guaranteed to change whenever validation criteria change (but its value is meaningless).
+            $scope.$watch('formForStateHelper.watchable', function () {
+                var hasFormBeenSubmitted = $scope.formForStateHelper.hasFormBeenSubmitted();
+                // Mark invalid fields
+                angular.forEach($scope.fields, function (fieldDatum, bindableFieldName) {
+                    if (hasFormBeenSubmitted || $scope.formForStateHelper.hasFieldBeenModified(bindableFieldName)) {
+                        var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
+                        fieldDatum.bindableWrapper.error = error ? _this.$sce_.trustAsHtml(error) : null;
+                    }
+                    else {
+                        fieldDatum.bindableWrapper.error = null; // Clear out field errors in the event that the form has been reset
+                    }
+                });
+                // Mark invalid collections
+                angular.forEach($scope.collectionLabels, function (bindableWrapper, bindableFieldName) {
+                    var error = $scope.formForStateHelper.getFieldError(bindableFieldName);
+                    bindableWrapper.error = error ? _this.$sce_.trustAsHtml(error) : null;
+                });
+            });
+        };
+        FormFor.prototype.link = function ($scope, $element, $attributes) {
+            var _this = this;
+            $element.on('submit', undefined, function () {
+                $scope.formForStateHelper.setFormSubmitted(true);
+                $scope.disable = true;
+                var validationPromise;
+                // By default formFor validates on-change,
+                // But we need to [re-]validate on submit as well to handle pristine fields.
+                // The only case we don't want to validate for is 'manual'.
+                if ($scope.validateOn === 'manual') {
+                    validationPromise = _this.promiseUtils_.resolve();
+                }
+                else {
+                    validationPromise = $scope.controller.validateForm();
+                }
+                validationPromise.then(function () {
+                    var promise;
+                    // $scope.submitWith is wrapped with a virtual function so we must check via attributes
+                    if ($attributes['submitWith']) {
+                        promise = $scope.submitWith({ data: $scope.formFor });
+                    }
+                    else if ($scope.$service && $scope.$service.submit) {
+                        promise = $scope.$service.submit($scope.formFor);
+                    }
+                    else {
+                        promise = _this.promiseUtils_.reject('No submit function provided');
+                    }
+                    // Issue #18 Guard against submit functions that don't return a promise by warning rather than erroring.
+                    if (!promise) {
+                        promise = _this.promiseUtils_.reject('Submit function did not return a promise');
+                    }
+                    promise.then(function (response) {
+                        // $scope.submitComplete is wrapped with a virtual function so we must check via attributes
+                        if ($attributes['submitComplete']) {
+                            $scope.submitComplete({ data: response });
+                        }
+                        else {
+                            _this.formForConfiguration_.defaultSubmitComplete(response);
+                        }
+                    }, function (errorMessageOrErrorMap) {
+                        // If the remote response returned inline-errors update our error map.
+                        // This is unecessary if a string was returned.
+                        if (angular.isObject(errorMessageOrErrorMap)) {
+                            if ($scope.validateOn !== 'manual') {
+                                // TODO Questionable: Maybe server should be forced to return fields/collections constraints?
+                                $scope.controller.updateCollectionErrors(errorMessageOrErrorMap);
+                                $scope.controller.updateFieldErrors(errorMessageOrErrorMap);
+                            }
+                        }
+                        // $scope.submitError is wrapped with a virtual function so we must check via attributes
+                        if ($attributes['submitError']) {
+                            $scope.submitError({ error: errorMessageOrErrorMap });
+                        }
+                        else {
+                            _this.formForConfiguration_.defaultSubmitError(errorMessageOrErrorMap);
+                        }
+                    });
+                    promise['finally'](function () {
+                        $scope.disable = false;
+                    });
+                }, function (reason) {
+                    $scope.disable = false;
+                    // $scope.validationFailed is wrapped with a virtual function so we must check via attributes
+                    if ($attributes['validationFailed']) {
+                        $scope.validationFailed();
+                    }
+                    else {
+                        _this.formForConfiguration_.defaultValidationFailed(reason);
+                    }
+                });
+                return false;
+            });
+        };
         return FormFor;
     })();
     formFor.FormFor = FormFor;
-    ;
+    angular.module('formFor').directive('formFor', function ($injector) { return new FormFor($injector); });
 })(formFor || (formFor = {}));
-;
-angular.module('formFor').directive('formFor', function () { return formFor.FormFor; });
+var formFor;
+(function (formFor) {
+    /**
+     * Renders a radio &lt;input&gt; with optional label.
+     * This type of component is well-suited for small enumerations.
+     *
+     * @example
+     * // To render a radio group for gender selection you might use the following markup:
+     * <radio-field label="Female" attribute="gender" value="f"></radio-field>
+     * <radio-field label="Male" attribute="gender" value="m"></radio-field>
+     */
+    var RadioField = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $log $injector-supplied $log service
+         * @param FormForConfiguration
+         */
+        function RadioField($log, FormForConfiguration) {
+            this.require = '^formFor';
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/radio-field.html';
+            this.scope = {
+                attribute: '@',
+                disable: '=',
+                help: '@?',
+                value: '@'
+            };
+            this.$log_ = $log;
+            this.fieldHelper_ = new formFor.FieldHelper(FormForConfiguration);
+            this.fieldNameToActiveRadioGroupDatumMap_ = {};
+        }
+        RadioField.prototype.link = function ($scope, $element, $attributes, formForController) {
+            if (!$scope.attribute) {
+                this.$log_.error('Missing required field "attribute"');
+                return;
+            }
+            if (!this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute]) {
+                this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+                this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute] = {
+                    defaultScope: $scope,
+                    scopes: []
+                };
+            }
+            else {
+                // Only the primary <radio> input should show error message text
+                $scope.hideErrorMessage = true;
+            }
+            // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
+            // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
+            $scope.uid = $attributes['uid'] || formFor.FormForGUID.create();
+            var radioGroupDatum = this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute];
+            radioGroupDatum.scopes.push($scope);
+            this.fieldHelper_.manageLabel($scope, $attributes, true);
+            $scope.tabIndex = $attributes['tabIndex'] || 0;
+            $scope.click = function () {
+                if (!$scope.disable && !$scope.model.disabled) {
+                    $scope.model.bindable = $scope.value;
+                }
+            };
+            radioGroupDatum.defaultScope.$watch('model', function (value) {
+                $scope.model = value;
+            });
+            radioGroupDatum.defaultScope.$watch('disable', function (value) {
+                $scope.disable = value;
+            });
+            radioGroupDatum.defaultScope.$watch('model.disabled', function (value) {
+                if ($scope.model) {
+                    $scope.model.disabled = value;
+                }
+            });
+            /**
+             * Update this RadioField (UI) whenever the group's value changes.
+             * This could be triggered by another RadioField in the group.
+             */
+            $scope.$watch('model.bindable', function (newValue) {
+                $scope.checked = newValue !== undefined && newValue !== null && $scope.value !== undefined && $scope.value !== null && newValue.toString() === $scope.value.toString();
+            });
+            /**
+             * Remove this RadioField from the group when it's removed from the DOM.
+             */
+            $scope.$on('$destroy', function () {
+                radioGroupDatum.scopes.splice(radioGroupDatum.scopes.indexOf($scope), 1);
+                if (radioGroupDatum.scopes.length === 0) {
+                    delete this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute];
+                }
+            });
+        };
+        return RadioField;
+    })();
+    formFor.RadioField = RadioField;
+    angular.module('formFor').directive('radioField', function ($log, FormForConfiguration) { return new RadioField($log, FormForConfiguration); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Renders a drop-down &lt;select&gt; menu along with an input label.
+     * This type of component works with large enumerations and can be configured to allow for a blank/empty selection
+     * by way of an allow-blank attribute.
+     *
+     * The following HTML attributes are supported by this directive:
+     * <ul>
+     * <li>allow-blank: The presence of this attribute indicates that an empty/blank selection should be allowed.
+     * <li>prevent-default-option: Optional attribute to override default selection of the first list option.
+     *       Without this attribute, lists with `allow-blank` will default select the first option in the options array.
+     *</ul>
+     *
+     * @example
+     * // To use this component you'll first need to define a set of options. For instance:
+     * $scope.genders = [
+     *   { value: 'f', label: 'Female' },
+     *   { value: 'm', label: 'Male' }
+     * ];
+     *
+     * // To render a drop-down input using the above options:
+     * <select-field attribute="gender"
+     *               label="Gender"
+     *               options="genders">
+     * </select-field>
+     *
+     * // If you want to make this attribute optional you can use the allow-blank attribute as follows:
+     * <select-field attribute="gender"
+     *               label="Gender"
+     *               options="genders"
+     *               allow-blank>
+     * </select-field>
+     */
+    var SelectField = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $document $injector-supplied $document service
+         * @param $log $injector-supplied $log service
+         * @param $timeout $injector-supplied $timeout service
+         * @param $window $injector-supplied $window service
+         * @param fieldHelper
+         */
+        function SelectField($document, $log, $timeout, $window, fieldHelper) {
+            this.require = '^formFor';
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/select-field.html';
+            this.scope = {
+                attribute: '@',
+                disable: '=',
+                filter: '=?',
+                filterDebounce: '@?',
+                help: '@?',
+                multiple: '=?',
+                options: '='
+            };
+            this.$document_ = $document;
+            this.$log_ = $log;
+            this.$timeout_ = $timeout;
+            this.$window_ = angular.element($window);
+            this.fieldHelper_ = fieldHelper;
+        }
+        SelectField.prototype.link = function ($scope, $element, $attributes, formForController) {
+            var _this = this;
+            if (!$scope.attribute) {
+                this.$log_.error('Missing required field "attribute"');
+                return;
+            }
+            $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
+            $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
+            $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
+            // Read from $attributes to avoid getting any interference from $scope.
+            $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
+            $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
+            $scope.placeholder = $attributes['placeholder'] || 'Select';
+            $scope.tabIndex = $attributes['tabIndex'] || 0;
+            this.fieldHelper_.manageLabel($scope, $attributes, false);
+            this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+            // Helper method for setting focus on an item after a delay
+            var setDelayedFocus = function ($target) {
+                var target = $target[0];
+                _this.$timeout_(target.focus.bind(target));
+            };
+            $scope.close = function () {
+                _this.$timeout_(function () {
+                    $scope.isOpen = false;
+                });
+            };
+            $scope.open = function () {
+                if ($scope.disable || $scope.model.disabled) {
+                    return;
+                }
+                _this.$timeout_(function () {
+                    $scope.isOpen = true;
+                });
+            };
+            /*****************************************************************************************
+             * The following code pertains to filtering visible options.
+             *****************************************************************************************/
+            $scope.emptyOption = {};
+            $scope.emptyOption[$scope.labelAttribute] = '';
+            $scope.emptyOption[$scope.valueAttribute] = undefined;
+            $scope.placeholderOption = {};
+            $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
+            $scope.placeholderOption[$scope.valueAttribute] = undefined;
+            $scope.filteredOptions = [];
+            // Sanitizes option and filter-text values for comparison
+            var sanitize = function (value) {
+                return value && value.toLowerCase();
+            };
+            // Updates visible <option>s based on current filter text
+            var calculateFilteredOptions = function () {
+                var options = $scope.options || [];
+                $scope.filteredOptions.splice(0);
+                if (!$scope.enableFiltering || !$scope.filter) {
+                    angular.copy(options, $scope.filteredOptions);
+                }
+                else {
+                    var filter = sanitize($scope.filter);
+                    angular.forEach(options, function (option) {
+                        var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
+                        if (index >= 0) {
+                            $scope.filteredOptions.push(option);
+                        }
+                    });
+                }
+                if (!$scope.selectedOption && !$scope.multiple) {
+                    $scope.filteredOptions.unshift($scope.placeholderOption);
+                }
+                else if ($scope.allowBlank) {
+                    $scope.filteredOptions.unshift($scope.emptyOption);
+                }
+            };
+            $scope.$watch('filter', calculateFilteredOptions);
+            $scope.$watch('options.length', calculateFilteredOptions);
+            /*****************************************************************************************
+             * The following code manages setting the correct default value based on bindable model.
+             *****************************************************************************************/
+            var updateDefaultOption = function () {
+                var selected = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
+                if ($scope.model.bindable === selected) {
+                    // Default select the first item in the list
+                    // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
+                    if (!$scope.allowBlank && !$scope.preventDefaultOption && $scope.options && $scope.options.length) {
+                        $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+                    }
+                }
+            };
+            $scope.$watch('model.bindable', updateDefaultOption);
+            $scope.$watch('options.length', updateDefaultOption);
+            /*****************************************************************************************
+             * The following code deals with toggling/collapsing the drop-down and selecting values.
+             *****************************************************************************************/
+            $scope.$watch('model.bindable', function () {
+                var matchingOption = null;
+                angular.forEach($scope.options, function (option) {
+                    if (option[$scope.valueAttribute] === $scope.model.bindable) {
+                        matchingOption = option;
+                    }
+                });
+                $scope.selectedOption = matchingOption;
+                $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+                // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
+                $scope.filter = $scope.selectedOptionLabel;
+            });
+            var documentClick = function (event) {
+                // See filterTextClick() for why we check this property.
+                if (event.ignoreFor === $scope.model.uid) {
+                    return;
+                }
+                $scope.close();
+            };
+            $scope.filterTextClick = function (event) {
+                // We can't stop the event from propagating or we might prevent other inputs from closing on blur.
+                // But we can't let it proceed as normal or it may result in the $document click handler closing a newly-opened input.
+                // Instead we tag it for this particular instance of <select-field> to ignore.
+                if ($scope.isOpen) {
+                    event.ignoreFor = $scope.model.uid;
+                }
+            };
+            var pendingTimeoutId;
+            $scope.$watch('isOpen', function () {
+                if (pendingTimeoutId) {
+                    _this.$timeout_.cancel(pendingTimeoutId);
+                }
+                pendingTimeoutId = _this.$timeout_(function () {
+                    pendingTimeoutId = null;
+                    if ($scope.isOpen) {
+                        _this.$document_.on('click', undefined, documentClick);
+                    }
+                    else {
+                        _this.$document_.off('click', undefined, documentClick);
+                    }
+                }, SelectField.MIN_TIMEOUT_INTERVAL);
+            });
+            $scope.$on('$destroy', function () {
+                _this.$document_.off('click', documentClick);
+            });
+            /*****************************************************************************************
+             * The following code responds to keyboard events when the drop-down is visible
+             *****************************************************************************************/
+            var filterText = $element.find('input');
+            $scope.setFilterFocus = function () {
+                setDelayedFocus(filterText);
+            };
+            $scope.mouseOver = function (index) {
+                $scope.mouseOverIndex = index;
+                $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
+            };
+            $scope.selectOption = function (option) {
+                $scope.model.bindable = option && option[$scope.valueAttribute];
+            };
+            // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
+            $scope.keyDown = function (event) {
+                switch (event.keyCode) {
+                    case 27:
+                        $scope.close();
+                        break;
+                    case 13:
+                        if ($scope.isOpen) {
+                            $scope.selectOption($scope.mouseOverOption);
+                            $scope.close();
+                        }
+                        else {
+                            $scope.open();
+                        }
+                        event.preventDefault();
+                        break;
+                    case 38:
+                        if ($scope.isOpen) {
+                            $scope.mouseOver($scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1);
+                        }
+                        else {
+                            $scope.open();
+                        }
+                        break;
+                    case 40:
+                        if ($scope.isOpen) {
+                            $scope.mouseOver($scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0);
+                        }
+                        else {
+                            $scope.open();
+                        }
+                        break;
+                    case 9:
+                    case 16:
+                        $scope.close();
+                        break;
+                    default:
+                        $scope.open();
+                        break;
+                }
+            };
+            $scope.$watchCollection('[isOpen, filteredOptions.length]', function () {
+                // Reset hover anytime our list opens/closes or our collection is refreshed.
+                $scope.mouseOver(-1);
+                // Pass focus through to filter field when select is opened
+                if ($scope.isOpen && $scope.enableFiltering) {
+                    setDelayedFocus(filterText);
+                }
+            });
+        };
+        SelectField.MIN_TIMEOUT_INTERVAL = 10;
+        return SelectField;
+    })();
+    formFor.SelectField = SelectField;
+    angular.module('formFor').directive('selectField', function ($document, $log, $timeout, $window, FieldHelper) { return new SelectField($document, $log, $timeout, $window, FieldHelper); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Displays a submit &lt;button&gt; component that is automatically disabled when a form is invalid or in the process of submitting.
+     *
+     * @example
+     * // Here is a simple submit button with an icon:
+     * <submit-button label="Sign Up" icon="fa fa-user"></submit-button>
+     *
+     * // You can use your own <button> components within a formFor as well.
+     * // If you choose to you must register your button with formFor's controller using registerSubmitButton().
+     * // This method returns a model with a bindable 'disabled' attribute that your button should use like so:
+     * <form form-for="formData">
+     *   <button ng-disabled="model.disabled">Submit</button>
+     * </form>
+     */
+    var SubmitButton = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $sce $injector-supplied $sce service
+         */
+        function SubmitButton($sce) {
+            this.require = '^formFor';
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/submit-button.html';
+            this.scope = {
+                disable: '=',
+                icon: '@',
+                label: '@'
+            };
+            this.$sce_ = $sce;
+        }
+        SubmitButton.prototype.link = function ($scope, $element, $attributes, formForController) {
+            $scope['buttonClass'] = $attributes['buttonClass'];
+            $scope.tabIndex = $attributes['tabIndex'] || 0;
+            $scope.$watch('label', function (value) {
+                $scope.bindableLabel = this.$sce_.trustAsHtml(value);
+            });
+            $scope.model = formForController.registerSubmitButton($scope);
+        };
+        return SubmitButton;
+    })();
+    formFor.SubmitButton = SubmitButton;
+    angular.module('formFor').directive('submitButton', function ($sce) { return new SubmitButton($sce); });
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Displays an HTML &lt;input&gt; or &lt;textarea&gt; element along with an optional label.
+     *
+     * <p>The HTML &lt;input&gt; type can be configured to allow for passwords, numbers, etc.
+     * This directive can also be configured to display an informational tooltip.
+     * In the event of a validation error, this directive will also render an inline error message.
+     *
+     * <p>This directive supports the following HTML attributes in addition to its scope properties:
+     *
+     * <ul>
+     *   <li>autofocus: The presence of this attribute will auto-focus the input field.
+     *   <li>multiline: The presence of this attribute enables multi-line input.
+     * </ul>
+     *
+     * @example
+     * // To create a password input you might use the following markup:
+     * <text-field attribute="password" label="Password" type="password"></text-field>
+     *
+     * // To create a more advanced input field, with placeholder text and help tooltip you might use the following markup:
+     * <text-field attribute="username" label="Username"
+     *             placeholder="Example brianvaughn"
+     *             help="Your username will be visible to others!"></text-field>
+     *
+     * // To render a multiline text input (or <textarea>):
+     * <text-field attribute="description" label="Description" multiline></text-field>
+     *
+     * // To render icons based on the status of the field (pristin, invalid, valid) pass an object:
+     * <text-field attribute="username" label="Username"
+     *             icon-after="{pristine: 'fa fa-user', invalid: 'fa fa-times', valid: 'fa fa-check'}">
+     * </text-field>
+     */
+    var TextField = (function () {
+        function TextField($log, $timeout, fieldHelper) {
+            this.require = '^formFor';
+            this.restrict = 'EA';
+            this.templateUrl = 'form-for/templates/text-field.html';
+            this.scope = {
+                attribute: '@',
+                debounce: '@?',
+                disable: '=',
+                focused: '&?',
+                blurred: '&?',
+                help: '@?',
+                iconAfterClicked: '&?',
+                iconBeforeClicked: '&?',
+                placeholder: '@?',
+                rows: '=?'
+            };
+            this.$log_ = $log;
+            this.$timeout_ = $timeout;
+            this.fieldHelper_ = fieldHelper;
+        }
+        TextField.prototype.link = function ($scope, $element, $attributes, formForController) {
+            if (!$scope.attribute) {
+                this.$log_.error('Missing required field "attribute"');
+                return;
+            }
+            // Expose textField attributes to textField template partials for easier customization (see issue #61)
+            $scope.attributes = $attributes;
+            $scope.rows = $scope.rows || 3;
+            $scope.type = $attributes['type'] || 'text';
+            $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes['multiline'] !== 'false';
+            $scope.tabIndex = $attributes['tabIndex'] || 0;
+            if ($attributes.hasOwnProperty('autofocus')) {
+                this.$timeout_(function () {
+                    $element.find($scope.multiline ? 'textarea' : 'input')[0].focus();
+                });
+            }
+            this.fieldHelper_.manageLabel($scope, $attributes, false);
+            this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+            // Update $scope.iconAfter based on the field state (see class-level documentation for more)
+            if ($attributes['iconAfter']) {
+                var updateIconAfter = function () {
+                    if (!$scope.model) {
+                        return;
+                    }
+                    var iconAfter = $attributes['iconAfter'].charAt(0) === '{' ? $scope.$eval($attributes['iconAfter']) : $attributes['iconAfter'];
+                    if (angular.isObject(iconAfter)) {
+                        if ($scope.model.error) {
+                            $scope.iconAfter = iconAfter['invalid'];
+                        }
+                        else if ($scope.model.pristine) {
+                            $scope.iconAfter = iconAfter['pristine'];
+                        }
+                        else {
+                            $scope.iconAfter = iconAfter['valid'];
+                        }
+                    }
+                    else {
+                        $scope.iconAfter = iconAfter;
+                    }
+                };
+                $attributes.$observe('iconAfter', updateIconAfter);
+                $scope.$watch('model.error', updateIconAfter);
+                $scope.$watch('model.pristine', updateIconAfter);
+            }
+            // Update $scope.iconBefore based on the field state (see class-level documentation for more)
+            if ($attributes['iconBefore']) {
+                var updateIconBefore = function () {
+                    if (!$scope.model) {
+                        return;
+                    }
+                    var iconBefore = $attributes['iconBefore'].charAt(0) === '{' ? $scope.$eval($attributes['iconBefore']) : $attributes['iconBefore'];
+                    if (angular.isObject(iconBefore)) {
+                        if ($scope.model.error) {
+                            $scope.iconBefore = iconBefore['invalid'];
+                        }
+                        else if ($scope.model.pristine) {
+                            $scope.iconBefore = iconBefore['pristine'];
+                        }
+                        else {
+                            $scope.iconBefore = iconBefore['valid'];
+                        }
+                    }
+                    else {
+                        $scope.iconBefore = iconBefore;
+                    }
+                };
+                $attributes.$observe('iconBefore', updateIconBefore);
+                $scope.$watch('model.error', updateIconBefore);
+                $scope.$watch('model.pristine', updateIconBefore);
+            }
+            $scope.onIconAfterClick = function () {
+                if ($attributes.hasOwnProperty('iconAfterClicked')) {
+                    $scope.iconAfterClicked();
+                }
+            };
+            $scope.onIconBeforeClick = function () {
+                if ($attributes.hasOwnProperty('iconBeforeClicked')) {
+                    $scope.iconBeforeClicked();
+                }
+            };
+            $scope.onFocus = function () {
+                if ($attributes.hasOwnProperty('focused')) {
+                    $scope.focused();
+                }
+            };
+            $scope.onBlur = function () {
+                if ($attributes.hasOwnProperty('blurred')) {
+                    $scope.blurred();
+                }
+            };
+        };
+        return TextField;
+    })();
+    formFor.TextField = TextField;
+    angular.module('formFor').directive('textField', function ($log, $timeout, FieldHelper) { return new TextField($log, $timeout, FieldHelper); });
+})(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
     /**
@@ -72,11 +1086,6 @@ var formFor;
         return BindableFieldWrapper;
     })();
     formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
     ;
 })(formFor || (formFor = {}));
 ;
@@ -414,10 +1423,8 @@ var formFor;
         return FieldHelper;
     })();
     formFor.FieldHelper = FieldHelper;
-    ;
     angular.module('formFor').service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); });
 })(formFor || (formFor = {}));
-;
 /// <reference path="../../definitions/angular.d.ts" />
 /// <reference path="form-for-configuration.ts" />
 var formFor;
@@ -436,7 +1443,6 @@ var formFor;
          */
         function ModelValidator($interpolate, $parse, $q, formForConfiguration) {
             this.$interpolate_ = $interpolate;
-            this.$q_ = $q;
             this.formForConfiguration_ = formForConfiguration;
             this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
             this.promiseUtils_ = new formFor.PromiseUtils($q);
@@ -542,7 +1548,7 @@ var formFor;
          */
         ModelValidator.prototype.validateFields = function (formData, fieldNames, validationRuleSet) {
             var _this = this;
-            var deferred = this.$q_.defer();
+            var deferred = this.promiseUtils_.defer();
             var promises = [];
             var errorMap = {};
             angular.forEach(fieldNames, function (fieldName) {
@@ -586,7 +1592,7 @@ var formFor;
          * This guards against the fact that `new Number('') == 0`.
          * @private
          */
-        ModelValidator.prototype.isConsideredNumeric_ = function (stringValue, numericValue) {
+        ModelValidator.isConsideredNumeric_ = function (stringValue, numericValue) {
             return stringValue && !isNaN(numericValue);
         };
         // Validation helper methods /////////////////////////////////////////////////////////////////////////////////////////
@@ -601,7 +1607,7 @@ var formFor;
                     else {
                         failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.COLLECTION_MIN_SIZE))({ num: min });
                     }
-                    return this.$q_.reject(failureMessage);
+                    return this.promiseUtils_.reject(failureMessage);
                 }
             }
             return null;
@@ -617,7 +1623,7 @@ var formFor;
                     else {
                         failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.COLLECTION_MAX_SIZE))({ num: max });
                     }
-                    return this.$q_.reject(failureMessage);
+                    return this.promiseUtils_.reject(failureMessage);
                 }
             }
             return null;
@@ -639,20 +1645,20 @@ var formFor;
                     var returnValue = validationFunction(value, formData);
                 }
                 catch (error) {
-                    return this.$q_.reject(error.message || defaultErrorMessage);
+                    return this.promiseUtils_.reject(error.message || defaultErrorMessage);
                 }
                 if (angular.isObject(returnValue) && angular.isFunction(returnValue.then)) {
                     return returnValue.then(function (reason) {
                         return _this.promiseUtils_.resolve(reason);
                     }, function (reason) {
-                        return _this.$q_.reject(reason || defaultErrorMessage);
+                        return _this.promiseUtils_.reject(reason || defaultErrorMessage);
                     });
                 }
                 else if (returnValue) {
                     return this.promiseUtils_.resolve(returnValue);
                 }
                 else {
-                    return this.$q_.reject(defaultErrorMessage);
+                    return this.promiseUtils_.reject(defaultErrorMessage);
                 }
             }
             return null;
@@ -668,7 +1674,7 @@ var formFor;
                     else {
                         failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MAX_LENGTH))({ num: maxlength });
                     }
-                    return this.$q_.reject(failureMessage);
+                    return this.promiseUtils_.reject(failureMessage);
                 }
             }
             return null;
@@ -684,7 +1690,7 @@ var formFor;
                     else {
                         failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MIN_LENGTH))({ num: minlength });
                     }
-                    return this.$q_.reject(failureMessage);
+                    return this.promiseUtils_.reject(failureMessage);
                 }
             }
             return null;
@@ -692,7 +1698,6 @@ var formFor;
         ModelValidator.prototype.validateFieldRequired_ = function (value, validationRules) {
             if (validationRules.required) {
                 var required = angular.isObject(validationRules.required) ? validationRules.required.rule : validationRules.required;
-                var sanitizedValue = value;
                 if (angular.isString(value)) {
                     value = value.replace(/\s+$/, ''); // Disallow an all-whitespace string
                 }
@@ -704,7 +1709,7 @@ var formFor;
                     else {
                         failureMessage = this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.REQUIRED);
                     }
-                    return this.$q_.reject(failureMessage);
+                    return this.promiseUtils_.reject(failureMessage);
                 }
             }
             return null;
@@ -715,7 +1720,7 @@ var formFor;
                 var regExp = isRegExp ? validationRules.pattern : validationRules.pattern.rule;
                 if (!regExp.exec(value)) {
                     var failureMessage = isRegExp ? this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.PATTERN) : validationRules.pattern.message;
-                    return this.$q_.reject(failureMessage);
+                    return this.promiseUtils_.reject(failureMessage);
                 }
             }
             return null;
@@ -733,32 +1738,32 @@ var formFor;
                         switch (type) {
                             case formFor.ValidationFieldType.INTEGER:
                                 if (stringValue && (isNaN(numericValue) || numericValue % 1 !== 0)) {
-                                    return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_INTEGER));
+                                    return this.promiseUtils_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_INTEGER));
                                 }
                                 break;
                             case formFor.ValidationFieldType.NUMBER:
                                 if (stringValue && isNaN(numericValue)) {
-                                    return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_NUMERIC));
+                                    return this.promiseUtils_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_NUMERIC));
                                 }
                                 break;
                             case formFor.ValidationFieldType.NEGATIVE:
-                                if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue >= 0) {
-                                    return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_NEGATIVE));
+                                if (ModelValidator.isConsideredNumeric_(stringValue, numericValue) && numericValue >= 0) {
+                                    return this.promiseUtils_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_NEGATIVE));
                                 }
                                 break;
                             case formFor.ValidationFieldType.NON_NEGATIVE:
-                                if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue < 0) {
-                                    return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_NON_NEGATIVE));
+                                if (ModelValidator.isConsideredNumeric_(stringValue, numericValue) && numericValue < 0) {
+                                    return this.promiseUtils_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_NON_NEGATIVE));
                                 }
                                 break;
                             case formFor.ValidationFieldType.POSITIVE:
-                                if (this.isConsideredNumeric_(stringValue, numericValue) && numericValue <= 0) {
-                                    return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_POSITIVE));
+                                if (ModelValidator.isConsideredNumeric_(stringValue, numericValue) && numericValue <= 0) {
+                                    return this.promiseUtils_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_POSITIVE));
                                 }
                                 break;
                             case formFor.ValidationFieldType.EMAIL:
                                 if (stringValue && !stringValue.match(/^.+@.+$/)) {
-                                    return this.$q_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_EMAIL));
+                                    return this.promiseUtils_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_EMAIL));
                                 }
                                 break;
                         }
@@ -770,10 +1775,8 @@ var formFor;
         return ModelValidator;
     })();
     formFor.ModelValidator = ModelValidator;
-    ;
     angular.module('formFor').service('ModelValidator', function ($interpolate, $parse, $q, FormForConfiguration) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration); });
 })(formFor || (formFor = {}));
-;
 var formFor;
 (function (formFor) {
     /**
@@ -792,7 +1795,6 @@ var formFor;
          */
         function FormForController($parse, $q, $scope, modelValidator) {
             this.$parse_ = $parse;
-            this.$q_ = $q;
             this.$scope_ = $scope;
             this.modelValidator_ = modelValidator;
             this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
@@ -809,17 +1811,17 @@ var formFor;
             var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
             var bindableWrapper = {
                 error: null,
-                required: this.modelValidator_.isCollectionRequired(fieldName, this.$scope_.$validationRules)
+                required: this.modelValidator_.isCollectionRequired(fieldName, this.$scope_.$validationRuleset)
             };
             this.$scope_.collectionLabels[bindableFieldName] = bindableWrapper;
             var watcherInitialized = false;
-            this.$scope_.$watch('formFor.' + fieldName + '.length', function (newValue, oldValue) {
+            this.$scope_.$watch('formFor.' + fieldName + '.length', function () {
                 // The initial $watch should not trigger a visible validation...
                 if (!watcherInitialized) {
                     watcherInitialized = true;
                 }
                 else if (!_this.$scope_.validateOn || _this.$scope_.validateOn === 'change') {
-                    _this.modelValidator_.validateCollection(_this.$scope_.formFor, fieldName, _this.$scope_.$validationRules).then(function () {
+                    _this.modelValidator_.validateCollection(_this.$scope_.formFor, fieldName, _this.$scope_.$validationRuleset).then(function () {
                         _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
                     }, function (error) {
                         _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
@@ -848,7 +1850,7 @@ var formFor;
                 disabled: this.$scope_.disable,
                 error: null,
                 pristine: true,
-                required: this.modelValidator_.isFieldRequired(fieldName, this.$scope_.$validationRules),
+                required: this.modelValidator_.isFieldRequired(fieldName, this.$scope_.$validationRuleset),
                 uid: formFor.FormForGUID.create()
             };
             // Store information about this field that we'll need for validation and binding purposes.
@@ -965,6 +1967,30 @@ var formFor;
             });
             delete this.$scope_.fields[bindableFieldName];
         };
+        /*
+         * Update all registered collection labels with the specified error messages.
+         * Specified map should be keyed with fieldName and should container user-friendly error strings.
+         * @param {Object} fieldNameToErrorMap Map of collection names (or paths) to errors
+         */
+        FormForController.prototype.updateCollectionErrors = function (fieldNameToErrorMap) {
+            var _this = this;
+            angular.forEach(this.$scope_.collectionLabels, function (bindableWrapper, bindableFieldName) {
+                var error = _this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, bindableFieldName);
+                _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+            });
+        };
+        /*
+         * Update all registered form fields with the specified error messages.
+         * Specified map should be keyed with fieldName and should container user-friendly error strings.
+         * @param {Object} fieldNameToErrorMap Map of field names (or paths) to errors
+         */
+        FormForController.prototype.updateFieldErrors = function (fieldNameToErrorMap) {
+            var _this = this;
+            angular.forEach(this.$scope_.fields, function (scope, bindableFieldName) {
+                var error = _this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, scope.fieldName);
+                _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+            });
+        };
         /**
          * Force validation for an individual field.
          * If the field fails validation an error message will automatically be shown.
@@ -976,8 +2002,8 @@ var formFor;
             var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
             this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
             // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
-            if (this.$scope_.$validationRules) {
-                this.modelValidator_.validateField(this.$scope_.formFor, fieldName, this.$scope_.$validationRules).then(function () {
+            if (this.$scope_.$validationRuleset) {
+                this.modelValidator_.validateField(this.$scope_.formFor, fieldName, this.$scope_.$validationRuleset).then(function () {
                     _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
                 }, function (error) {
                     _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
@@ -993,29 +2019,29 @@ var formFor;
         FormForController.prototype.validateForm = function (showErrors) {
             var _this = this;
             // Reset errors before starting new validation.
-            this.$scope_.updateCollectionErrors({});
-            this.$scope_.updateFieldErrors({});
+            this.updateCollectionErrors({});
+            this.updateFieldErrors({});
             var validateCollectionsPromise;
             var validateFieldsPromise;
-            if (this.$scope_.$validationRules) {
+            if (this.$scope_.$validationRuleset) {
                 var validationKeys = [];
                 angular.forEach(this.$scope_.fields, function (fieldDatum) {
                     validationKeys.push(fieldDatum.fieldName);
                 });
-                validateFieldsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRules);
-                validateFieldsPromise.then(angular.noop, this.$scope_.updateFieldErrors);
+                validateFieldsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
+                validateFieldsPromise.then(angular.noop, this.updateFieldErrors);
                 validationKeys = []; // Reset for below re-use
                 angular.forEach(this.$scope_.collectionLabels, function (bindableWrapper, bindableFieldName) {
                     validationKeys.push(bindableFieldName);
                 });
-                validateCollectionsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRules);
-                validateCollectionsPromise.then(angular.noop, this.$scope_.updateCollectionErrors);
+                validateCollectionsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
+                validateCollectionsPromise.then(angular.noop, this.updateCollectionErrors);
             }
             else {
                 validateCollectionsPromise = this.promiseUtils_.resolve();
                 validateFieldsPromise = this.promiseUtils_.resolve();
             }
-            var deferred = this.$q_.defer();
+            var deferred = this.promiseUtils_.defer();
             this.promiseUtils_.waitForAll([validateCollectionsPromise, validateFieldsPromise]).then(deferred.resolve, function (errors) {
                 // If all collections are valid (or no collections exist) this will be an empty array.
                 if (angular.isArray(errors[0]) && errors[0].length === 0) {
@@ -1041,9 +2067,7 @@ var formFor;
         return FormForController;
     })();
     formFor.FormForController = FormForController;
-    ;
 })(formFor || (formFor = {}));
-;
 var formFor;
 (function (formFor) {
     /**
@@ -1064,9 +2088,7 @@ var formFor;
         return FormForGUID;
     })();
     formFor.FormForGUID = FormForGUID;
-    ;
 })(formFor || (formFor = {}));
-;
 var formFor;
 (function (formFor) {
     /*
@@ -1079,7 +2101,7 @@ var formFor;
         function FormForStateHelper($parse, $scope) {
             this.$scope_ = $scope;
             this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
-            this.$scope_.errorMap = $scope.errorMap || {};
+            this.$scope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
             this.$scope_.valid = true;
             this.fieldNameToModifiedStateMap_ = {};
             this.formSubmitted_ = false;
@@ -1087,16 +2109,13 @@ var formFor;
             this.watchableCounter_ = 0;
         }
         FormForStateHelper.prototype.getFieldError = function (fieldName) {
-            return this.nestedObjectHelper_.readAttribute(this.$scope_.errorMap, fieldName);
+            return this.nestedObjectHelper_.readAttribute(this.$scope_.fieldNameToErrorMap, fieldName);
         };
         FormForStateHelper.prototype.hasFieldBeenModified = function (fieldName) {
             return this.nestedObjectHelper_.readAttribute(this.fieldNameToModifiedStateMap_, fieldName);
         };
         FormForStateHelper.prototype.hasFormBeenSubmitted = function () {
             return this.formSubmitted_;
-        };
-        FormForStateHelper.prototype.isFieldValid = function (fieldName) {
-            return !this.getFieldError(fieldName);
         };
         FormForStateHelper.prototype.isFormInvalid = function () {
             return !this.isFormValid();
@@ -1108,11 +2127,11 @@ var formFor;
             return true;
         };
         FormForStateHelper.prototype.resetFieldErrors = function () {
-            this.$scope_.errorMap = {};
+            this.$scope_.fieldNameToErrorMap = {};
         };
         FormForStateHelper.prototype.setFieldError = function (fieldName, error) {
             var safeFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            this.nestedObjectHelper_.writeAttribute(this.$scope_.errorMap, fieldName, error);
+            this.nestedObjectHelper_.writeAttribute(this.$scope_.fieldNameToErrorMap, fieldName, error);
             if (error) {
                 this.fieldNameToErrorMap_[safeFieldName] = error;
             }
@@ -1133,9 +2152,7 @@ var formFor;
         return FormForStateHelper;
     })();
     formFor.FormForStateHelper = FormForStateHelper;
-    ;
 })(formFor || (formFor = {}));
-;
 /// <reference path="../../definitions/angular.d.ts" />
 var formFor;
 (function (formFor) {
@@ -1148,7 +2165,7 @@ var formFor;
         /**
          * Constructor.
          *
-         * @param $q Injector-supplied $q service, decorated with a few additional formFor-added methods.
+         * @param $parse Injector-supplied $parse service
          */
         function NestedObjectHelper($parse) {
             this.$parse_ = $parse;
@@ -1185,9 +2202,10 @@ var formFor;
                 if (typeof data.object === 'object') {
                     for (var prop in data.object) {
                         var path = prefix + prop;
+                        var value = data.object[prop];
                         keys.push(path);
                         queue.push({
-                            object: data.object[prop],
+                            object: value,
                             prefix: path
                         });
                     }
@@ -1251,9 +2269,7 @@ var formFor;
         return NestedObjectHelper;
     })();
     formFor.NestedObjectHelper = NestedObjectHelper;
-    ;
 })(formFor || (formFor = {}));
-;
 var formFor;
 (function (formFor) {
     /**
@@ -1271,6 +2287,18 @@ var formFor;
             this.$q_ = $q;
         }
         /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.all = function (promises) {
+            return this.$q_.all(promises);
+        };
+        /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.defer = function () {
+            return this.$q_.defer();
+        };
+        /**
          * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
          *
          * @param data Value to resolve the promise with
@@ -1280,6 +2308,12 @@ var formFor;
             var deferred = this.$q_.defer();
             deferred.resolve(data);
             return deferred.promise;
+        };
+        /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.reject = function (reason) {
+            return this.$q_.reject(reason);
         };
         /**
          * Similar to $q.all but waits for all promises to resolve/reject before resolving/rejecting.
@@ -1321,12 +2355,16 @@ var formFor;
             checkForDone(); // Handle empty Array
             return deferred.promise;
         };
+        /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.when = function (value) {
+            return this.$q_.when(value);
+        };
         return PromiseUtils;
     })();
     formFor.PromiseUtils = PromiseUtils;
-    ;
 })(formFor || (formFor = {}));
-;
 var formFor;
 (function (formFor) {
     /**
@@ -1361,9 +2399,7 @@ var formFor;
         return StringUtil;
     })();
     formFor.StringUtil = StringUtil;
-    ;
 })(formFor || (formFor = {}));
-;
 var formFor;
 (function (formFor) {
     ;

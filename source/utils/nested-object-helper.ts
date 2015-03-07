@@ -14,7 +14,7 @@ module formFor {
     /**
      * Constructor.
      *
-     * @param $q Injector-supplied $q service, decorated with a few additional formFor-added methods.
+     * @param $parse Injector-supplied $parse service
      */
     constructor($parse:ng.IParseService) {
       this.$parse_ = $parse;
@@ -56,11 +56,12 @@ module formFor {
         if (typeof data.object === 'object') {
           for (var prop in data.object) {
             var path:string = prefix + prop;
+            var value:any = data.object[prop];
 
             keys.push(path);
 
             queue.push({
-              object: data.object[prop],
+              object: value,
               prefix: path
             });
           }
@@ -135,5 +136,5 @@ module formFor {
         startOfArray++;
       }
     }
-  };
-};
+  }
+}

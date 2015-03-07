@@ -19,7 +19,7 @@ module formFor {
       this.$scope_ = $scope;
       this.nestedObjectHelper_ = new NestedObjectHelper($parse);
 
-      this.$scope_.errorMap = $scope.errorMap || {};
+      this.$scope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
       this.$scope_.valid = true;
 
       this.fieldNameToModifiedStateMap_ = {};
@@ -29,7 +29,7 @@ module formFor {
     }
 
     public getFieldError(fieldName:string):string {
-      return this.nestedObjectHelper_.readAttribute(this.$scope_.errorMap, fieldName);
+      return this.nestedObjectHelper_.readAttribute(this.$scope_.fieldNameToErrorMap, fieldName);
     }
 
     public hasFieldBeenModified(fieldName:string):boolean {
@@ -38,10 +38,6 @@ module formFor {
 
     public hasFormBeenSubmitted():boolean {
       return this.formSubmitted_;
-    }
-
-    public isFieldValid(fieldName:string):boolean {
-      return !this.getFieldError(fieldName);
     }
 
     public isFormInvalid():boolean {
@@ -57,13 +53,13 @@ module formFor {
     }
 
     public resetFieldErrors():void {
-      this.$scope_.errorMap = {};
+      this.$scope_.fieldNameToErrorMap = {};
     }
 
     public setFieldError(fieldName:string, error:string):void {
       var safeFieldName:string = this.nestedObjectHelper_.flattenAttribute(fieldName);
 
-      this.nestedObjectHelper_.writeAttribute(this.$scope_.errorMap, fieldName, error);
+      this.nestedObjectHelper_.writeAttribute(this.$scope_.fieldNameToErrorMap, fieldName, error);
 
       if (error) {
         this.fieldNameToErrorMap_[safeFieldName] = error;
@@ -85,5 +81,5 @@ module formFor {
       this.formSubmitted_ = submitted;
       this.watchableCounter_++;
     }
-  };
-};
+  }
+}

@@ -32,5 +32,5 @@ module formFor {
 
       return text;
     }
-  };
-};
+  }
+}

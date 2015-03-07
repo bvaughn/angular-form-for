@@ -63,8 +63,8 @@ module formFor {
         formForController.unregisterFormField($scope['attribute']);
       });
     }
-  };
+  }
 
   angular.module('formFor').service('FieldHelper',
     (FormForConfiguration) => new FieldHelper(FormForConfiguration));
-};
+}

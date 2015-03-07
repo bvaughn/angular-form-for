@@ -8,7 +8,6 @@ module formFor {
   export class FormForController {
 
     private $parse_:ng.IParseService;
-    private $q_:ng.IQService;
     private $scope_:FormForScope;
     private modelValidator_:ModelValidator;
     private promiseUtils_:PromiseUtils;
@@ -27,7 +26,6 @@ module formFor {
                 $scope:FormForScope,
                 modelValidator:ModelValidator) {
       this.$parse_ = $parse;
-      this.$q_ = $q;
       this.$scope_ = $scope;
       this.modelValidator_ = modelValidator;
 
@@ -46,7 +44,7 @@ module formFor {
 
       var bindableWrapper:BindableCollectionWrapper = {
         error: null,
-        required: this.modelValidator_.isCollectionRequired(fieldName, this.$scope_.$validationRules)
+        required: this.modelValidator_.isCollectionRequired(fieldName, this.$scope_.$validationRuleset)
       };
 
       this.$scope_.collectionLabels[bindableFieldName] = bindableWrapper;
@@ -54,13 +52,13 @@ module formFor {
       var watcherInitialized = false;
 
       this.$scope_.$watch('formFor.' + fieldName + '.length',
-        (newValue:any, oldValue:any) => {
+        () => {
           // The initial $watch should not trigger a visible validation...
           if (!watcherInitialized) {
             watcherInitialized = true;
 
           } else if (!this.$scope_.validateOn || this.$scope_.validateOn === 'change') {
-            this.modelValidator_.validateCollection(this.$scope_.formFor, fieldName, this.$scope_.$validationRules).then(
+            this.modelValidator_.validateCollection(this.$scope_.formFor, fieldName, this.$scope_.$validationRuleset).then(
               () => {
                 this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
               },
@@ -95,7 +93,7 @@ module formFor {
         disabled: this.$scope_.disable,
         error: null,
         pristine: true,
-        required: this.modelValidator_.isFieldRequired(fieldName, this.$scope_.$validationRules),
+        required: this.modelValidator_.isFieldRequired(fieldName, this.$scope_.$validationRuleset),
         uid: FormForGUID.create()
       };
 
@@ -250,6 +248,34 @@ module formFor {
       delete this.$scope_.fields[bindableFieldName];
     }
 
+    /*
+     * Update all registered collection labels with the specified error messages.
+     * Specified map should be keyed with fieldName and should container user-friendly error strings.
+     * @param {Object} fieldNameToErrorMap Map of collection names (or paths) to errors
+     */
+    updateCollectionErrors(fieldNameToErrorMap:{[fieldName:string]:string}):void {
+      angular.forEach(this.$scope_.collectionLabels,
+        (bindableWrapper, bindableFieldName) => {
+          var error:string = this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, bindableFieldName);
+
+          this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+        });
+    }
+
+    /*
+     * Update all registered form fields with the specified error messages.
+     * Specified map should be keyed with fieldName and should container user-friendly error strings.
+     * @param {Object} fieldNameToErrorMap Map of field names (or paths) to errors
+     */
+    updateFieldErrors(fieldNameToErrorMap:{[fieldName:string]:string}):void {
+      angular.forEach(this.$scope_.fields,
+        (scope, bindableFieldName) => {
+          var error:string = this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, scope.fieldName);
+
+          this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+        });
+    }
+
     /**
      * Force validation for an individual field.
      * If the field fails validation an error message will automatically be shown.
@@ -262,11 +288,11 @@ module formFor {
       this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
 
       // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
-      if (this.$scope_.$validationRules) {
+      if (this.$scope_.$validationRuleset) {
         this.modelValidator_.validateField(
           this.$scope_.formFor,
           fieldName,
-          this.$scope_.$validationRules
+          this.$scope_.$validationRuleset
         ).then(
           () => {
             this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
@@ -285,13 +311,13 @@ module formFor {
      */
     validateForm(showErrors?:boolean):ng.IPromise<any> {
       // Reset errors before starting new validation.
-      this.$scope_.updateCollectionErrors({});
-      this.$scope_.updateFieldErrors({});
+      this.updateCollectionErrors({});
+      this.updateFieldErrors({});
 
       var validateCollectionsPromise:ng.IPromise<any>;
       var validateFieldsPromise:ng.IPromise<any>;
 
-      if (this.$scope_.$validationRules) {
+      if (this.$scope_.$validationRuleset) {
         var validationKeys:Array<string> = [];
 
         angular.forEach(this.$scope_.fields, (fieldDatum:FieldDatum) => {
@@ -299,8 +325,8 @@ module formFor {
         });
 
         validateFieldsPromise =
-          this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRules);
-        validateFieldsPromise.then(angular.noop, this.$scope_.updateFieldErrors);
+          this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
+        validateFieldsPromise.then(angular.noop, this.updateFieldErrors);
 
         validationKeys = []; // Reset for below re-use
 
@@ -310,15 +336,15 @@ module formFor {
           });
 
         validateCollectionsPromise =
-          this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRules);
-        validateCollectionsPromise.then(angular.noop, this.$scope_.updateCollectionErrors);
+          this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
+        validateCollectionsPromise.then(angular.noop, this.updateCollectionErrors);
 
       } else {
         validateCollectionsPromise = this.promiseUtils_.resolve();
         validateFieldsPromise = this.promiseUtils_.resolve();
       }
 
-      var deferred:ng.IDeferred<any> = this.$q_.defer();
+      var deferred:ng.IDeferred<any> = this.promiseUtils_.defer();
 
       this.promiseUtils_.waitForAll([validateCollectionsPromise, validateFieldsPromise]).then(
         deferred.resolve,
@@ -351,5 +377,5 @@ module formFor {
 
       return deferred.promise;
     }
-  };
-};
+  }
+}

@@ -5,7 +5,7 @@ module formFor {
    *
    * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
    */
-  export class PromiseUtils {
+  export class PromiseUtils implements ng.IQService {
 
     private $q_:ng.IQService;
 
@@ -19,6 +19,20 @@ module formFor {
     }
 
     /**
+     * @inheritDoc
+     */
+    all(promises:ng.IPromise<any>[]):ng.IPromise<any[]> {
+      return this.$q_.all(promises);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    defer<T>():ng.IDeferred<T> {
+      return this.$q_.defer();
+    }
+
+    /**
      * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
      *
      * @param data Value to resolve the promise with
@@ -29,6 +43,13 @@ module formFor {
       deferred.resolve(data);
 
       return deferred.promise;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    reject(reason?:any):ng.IPromise<void> {
+      return this.$q_.reject(reason);
     }
 
     /**
@@ -81,5 +102,12 @@ module formFor {
 
       return deferred.promise;
     }
-  };
-};
+
+    /**
+     * @inheritDoc
+     */
+    when<T>(value:T):ng.IPromise<T> {
+      return this.$q_.when(value);
+    }
+  }
+}
