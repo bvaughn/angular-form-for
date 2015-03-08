@@ -288,6 +288,64 @@ var formFor;
     angular.module('formFor').service('FormForConfiguration', function () { return new FormForConfiguration(); });
 })(formFor || (formFor = {}));
 ;
+/// <reference path="form-for-configuration.ts" />
+var formFor;
+(function (formFor) {
+    /**
+     * Various helper methods for functionality shared between formFor field directives.
+     */
+    var FieldHelper = (function () {
+        function FieldHelper(FormForConfiguration) {
+            this.formForConfiguration_ = FormForConfiguration;
+        }
+        /**
+         * Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
+         * Also watches for changes in the (attributes) label and updates $scope accordingly.
+         *
+         * @param $scope Directive link $scope
+         * @param $attributes Directive link $attributes
+         * @param humanizeValueAttribute Fall back to a humanized version of the :value attribute if no label is provided;
+         *                               This can be useful for radio options where the label should represent the value.
+         *                               By default, a humanized version of the :attribute attribute will be used.
+         */
+        FieldHelper.prototype.manageLabel = function ($scope, $attributes, humanizeValueAttribute) {
+            if ($attributes.hasOwnProperty('label')) {
+                $attributes.$observe('label', function (label) {
+                    $scope['label'] = label;
+                });
+            }
+            if (this.formForConfiguration_.autoGenerateLabels) {
+                $scope['label'] = humanizeValueAttribute ? formFor.StringUtil.humanize($scope['value']) : formFor.StringUtil.humanize($scope['attribute']);
+            }
+        };
+        /**
+         * Helper method that registers a form field and stores the bindable object returned on the $scope.
+         * This method also unregisters the field on $scope $destroy.
+         *
+         * @param $scope Input field $scope
+         * @param $attributes Input field $attributes element
+         * @param formForController Controller object for parent formFor
+         */
+        FieldHelper.prototype.manageFieldRegistration = function ($scope, $attributes, formForController) {
+            $scope.$watch('attribute', function (newValue, oldValue) {
+                if ($scope['model']) {
+                    formForController.unregisterFormField(oldValue);
+                }
+                $scope['model'] = formForController.registerFormField($scope['attribute']);
+                if ($attributes['uid']) {
+                    $scope['model']['uid'] = $attributes['uid'];
+                }
+            });
+            $scope.$on('$destroy', function () {
+                formForController.unregisterFormField($scope['attribute']);
+            });
+        };
+        return FieldHelper;
+    })();
+    formFor.FieldHelper = FieldHelper;
+    angular.module('formFor').service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); });
+})(formFor || (formFor = {}));
+/// <reference path="../services/field-helper.ts" />
 /// <reference path="../services/form-for-configuration.ts" />
 var formFor;
 (function (formFor) {
@@ -1264,6 +1322,7 @@ var formFor;
     })();
     formFor.FormForGUID = FormForGUID;
 })(formFor || (formFor = {}));
+/// <reference path="../services/field-helper.ts" />
 /// <reference path="../services/form-for-configuration.ts" />
 /// <reference path="../utils/form-for-guid.ts" />
 var formFor;
@@ -1358,63 +1417,6 @@ var formFor;
     })();
     formFor.RadioField = RadioField;
     angular.module('formFor').directive('radioField', function ($log, FormForConfiguration) { return new RadioField($log, FormForConfiguration); });
-})(formFor || (formFor = {}));
-/// <reference path="form-for-configuration.ts" />
-var formFor;
-(function (formFor) {
-    /**
-     * Various helper methods for functionality shared between formFor field directives.
-     */
-    var FieldHelper = (function () {
-        function FieldHelper(FormForConfiguration) {
-            this.formForConfiguration_ = FormForConfiguration;
-        }
-        /**
-         * Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
-         * Also watches for changes in the (attributes) label and updates $scope accordingly.
-         *
-         * @param $scope Directive link $scope
-         * @param $attributes Directive link $attributes
-         * @param humanizeValueAttribute Fall back to a humanized version of the :value attribute if no label is provided;
-         *                               This can be useful for radio options where the label should represent the value.
-         *                               By default, a humanized version of the :attribute attribute will be used.
-         */
-        FieldHelper.prototype.manageLabel = function ($scope, $attributes, humanizeValueAttribute) {
-            if ($attributes.hasOwnProperty('label')) {
-                $attributes.$observe('label', function (label) {
-                    $scope['label'] = label;
-                });
-            }
-            if (this.formForConfiguration_.autoGenerateLabels) {
-                $scope['label'] = humanizeValueAttribute ? formFor.StringUtil.humanize($scope['value']) : formFor.StringUtil.humanize($scope['attribute']);
-            }
-        };
-        /**
-         * Helper method that registers a form field and stores the bindable object returned on the $scope.
-         * This method also unregisters the field on $scope $destroy.
-         *
-         * @param $scope Input field $scope
-         * @param $attributes Input field $attributes element
-         * @param formForController Controller object for parent formFor
-         */
-        FieldHelper.prototype.manageFieldRegistration = function ($scope, $attributes, formForController) {
-            $scope.$watch('attribute', function (newValue, oldValue) {
-                if ($scope['model']) {
-                    formForController.unregisterFormField(oldValue);
-                }
-                $scope['model'] = formForController.registerFormField($scope['attribute']);
-                if ($attributes['uid']) {
-                    $scope['model']['uid'] = $attributes['uid'];
-                }
-            });
-            $scope.$on('$destroy', function () {
-                formForController.unregisterFormField($scope['attribute']);
-            });
-        };
-        return FieldHelper;
-    })();
-    formFor.FieldHelper = FieldHelper;
-    angular.module('formFor').service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); });
 })(formFor || (formFor = {}));
 /// <reference path="../services/field-helper.ts" />
 var formFor;
