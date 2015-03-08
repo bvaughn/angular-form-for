@@ -1,3 +1,5 @@
+/// <reference path="../services/field-helper.ts" />
+
 module formFor {
 
   /**

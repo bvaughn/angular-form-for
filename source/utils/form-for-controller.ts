@@ -1,3 +1,6 @@
+/// <reference path="../utils/nested-object-helper.ts" />
+/// <reference path="../utils/promise-utils.ts" />
+
 module formFor {
 
   /**

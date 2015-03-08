@@ -1,3 +1,5 @@
+/// <reference path="../services/form-for-configuration.ts" />
+
 module formFor {
 
   /**
@@ -120,6 +122,6 @@ module formFor {
   }
 
   angular.module('formFor').directive('formForDebounce',
-    ($log, $sniffer, $timeout, formForConfiguration) =>
-      new FormForDebounce($log, $sniffer, $timeout, formForConfiguration));
+    ($log, $sniffer, $timeout, FormForConfiguration) =>
+      new FormForDebounce($log, $sniffer, $timeout, FormForConfiguration));
 }

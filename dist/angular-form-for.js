@@ -24,6 +24,271 @@ var formFor;
     formFor.AriaManager = AriaManager;
     angular.module('formFor').directive('ariaManager', function () { return new AriaManager(); });
 })(formFor || (formFor = {}));
+/// <reference path="../../definitions/angular.d.ts" />
+var formFor;
+(function (formFor) {
+    /**
+     * This service can be used to configure default behavior for all instances of formFor within a project.
+     * Note that it is a service accessible to during the run loop and not a provider accessible during config.
+     */
+    var FormForConfiguration = (function () {
+        function FormForConfiguration() {
+            this.autoGenerateLabels_ = false;
+            this.defaultDebounceDuration_ = 500;
+            this.defaultSubmitComplete_ = angular.noop;
+            this.defaultSubmitError_ = angular.noop;
+            this.defaultValidationFailed_ = angular.noop;
+            this.requiredLabel_ = null;
+            this.validationFailedForCustomMessage_ = "Failed custom validation";
+            this.validationFailedForEmailTypeMessage_ = "Invalid email format";
+            this.validationFailedForIntegerTypeMessage_ = "Must be an integer";
+            this.validationFailedForMaxCollectionSizeMessage_ = "Must be fewer than {{num}} items";
+            this.validationFailedForMaxLengthMessage_ = "Must be fewer than {{num}} characters";
+            this.validationFailedForMinCollectionSizeMessage_ = "Must at least {{num}} items";
+            this.validationFailedForMinLengthMessage_ = "Must be at least {{num}} characters";
+            this.validationFailedForNegativeTypeMessage_ = "Must be negative";
+            this.validationFailedForNonNegativeTypeMessage_ = "Must be non-negative";
+            this.validationFailedForNumericTypeMessage_ = "Must be numeric";
+            this.validationFailedForPatternMessage_ = "Invalid format";
+            this.validationFailedForPositiveTypeMessage_ = "Must be positive";
+            this.validationFailedForRequiredMessage_ = "Required field";
+        }
+        Object.defineProperty(FormForConfiguration.prototype, "autoGenerateLabels", {
+            // Getters and setters ///////////////////////////////////////////////////////////////////////////////////////////////
+            // TODO Add better documentation
+            get: function () {
+                return this.autoGenerateLabels_;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FormForConfiguration.prototype, "defaultDebounceDuration", {
+            get: function () {
+                return this.defaultDebounceDuration_;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FormForConfiguration.prototype, "defaultSubmitComplete", {
+            get: function () {
+                return this.defaultSubmitComplete_;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FormForConfiguration.prototype, "defaultSubmitError", {
+            get: function () {
+                return this.defaultSubmitError_;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FormForConfiguration.prototype, "defaultValidationFailed", {
+            get: function () {
+                return this.defaultValidationFailed_;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FormForConfiguration.prototype, "requiredLabel", {
+            get: function () {
+                return this.requiredLabel_;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // Public methods ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * Use this method to disable auto-generated labels for formFor input fields.
+         */
+        FormForConfiguration.prototype.disableAutoLabels = function () {
+            this.autoGenerateLabels_ = false;
+        };
+        /**
+         * Use this method to enable auto-generated labels for formFor input fields.
+         * Labels will be generated based on attribute-name for fields without a label attribute present.
+         * Radio fields are an exception to this rule.
+         * Their names are generated from their values.
+         */
+        FormForConfiguration.prototype.enableAutoLabels = function () {
+            this.autoGenerateLabels_ = true;
+        };
+        /**
+         * Returns the appropriate error message for the validation failure type.
+         */
+        FormForConfiguration.prototype.getFailedValidationMessage = function (failureType) {
+            switch (failureType) {
+                case formFor.ValidationFailureType.CUSTOM:
+                    return this.validationFailedForCustomMessage_;
+                case formFor.ValidationFailureType.COLLECTION_MAX_SIZE:
+                    return this.validationFailedForMaxCollectionSizeMessage_;
+                case formFor.ValidationFailureType.COLLECTION_MIN_SIZE:
+                    return this.validationFailedForMinCollectionSizeMessage_;
+                case formFor.ValidationFailureType.MAX_LENGTH:
+                    return this.validationFailedForMaxLengthMessage_;
+                case formFor.ValidationFailureType.MIN_LENGTH:
+                    return this.validationFailedForMinLengthMessage_;
+                case formFor.ValidationFailureType.PATTERN:
+                    return this.validationFailedForPatternMessage_;
+                case formFor.ValidationFailureType.REQUIRED:
+                    return this.validationFailedForRequiredMessage_;
+                case formFor.ValidationFailureType.TYPE_EMAIL:
+                    return this.validationFailedForEmailTypeMessage_;
+                case formFor.ValidationFailureType.TYPE_INTEGER:
+                    return this.validationFailedForIntegerTypeMessage_;
+                case formFor.ValidationFailureType.TYPE_NEGATIVE:
+                    return this.validationFailedForNegativeTypeMessage_;
+                case formFor.ValidationFailureType.TYPE_NON_NEGATIVE:
+                    return this.validationFailedForNonNegativeTypeMessage_;
+                case formFor.ValidationFailureType.TYPE_NUMERIC:
+                    return this.validationFailedForNumericTypeMessage_;
+                case formFor.ValidationFailureType.TYPE_POSITIVE:
+                    return this.validationFailedForPositiveTypeMessage_;
+            }
+        };
+        /**
+         * Sets the default debounce interval (in ms) for all textField inputs.
+         * This setting can be overridden on a per-input basis (see textField).
+         * Defaults to 500ms.
+         * To disable debounce (update only on blur) pass false.
+         */
+        FormForConfiguration.prototype.setDefaultDebounceDuration = function (value) {
+            this.defaultDebounceDuration_ = value;
+        };
+        /**
+         * Sets the default submit-complete behavior for all formFor directives.
+         * This setting can be overridden on a per-form basis (see formFor).
+         *
+         * Default handler function accepting a data parameter representing the server-response returned by the submitted form.
+         * This function should accept a single parameter, the response data from the form-submit method.
+         */
+        FormForConfiguration.prototype.setDefaultSubmitComplete = function (value) {
+            this.defaultSubmitComplete_ = value;
+        };
+        /**
+         * Sets the default submit-error behavior for all formFor directives.
+         * This setting can be overridden on a per-form basis (see formFor).
+         * @memberof FormForConfiguration
+         * @param {Function} method Default handler function accepting an error parameter representing the data passed to the rejected submit promise.
+         * This function should accept a single parameter, the error returned by the form-submit method.
+         */
+        FormForConfiguration.prototype.setDefaultSubmitError = function (value) {
+            this.defaultSubmitError_ = value;
+        };
+        /**
+         * Sets the default validation-failed behavior for all formFor directives.
+         * This setting can be overridden on a per-form basis (see formFor).
+         * @memberof FormForConfiguration
+         * @param {Function} method Default function invoked when local form validation fails.
+         */
+        FormForConfiguration.prototype.setDefaultValidationFailed = function (value) {
+            this.defaultValidationFailed_ = value;
+        };
+        /**
+         * Sets a default label to be displayed beside each text and select input for required attributes only.
+         */
+        FormForConfiguration.prototype.setRequiredLabel = function (value) {
+            this.requiredLabel_ = value;
+        };
+        /**
+         * Override the default error message for failed custom validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForCustomMessage = function (value) {
+            this.validationFailedForCustomMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed max collection size validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForMaxCollectionSizeMessage = function (value) {
+            this.validationFailedForMaxCollectionSizeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed maxlength validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForMaxLengthMessage = function (value) {
+            this.validationFailedForMaxLengthMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed min collection size validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForMinCollectionSizeMessage = function (value) {
+            this.validationFailedForMaxCollectionSizeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed minlength validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForMinLengthMessage = function (value) {
+            this.validationFailedForMinLengthMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed pattern validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForPatternMessage = function (value) {
+            this.validationFailedForPatternMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed required validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForRequiredMessage = function (value) {
+            this.validationFailedForRequiredMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed type = 'email' validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForEmailTypeMessage = function (value) {
+            this.validationFailedForEmailTypeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed type = 'integer' validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForIntegerTypeMessage = function (value) {
+            this.validationFailedForIntegerTypeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed type = 'negative' validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForNegativeTypeMessage = function (value) {
+            this.validationFailedForNegativeTypeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed type = 'nonNegative' validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForNonNegativeTypeMessage = function (value) {
+            this.validationFailedForNonNegativeTypeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed type = 'numeric' validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForNumericTypeMessage = function (value) {
+            this.validationFailedForNumericTypeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed type = 'positive' validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForPositiveTypeMessage = function (value) {
+            this.validationFailedForPositiveTypeMessage_ = value;
+        };
+        return FormForConfiguration;
+    })();
+    formFor.FormForConfiguration = FormForConfiguration;
+    ;
+    angular.module('formFor').service('FormForConfiguration', function () { return new FormForConfiguration(); });
+})(formFor || (formFor = {}));
+;
+/// <reference path="../services/form-for-configuration.ts" />
 var formFor;
 (function (formFor) {
     /**
@@ -139,6 +404,7 @@ var formFor;
     formFor.FieldError = FieldError;
     angular.module('formFor').directive('fieldError', function () { return new FieldError(); });
 })(formFor || (formFor = {}));
+/// <reference path="../services/form-for-configuration.ts" />
 var formFor;
 (function (formFor) {
     /**
@@ -184,6 +450,7 @@ var formFor;
     formFor.FieldLabel = FieldLabel;
     angular.module('formFor').directive('fieldLabel', function ($sce, FormForConfiguration) { return new FieldLabel($sce, FormForConfiguration); });
 })(formFor || (formFor = {}));
+/// <reference path="../services/form-for-configuration.ts" />
 var formFor;
 (function (formFor) {
     /**
@@ -288,8 +555,516 @@ var formFor;
         return FormForDebounce;
     })();
     formFor.FormForDebounce = FormForDebounce;
-    angular.module('formFor').directive('formForDebounce', function ($log, $sniffer, $timeout, formForConfiguration) { return new FormForDebounce($log, $sniffer, $timeout, formForConfiguration); });
+    angular.module('formFor').directive('formForDebounce', function ($log, $sniffer, $timeout, FormForConfiguration) { return new FormForDebounce($log, $sniffer, $timeout, FormForConfiguration); });
 })(formFor || (formFor = {}));
+/// <reference path="../../definitions/angular.d.ts" />
+var formFor;
+(function (formFor) {
+    /**
+     * Helper utility to simplify working with nested objects.
+     *
+     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
+     */
+    var NestedObjectHelper = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $parse Injector-supplied $parse service
+         */
+        function NestedObjectHelper($parse) {
+            this.$parse_ = $parse;
+        }
+        /**
+         * Converts a field name (which may contain dots or array indices) into a string that can be used to key an object.
+         * e.g. a field name like 'items[0].name' would be converted into 'items___0______name'
+         *
+         * @param fieldName Attribute (or dot-notation path) to read
+         * @returns Modified field name safe to use as an object key
+         */
+        NestedObjectHelper.prototype.flattenAttribute = function (fieldName) {
+            return fieldName.replace(/\[([^\]]+)\]\.{0,1}/g, '___$1___').replace(/\./g, '___');
+        };
+        /**
+         * Crawls an object and returns a flattened set of all attributes using dot notation.
+         * This converts an Object like: {foo: {bar: true}, baz: true} into an Array like ['foo', 'foo.bar', 'baz'].
+         *
+         * @param object Object to be flattened
+         * @returns Array of flattened keys (perhaps containing dot notation)
+         */
+        NestedObjectHelper.prototype.flattenObjectKeys = function (object) {
+            var keys = [];
+            var queue = [{
+                object: object,
+                prefix: null
+            }];
+            while (true) {
+                if (queue.length === 0) {
+                    break;
+                }
+                var data = queue.pop();
+                var prefix = data.prefix ? data.prefix + '.' : '';
+                if (typeof data.object === 'object') {
+                    for (var prop in data.object) {
+                        var path = prefix + prop;
+                        var value = data.object[prop];
+                        keys.push(path);
+                        queue.push({
+                            object: value,
+                            prefix: path
+                        });
+                    }
+                }
+            }
+            return keys;
+        };
+        /**
+         * Returns the value defined by the specified attribute.
+         * This function guards against dot notation for nested references (ex. 'foo.bar').
+         *
+         * @param object Object ot be read
+         * @param fieldName Attribute (or dot-notation path) to read
+         * @returns Value defined at the specified key
+         */
+        NestedObjectHelper.prototype.readAttribute = function (object, fieldName) {
+            return this.$parse_(fieldName)(object);
+        };
+        /**
+         * Writes the specified value to the specified attribute.
+         * This function guards against dot notation for nested references (ex. 'foo.bar').
+         *
+         * @param object Object ot be updated
+         * @param fieldName Attribute (or dot-notation path) to update
+         * @param value Value to be written
+         */
+        NestedObjectHelper.prototype.writeAttribute = function (object, fieldName, value) {
+            this.initializeArraysAndObjectsForParse_(object, fieldName);
+            this.$parse_(fieldName).assign(object, value);
+        };
+        // Helper methods ////////////////////////////////////////////////////////////////////////////////////////////////////
+        // For Angular 1.2.21 and below, $parse does not handle array brackets gracefully.
+        // Essentially we need to create Arrays that don't exist yet or objects within array indices that don't yet exist.
+        // @see https://github.com/angular/angular.js/issues/2845
+        NestedObjectHelper.prototype.initializeArraysAndObjectsForParse_ = function (object, attribute) {
+            var startOfArray = 0;
+            while (true) {
+                startOfArray = attribute.indexOf('[', startOfArray);
+                if (startOfArray < 0) {
+                    break;
+                }
+                var arrayAttribute = attribute.substr(0, startOfArray);
+                var possibleArray = this.readAttribute(object, arrayAttribute);
+                // Create the Array if it doesn't yet exist
+                if (!possibleArray) {
+                    possibleArray = [];
+                    this.writeAttribute(object, arrayAttribute, possibleArray);
+                }
+                // Create an empty Object in the Array if the user is about to write to one (and one does not yet exist)
+                var match = attribute.substr(startOfArray).match(/([0-9]+)\]\./);
+                if (match) {
+                    var targetIndex = parseInt(match[1]);
+                    if (!possibleArray[targetIndex]) {
+                        possibleArray[targetIndex] = {};
+                    }
+                }
+                // Increment and keep scanning
+                startOfArray++;
+            }
+        };
+        return NestedObjectHelper;
+    })();
+    formFor.NestedObjectHelper = NestedObjectHelper;
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Supplies $q service with additional methods.
+     *
+     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
+     */
+    var PromiseUtils = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $q Injector-supplied $q service
+         */
+        function PromiseUtils($q) {
+            this.$q_ = $q;
+        }
+        /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.all = function (promises) {
+            return this.$q_.all(promises);
+        };
+        /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.defer = function () {
+            return this.$q_.defer();
+        };
+        /**
+         * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
+         *
+         * @param data Value to resolve the promise with
+         * @returns A resolved promise
+         */
+        PromiseUtils.prototype.resolve = function (data) {
+            var deferred = this.$q_.defer();
+            deferred.resolve(data);
+            return deferred.promise;
+        };
+        /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.reject = function (reason) {
+            return this.$q_.reject(reason);
+        };
+        /**
+         * Similar to $q.all but waits for all promises to resolve/reject before resolving/rejecting.
+         *
+         * @param promises Array of Promises
+         * @returns A promise to be resolved or rejected once all of the observed promises complete
+         */
+        PromiseUtils.prototype.waitForAll = function (promises) {
+            var deferred = this.$q_.defer();
+            var results = {};
+            var counter = 0;
+            var errored = false;
+            function udpateResult(key, data) {
+                if (!results.hasOwnProperty(key)) {
+                    results[key] = data;
+                    counter--;
+                }
+                checkForDone();
+            }
+            function checkForDone() {
+                if (counter === 0) {
+                    if (errored) {
+                        deferred.reject(results);
+                    }
+                    else {
+                        deferred.resolve(results);
+                    }
+                }
+            }
+            angular.forEach(promises, function (promise, key) {
+                counter++;
+                promise.then(function (data) {
+                    udpateResult(key, data);
+                }, function (data) {
+                    errored = true;
+                    udpateResult(key, data);
+                });
+            });
+            checkForDone(); // Handle empty Array
+            return deferred.promise;
+        };
+        /**
+         * @inheritDoc
+         */
+        PromiseUtils.prototype.when = function (value) {
+            return this.$q_.when(value);
+        };
+        return PromiseUtils;
+    })();
+    formFor.PromiseUtils = PromiseUtils;
+})(formFor || (formFor = {}));
+/// <reference path="../utils/nested-object-helper.ts" />
+/// <reference path="../utils/promise-utils.ts" />
+var formFor;
+(function (formFor) {
+    /**
+     * Controller exposed via the FormFor directive's scope.
+     *
+     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
+     */
+    var FormForController = (function () {
+        /**
+         * Constructor.
+         *
+         * @param $parse Injector-supplied $parse service
+         * @param $q Injector-supplied $q service
+         * @param $scope formFor directive $scope
+         * @param modelValidator ModelValidator service
+         */
+        function FormForController($parse, $q, $scope, modelValidator) {
+            this.$parse_ = $parse;
+            this.$scope_ = $scope;
+            this.modelValidator_ = modelValidator;
+            this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
+            this.promiseUtils_ = new formFor.PromiseUtils($q);
+        }
+        /**
+         * Collection headers should register themselves using this function in order to be notified of validation errors.
+         *
+         * @param fieldName Unique identifier of collection within model
+         * @return A bind-friendly wrapper object describing the state of the collection
+         */
+        FormForController.prototype.registerCollectionLabel = function (fieldName) {
+            var _this = this;
+            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
+            var bindableWrapper = {
+                error: null,
+                required: this.modelValidator_.isCollectionRequired(fieldName, this.$scope_.$validationRuleset)
+            };
+            this.$scope_.collectionLabels[bindableFieldName] = bindableWrapper;
+            var watcherInitialized = false;
+            this.$scope_.$watch('formFor.' + fieldName + '.length', function () {
+                // The initial $watch should not trigger a visible validation...
+                if (!watcherInitialized) {
+                    watcherInitialized = true;
+                }
+                else if (!_this.$scope_.validateOn || _this.$scope_.validateOn === 'change') {
+                    _this.modelValidator_.validateCollection(_this.$scope_.formFor, fieldName, _this.$scope_.$validationRuleset).then(function () {
+                        _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
+                    }, function (error) {
+                        _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+                    });
+                }
+            });
+            return bindableWrapper;
+        };
+        /**
+         * All form-input children of formFor must register using this function.
+         *
+         * @param fieldName Unique identifier of field within model; used to map errors back to input fields
+         * @return Bindable field wrapper
+         */
+        FormForController.prototype.registerFormField = function (fieldName) {
+            var _this = this;
+            if (!fieldName) {
+                throw Error('Invalid field name "' + fieldName + '" provided.');
+            }
+            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
+            if (this.$scope_['fields'].hasOwnProperty(bindableFieldName)) {
+                throw Error('Field "' + fieldName + '" has already been registered. Field names must be unique.');
+            }
+            var bindableFieldWrapper = {
+                bindable: null,
+                disabled: this.$scope_.disable,
+                error: null,
+                pristine: true,
+                required: this.modelValidator_.isFieldRequired(fieldName, this.$scope_.$validationRuleset),
+                uid: formFor.FormForGUID.create()
+            };
+            // Store information about this field that we'll need for validation and binding purposes.
+            // @see Above documentation for $scope.fields
+            var fieldDatum = {
+                bindableWrapper: bindableFieldWrapper,
+                fieldName: fieldName,
+                formForStateHelper: this.$scope_.formForStateHelper,
+                unwatchers: []
+            };
+            this.$scope_.fields[bindableFieldName] = fieldDatum;
+            var getter = this.$parse_(fieldName);
+            // Changes made by our field should be synced back to the form-data model.
+            fieldDatum.unwatchers.push(this.$scope_.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function (newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    getter.assign(_this.$scope_.formFor, newValue);
+                }
+            }));
+            var formDataWatcherInitialized;
+            // Changes made to the form-data model should likewise be synced to the field's bindable model.
+            // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
+            fieldDatum.unwatchers.push(this.$scope_.$watch('formFor.' + fieldName, function (newValue, oldValue) {
+                // An asynchronous formFor data source should reset any dirty flags.
+                // A user tabbing in and out of a field also shouldn't be counted as dirty.
+                // Easiest way to guard against this is to reset the initialization flag.
+                if (newValue !== fieldDatum.bindableWrapper.bindable || oldValue === undefined && newValue === '' || newValue === undefined) {
+                    formDataWatcherInitialized = false;
+                }
+                fieldDatum.bindableWrapper.bindable = newValue;
+                if (!_this.$scope_.validateOn || _this.$scope_.validateOn === 'change') {
+                    _this.validateField(fieldName);
+                }
+                // Changes in form-data should also trigger validations.
+                // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
+                // We shouldn't mark our field as dirty when Angular auto-invokes the initial watcher though,
+                // So we ignore the first invocation...
+                if (!formDataWatcherInitialized) {
+                    formDataWatcherInitialized = true;
+                    _this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
+                }
+                fieldDatum.bindableWrapper.pristine = !_this.$scope_.formForStateHelper.hasFieldBeenModified(bindableFieldName);
+            }));
+            return bindableFieldWrapper;
+        };
+        /**
+         * All submitButton children must register with formFor using this function.
+         *
+         * @param submitButtonScope $scope of submit button directive
+         * @return Submit button wrapper
+         */
+        FormForController.prototype.registerSubmitButton = function (submitButtonScope) {
+            var bindableWrapper = {
+                disabled: false
+            };
+            this.$scope_.buttons.push(bindableWrapper);
+            return bindableWrapper;
+        };
+        /**
+         * Resets errors displayed on the <form> without resetting the form data values.
+         */
+        FormForController.prototype.resetErrors = function () {
+            for (var bindableFieldName in this.$scope_.fields) {
+                // If the field is invalid, we don't want it to appear valid- just pristing.
+                if (this.$scope_.formForStateHelper.getFieldError(bindableFieldName)) {
+                    this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
+                    this.$scope_.fields[bindableFieldName].bindableWrapper.pristine = true;
+                }
+            }
+            this.$scope_.formForStateHelper.setFormSubmitted(false);
+            this.$scope_.formForStateHelper.resetFieldErrors();
+        };
+        /**
+         * Reset validation errors for an individual field.
+         *
+         * @param fieldName Field name within formFor data object (ex. billing.address)
+         */
+        FormForController.prototype.resetField = function (fieldName) {
+            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
+            // If the field is invalid, we don't want it to appear valid- just pristing.
+            if (this.$scope_.formForStateHelper.getFieldError(bindableFieldName)) {
+                this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
+                this.$scope_.fields[bindableFieldName].bindableWrapper.pristine = true;
+            }
+            this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
+        };
+        /**
+         * Alias to resetErrors.
+         * @memberof form-for
+         */
+        FormForController.prototype.resetFields = function () {
+            this.resetErrors();
+        };
+        /**
+         * Manually set a validation error message for a given field.
+         * This method should only be used when formFor's :validateOn attribute has been set to "manual".
+         *
+         * @param fieldName Field name within formFor data object (ex. billing.address)
+         * @param error Error message to display (or null to clear the visible error)
+         */
+        FormForController.prototype.setFieldError = function (fieldName, error) {
+            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
+            this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+            this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+        };
+        /**
+         * Form fields created within ngRepeat or ngIf directive should clean up themselves on removal.
+         *
+         * @param fieldName Unique identifier of field within model
+         */
+        FormForController.prototype.unregisterFormField = function (fieldName) {
+            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
+            angular.forEach(this.$scope_.fields[bindableFieldName].unwatchers, function (unwatch) {
+                unwatch();
+            });
+            delete this.$scope_.fields[bindableFieldName];
+        };
+        /*
+         * Update all registered collection labels with the specified error messages.
+         * Specified map should be keyed with fieldName and should container user-friendly error strings.
+         * @param {Object} fieldNameToErrorMap Map of collection names (or paths) to errors
+         */
+        FormForController.prototype.updateCollectionErrors = function (fieldNameToErrorMap) {
+            var _this = this;
+            angular.forEach(this.$scope_.collectionLabels, function (bindableWrapper, bindableFieldName) {
+                var error = _this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, bindableFieldName);
+                _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+            });
+        };
+        /*
+         * Update all registered form fields with the specified error messages.
+         * Specified map should be keyed with fieldName and should container user-friendly error strings.
+         * @param {Object} fieldNameToErrorMap Map of field names (or paths) to errors
+         */
+        FormForController.prototype.updateFieldErrors = function (fieldNameToErrorMap) {
+            var _this = this;
+            angular.forEach(this.$scope_.fields, function (scope, bindableFieldName) {
+                var error = _this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, scope.fieldName);
+                _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+            });
+        };
+        /**
+         * Force validation for an individual field.
+         * If the field fails validation an error message will automatically be shown.
+         *
+         * @param fieldName Field name within formFor data object (ex. billing.address)
+         */
+        FormForController.prototype.validateField = function (fieldName) {
+            var _this = this;
+            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
+            this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+            // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
+            if (this.$scope_.$validationRuleset) {
+                this.modelValidator_.validateField(this.$scope_.formFor, fieldName, this.$scope_.$validationRuleset).then(function () {
+                    _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
+                }, function (error) {
+                    _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
+                });
+            }
+        };
+        /**
+         * Validate all registered form-fields.
+         * This method returns a promise that is resolved or rejected with a field to error message map.
+         *
+         * @param showErrors Mark fields with errors as invalid (visually) after validation
+         */
+        FormForController.prototype.validateForm = function (showErrors) {
+            var _this = this;
+            // Reset errors before starting new validation.
+            this.updateCollectionErrors({});
+            this.updateFieldErrors({});
+            var validateCollectionsPromise;
+            var validateFieldsPromise;
+            if (this.$scope_.$validationRuleset) {
+                var validationKeys = [];
+                angular.forEach(this.$scope_.fields, function (fieldDatum) {
+                    validationKeys.push(fieldDatum.fieldName);
+                });
+                validateFieldsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
+                validateFieldsPromise.then(angular.noop, this.updateFieldErrors);
+                validationKeys = []; // Reset for below re-use
+                angular.forEach(this.$scope_.collectionLabels, function (bindableWrapper, bindableFieldName) {
+                    validationKeys.push(bindableFieldName);
+                });
+                validateCollectionsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
+                validateCollectionsPromise.then(angular.noop, this.updateCollectionErrors);
+            }
+            else {
+                validateCollectionsPromise = this.promiseUtils_.resolve();
+                validateFieldsPromise = this.promiseUtils_.resolve();
+            }
+            var deferred = this.promiseUtils_.defer();
+            this.promiseUtils_.waitForAll([validateCollectionsPromise, validateFieldsPromise]).then(deferred.resolve, function (errors) {
+                // If all collections are valid (or no collections exist) this will be an empty array.
+                if (angular.isArray(errors[0]) && errors[0].length === 0) {
+                    errors.splice(0, 1);
+                }
+                // Errors won't be shown for clean fields, so mark errored fields as dirty.
+                if (showErrors) {
+                    angular.forEach(errors, function (errorObjectOrArray) {
+                        var flattenedFields = _this.nestedObjectHelper_.flattenObjectKeys(errorObjectOrArray);
+                        angular.forEach(flattenedFields, function (fieldName) {
+                            var error = _this.nestedObjectHelper_.readAttribute(errorObjectOrArray, fieldName);
+                            if (error) {
+                                var bindableFieldName = _this.nestedObjectHelper_.flattenAttribute(fieldName);
+                                _this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
+                            }
+                        });
+                    });
+                }
+                deferred.reject(errors);
+            });
+            return deferred.promise;
+        };
+        return FormForController;
+    })();
+    formFor.FormForController = FormForController;
+})(formFor || (formFor = {}));
+/// <reference path="../utils/form-for-controller.ts" />
+/// <reference path="../utils/nested-object-helper.ts" />
+/// <reference path="../utils/promise-utils.ts" />
 var formFor;
 (function (formFor) {
     /**
@@ -325,9 +1100,9 @@ var formFor;
             this.$parse_ = $injector.get('$parse');
             this.$sce_ = $injector.get('$sce');
             this.formForConfiguration_ = $injector.get('FormForConfiguration');
-            this.nestedObjectHelper_ = $injector.get('NestedObjectHelper');
             this.modelValidator_ = $injector.get('ModelValidator');
             var $q = $injector.get('$q');
+            this.nestedObjectHelper_ = new formFor.NestedObjectHelper(this.$parse_);
             this.promiseUtils_ = new formFor.PromiseUtils($q);
         }
         FormFor.prototype.controller = function ($scope) {
@@ -471,6 +1246,29 @@ var formFor;
 var formFor;
 (function (formFor) {
     /**
+     * UID generator for formFor input fields.
+     * @see http://stackoverflow.com/questions/6248666/how-to-generate-short-uid-like-ax4j9z-in-js
+     *
+     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
+     */
+    var FormForGUID = (function () {
+        function FormForGUID() {
+        }
+        /**
+         * Create a new GUID.
+         */
+        FormForGUID.create = function () {
+            return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).slice(-4);
+        };
+        return FormForGUID;
+    })();
+    formFor.FormForGUID = FormForGUID;
+})(formFor || (formFor = {}));
+/// <reference path="../services/form-for-configuration.ts" />
+/// <reference path="../utils/form-for-guid.ts" />
+var formFor;
+(function (formFor) {
+    /**
      * Renders a radio &lt;input&gt; with optional label.
      * This type of component is well-suited for small enumerations.
      *
@@ -561,6 +1359,64 @@ var formFor;
     formFor.RadioField = RadioField;
     angular.module('formFor').directive('radioField', function ($log, FormForConfiguration) { return new RadioField($log, FormForConfiguration); });
 })(formFor || (formFor = {}));
+/// <reference path="form-for-configuration.ts" />
+var formFor;
+(function (formFor) {
+    /**
+     * Various helper methods for functionality shared between formFor field directives.
+     */
+    var FieldHelper = (function () {
+        function FieldHelper(FormForConfiguration) {
+            this.formForConfiguration_ = FormForConfiguration;
+        }
+        /**
+         * Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
+         * Also watches for changes in the (attributes) label and updates $scope accordingly.
+         *
+         * @param $scope Directive link $scope
+         * @param $attributes Directive link $attributes
+         * @param humanizeValueAttribute Fall back to a humanized version of the :value attribute if no label is provided;
+         *                               This can be useful for radio options where the label should represent the value.
+         *                               By default, a humanized version of the :attribute attribute will be used.
+         */
+        FieldHelper.prototype.manageLabel = function ($scope, $attributes, humanizeValueAttribute) {
+            if ($attributes.hasOwnProperty('label')) {
+                $attributes.$observe('label', function (label) {
+                    $scope['label'] = label;
+                });
+            }
+            if (this.formForConfiguration_.autoGenerateLabels) {
+                $scope['label'] = humanizeValueAttribute ? formFor.StringUtil.humanize($scope['value']) : formFor.StringUtil.humanize($scope['attribute']);
+            }
+        };
+        /**
+         * Helper method that registers a form field and stores the bindable object returned on the $scope.
+         * This method also unregisters the field on $scope $destroy.
+         *
+         * @param $scope Input field $scope
+         * @param $attributes Input field $attributes element
+         * @param formForController Controller object for parent formFor
+         */
+        FieldHelper.prototype.manageFieldRegistration = function ($scope, $attributes, formForController) {
+            $scope.$watch('attribute', function (newValue, oldValue) {
+                if ($scope['model']) {
+                    formForController.unregisterFormField(oldValue);
+                }
+                $scope['model'] = formForController.registerFormField($scope['attribute']);
+                if ($attributes['uid']) {
+                    $scope['model']['uid'] = $attributes['uid'];
+                }
+            });
+            $scope.$on('$destroy', function () {
+                formForController.unregisterFormField($scope['attribute']);
+            });
+        };
+        return FieldHelper;
+    })();
+    formFor.FieldHelper = FieldHelper;
+    angular.module('formFor').service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); });
+})(formFor || (formFor = {}));
+/// <reference path="../services/field-helper.ts" />
 var formFor;
 (function (formFor) {
     /**
@@ -876,6 +1732,7 @@ var formFor;
     formFor.SubmitButton = SubmitButton;
     angular.module('formFor').directive('submitButton', function ($sce) { return new SubmitButton($sce); });
 })(formFor || (formFor = {}));
+/// <reference path="../services/field-helper.ts" />
 var formFor;
 (function (formFor) {
     /**
@@ -1105,328 +1962,9 @@ var formFor;
 })(formFor || (formFor = {}));
 ;
 /// <reference path="../../definitions/angular.d.ts" />
-var formFor;
-(function (formFor) {
-    /**
-     * This service can be used to configure default behavior for all instances of formFor within a project.
-     * Note that it is a service accessible to during the run loop and not a provider accessible during config.
-     */
-    var FormForConfiguration = (function () {
-        function FormForConfiguration() {
-            this.autoGenerateLabels_ = false;
-            this.defaultDebounceDuration_ = 500;
-            this.defaultSubmitComplete_ = angular.noop;
-            this.defaultSubmitError_ = angular.noop;
-            this.defaultValidationFailed_ = angular.noop;
-            this.requiredLabel_ = null;
-            this.validationFailedForCustomMessage_ = "Failed custom validation";
-            this.validationFailedForEmailTypeMessage_ = "Invalid email format";
-            this.validationFailedForIntegerTypeMessage_ = "Must be an integer";
-            this.validationFailedForMaxCollectionSizeMessage_ = "Must be fewer than {{num}} items";
-            this.validationFailedForMaxLengthMessage_ = "Must be fewer than {{num}} characters";
-            this.validationFailedForMinCollectionSizeMessage_ = "Must at least {{num}} items";
-            this.validationFailedForMinLengthMessage_ = "Must be at least {{num}} characters";
-            this.validationFailedForNegativeTypeMessage_ = "Must be negative";
-            this.validationFailedForNonNegativeTypeMessage_ = "Must be non-negative";
-            this.validationFailedForNumericTypeMessage_ = "Must be numeric";
-            this.validationFailedForPatternMessage_ = "Invalid format";
-            this.validationFailedForPositiveTypeMessage_ = "Must be positive";
-            this.validationFailedForRequiredMessage_ = "Required field";
-        }
-        Object.defineProperty(FormForConfiguration.prototype, "autoGenerateLabels", {
-            // Getters and setters ///////////////////////////////////////////////////////////////////////////////////////////////
-            // TODO Add better documentation
-            get: function () {
-                return this.autoGenerateLabels_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultDebounceDuration", {
-            get: function () {
-                return this.defaultDebounceDuration_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultSubmitComplete", {
-            get: function () {
-                return this.defaultSubmitComplete_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultSubmitError", {
-            get: function () {
-                return this.defaultSubmitError_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultValidationFailed", {
-            get: function () {
-                return this.defaultValidationFailed_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "requiredLabel", {
-            get: function () {
-                return this.requiredLabel_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        // Public methods ////////////////////////////////////////////////////////////////////////////////////////////////////
-        /**
-         * Use this method to disable auto-generated labels for formFor input fields.
-         */
-        FormForConfiguration.prototype.disableAutoLabels = function () {
-            this.autoGenerateLabels_ = false;
-        };
-        /**
-         * Use this method to enable auto-generated labels for formFor input fields.
-         * Labels will be generated based on attribute-name for fields without a label attribute present.
-         * Radio fields are an exception to this rule.
-         * Their names are generated from their values.
-         */
-        FormForConfiguration.prototype.enableAutoLabels = function () {
-            this.autoGenerateLabels_ = true;
-        };
-        /**
-         * Returns the appropriate error message for the validation failure type.
-         */
-        FormForConfiguration.prototype.getFailedValidationMessage = function (failureType) {
-            switch (failureType) {
-                case formFor.ValidationFailureType.CUSTOM:
-                    return this.validationFailedForCustomMessage_;
-                case formFor.ValidationFailureType.COLLECTION_MAX_SIZE:
-                    return this.validationFailedForMaxCollectionSizeMessage_;
-                case formFor.ValidationFailureType.COLLECTION_MIN_SIZE:
-                    return this.validationFailedForMinCollectionSizeMessage_;
-                case formFor.ValidationFailureType.MAX_LENGTH:
-                    return this.validationFailedForMaxLengthMessage_;
-                case formFor.ValidationFailureType.MIN_LENGTH:
-                    return this.validationFailedForMinLengthMessage_;
-                case formFor.ValidationFailureType.PATTERN:
-                    return this.validationFailedForPatternMessage_;
-                case formFor.ValidationFailureType.REQUIRED:
-                    return this.validationFailedForRequiredMessage_;
-                case formFor.ValidationFailureType.TYPE_EMAIL:
-                    return this.validationFailedForEmailTypeMessage_;
-                case formFor.ValidationFailureType.TYPE_INTEGER:
-                    return this.validationFailedForIntegerTypeMessage_;
-                case formFor.ValidationFailureType.TYPE_NEGATIVE:
-                    return this.validationFailedForNegativeTypeMessage_;
-                case formFor.ValidationFailureType.TYPE_NON_NEGATIVE:
-                    return this.validationFailedForNonNegativeTypeMessage_;
-                case formFor.ValidationFailureType.TYPE_NUMERIC:
-                    return this.validationFailedForNumericTypeMessage_;
-                case formFor.ValidationFailureType.TYPE_POSITIVE:
-                    return this.validationFailedForPositiveTypeMessage_;
-            }
-        };
-        /**
-         * Sets the default debounce interval (in ms) for all textField inputs.
-         * This setting can be overridden on a per-input basis (see textField).
-         * Defaults to 500ms.
-         * To disable debounce (update only on blur) pass false.
-         */
-        FormForConfiguration.prototype.setDefaultDebounceDuration = function (value) {
-            this.defaultDebounceDuration_ = value;
-        };
-        /**
-         * Sets the default submit-complete behavior for all formFor directives.
-         * This setting can be overridden on a per-form basis (see formFor).
-         *
-         * Default handler function accepting a data parameter representing the server-response returned by the submitted form.
-         * This function should accept a single parameter, the response data from the form-submit method.
-         */
-        FormForConfiguration.prototype.setDefaultSubmitComplete = function (value) {
-            this.defaultSubmitComplete_ = value;
-        };
-        /**
-         * Sets the default submit-error behavior for all formFor directives.
-         * This setting can be overridden on a per-form basis (see formFor).
-         * @memberof FormForConfiguration
-         * @param {Function} method Default handler function accepting an error parameter representing the data passed to the rejected submit promise.
-         * This function should accept a single parameter, the error returned by the form-submit method.
-         */
-        FormForConfiguration.prototype.setDefaultSubmitError = function (value) {
-            this.defaultSubmitError_ = value;
-        };
-        /**
-         * Sets the default validation-failed behavior for all formFor directives.
-         * This setting can be overridden on a per-form basis (see formFor).
-         * @memberof FormForConfiguration
-         * @param {Function} method Default function invoked when local form validation fails.
-         */
-        FormForConfiguration.prototype.setDefaultValidationFailed = function (value) {
-            this.defaultValidationFailed_ = value;
-        };
-        /**
-         * Sets a default label to be displayed beside each text and select input for required attributes only.
-         */
-        FormForConfiguration.prototype.setRequiredLabel = function (value) {
-            this.requiredLabel_ = value;
-        };
-        /**
-         * Override the default error message for failed custom validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForCustomMessage = function (value) {
-            this.validationFailedForCustomMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed max collection size validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForMaxCollectionSizeMessage = function (value) {
-            this.validationFailedForMaxCollectionSizeMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed maxlength validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForMaxLengthMessage = function (value) {
-            this.validationFailedForMaxLengthMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed min collection size validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForMinCollectionSizeMessage = function (value) {
-            this.validationFailedForMaxCollectionSizeMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed minlength validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForMinLengthMessage = function (value) {
-            this.validationFailedForMinLengthMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed pattern validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForPatternMessage = function (value) {
-            this.validationFailedForPatternMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed required validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForRequiredMessage = function (value) {
-            this.validationFailedForRequiredMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed type = 'email' validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForEmailTypeMessage = function (value) {
-            this.validationFailedForEmailTypeMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed type = 'integer' validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForIntegerTypeMessage = function (value) {
-            this.validationFailedForIntegerTypeMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed type = 'negative' validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForNegativeTypeMessage = function (value) {
-            this.validationFailedForNegativeTypeMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed type = 'nonNegative' validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForNonNegativeTypeMessage = function (value) {
-            this.validationFailedForNonNegativeTypeMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed type = 'numeric' validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForNumericTypeMessage = function (value) {
-            this.validationFailedForNumericTypeMessage_ = value;
-        };
-        /**
-         * Override the default error message for failed type = 'positive' validations.
-         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
-         */
-        FormForConfiguration.prototype.setValidationFailedForPositiveTypeMessage = function (value) {
-            this.validationFailedForPositiveTypeMessage_ = value;
-        };
-        return FormForConfiguration;
-    })();
-    formFor.FormForConfiguration = FormForConfiguration;
-    ;
-    angular.module('formFor').service('FormForConfiguration', function () { return new FormForConfiguration(); });
-})(formFor || (formFor = {}));
-;
 /// <reference path="form-for-configuration.ts" />
-var formFor;
-(function (formFor) {
-    /**
-     * Various helper methods for functionality shared between formFor field directives.
-     */
-    var FieldHelper = (function () {
-        function FieldHelper(FormForConfiguration) {
-            this.formForConfiguration_ = FormForConfiguration;
-        }
-        /**
-         * Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
-         * Also watches for changes in the (attributes) label and updates $scope accordingly.
-         *
-         * @param $scope Directive link $scope
-         * @param $attributes Directive link $attributes
-         * @param humanizeValueAttribute Fall back to a humanized version of the :value attribute if no label is provided;
-         *                               This can be useful for radio options where the label should represent the value.
-         *                               By default, a humanized version of the :attribute attribute will be used.
-         */
-        FieldHelper.prototype.manageLabel = function ($scope, $attributes, humanizeValueAttribute) {
-            if ($attributes.hasOwnProperty('label')) {
-                $attributes.$observe('label', function (label) {
-                    $scope['label'] = label;
-                });
-            }
-            if (this.formForConfiguration_.autoGenerateLabels) {
-                $scope['label'] = humanizeValueAttribute ? formFor.StringUtil.humanize($scope['value']) : formFor.StringUtil.humanize($scope['attribute']);
-            }
-        };
-        /**
-         * Helper method that registers a form field and stores the bindable object returned on the $scope.
-         * This method also unregisters the field on $scope $destroy.
-         *
-         * @param $scope Input field $scope
-         * @param $attributes Input field $attributes element
-         * @param formForController Controller object for parent formFor
-         */
-        FieldHelper.prototype.manageFieldRegistration = function ($scope, $attributes, formForController) {
-            $scope.$watch('attribute', function (newValue, oldValue) {
-                if ($scope['model']) {
-                    formForController.unregisterFormField(oldValue);
-                }
-                $scope['model'] = formForController.registerFormField($scope['attribute']);
-                if ($attributes['uid']) {
-                    $scope['model']['uid'] = $attributes['uid'];
-                }
-            });
-            $scope.$on('$destroy', function () {
-                formForController.unregisterFormField($scope['attribute']);
-            });
-        };
-        return FieldHelper;
-    })();
-    formFor.FieldHelper = FieldHelper;
-    angular.module('formFor').service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); });
-})(formFor || (formFor = {}));
-/// <reference path="../../definitions/angular.d.ts" />
-/// <reference path="form-for-configuration.ts" />
+/// <reference path="../utils/nested-object-helper.ts" />
+/// <reference path="../utils/promise-utils.ts" />
 var formFor;
 (function (formFor) {
     /**
@@ -1777,318 +2315,7 @@ var formFor;
     formFor.ModelValidator = ModelValidator;
     angular.module('formFor').service('ModelValidator', function ($interpolate, $parse, $q, FormForConfiguration) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration); });
 })(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    /**
-     * Controller exposed via the FormFor directive's scope.
-     *
-     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
-     */
-    var FormForController = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $parse Injector-supplied $parse service
-         * @param $q Injector-supplied $q service
-         * @param $scope formFor directive $scope
-         * @param modelValidator ModelValidator service
-         */
-        function FormForController($parse, $q, $scope, modelValidator) {
-            this.$parse_ = $parse;
-            this.$scope_ = $scope;
-            this.modelValidator_ = modelValidator;
-            this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
-            this.promiseUtils_ = new formFor.PromiseUtils($q);
-        }
-        /**
-         * Collection headers should register themselves using this function in order to be notified of validation errors.
-         *
-         * @param fieldName Unique identifier of collection within model
-         * @return A bind-friendly wrapper object describing the state of the collection
-         */
-        FormForController.prototype.registerCollectionLabel = function (fieldName) {
-            var _this = this;
-            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            var bindableWrapper = {
-                error: null,
-                required: this.modelValidator_.isCollectionRequired(fieldName, this.$scope_.$validationRuleset)
-            };
-            this.$scope_.collectionLabels[bindableFieldName] = bindableWrapper;
-            var watcherInitialized = false;
-            this.$scope_.$watch('formFor.' + fieldName + '.length', function () {
-                // The initial $watch should not trigger a visible validation...
-                if (!watcherInitialized) {
-                    watcherInitialized = true;
-                }
-                else if (!_this.$scope_.validateOn || _this.$scope_.validateOn === 'change') {
-                    _this.modelValidator_.validateCollection(_this.$scope_.formFor, fieldName, _this.$scope_.$validationRuleset).then(function () {
-                        _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
-                    }, function (error) {
-                        _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
-                    });
-                }
-            });
-            return bindableWrapper;
-        };
-        /**
-         * All form-input children of formFor must register using this function.
-         *
-         * @param fieldName Unique identifier of field within model; used to map errors back to input fields
-         * @return Bindable field wrapper
-         */
-        FormForController.prototype.registerFormField = function (fieldName) {
-            var _this = this;
-            if (!fieldName) {
-                throw Error('Invalid field name "' + fieldName + '" provided.');
-            }
-            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            if (this.$scope_['fields'].hasOwnProperty(bindableFieldName)) {
-                throw Error('Field "' + fieldName + '" has already been registered. Field names must be unique.');
-            }
-            var bindableFieldWrapper = {
-                bindable: null,
-                disabled: this.$scope_.disable,
-                error: null,
-                pristine: true,
-                required: this.modelValidator_.isFieldRequired(fieldName, this.$scope_.$validationRuleset),
-                uid: formFor.FormForGUID.create()
-            };
-            // Store information about this field that we'll need for validation and binding purposes.
-            // @see Above documentation for $scope.fields
-            var fieldDatum = {
-                bindableWrapper: bindableFieldWrapper,
-                fieldName: fieldName,
-                formForStateHelper: this.$scope_.formForStateHelper,
-                unwatchers: []
-            };
-            this.$scope_.fields[bindableFieldName] = fieldDatum;
-            var getter = this.$parse_(fieldName);
-            // Changes made by our field should be synced back to the form-data model.
-            fieldDatum.unwatchers.push(this.$scope_.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function (newValue, oldValue) {
-                if (newValue !== oldValue) {
-                    getter.assign(_this.$scope_.formFor, newValue);
-                }
-            }));
-            var formDataWatcherInitialized;
-            // Changes made to the form-data model should likewise be synced to the field's bindable model.
-            // (This is necessary for data that is loaded asynchronously after a form has already been displayed.)
-            fieldDatum.unwatchers.push(this.$scope_.$watch('formFor.' + fieldName, function (newValue, oldValue) {
-                // An asynchronous formFor data source should reset any dirty flags.
-                // A user tabbing in and out of a field also shouldn't be counted as dirty.
-                // Easiest way to guard against this is to reset the initialization flag.
-                if (newValue !== fieldDatum.bindableWrapper.bindable || oldValue === undefined && newValue === '' || newValue === undefined) {
-                    formDataWatcherInitialized = false;
-                }
-                fieldDatum.bindableWrapper.bindable = newValue;
-                if (!_this.$scope_.validateOn || _this.$scope_.validateOn === 'change') {
-                    _this.validateField(fieldName);
-                }
-                // Changes in form-data should also trigger validations.
-                // Validation failures will not be displayed unless the form-field has been marked dirty (changed by user).
-                // We shouldn't mark our field as dirty when Angular auto-invokes the initial watcher though,
-                // So we ignore the first invocation...
-                if (!formDataWatcherInitialized) {
-                    formDataWatcherInitialized = true;
-                    _this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
-                }
-                fieldDatum.bindableWrapper.pristine = !_this.$scope_.formForStateHelper.hasFieldBeenModified(bindableFieldName);
-            }));
-            return bindableFieldWrapper;
-        };
-        /**
-         * All submitButton children must register with formFor using this function.
-         *
-         * @param submitButtonScope $scope of submit button directive
-         * @return Submit button wrapper
-         */
-        FormForController.prototype.registerSubmitButton = function (submitButtonScope) {
-            var bindableWrapper = {
-                disabled: false
-            };
-            this.$scope_.buttons.push(bindableWrapper);
-            return bindableWrapper;
-        };
-        /**
-         * Resets errors displayed on the <form> without resetting the form data values.
-         */
-        FormForController.prototype.resetErrors = function () {
-            for (var bindableFieldName in this.$scope_.fields) {
-                // If the field is invalid, we don't want it to appear valid- just pristing.
-                if (this.$scope_.formForStateHelper.getFieldError(bindableFieldName)) {
-                    this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
-                    this.$scope_.fields[bindableFieldName].bindableWrapper.pristine = true;
-                }
-            }
-            this.$scope_.formForStateHelper.setFormSubmitted(false);
-            this.$scope_.formForStateHelper.resetFieldErrors();
-        };
-        /**
-         * Reset validation errors for an individual field.
-         *
-         * @param fieldName Field name within formFor data object (ex. billing.address)
-         */
-        FormForController.prototype.resetField = function (fieldName) {
-            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            // If the field is invalid, we don't want it to appear valid- just pristing.
-            if (this.$scope_.formForStateHelper.getFieldError(bindableFieldName)) {
-                this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, false);
-                this.$scope_.fields[bindableFieldName].bindableWrapper.pristine = true;
-            }
-            this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
-        };
-        /**
-         * Alias to resetErrors.
-         * @memberof form-for
-         */
-        FormForController.prototype.resetFields = function () {
-            this.resetErrors();
-        };
-        /**
-         * Manually set a validation error message for a given field.
-         * This method should only be used when formFor's :validateOn attribute has been set to "manual".
-         *
-         * @param fieldName Field name within formFor data object (ex. billing.address)
-         * @param error Error message to display (or null to clear the visible error)
-         */
-        FormForController.prototype.setFieldError = function (fieldName, error) {
-            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
-            this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
-        };
-        /**
-         * Form fields created within ngRepeat or ngIf directive should clean up themselves on removal.
-         *
-         * @param fieldName Unique identifier of field within model
-         */
-        FormForController.prototype.unregisterFormField = function (fieldName) {
-            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            angular.forEach(this.$scope_.fields[bindableFieldName].unwatchers, function (unwatch) {
-                unwatch();
-            });
-            delete this.$scope_.fields[bindableFieldName];
-        };
-        /*
-         * Update all registered collection labels with the specified error messages.
-         * Specified map should be keyed with fieldName and should container user-friendly error strings.
-         * @param {Object} fieldNameToErrorMap Map of collection names (or paths) to errors
-         */
-        FormForController.prototype.updateCollectionErrors = function (fieldNameToErrorMap) {
-            var _this = this;
-            angular.forEach(this.$scope_.collectionLabels, function (bindableWrapper, bindableFieldName) {
-                var error = _this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, bindableFieldName);
-                _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
-            });
-        };
-        /*
-         * Update all registered form fields with the specified error messages.
-         * Specified map should be keyed with fieldName and should container user-friendly error strings.
-         * @param {Object} fieldNameToErrorMap Map of field names (or paths) to errors
-         */
-        FormForController.prototype.updateFieldErrors = function (fieldNameToErrorMap) {
-            var _this = this;
-            angular.forEach(this.$scope_.fields, function (scope, bindableFieldName) {
-                var error = _this.nestedObjectHelper_.readAttribute(fieldNameToErrorMap, scope.fieldName);
-                _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
-            });
-        };
-        /**
-         * Force validation for an individual field.
-         * If the field fails validation an error message will automatically be shown.
-         *
-         * @param fieldName Field name within formFor data object (ex. billing.address)
-         */
-        FormForController.prototype.validateField = function (fieldName) {
-            var _this = this;
-            var bindableFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
-            // Run validations and store the result keyed by our bindableFieldName for easier subsequent lookup.
-            if (this.$scope_.$validationRuleset) {
-                this.modelValidator_.validateField(this.$scope_.formFor, fieldName, this.$scope_.$validationRuleset).then(function () {
-                    _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, null);
-                }, function (error) {
-                    _this.$scope_.formForStateHelper.setFieldError(bindableFieldName, error);
-                });
-            }
-        };
-        /**
-         * Validate all registered form-fields.
-         * This method returns a promise that is resolved or rejected with a field to error message map.
-         *
-         * @param showErrors Mark fields with errors as invalid (visually) after validation
-         */
-        FormForController.prototype.validateForm = function (showErrors) {
-            var _this = this;
-            // Reset errors before starting new validation.
-            this.updateCollectionErrors({});
-            this.updateFieldErrors({});
-            var validateCollectionsPromise;
-            var validateFieldsPromise;
-            if (this.$scope_.$validationRuleset) {
-                var validationKeys = [];
-                angular.forEach(this.$scope_.fields, function (fieldDatum) {
-                    validationKeys.push(fieldDatum.fieldName);
-                });
-                validateFieldsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
-                validateFieldsPromise.then(angular.noop, this.updateFieldErrors);
-                validationKeys = []; // Reset for below re-use
-                angular.forEach(this.$scope_.collectionLabels, function (bindableWrapper, bindableFieldName) {
-                    validationKeys.push(bindableFieldName);
-                });
-                validateCollectionsPromise = this.modelValidator_.validateFields(this.$scope_.formFor, validationKeys, this.$scope_.$validationRuleset);
-                validateCollectionsPromise.then(angular.noop, this.updateCollectionErrors);
-            }
-            else {
-                validateCollectionsPromise = this.promiseUtils_.resolve();
-                validateFieldsPromise = this.promiseUtils_.resolve();
-            }
-            var deferred = this.promiseUtils_.defer();
-            this.promiseUtils_.waitForAll([validateCollectionsPromise, validateFieldsPromise]).then(deferred.resolve, function (errors) {
-                // If all collections are valid (or no collections exist) this will be an empty array.
-                if (angular.isArray(errors[0]) && errors[0].length === 0) {
-                    errors.splice(0, 1);
-                }
-                // Errors won't be shown for clean fields, so mark errored fields as dirty.
-                if (showErrors) {
-                    angular.forEach(errors, function (errorObjectOrArray) {
-                        var flattenedFields = _this.nestedObjectHelper_.flattenObjectKeys(errorObjectOrArray);
-                        angular.forEach(flattenedFields, function (fieldName) {
-                            var error = _this.nestedObjectHelper_.readAttribute(errorObjectOrArray, fieldName);
-                            if (error) {
-                                var bindableFieldName = _this.nestedObjectHelper_.flattenAttribute(fieldName);
-                                _this.$scope_.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);
-                            }
-                        });
-                    });
-                }
-                deferred.reject(errors);
-            });
-            return deferred.promise;
-        };
-        return FormForController;
-    })();
-    formFor.FormForController = FormForController;
-})(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    /**
-     * UID generator for formFor input fields.
-     * @see http://stackoverflow.com/questions/6248666/how-to-generate-short-uid-like-ax4j9z-in-js
-     *
-     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
-     */
-    var FormForGUID = (function () {
-        function FormForGUID() {
-        }
-        /**
-         * Create a new GUID.
-         */
-        FormForGUID.create = function () {
-            return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).slice(-4);
-        };
-        return FormForGUID;
-    })();
-    formFor.FormForGUID = FormForGUID;
-})(formFor || (formFor = {}));
+/// <reference path="nested-object-helper.ts" />
 var formFor;
 (function (formFor) {
     /*
@@ -2152,218 +2379,6 @@ var formFor;
         return FormForStateHelper;
     })();
     formFor.FormForStateHelper = FormForStateHelper;
-})(formFor || (formFor = {}));
-/// <reference path="../../definitions/angular.d.ts" />
-var formFor;
-(function (formFor) {
-    /**
-     * Helper utility to simplify working with nested objects.
-     *
-     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
-     */
-    var NestedObjectHelper = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $parse Injector-supplied $parse service
-         */
-        function NestedObjectHelper($parse) {
-            this.$parse_ = $parse;
-        }
-        /**
-         * Converts a field name (which may contain dots or array indices) into a string that can be used to key an object.
-         * e.g. a field name like 'items[0].name' would be converted into 'items___0______name'
-         *
-         * @param fieldName Attribute (or dot-notation path) to read
-         * @returns Modified field name safe to use as an object key
-         */
-        NestedObjectHelper.prototype.flattenAttribute = function (fieldName) {
-            return fieldName.replace(/\[([^\]]+)\]\.{0,1}/g, '___$1___').replace(/\./g, '___');
-        };
-        /**
-         * Crawls an object and returns a flattened set of all attributes using dot notation.
-         * This converts an Object like: {foo: {bar: true}, baz: true} into an Array like ['foo', 'foo.bar', 'baz'].
-         *
-         * @param object Object to be flattened
-         * @returns Array of flattened keys (perhaps containing dot notation)
-         */
-        NestedObjectHelper.prototype.flattenObjectKeys = function (object) {
-            var keys = [];
-            var queue = [{
-                object: object,
-                prefix: null
-            }];
-            while (true) {
-                if (queue.length === 0) {
-                    break;
-                }
-                var data = queue.pop();
-                var prefix = data.prefix ? data.prefix + '.' : '';
-                if (typeof data.object === 'object') {
-                    for (var prop in data.object) {
-                        var path = prefix + prop;
-                        var value = data.object[prop];
-                        keys.push(path);
-                        queue.push({
-                            object: value,
-                            prefix: path
-                        });
-                    }
-                }
-            }
-            return keys;
-        };
-        /**
-         * Returns the value defined by the specified attribute.
-         * This function guards against dot notation for nested references (ex. 'foo.bar').
-         *
-         * @param object Object ot be read
-         * @param fieldName Attribute (or dot-notation path) to read
-         * @returns Value defined at the specified key
-         */
-        NestedObjectHelper.prototype.readAttribute = function (object, fieldName) {
-            return this.$parse_(fieldName)(object);
-        };
-        /**
-         * Writes the specified value to the specified attribute.
-         * This function guards against dot notation for nested references (ex. 'foo.bar').
-         *
-         * @param object Object ot be updated
-         * @param fieldName Attribute (or dot-notation path) to update
-         * @param value Value to be written
-         */
-        NestedObjectHelper.prototype.writeAttribute = function (object, fieldName, value) {
-            this.initializeArraysAndObjectsForParse_(object, fieldName);
-            this.$parse_(fieldName).assign(object, value);
-        };
-        // Helper methods ////////////////////////////////////////////////////////////////////////////////////////////////////
-        // For Angular 1.2.21 and below, $parse does not handle array brackets gracefully.
-        // Essentially we need to create Arrays that don't exist yet or objects within array indices that don't yet exist.
-        // @see https://github.com/angular/angular.js/issues/2845
-        NestedObjectHelper.prototype.initializeArraysAndObjectsForParse_ = function (object, attribute) {
-            var startOfArray = 0;
-            while (true) {
-                startOfArray = attribute.indexOf('[', startOfArray);
-                if (startOfArray < 0) {
-                    break;
-                }
-                var arrayAttribute = attribute.substr(0, startOfArray);
-                var possibleArray = this.readAttribute(object, arrayAttribute);
-                // Create the Array if it doesn't yet exist
-                if (!possibleArray) {
-                    possibleArray = [];
-                    this.writeAttribute(object, arrayAttribute, possibleArray);
-                }
-                // Create an empty Object in the Array if the user is about to write to one (and one does not yet exist)
-                var match = attribute.substr(startOfArray).match(/([0-9]+)\]\./);
-                if (match) {
-                    var targetIndex = parseInt(match[1]);
-                    if (!possibleArray[targetIndex]) {
-                        possibleArray[targetIndex] = {};
-                    }
-                }
-                // Increment and keep scanning
-                startOfArray++;
-            }
-        };
-        return NestedObjectHelper;
-    })();
-    formFor.NestedObjectHelper = NestedObjectHelper;
-})(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    /**
-     * Supplies $q service with additional methods.
-     *
-     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
-     */
-    var PromiseUtils = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $q Injector-supplied $q service
-         */
-        function PromiseUtils($q) {
-            this.$q_ = $q;
-        }
-        /**
-         * @inheritDoc
-         */
-        PromiseUtils.prototype.all = function (promises) {
-            return this.$q_.all(promises);
-        };
-        /**
-         * @inheritDoc
-         */
-        PromiseUtils.prototype.defer = function () {
-            return this.$q_.defer();
-        };
-        /**
-         * Similar to $q.reject, this is a convenience method to create and resolve a Promise.
-         *
-         * @param data Value to resolve the promise with
-         * @returns A resolved promise
-         */
-        PromiseUtils.prototype.resolve = function (data) {
-            var deferred = this.$q_.defer();
-            deferred.resolve(data);
-            return deferred.promise;
-        };
-        /**
-         * @inheritDoc
-         */
-        PromiseUtils.prototype.reject = function (reason) {
-            return this.$q_.reject(reason);
-        };
-        /**
-         * Similar to $q.all but waits for all promises to resolve/reject before resolving/rejecting.
-         *
-         * @param promises Array of Promises
-         * @returns A promise to be resolved or rejected once all of the observed promises complete
-         */
-        PromiseUtils.prototype.waitForAll = function (promises) {
-            var deferred = this.$q_.defer();
-            var results = {};
-            var counter = 0;
-            var errored = false;
-            function udpateResult(key, data) {
-                if (!results.hasOwnProperty(key)) {
-                    results[key] = data;
-                    counter--;
-                }
-                checkForDone();
-            }
-            function checkForDone() {
-                if (counter === 0) {
-                    if (errored) {
-                        deferred.reject(results);
-                    }
-                    else {
-                        deferred.resolve(results);
-                    }
-                }
-            }
-            angular.forEach(promises, function (promise, key) {
-                counter++;
-                promise.then(function (data) {
-                    udpateResult(key, data);
-                }, function (data) {
-                    errored = true;
-                    udpateResult(key, data);
-                });
-            });
-            checkForDone(); // Handle empty Array
-            return deferred.promise;
-        };
-        /**
-         * @inheritDoc
-         */
-        PromiseUtils.prototype.when = function (value) {
-            return this.$q_.when(value);
-        };
-        return PromiseUtils;
-    })();
-    formFor.PromiseUtils = PromiseUtils;
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {

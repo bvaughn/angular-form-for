@@ -1,3 +1,5 @@
+/// <reference path="nested-object-helper.ts" />
+
 module formFor {
 
   /*

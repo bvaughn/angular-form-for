@@ -1,3 +1,6 @@
+/// <reference path="../services/form-for-configuration.ts" />
+/// <reference path="../utils/form-for-guid.ts" />
+
 module formFor {
 
   /**

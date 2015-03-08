@@ -1,5 +1,8 @@
 /// <reference path="../../definitions/angular.d.ts" />
 /// <reference path="form-for-configuration.ts" />
+/// <reference path="../utils/nested-object-helper.ts" />
+/// <reference path="../utils/promise-utils.ts" />
+
 
 module formFor {
 

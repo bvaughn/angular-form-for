@@ -1,3 +1,7 @@
+/// <reference path="../utils/form-for-controller.ts" />
+/// <reference path="../utils/nested-object-helper.ts" />
+/// <reference path="../utils/promise-utils.ts" />
+
 module formFor {
 
   /**
@@ -45,11 +49,11 @@ module formFor {
       this.$parse_ = $injector.get('$parse');
       this.$sce_ = $injector.get('$sce');
       this.formForConfiguration_ = $injector.get('FormForConfiguration');
-      this.nestedObjectHelper_ = $injector.get('NestedObjectHelper');
       this.modelValidator_ = $injector.get('ModelValidator');
 
       var $q:ng.IQService = $injector.get('$q');
 
+      this.nestedObjectHelper_ = new NestedObjectHelper(this.$parse_);
       this.promiseUtils_ = new PromiseUtils($q);
     }
 
