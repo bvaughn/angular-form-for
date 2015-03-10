@@ -72,54 +72,45 @@ module formFor {
    *                 attribute="accepted">
    * </checkbox-field>
    */
-  export class CheckboxField implements ng.IDirective {
+  export function CheckboxFieldDirective($log:ng.ILogService):ng.IDirective {
+    var fieldHelper:FieldHelper = new FieldHelper(FormForConfiguration);
 
-    require:string = '^formFor';
-    restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/checkbox-field.html';
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/checkbox-field.html',
 
-    scope:any = {
-      attribute: '@',
-      disable: '=',
-      help: '@?',
-      changed: '@?'
-    };
+      scope: {
+        attribute: '@',
+        disable: '=',
+        help: '@?',
+        changed: '@?'
+      },
 
-    private $log_:ng.ILogService;
-    private fieldHelper_:FieldHelper;
+      link: ($scope:CheckboxFieldScope,
+             $element:ng.IAugmentedJQuery,
+             $attributes:ng.IAttributes,
+             formForController:FormForController) => {
+        if (!$scope['attribute']) {
+          $log.error('Missing required field "attribute"');
 
-    /**
-     * Constructor.
-     *
-     * @param $log $injector-supplied $log service
-     * @param FormForConfiguration
-     */
-    constructor($log, FormForConfiguration) {
-      this.$log_ = $log;
-
-      this.fieldHelper_ = new FieldHelper(FormForConfiguration);
-    }
-
-    link($scope:CheckboxFieldScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
-      if (!$scope['attribute']) {
-        this.$log_.error('Missing required field "attribute"');
-
-        return;
-      }
-
-      $scope.tabIndex = $attributes['tabIndex'] || 0;
-
-      $scope.toggle = function toggle() {
-        if (!$scope.disable && !$scope.model.disabled) {
-          $scope.model.bindable = !$scope.model.bindable;
+          return;
         }
-      };
 
-      this.fieldHelper_.manageLabel($scope, $attributes, false);
-      this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
-    }
+        $scope.tabIndex = $attributes['tabIndex'] || 0;
+
+        $scope.toggle = function toggle() {
+          if (!$scope.disable && !$scope.model.disabled) {
+            $scope.model.bindable = !$scope.model.bindable;
+          }
+        };
+
+        fieldHelper.manageLabel($scope, $attributes, false);
+        fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
+      }
+    };
   }
 
   angular.module('formFor').directive('checkboxField',
-    ($log, FormForConfiguration) => new CheckboxField($log, FormForConfiguration));
+    ($log) => CheckboxFieldDirective($log));
 }

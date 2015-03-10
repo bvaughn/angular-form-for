@@ -19,109 +19,106 @@ module formFor {
    *        ng-model="username"
    *        form-for-debounce="false" />
    */
-  export class FormForDebounce implements ng.IDirective {
+  export function FormForDebounceDirective($log:ng.ILogService,
+                                           $sniffer:any,
+                                           $timeout:ng.ITimeoutService,
+                                           formForConfiguration:FormForConfiguration):ng.IDirective {
 
-    priority:number = 99;
-    require:string = 'ngModel';
-    restrict:string = 'A';
+    return {
+      priority: 99,
+      require: 'ngModel',
+      restrict: 'A',
 
-    /**
-     * Scope.
-     *
-     * @param formForDebounce Debounce duration in milliseconds.
-     *                        By default this value is 1000ms.
-     *                        To disable the debounce interval (to update on blur) a value of false should be specified.
-     */
-    scope:any = {
-      formForDebounce: '@'
-    };
+      /**
+       * Scope.
+       *
+       * @param formForDebounce Debounce duration in milliseconds.
+       *                        By default this value is 1000ms.
+       *                        To disable the debounce interval (to update on blur) a value of false should be specified.
+       */
+      scope: {
+        formForDebounce: '@'
+      },
 
-    private $log_:ng.ILogService;
-    private $sniffer_:any;
-    private $timeout_:ng.ITimeoutService;
-    private formForConfiguration_:FormForConfiguration;
+      link: ($scope:ng.IScope,
+             $element:ng.IAugmentedJQuery,
+             $attributes:ng.IAttributes,
+             ngModelController:ng.INgModelController) => {
 
-    constructor($log:ng.ILogService, $sniffer:any, $timeout:ng.ITimeoutService, formForConfiguration:FormForConfiguration) {
-      this.$log_ = $log;
-      this.$sniffer_ = $sniffer;
-      this.$timeout_ = $timeout;
-      this.formForConfiguration_ = formForConfiguration;
-    }
+        if ($attributes['type'] === 'radio' || $attributes['type'] === 'checkbox') {
+          $log.warn("formForDebounce should only be used with <input type=text> and <textarea> elements");
 
-    link($scope:ng.IScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, ngModelController:ng.INgModelController):void {
-      if ($attributes['type'] === 'radio' || $attributes['type'] === 'checkbox') {
-        this.$log_.warn("formForDebounce should only be used with <input type=text> and <textarea> elements");
+          return;
+        }
 
-        return;
-      }
+        var durationAttributeValue:any = $attributes['formForDebounce'];
+        var duration:any = formForConfiguration.defaultDebounceDuration;
 
-      var durationAttributeValue:any = $attributes['formForDebounce'];
-      var duration:any = this.formForConfiguration_.defaultDebounceDuration;
+        // Debounce can be configured for blur-only by passing a value of 'false'.
+        if (durationAttributeValue !== undefined) {
+          if (durationAttributeValue.toString() === 'false') {
+            duration = false;
+          } else {
+            durationAttributeValue = parseInt(durationAttributeValue);
 
-      // Debounce can be configured for blur-only by passing a value of 'false'.
-      if (durationAttributeValue !== undefined) {
-        if (durationAttributeValue.toString() === 'false') {
-          duration = false;
-        } else {
-          durationAttributeValue = parseInt(durationAttributeValue);
-
-          if (angular.isNumber(durationAttributeValue) && !isNaN(durationAttributeValue)) {
-            duration = durationAttributeValue;
+            if (angular.isNumber(durationAttributeValue) && !isNaN(durationAttributeValue)) {
+              duration = durationAttributeValue;
+            }
           }
         }
-      }
 
-      // Older IEs do not have 'input' events - and trying to access them can cause TypeErrors.
-      // Angular's ngModel falls back to 'keydown' and 'paste' events in this case, so we must also.
-      if (this.$sniffer_.hasEvent('input')) {
-        $element.off('input');
-      } else {
-        $element.off('keydown');
-
-        if (this.$sniffer_.hasEvent('paste')) {
-          $element.off('paste');
-        }
-      }
-
-      var debounceTimeoutId:ng.IPromise<any>;
-
-      if (duration !== false) {
-        var inputChangeHandler = () => {
-          this.$timeout_.cancel(debounceTimeoutId);
-
-          debounceTimeoutId = this.$timeout_(() => {
-            $scope.$apply(() => {
-              ngModelController.$setViewValue($element.val());
-            });
-          }, duration);
-        };
-
-        if (this.$sniffer_.hasEvent('input')) {
-          $element.on('input', undefined, inputChangeHandler);
+        // Older IEs do not have 'input' events - and trying to access them can cause TypeErrors.
+        // Angular's ngModel falls back to 'keydown' and 'paste' events in this case, so we must also.
+        if ($sniffer.hasEvent('input')) {
+          $element.off('input');
         } else {
-          $element.on('keydown', undefined, inputChangeHandler);
+          $element.off('keydown');
 
-          if (this.$sniffer_.hasEvent('paste')) {
-            $element.on('paste', undefined, inputChangeHandler);
+          if ($sniffer.hasEvent('paste')) {
+            $element.off('paste');
           }
         }
-      }
 
-      $element.on('blur', undefined, () => {
-        $scope.$apply(function() {
-          ngModelController.$setViewValue($element.val());
+        var debounceTimeoutId:ng.IPromise<any>;
+
+        if (duration !== false) {
+          var inputChangeHandler = () => {
+            $timeout.cancel(debounceTimeoutId);
+
+            debounceTimeoutId = $timeout(() => {
+              $scope.$apply(() => {
+                ngModelController.$setViewValue($element.val());
+              });
+            }, duration);
+          };
+
+          if ($sniffer.hasEvent('input')) {
+            $element.on('input', undefined, inputChangeHandler);
+          } else {
+            $element.on('keydown', undefined, inputChangeHandler);
+
+            if ($sniffer.hasEvent('paste')) {
+              $element.on('paste', undefined, inputChangeHandler);
+            }
+          }
+        }
+
+        $element.on('blur', undefined, () => {
+          $scope.$apply(function () {
+            ngModelController.$setViewValue($element.val());
+          });
         });
-      });
 
-      $scope.$on('$destroy', () => {
-        if (debounceTimeoutId) {
-          this.$timeout_.cancel(debounceTimeoutId);
-        }
-      });
-    }
+        $scope.$on('$destroy', () => {
+          if (debounceTimeoutId) {
+            $timeout.cancel(debounceTimeoutId);
+          }
+        });
+      }
+    };
   }
 
   angular.module('formFor').directive('formForDebounce',
     ($log, $sniffer, $timeout, FormForConfiguration) =>
-      new FormForDebounce($log, $sniffer, $timeout, FormForConfiguration));
+      FormForDebounceDirective($log, $sniffer, $timeout, FormForConfiguration));
 }

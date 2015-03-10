@@ -176,146 +176,140 @@ module formFor {
    *             icon-after="{pristine: 'fa fa-user', invalid: 'fa fa-times', valid: 'fa fa-check'}">
    * </text-field>
    */
-  export class TextField implements ng.IDirective {
+  export function TextFieldDirective($log:ng.ILogService,
+                                     $timeout:ng.ITimeoutService,
+                                     fieldHelper:FieldHelper):ng.IDirective {
 
-    require:string = '^formFor';
-    restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/text-field.html';
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/text-field.html',
 
-    scope:any = {
-      attribute: '@',
-      debounce: '@?',
-      disable: '=',
-      focused: '&?',
-      blurred: '&?',
-      help: '@?',
-      iconAfterClicked: '&?',
-      iconBeforeClicked: '&?',
-      placeholder: '@?',
-      rows: '=?'
+      scope: {
+        attribute: '@',
+        debounce: '@?',
+        disable: '=',
+        focused: '&?',
+        blurred: '&?',
+        help: '@?',
+        iconAfterClicked: '&?',
+        iconBeforeClicked: '&?',
+        placeholder: '@?',
+        rows: '=?'
+      },
+
+      link: ($scope:TextFieldScope,
+             $element:ng.IAugmentedJQuery,
+             $attributes:ng.IAttributes,
+             formForController:FormForController) => {
+
+        if (!$scope.attribute) {
+          $log.error('Missing required field "attribute"');
+
+          return;
+        }
+
+        // Expose textField attributes to textField template partials for easier customization (see issue #61)
+        $scope.attributes = $attributes;
+
+        $scope.rows = $scope.rows || 3;
+        $scope.type = $attributes['type'] || 'text';
+        $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes['multiline'] !== 'false';
+        $scope.tabIndex = $attributes['tabIndex'] || 0;
+
+        if ($attributes.hasOwnProperty('autofocus')) {
+          $timeout(() => {
+            $element.find($scope.multiline ? 'textarea' : 'input')[0].focus();
+          });
+        }
+
+        fieldHelper.manageLabel($scope, $attributes, false);
+        fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
+
+        // Update $scope.iconAfter based on the field state (see class-level documentation for more)
+        if ($attributes['iconAfter']) {
+          var updateIconAfter:(value?:any) => any = () => {
+            if (!$scope.model) {
+              return;
+            }
+
+            var iconAfter:any =
+              $attributes['iconAfter'].charAt(0) === '{' ?
+                $scope.$eval($attributes['iconAfter']) :
+                $attributes['iconAfter'];
+
+            if (angular.isObject(iconAfter)) {
+              if ($scope.model.error) {
+                $scope.iconAfter = iconAfter['invalid'];
+              } else if ($scope.model.pristine) {
+                $scope.iconAfter = iconAfter['pristine'];
+              } else {
+                $scope.iconAfter = iconAfter['valid'];
+              }
+            } else {
+              $scope.iconAfter = iconAfter;
+            }
+          };
+
+          $attributes.$observe('iconAfter', updateIconAfter);
+          $scope.$watch('model.error', updateIconAfter);
+          $scope.$watch('model.pristine', updateIconAfter);
+        }
+
+        // Update $scope.iconBefore based on the field state (see class-level documentation for more)
+        if ($attributes['iconBefore']) {
+          var updateIconBefore:(value?:any) => any = () => {
+            if (!$scope.model) {
+              return;
+            }
+
+            var iconBefore:any =
+              $attributes['iconBefore'].charAt(0) === '{' ?
+                $scope.$eval($attributes['iconBefore']) :
+                $attributes['iconBefore'];
+
+            if (angular.isObject(iconBefore)) {
+              if ($scope.model.error) {
+                $scope.iconBefore = iconBefore['invalid'];
+              } else if ($scope.model.pristine) {
+                $scope.iconBefore = iconBefore['pristine'];
+              } else {
+                $scope.iconBefore = iconBefore['valid'];
+              }
+            } else {
+              $scope.iconBefore = iconBefore;
+            }
+          };
+
+          $attributes.$observe('iconBefore', updateIconBefore);
+          $scope.$watch('model.error', updateIconBefore);
+          $scope.$watch('model.pristine', updateIconBefore);
+        }
+
+        $scope.onIconAfterClick = () => {
+          if ($attributes.hasOwnProperty('iconAfterClicked')) {
+            $scope.iconAfterClicked();
+          }
+        };
+        $scope.onIconBeforeClick = () => {
+          if ($attributes.hasOwnProperty('iconBeforeClicked')) {
+            $scope.iconBeforeClicked();
+          }
+        };
+        $scope.onFocus = () => {
+          if ($attributes.hasOwnProperty('focused')) {
+            $scope.focused();
+          }
+        };
+        $scope.onBlur = () => {
+          if ($attributes.hasOwnProperty('blurred')) {
+            $scope.blurred();
+          }
+        };
+      }
     };
-
-    private $log_:ng.ILogService;
-    private $timeout_:ng.ITimeoutService;
-    private fieldHelper_:FieldHelper;
-
-    constructor($log:ng.ILogService, $timeout:ng.ITimeoutService, fieldHelper:FieldHelper) {
-      this.$log_ = $log;
-      this.$timeout_ = $timeout;
-      this.fieldHelper_ = fieldHelper;
-    }
-
-    link($scope:TextFieldScope,
-         $element:ng.IAugmentedJQuery,
-         $attributes:ng.IAttributes,
-         formForController:FormForController):void {
-
-      if (!$scope.attribute) {
-        this.$log_.error('Missing required field "attribute"');
-
-        return;
-      }
-
-      // Expose textField attributes to textField template partials for easier customization (see issue #61)
-      $scope.attributes = $attributes;
-
-      $scope.rows = $scope.rows || 3;
-      $scope.type = $attributes['type'] || 'text';
-      $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes['multiline'] !== 'false';
-      $scope.tabIndex = $attributes['tabIndex'] || 0;
-
-      if ($attributes.hasOwnProperty('autofocus')) {
-        this.$timeout_(() => {
-          $element.find( $scope.multiline ? 'textarea' : 'input' )[0].focus();
-        });
-      }
-
-      this.fieldHelper_.manageLabel($scope, $attributes, false);
-      this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
-
-      // Update $scope.iconAfter based on the field state (see class-level documentation for more)
-      if ($attributes['iconAfter']) {
-        var updateIconAfter:(value?:any) => any = () => {
-          if (!$scope.model) {
-            return;
-          }
-
-          var iconAfter:any =
-            $attributes['iconAfter'].charAt(0) === '{' ?
-              $scope.$eval($attributes['iconAfter']) :
-              $attributes['iconAfter'];
-
-          if (angular.isObject(iconAfter)) {
-            if ($scope.model.error) {
-              $scope.iconAfter = iconAfter['invalid'];
-            } else if ($scope.model.pristine) {
-              $scope.iconAfter = iconAfter['pristine'];
-            } else {
-              $scope.iconAfter = iconAfter['valid'];
-            }
-          } else {
-            $scope.iconAfter = iconAfter;
-          }
-        };
-
-        $attributes.$observe('iconAfter', updateIconAfter);
-        $scope.$watch('model.error', updateIconAfter);
-        $scope.$watch('model.pristine', updateIconAfter);
-      }
-
-      // Update $scope.iconBefore based on the field state (see class-level documentation for more)
-      if ($attributes['iconBefore']) {
-        var updateIconBefore:(value?:any) => any = () => {
-          if (!$scope.model) {
-            return;
-          }
-
-          var iconBefore:any =
-            $attributes['iconBefore'].charAt(0) === '{' ?
-              $scope.$eval($attributes['iconBefore']) :
-              $attributes['iconBefore'];
-
-          if (angular.isObject(iconBefore)) {
-            if ($scope.model.error) {
-              $scope.iconBefore = iconBefore['invalid'];
-            } else if ($scope.model.pristine) {
-              $scope.iconBefore = iconBefore['pristine'];
-            } else {
-              $scope.iconBefore = iconBefore['valid'];
-            }
-          } else {
-            $scope.iconBefore = iconBefore;
-          }
-        };
-
-        $attributes.$observe('iconBefore', updateIconBefore);
-        $scope.$watch('model.error', updateIconBefore);
-        $scope.$watch('model.pristine', updateIconBefore);
-      }
-
-      $scope.onIconAfterClick = () => {
-        if ($attributes.hasOwnProperty('iconAfterClicked')) {
-          $scope.iconAfterClicked();
-        }
-      };
-      $scope.onIconBeforeClick = () => {
-        if ($attributes.hasOwnProperty('iconBeforeClicked')) {
-          $scope.iconBeforeClicked();
-        }
-      };
-      $scope.onFocus = () => {
-        if ($attributes.hasOwnProperty('focused')) {
-          $scope.focused();
-        }
-      };
-      $scope.onBlur = () => {
-        if ($attributes.hasOwnProperty('blurred')) {
-          $scope.blurred();
-        }
-      };
-    }
   }
 
   angular.module('formFor').directive('textField',
-    ($log, $timeout, FieldHelper) => new TextField($log, $timeout, FieldHelper));
+    ($log, $timeout, FieldHelper) => TextFieldDirective($log, $timeout, FieldHelper));
 }
