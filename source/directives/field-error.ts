@@ -26,21 +26,23 @@ module formFor {
    * <field-error error="This is an error message">
    * </field-error>
    */
-  export class FieldError implements ng.IDirective {
+  export function FieldErrorDirective():ng.IDirective {
+    return {
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/field-error.html',
 
-    restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/field-error.html';
+      scope: {
+        error: '=',
+        leftAligned: '@?',
+        uid: '@'
+      },
 
-    scope:any = {
-      error: '=',
-      leftAligned: '@?',
-      uid: '@'
+      link: function($scope:FieldErrorScope):void {
+        console.log('FieldError directive $scope:'+$scope.$id); // TODO Testing
+        // No-op
+      }
     };
-
-    link: ($scope:FieldErrorScope) => {
-      // No-op
-    }
   }
 
-  angular.module('formFor').directive('fieldError', () => new FieldError());
+  angular.module('formFor').directive('fieldError', FieldErrorDirective);
 }

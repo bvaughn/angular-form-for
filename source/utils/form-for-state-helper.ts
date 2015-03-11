@@ -9,29 +9,33 @@ module formFor {
    */
   export class FormForStateHelper {
 
-    private $scope_:FormForScope;
     private fieldNameToErrorMap_:{[fieldName:string]:string};
     private fieldNameToModifiedStateMap_:{[fieldName:string]:boolean};
+    private formForScope_:FormForScope;
     private formSubmitted_:boolean;
     private nestedObjectHelper_:NestedObjectHelper;
-    private watchableCounter_:number;
+
+    /**
+     * $scope.$watch this value for notification of form-state changes.
+     */
+    public watchable:number;
 
     // TODO Add some documentation
     constructor($parse:ng.IParseService, $scope:FormForScope) {
-      this.$scope_ = $scope;
+      this.formForScope_ = $scope;
       this.nestedObjectHelper_ = new NestedObjectHelper($parse);
 
-      this.$scope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
-      this.$scope_.valid = true;
+      this.formForScope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
+      this.formForScope_.valid = true;
 
       this.fieldNameToModifiedStateMap_ = {};
       this.formSubmitted_ = false;
       this.fieldNameToErrorMap_ = {};
-      this.watchableCounter_ = 0;
+      this.watchable = 0;
     }
 
     public getFieldError(fieldName:string):string {
-      return this.nestedObjectHelper_.readAttribute(this.$scope_.fieldNameToErrorMap, fieldName);
+      return this.nestedObjectHelper_.readAttribute(this.formForScope_.fieldNameToErrorMap, fieldName);
     }
 
     public hasFieldBeenModified(fieldName:string):boolean {
@@ -55,13 +59,13 @@ module formFor {
     }
 
     public resetFieldErrors():void {
-      this.$scope_.fieldNameToErrorMap = {};
+      this.formForScope_.fieldNameToErrorMap = {};
     }
 
     public setFieldError(fieldName:string, error:string):void {
       var safeFieldName:string = this.nestedObjectHelper_.flattenAttribute(fieldName);
 
-      this.nestedObjectHelper_.writeAttribute(this.$scope_.fieldNameToErrorMap, fieldName, error);
+      this.nestedObjectHelper_.writeAttribute(this.formForScope_.fieldNameToErrorMap, fieldName, error);
 
       if (error) {
         this.fieldNameToErrorMap_[safeFieldName] = error;
@@ -69,19 +73,19 @@ module formFor {
         delete this.fieldNameToErrorMap_[safeFieldName];
       }
 
-      this.$scope_.valid = this.isFormValid();
-      this.watchableCounter_++;
+      this.formForScope_.valid = this.isFormValid();
+      this.watchable++;
     }
 
     public setFieldHasBeenModified(fieldName:string, hasBeenModified:boolean):void {
       this.nestedObjectHelper_.writeAttribute(this.fieldNameToModifiedStateMap_, fieldName, hasBeenModified);
 
-      this.watchableCounter_++;
+      this.watchable++;
     }
 
     public setFormSubmitted(submitted:boolean):void {
       this.formSubmitted_ = submitted;
-      this.watchableCounter_++;
+      this.watchable++;
     }
   }
 }

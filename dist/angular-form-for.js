@@ -439,20 +439,23 @@ var formFor;
      * <field-error error="This is an error message">
      * </field-error>
      */
-    var FieldError = (function () {
-        function FieldError() {
-            this.restrict = 'EA';
-            this.templateUrl = 'form-for/templates/field-error.html';
-            this.scope = {
+    function FieldErrorDirective() {
+        return {
+            restrict: 'EA',
+            templateUrl: 'form-for/templates/field-error.html',
+            scope: {
                 error: '=',
                 leftAligned: '@?',
                 uid: '@'
-            };
-        }
-        return FieldError;
-    })();
-    formFor.FieldError = FieldError;
-    angular.module('formFor').directive('fieldError', function () { return new FieldError(); });
+            },
+            link: function ($scope) {
+                console.log('FieldError directive $scope:' + $scope.$id); // TODO Testing
+                // No-op
+            }
+        };
+    }
+    formFor.FieldErrorDirective = FieldErrorDirective;
+    angular.module('formFor').directive('fieldError', FieldErrorDirective);
 })(formFor || (formFor = {}));
 /// <reference path="../services/form-for-configuration.ts" />
 var formFor;
@@ -465,40 +468,35 @@ var formFor;
      * <field-label label="Username"
      *              help="This will be visible to other users">
      * </field-label>
+     *
+     * @param $sce $injector-supplied $sce service
+     * @param formForConfiguration
      */
-    var FieldLabel = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $sce $injector-supplied $sce service
-         * @param formForConfiguration
-         */
-        function FieldLabel($sce, formForConfiguration) {
-            this.replace = true; // Necessary for CSS sibling selectors
-            this.restrict = 'EA';
-            this.templateUrl = 'form-for/templates/field-label.html';
-            this.scope = {
+    function FieldLabelDirective($sce, formForConfiguration) {
+        return {
+            replace: true,
+            restrict: 'EA',
+            templateUrl: 'form-for/templates/field-label.html',
+            scope: {
                 inputUid: '@',
                 help: '@?',
                 label: '@',
                 required: '@?',
                 uid: '@'
-            };
-            this.$sce_ = $sce;
-            this.formForConfiguration_ = formForConfiguration;
-        }
-        FieldLabel.prototype.controller = function ($scope) {
-            $scope.$watch('label', function (value) {
-                $scope.bindableLabel = this.$sce_.trustAsHtml(value);
-            });
-            $scope.$watch('required', function (required) {
-                $scope.requiredLabel = $scope.$eval(required) ? this.formForConfiguration_.requiredLabel : null;
-            });
+            },
+            controller: function ($scope) {
+                console.log('FieldLabel directive controller $scope:' + $scope.$id); // TODO Testing
+                $scope.$watch('label', function (value) {
+                    $scope.bindableLabel = $sce.trustAsHtml(value);
+                });
+                $scope.$watch('required', function (required) {
+                    $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration.requiredLabel : null;
+                });
+            }
         };
-        return FieldLabel;
-    })();
-    formFor.FieldLabel = FieldLabel;
-    angular.module('formFor').directive('fieldLabel', function ($sce, FormForConfiguration) { return new FieldLabel($sce, FormForConfiguration); });
+    }
+    formFor.FieldLabelDirective = FieldLabelDirective;
+    angular.module('formFor').directive('fieldLabel', function ($sce, FormForConfiguration) { return FieldLabelDirective($sce, FormForConfiguration); });
 })(formFor || (formFor = {}));
 /// <reference path="../services/form-for-configuration.ts" />
 var formFor;
@@ -536,6 +534,7 @@ var formFor;
                 formForDebounce: '@'
             },
             link: function ($scope, $element, $attributes, ngModelController) {
+                console.log('FormForDebounce directive $scope:' + $scope.$id); // TODO Testing
                 if ($attributes['type'] === 'radio' || $attributes['type'] === 'checkbox') {
                     $log.warn("formForDebounce should only be used with <input type=text> and <textarea> elements");
                     return;
@@ -886,10 +885,11 @@ var formFor;
             };
             $scope.fields[bindableFieldName] = fieldDatum;
             var getter = $parse(fieldName);
+            var setter = getter.assign;
             // Changes made by our field should be synced back to the form-data model.
             fieldDatum.unwatchers.push($scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function (newValue, oldValue) {
                 if (newValue !== oldValue) {
-                    getter.assign($scope.formFor, newValue);
+                    setter($scope.formFor, newValue);
                 }
             }));
             var formDataWatcherInitialized;
@@ -1117,6 +1117,7 @@ var formFor;
                 else if ($scope.$service) {
                     $scope.$validationRuleset = $scope.$service.validationRules;
                 }
+                // Attach FormForController (interface) methods to the directive's controller (this).
                 formFor.createFormForController(this, $parse, promiseUtils, $scope, modelValidator);
                 // Expose controller methods to the shared, bindable $scope.controller
                 if ($scope.controller) {
@@ -1634,36 +1635,33 @@ var formFor;
      * <form form-for="formData">
      *   <button ng-disabled="model.disabled">Submit</button>
      * </form>
+     *
+     * @param $sce $injector-supplied $sce service
      */
-    var SubmitButton = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $sce $injector-supplied $sce service
-         */
-        function SubmitButton($sce) {
-            this.require = '^formFor';
-            this.restrict = 'EA';
-            this.templateUrl = 'form-for/templates/submit-button.html';
-            this.scope = {
+    function SubmitButtonDirective($sce) {
+        return {
+            require: '^formFor',
+            restrict: 'EA',
+            templateUrl: 'form-for/templates/submit-button.html',
+            scope: {
                 disable: '=',
                 icon: '@',
                 label: '@'
-            };
-            this.$sce_ = $sce;
-        }
-        SubmitButton.prototype.link = function ($scope, $element, $attributes, formForController) {
-            $scope['buttonClass'] = $attributes['buttonClass'];
-            $scope.tabIndex = $attributes['tabIndex'] || 0;
-            $scope.$watch('label', function (value) {
-                $scope.bindableLabel = this.$sce_.trustAsHtml(value);
-            });
-            $scope.model = formForController.registerSubmitButton($scope);
+            },
+            link: function ($scope, $element, $attributes, formForController) {
+                console.log('SubmitButton directive link $scope:' + $scope.$id); // TODO Testing
+                $scope['buttonClass'] = $attributes['buttonClass'];
+                $scope.tabIndex = $attributes['tabIndex'] || 0;
+                $scope.$watch('label', function (value) {
+                    $scope.bindableLabel = $sce.trustAsHtml(value);
+                });
+                $scope.model = formForController.registerSubmitButton($scope);
+            }
         };
-        return SubmitButton;
-    })();
-    formFor.SubmitButton = SubmitButton;
-    angular.module('formFor').directive('submitButton', function ($sce) { return new SubmitButton($sce); });
+    }
+    formFor.SubmitButtonDirective = SubmitButtonDirective;
+    ;
+    angular.module('formFor').directive('submitButton', function ($sce) { return SubmitButtonDirective($sce); });
 })(formFor || (formFor = {}));
 /// <reference path="../services/field-helper.ts" />
 var formFor;
@@ -2255,17 +2253,17 @@ var formFor;
     var FormForStateHelper = (function () {
         // TODO Add some documentation
         function FormForStateHelper($parse, $scope) {
-            this.$scope_ = $scope;
+            this.formForScope_ = $scope;
             this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
-            this.$scope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
-            this.$scope_.valid = true;
+            this.formForScope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
+            this.formForScope_.valid = true;
             this.fieldNameToModifiedStateMap_ = {};
             this.formSubmitted_ = false;
             this.fieldNameToErrorMap_ = {};
-            this.watchableCounter_ = 0;
+            this.watchable = 0;
         }
         FormForStateHelper.prototype.getFieldError = function (fieldName) {
-            return this.nestedObjectHelper_.readAttribute(this.$scope_.fieldNameToErrorMap, fieldName);
+            return this.nestedObjectHelper_.readAttribute(this.formForScope_.fieldNameToErrorMap, fieldName);
         };
         FormForStateHelper.prototype.hasFieldBeenModified = function (fieldName) {
             return this.nestedObjectHelper_.readAttribute(this.fieldNameToModifiedStateMap_, fieldName);
@@ -2283,27 +2281,27 @@ var formFor;
             return true;
         };
         FormForStateHelper.prototype.resetFieldErrors = function () {
-            this.$scope_.fieldNameToErrorMap = {};
+            this.formForScope_.fieldNameToErrorMap = {};
         };
         FormForStateHelper.prototype.setFieldError = function (fieldName, error) {
             var safeFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            this.nestedObjectHelper_.writeAttribute(this.$scope_.fieldNameToErrorMap, fieldName, error);
+            this.nestedObjectHelper_.writeAttribute(this.formForScope_.fieldNameToErrorMap, fieldName, error);
             if (error) {
                 this.fieldNameToErrorMap_[safeFieldName] = error;
             }
             else {
                 delete this.fieldNameToErrorMap_[safeFieldName];
             }
-            this.$scope_.valid = this.isFormValid();
-            this.watchableCounter_++;
+            this.formForScope_.valid = this.isFormValid();
+            this.watchable++;
         };
         FormForStateHelper.prototype.setFieldHasBeenModified = function (fieldName, hasBeenModified) {
             this.nestedObjectHelper_.writeAttribute(this.fieldNameToModifiedStateMap_, fieldName, hasBeenModified);
-            this.watchableCounter_++;
+            this.watchable++;
         };
         FormForStateHelper.prototype.setFormSubmitted = function (submitted) {
             this.formSubmitted_ = submitted;
-            this.watchableCounter_++;
+            this.watchable++;
         };
         return FormForStateHelper;
     })();

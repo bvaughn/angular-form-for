@@ -152,7 +152,7 @@ module formFor {
     /**
      * @inheritDocs
      */
-    target.registerFormField = (fieldName:string):BindableFieldWrapper => {
+    target.registerFormField = function(fieldName:string):BindableFieldWrapper {
       if (!fieldName) {
         throw Error('Invalid field name "' + fieldName + '" provided.');
       }
@@ -184,13 +184,14 @@ module formFor {
       $scope.fields[bindableFieldName] = fieldDatum;
 
       var getter:ng.ICompiledExpression = $parse(fieldName);
+      var setter:(context:any, value:any) => any = getter.assign;
 
       // Changes made by our field should be synced back to the form-data model.
       fieldDatum.unwatchers.push(
         $scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable',
           (newValue:any, oldValue:any) => {
             if (newValue !== oldValue) {
-              getter.assign($scope.formFor, newValue);
+              setter($scope.formFor, newValue);
             }
           }));
 
@@ -326,9 +327,9 @@ module formFor {
     /**
      * @inheritDocs
      */
-    target.updateFieldErrors = (fieldNameToErrorMap:{[fieldName:string]:string}) => {
+    target.updateFieldErrors = function(fieldNameToErrorMap:{[fieldName:string]:string}):void {
       angular.forEach($scope.fields,
-        (scope, bindableFieldName) => {
+        function(scope, bindableFieldName):void {
           var error:string = nestedObjectHelper.readAttribute(fieldNameToErrorMap, scope.fieldName);
 
           $scope.formForStateHelper.setFieldError(bindableFieldName, error);
@@ -338,7 +339,7 @@ module formFor {
     /**
      * @inheritDocs
      */
-    target.validateField = (fieldName:string) => {
+    target.validateField = function(fieldName:string):void {
       var bindableFieldName = nestedObjectHelper.flattenAttribute(fieldName);
 
       $scope.formForStateHelper.setFieldHasBeenModified(bindableFieldName, true);

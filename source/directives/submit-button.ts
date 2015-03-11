@@ -55,45 +55,38 @@ module formFor {
    * <form form-for="formData">
    *   <button ng-disabled="model.disabled">Submit</button>
    * </form>
+   *
+   * @param $sce $injector-supplied $sce service
    */
-  export class SubmitButton implements ng.IDirective {
+  export function SubmitButtonDirective($sce:ng.ISCEService):ng.IDirective {
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/submit-button.html',
 
-    require:string = '^formFor';
-    restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/submit-button.html';
+      scope: {
+        disable: '=',
+        icon: '@',
+        label: '@'
+      },
 
-    scope:any = {
-      disable: '=',
-      icon: '@',
-      label: '@'
-    };
+      link: function($scope:SubmitButtonScope,
+                     $element:ng.IAugmentedJQuery,
+                     $attributes:ng.IAttributes,
+                     formForController:FormForController):void {
 
-    private $sce_:ng.ISCEService;
+        console.log('SubmitButton directive link $scope:'+$scope.$id); // TODO Testing
+        $scope['buttonClass'] = $attributes['buttonClass'];
+        $scope.tabIndex = $attributes['tabIndex'] || 0;
 
-    /**
-     * Constructor.
-     *
-     * @param $sce $injector-supplied $sce service
-     */
-    constructor($sce:ng.ISCEService) {
-      this.$sce_ = $sce;
+        $scope.$watch('label', function (value) {
+          $scope.bindableLabel = $sce.trustAsHtml(value);
+        });
+
+        $scope.model = formForController.registerSubmitButton($scope);
+      }
     }
+  };
 
-    link($scope:SubmitButtonScope,
-         $element:ng.IAugmentedJQuery,
-         $attributes:ng.IAttributes,
-         formForController:FormForController):void {
-
-      $scope['buttonClass'] = $attributes['buttonClass'];
-      $scope.tabIndex = $attributes['tabIndex'] || 0;
-
-      $scope.$watch('label', function(value) {
-        $scope.bindableLabel = this.$sce_.trustAsHtml(value);
-      });
-
-      $scope.model = formForController.registerSubmitButton($scope);
-    }
-  }
-
-  angular.module('formFor').directive('submitButton', ($sce) => new SubmitButton($sce));
+  angular.module('formFor').directive('submitButton', ($sce) => SubmitButtonDirective($sce));
 }

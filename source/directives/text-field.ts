@@ -198,10 +198,10 @@ module formFor {
         rows: '=?'
       },
 
-      link: ($scope:TextFieldScope,
-             $element:ng.IAugmentedJQuery,
-             $attributes:ng.IAttributes,
-             formForController:FormForController) => {
+      link: function($scope:TextFieldScope,
+                     $element:ng.IAugmentedJQuery,
+                     $attributes:ng.IAttributes,
+                     formForController:FormForController):void {
 
         if (!$scope.attribute) {
           $log.error('Missing required field "attribute"');

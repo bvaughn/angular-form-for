@@ -50,46 +50,37 @@ module formFor {
    * <field-label label="Username"
    *              help="This will be visible to other users">
    * </field-label>
+   *
+   * @param $sce $injector-supplied $sce service
+   * @param formForConfiguration
    */
-  export class FieldLabel implements ng.IDirective {
+  export function FieldLabelDirective($sce:ng.ISCEService, formForConfiguration:FormForConfiguration):ng.IDirective {
+    return {
+      replace: true, // Necessary for CSS sibling selectors
+      restrict: 'EA',
+      templateUrl:'form-for/templates/field-label.html',
 
-    replace:boolean = true; // Necessary for CSS sibling selectors
-    restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/field-label.html';
+      scope: {
+        inputUid: '@',
+        help: '@?',
+        label: '@',
+        required: '@?',
+        uid: '@'
+      },
 
-    scope:any = {
-      inputUid: '@',
-      help: '@?',
-      label: '@',
-      required: '@?',
-      uid: '@'
+      controller: function($scope:FieldLabelScope):void {
+        console.log('FieldLabel directive controller $scope:'+$scope.$id); // TODO Testing
+        $scope.$watch('label', function(value) {
+          $scope.bindableLabel = $sce.trustAsHtml(value);
+        });
+
+        $scope.$watch('required', function(required) {
+          $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration.requiredLabel : null;
+        });
+      }
     };
-
-    private $sce_:ng.ISCEService;
-    private formForConfiguration_:FormForConfiguration;
-
-    /**
-     * Constructor.
-     *
-     * @param $sce $injector-supplied $sce service
-     * @param formForConfiguration
-     */
-    constructor($sce:ng.ISCEService, formForConfiguration:FormForConfiguration) {
-      this.$sce_ = $sce;
-      this.formForConfiguration_ = formForConfiguration;
-    }
-
-    controller($scope:FieldLabelScope):void {
-      $scope.$watch('label', function(value) {
-        $scope.bindableLabel = this.$sce_.trustAsHtml(value);
-      });
-
-      $scope.$watch('required', function(required) {
-        $scope.requiredLabel = $scope.$eval(required) ? this.formForConfiguration_.requiredLabel : null;
-      });
-    }
   }
 
   angular.module('formFor').directive('fieldLabel',
-    ($sce, FormForConfiguration) => new FieldLabel($sce, FormForConfiguration));
+    ($sce, FormForConfiguration) => FieldLabelDirective($sce, FormForConfiguration));
 }

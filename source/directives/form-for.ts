@@ -36,7 +36,7 @@ module formFor {
         validationRules: '=?'
       },
 
-      controller: function($scope:FormForScope) {
+      controller: function($scope:FormForScope):void {
         if (!$scope.formFor) {
           $log.error('The form data object specified by <form form-for=""> is null or undefined.');
         }
@@ -106,7 +106,7 @@ module formFor {
         });
       },
 
-      link: ($scope:FormForScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes) => {
+      link: function($scope:FormForScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
         $element.on('submit', undefined, // Override form submit to trigger overall validation.
           () => {
             $scope.formForStateHelper.setFormSubmitted(true);
