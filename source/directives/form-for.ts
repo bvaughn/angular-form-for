@@ -44,6 +44,7 @@ module formFor {
         $scope.fields = {};
         $scope.collectionLabels = {};
         $scope.buttons = [];
+        $scope.controller = $scope.controller || <any> {};
 
         if ($scope.service) {
           $scope.$service = $injector.get($scope.service);

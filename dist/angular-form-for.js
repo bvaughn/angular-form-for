@@ -1106,6 +1106,7 @@ var formFor;
                 $scope.fields = {};
                 $scope.collectionLabels = {};
                 $scope.buttons = [];
+                $scope.controller = $scope.controller || {};
                 if ($scope.service) {
                     $scope.$service = $injector.get($scope.service);
                 }
