@@ -29,7 +29,7 @@ gulp.task('build', function(callback) {
 });
 
 gulp.task('compile', function() {
-  return buildHelper(sources, distDirectory , 'angular-form-for.js');
+  return buildHelper(sources, distDirectory , 'form-for.js');
 });
 
 gulp.task('compileBootstrapTemplates', function() {
@@ -64,7 +64,7 @@ gulp.task('map', function() {
   console.log('CWD: ' + process.cwd() + '/dist');
 
   return shell.task(
-    'uglifyjs --compress --mangle --source-map angular-form-for.min.js.map --source-map-root . -o angular-form-for.min.js -- angular-form-for.js',
+    'uglifyjs --compress --mangle --source-map form-for.min.js.map --source-map-root . -o form-for.min.js -- form-for.js',
     {cwd: process.cwd() + '/dist'}
   )();
 });
@@ -96,7 +96,7 @@ gulp.task('uglify', function() {
   var fs = require('fs');
   var uglifyJs = require('uglify-js2');
 
-  var code = fs.readFileSync('dist/angular-form-for.js', 'utf8');
+  var code = fs.readFileSync('dist/form-for.js', 'utf8');
 
   var parsed = uglifyJs.parse(code);
   parsed.figure_out_scope();
@@ -108,7 +108,7 @@ gulp.task('uglify', function() {
 
   var finalCode = compressed.print_to_string();
 
-  fs.writeFileSync('dist/angular-form-for.min.js', finalCode);
+  fs.writeFileSync('dist/form-for.min.js', finalCode);
 });
 
 var buildHelper = function(sources, directory, outputFile) {

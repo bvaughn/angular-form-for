@@ -17,7 +17,7 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/jasmine-object-matchers/dist/jasmine-object-matchers.js',
       'bower_components/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
-      'dist/angular-form-for.js',
+      'dist/form-for.js',
       'tests/**/*.js',
       'templates/**/*.html'
     ],
