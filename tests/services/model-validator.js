@@ -220,6 +220,90 @@ describe('ModelValidator', function() {
     });
   });
 
+  describe('validateField minimum', function() {
+    beforeEach(function () {
+      model.rules = {
+        minimumField: {
+          minimum: 2
+        }
+      };
+    });
+
+    it('should not reject null or undefined value', function () {
+      expect(ModelValidator.validateField({minimumField: null}, 'minimumField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({minimumField: undefined}, 'minimumField', model.rules)).toBeResolved();
+    });
+
+    it('should not reject an empty string', function () {
+      expect(ModelValidator.validateField({minimumField: ''}, 'minimumField', model.rules)).toBeResolved();
+    });
+
+    it('should reject a number less than the required minimum', function () {
+      expect(ModelValidator.validateField({minimumField: 1}, 'minimumField', model.rules)).toBeRejected();
+    });
+
+    it('should allow a number greater than or equal to the required minimum', function () {
+      expect(ModelValidator.validateField({minimumField: 2}, 'minimumField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({mininumField: 3}, 'mininumField', model.rules)).toBeResolved();
+    });
+
+    it('should allow custom error messages for failed validations', function() {
+      model.rules = {
+        mininumField: {
+          minimum: {
+            rule: 2,
+            message: 'foobar'
+          }
+        }
+      };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({mininumField: 1}, 'mininumField', model.rules), 'foobar');
+    });
+  });
+
+  describe('validateField maximum', function() {
+    beforeEach(function () {
+      model.rules = {
+        maximumField: {
+          maximum: 2
+        }
+      };
+    });
+
+    it('should not reject null or undefined value', function () {
+      expect(ModelValidator.validateField({maximumField: null}, 'maximumField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({maximumField: undefined}, 'maximumField', model.rules)).toBeResolved();
+    });
+
+    it('should not reject an empty string', function () {
+      expect(ModelValidator.validateField({maximumField: ''}, 'maximumField', model.rules)).toBeResolved();
+    });
+
+    it('should reject a number greater than the required minimum', function () {
+      expect(ModelValidator.validateField({maximumField: 3}, 'maximumField', model.rules)).toBeRejected();
+    });
+
+    it('should allow a number lesser than or equal to the required minimum', function () {
+      expect(ModelValidator.validateField({maximumField: 1}, 'maximumField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({maximumField: 2}, 'maximumField', model.rules)).toBeResolved();
+    });
+
+    it('should allow custom error messages for failed validations', function() {
+      model.rules = {
+        maximumField: {
+          maximum: {
+            rule: 2,
+            message: 'foobar'
+          }
+        }
+      };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({maximumField: 3}, 'maximumField', model.rules), 'foobar');
+    });
+  });
+
   describe('validateField type', function() {
     beforeEach(function() {
       model.rules = {

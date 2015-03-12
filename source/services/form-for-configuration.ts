@@ -18,7 +18,9 @@ module formFor {
     private validationFailedForEmailTypeMessage_:string = "Invalid email format";
     private validationFailedForIntegerTypeMessage_:string = "Must be an integer";
     private validationFailedForMaxCollectionSizeMessage_:string = "Must be fewer than {{num}} items";
+    private validationFailedForMaximumMessage_:string = "Must be no more than {{num}}";
     private validationFailedForMaxLengthMessage_:string = "Must be fewer than {{num}} characters";
+    private validationFailedForMinimumMessage_:string = "Must be at least {{num}}";
     private validationFailedForMinCollectionSizeMessage_:string = "Must at least {{num}} items";
     private validationFailedForMinLengthMessage_:string = "Must be at least {{num}} characters";
     private validationFailedForNegativeTypeMessage_:string = "Must be negative";
@@ -86,8 +88,12 @@ module formFor {
           return this.validationFailedForMaxCollectionSizeMessage_;
         case ValidationFailureType.COLLECTION_MIN_SIZE:
           return this.validationFailedForMinCollectionSizeMessage_;
+        case ValidationFailureType.MINIMUM:
+          return this.validationFailedForMinimumMessage_;
         case ValidationFailureType.MAX_LENGTH:
           return this.validationFailedForMaxLengthMessage_;
+        case ValidationFailureType.MAXIMUM:
+          return this.validationFailedForMaximumMessage_;
         case ValidationFailureType.MIN_LENGTH:
           return this.validationFailedForMinLengthMessage_;
         case ValidationFailureType.PATTERN:
@@ -175,6 +181,14 @@ module formFor {
     }
 
     /**
+     * Override the default error message for failed maximum validations.
+     * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+     */
+    public setValidationFailedForMaximumMessage(value:string):void {
+      this.validationFailedForMaximumMessage_= value;
+    }
+
+    /**
      * Override the default error message for failed maxlength validations.
      * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
      */
@@ -188,6 +202,14 @@ module formFor {
      */
     public setValidationFailedForMinCollectionSizeMessage(value:string):void {
       this.validationFailedForMaxCollectionSizeMessage_ = value;
+    }
+
+    /**
+     * Override the default error message for failed minimum validations.
+     * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+     */
+    public setValidationFailedForMinimumMessage(value:string):void {
+      this.validationFailedForMinimumMessage_= value;
     }
 
     /**

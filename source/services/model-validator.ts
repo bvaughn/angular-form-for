@@ -137,7 +137,9 @@ module formFor {
         }
 
         return this.validateFieldRequired_(value, validationRules) ||
+          this.validateFieldMinimum_(value, validationRules) ||
           this.validateFieldMinLength_(value, validationRules) ||
+          this.validateFieldMaximum_(value, validationRules) ||
           this.validateFieldMaxLength_(value, validationRules) ||
           this.validateFieldType_(value, validationRules) ||
           this.validateFieldPattern_(value, validationRules) ||
@@ -322,6 +324,34 @@ module formFor {
       return null;
     }
 
+    private validateFieldMaximum_(value:any, validationRules:ValidationRules):any {
+      if (validationRules.maximum) {
+        var stringValue:string = value.toString();
+        var numericValue:number = Number(value);
+
+        var maximum:number = angular.isObject(validationRules.maximum) ?
+          (<ValidationRuleNumber> validationRules.maximum).rule :
+          <number> validationRules.maximum;
+
+        if (stringValue && !isNaN(numericValue) && numericValue > maximum) {
+          var failureMessage:string;
+
+          if (angular.isObject(validationRules.maximum)) {
+            failureMessage = (<ValidationRuleNumber> validationRules.maximum).message;
+          } else {
+            failureMessage =
+              this.$interpolate_(
+                this.formForConfiguration_.getFailedValidationMessage(
+                  ValidationFailureType.MAXIMUM))({num: maximum});
+          }
+
+          return this.promiseUtils_.reject(failureMessage);
+        }
+      }
+
+      return null;
+    }
+
     private validateFieldMaxLength_(value:any, validationRules:ValidationRules):any {
       if (validationRules.maxlength) {
         var maxlength:number = angular.isObject(validationRules.maxlength) ?
@@ -338,6 +368,34 @@ module formFor {
               this.$interpolate_(
                 this.formForConfiguration_.getFailedValidationMessage(
                   ValidationFailureType.MAX_LENGTH))({num: maxlength});
+          }
+
+          return this.promiseUtils_.reject(failureMessage);
+        }
+      }
+
+      return null;
+    }
+
+    private validateFieldMinimum_(value:any, validationRules:ValidationRules):any {
+      if (validationRules.minimum) {
+        var stringValue:string = value.toString();
+        var numericValue:number = Number(value);
+
+        var minimum:number = angular.isObject(validationRules.minimum) ?
+          (<ValidationRuleNumber> validationRules.minimum).rule :
+          <number> validationRules.minimum;
+
+        if (stringValue && !isNaN(numericValue) && numericValue < minimum) {
+          var failureMessage:string;
+
+          if (angular.isObject(validationRules.minimum)) {
+            failureMessage = (<ValidationRuleNumber> validationRules.minimum).message;
+          } else {
+            failureMessage =
+              this.$interpolate_(
+                this.formForConfiguration_.getFailedValidationMessage(
+                  ValidationFailureType.MINIMUM))({num: minimum});
           }
 
           return this.promiseUtils_.reject(failureMessage);

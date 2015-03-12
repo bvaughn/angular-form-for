@@ -43,7 +43,9 @@ var formFor;
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
             this.validationFailedForIntegerTypeMessage_ = "Must be an integer";
             this.validationFailedForMaxCollectionSizeMessage_ = "Must be fewer than {{num}} items";
+            this.validationFailedForMaximumMessage_ = "Must be no more than {{num}}";
             this.validationFailedForMaxLengthMessage_ = "Must be fewer than {{num}} characters";
+            this.validationFailedForMinimumMessage_ = "Must be at least {{num}}";
             this.validationFailedForMinCollectionSizeMessage_ = "Must at least {{num}} items";
             this.validationFailedForMinLengthMessage_ = "Must be at least {{num}} characters";
             this.validationFailedForNegativeTypeMessage_ = "Must be negative";
@@ -124,8 +126,12 @@ var formFor;
                     return this.validationFailedForMaxCollectionSizeMessage_;
                 case formFor.ValidationFailureType.COLLECTION_MIN_SIZE:
                     return this.validationFailedForMinCollectionSizeMessage_;
+                case formFor.ValidationFailureType.MINIMUM:
+                    return this.validationFailedForMinimumMessage_;
                 case formFor.ValidationFailureType.MAX_LENGTH:
                     return this.validationFailedForMaxLengthMessage_;
+                case formFor.ValidationFailureType.MAXIMUM:
+                    return this.validationFailedForMaximumMessage_;
                 case formFor.ValidationFailureType.MIN_LENGTH:
                     return this.validationFailedForMinLengthMessage_;
                 case formFor.ValidationFailureType.PATTERN:
@@ -205,6 +211,13 @@ var formFor;
             this.validationFailedForMaxCollectionSizeMessage_ = value;
         };
         /**
+         * Override the default error message for failed maximum validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForMaximumMessage = function (value) {
+            this.validationFailedForMaximumMessage_ = value;
+        };
+        /**
          * Override the default error message for failed maxlength validations.
          * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
          */
@@ -217,6 +230,13 @@ var formFor;
          */
         FormForConfiguration.prototype.setValidationFailedForMinCollectionSizeMessage = function (value) {
             this.validationFailedForMaxCollectionSizeMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed minimum validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForMinimumMessage = function (value) {
+            this.validationFailedForMinimumMessage_ = value;
         };
         /**
          * Override the default error message for failed minlength validations.
@@ -1794,7 +1814,9 @@ var formFor;
         ValidationFailureType[ValidationFailureType["COLLECTION_MAX_SIZE"] = "COLLECTION_MAX_SIZE"] = "COLLECTION_MAX_SIZE";
         ValidationFailureType[ValidationFailureType["COLLECTION_MIN_SIZE"] = "COLLECTION_MIN_SIZE"] = "COLLECTION_MIN_SIZE";
         ValidationFailureType[ValidationFailureType["CUSTOM"] = "CUSTOM"] = "CUSTOM";
+        ValidationFailureType[ValidationFailureType["MAXIMUM"] = "MAXIMUM"] = "MAXIMUM";
         ValidationFailureType[ValidationFailureType["MAX_LENGTH"] = "MAX_LENGTH"] = "MAX_LENGTH";
+        ValidationFailureType[ValidationFailureType["MINIMUM"] = "MINIMUM"] = "MINIMUM";
         ValidationFailureType[ValidationFailureType["MIN_LENGTH"] = "MIN_LENGTH"] = "MIN_LENGTH";
         ValidationFailureType[ValidationFailureType["PATTERN"] = "PATTERN"] = "PATTERN";
         ValidationFailureType[ValidationFailureType["REQUIRED"] = "REQUIRED_FIELD"] = "REQUIRED";
@@ -1971,7 +1993,7 @@ var formFor;
                 if (value === undefined || value === null) {
                     value = ""; // Escape falsy values liked null or undefined, but not ones like 0
                 }
-                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules) || this.promiseUtils_.resolve();
+                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules) || this.promiseUtils_.resolve();
             }
             return this.promiseUtils_.resolve();
         };
@@ -2103,6 +2125,24 @@ var formFor;
             }
             return null;
         };
+        ModelValidator.prototype.validateFieldMaximum_ = function (value, validationRules) {
+            if (validationRules.maximum) {
+                var stringValue = value.toString();
+                var numericValue = Number(value);
+                var maximum = angular.isObject(validationRules.maximum) ? validationRules.maximum.rule : validationRules.maximum;
+                if (stringValue && !isNaN(numericValue) && numericValue > maximum) {
+                    var failureMessage;
+                    if (angular.isObject(validationRules.maximum)) {
+                        failureMessage = validationRules.maximum.message;
+                    }
+                    else {
+                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MAXIMUM))({ num: maximum });
+                    }
+                    return this.promiseUtils_.reject(failureMessage);
+                }
+            }
+            return null;
+        };
         ModelValidator.prototype.validateFieldMaxLength_ = function (value, validationRules) {
             if (validationRules.maxlength) {
                 var maxlength = angular.isObject(validationRules.maxlength) ? validationRules.maxlength.rule : validationRules.maxlength;
@@ -2113,6 +2153,24 @@ var formFor;
                     }
                     else {
                         failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MAX_LENGTH))({ num: maxlength });
+                    }
+                    return this.promiseUtils_.reject(failureMessage);
+                }
+            }
+            return null;
+        };
+        ModelValidator.prototype.validateFieldMinimum_ = function (value, validationRules) {
+            if (validationRules.minimum) {
+                var stringValue = value.toString();
+                var numericValue = Number(value);
+                var minimum = angular.isObject(validationRules.minimum) ? validationRules.minimum.rule : validationRules.minimum;
+                if (stringValue && !isNaN(numericValue) && numericValue < minimum) {
+                    var failureMessage;
+                    if (angular.isObject(validationRules.minimum)) {
+                        failureMessage = validationRules.minimum.message;
+                    }
+                    else {
+                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MINIMUM))({ num: minimum });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }

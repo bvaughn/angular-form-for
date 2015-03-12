@@ -24,10 +24,22 @@ module formFor {
     custom?:CustomValidationFunction|ValidationRuleCustom;
 
     /**
+     * Field's numeric value must be lesser than or equal to this value.
+     * This field can be either a number or an instance of {@link ValidationRuleNumber}.
+     */
+    maximum?:number|ValidationRuleNumber;
+
+    /**
      * Field must contain no more than this many characters.
      * This field can be either a number or an instance of {@link ValidationRuleNumber}.
      */
     maxlength?:number|ValidationRuleNumber;
+
+    /**
+     * Field's numeric value must be greater than or equal to this value.
+     * This field can be either a number or an instance of {@link ValidationRuleNumber}.
+     */
+    minimum?:number|ValidationRuleNumber;
 
     /**
      * Field must contain at least this many characters.
