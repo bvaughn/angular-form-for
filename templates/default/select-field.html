@@ -50,7 +50,7 @@
         ng-class="{ 'form-for-typeahead-list-item-active': option === selectedOption,
                     'form-for-typeahead-list-item-hover':  $index === mouseOverIndex}"
         ng-bind="option[labelAttribute]"
-        ng-click="selectOption(option)"
+        ng-mousedown="selectOption(option)"
         ng-mouseenter="mouseOver($index)">
     </li>
   </ul>
