@@ -5,6 +5,7 @@ var runSequence = require('run-sequence');
 var sources = [
   'source/**/*.ts'
 ];
+var stylesDirectory = "styles";
 var testFiles = []; // Declared in the karma.conf.js
 var distDirectory = 'dist';
 
@@ -21,7 +22,7 @@ gulp.task('all', function(callback) {
 
 gulp.task('build', function(callback) {
   runSequence(
-    'compile',
+    ['compile', 'compileBootstrapTemplates', 'compileDefaultTemplates', 'compileStylesheets'],
     'uglify',
     'map',
     callback);
@@ -29,6 +30,26 @@ gulp.task('build', function(callback) {
 
 gulp.task('compile', function() {
   return buildHelper(sources, distDirectory , 'angular-form-for.js');
+});
+
+gulp.task('compileBootstrapTemplates', function() {
+  return buildTemplatesHelper('templates/bootstrap/**/*.html', 'formFor.bootstrapTemplates', 'form-for.bootstrap-templates.js');
+});
+
+gulp.task('compileDefaultTemplates', function() {
+  return buildTemplatesHelper('templates/default/**/*.html', 'formFor.defaultTemplates', 'form-for.default-templates.js');
+});
+
+gulp.task('compileStylesheets', function() {
+  var concat = require('gulp-concat');
+  var stylus = require('gulp-stylus');
+  var autoprefixer = require('autoprefixer-stylus');
+  var nib = require('nib');
+
+  return gulp.src(stylesDirectory + '/**/*.styl')
+    .pipe(stylus({use: [nib(), autoprefixer()]}))
+    .pipe(concat('form-for.css'))
+    .pipe(gulp.dest(distDirectory));
 });
 
 gulp.task('clean', function() {
@@ -69,7 +90,6 @@ gulp.task('test:watch', function() {
     }));
 });
 
-// TODO Bundle templates
 // TODO Compile and bundle Stylus styles
 
 gulp.task('uglify', function() {
@@ -93,6 +113,7 @@ gulp.task('uglify', function() {
 
 var buildHelper = function(sources, directory, outputFile) {
   var typeScriptCompiler = require('gulp-tsc');
+  var ngAnnotate = require('gulp-ng-annotate');
 
   return gulp
     .src(sources)
@@ -102,5 +123,24 @@ var buildHelper = function(sources, directory, outputFile) {
       out: outputFile,
       target: 'ES5'
     }))
+    .pipe(ngAnnotate())
     .pipe(gulp.dest(directory));
+};
+
+var buildTemplatesHelper = function(templatesDirectory, moduleName, outputFile) {
+  var concat = require('gulp-concat');
+  var ngAnnotate = require('gulp-ng-annotate');
+  var templateCache = require('gulp-angular-templatecache');
+
+  return gulp.src(templatesDirectory)
+    .pipe(
+    templateCache('templates.js',
+      {
+        module: moduleName,
+        standalone: true,
+        root: 'form-for/templates/' // Relative path for Directive :templateUrls
+      }))
+    .pipe(ngAnnotate())
+    .pipe(concat(outputFile))
+    .pipe(gulp.dest(distDirectory))
 };

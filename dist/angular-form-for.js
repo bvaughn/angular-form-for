@@ -363,7 +363,7 @@ var formFor;
         return FieldHelper;
     })();
     formFor.FieldHelper = FieldHelper;
-    angular.module('formFor').service('FieldHelper', function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); });
+    angular.module('formFor').service('FieldHelper', ["FormForConfiguration", function (FormForConfiguration) { return new FieldHelper(FormForConfiguration); }]);
 })(formFor || (formFor = {}));
 /// <reference path="../services/field-helper.ts" />
 /// <reference path="../services/form-for-configuration.ts" />
@@ -407,7 +407,7 @@ var formFor;
         };
     }
     formFor.CheckboxFieldDirective = CheckboxFieldDirective;
-    angular.module('formFor').directive('checkboxField', function ($log, FieldHelper) { return CheckboxFieldDirective($log, FieldHelper); });
+    angular.module('formFor').directive('checkboxField', ["$log", "FieldHelper", function ($log, FieldHelper) { return CheckboxFieldDirective($log, FieldHelper); }]);
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -441,7 +441,7 @@ var formFor;
         };
     }
     formFor.CollectionLabelDirective = CollectionLabelDirective;
-    angular.module('formFor').directive('collectionLabel', function ($sce) { return CollectionLabelDirective($sce); });
+    angular.module('formFor').directive('collectionLabel', ["$sce", function ($sce) { return CollectionLabelDirective($sce); }]);
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -508,7 +508,7 @@ var formFor;
         };
     }
     formFor.FieldLabelDirective = FieldLabelDirective;
-    angular.module('formFor').directive('fieldLabel', function ($sce, FormForConfiguration) { return FieldLabelDirective($sce, FormForConfiguration); });
+    angular.module('formFor').directive('fieldLabel', ["$sce", "FormForConfiguration", function ($sce, FormForConfiguration) { return FieldLabelDirective($sce, FormForConfiguration); }]);
 })(formFor || (formFor = {}));
 /// <reference path="../services/form-for-configuration.ts" />
 var formFor;
@@ -609,7 +609,7 @@ var formFor;
         };
     }
     formFor.FormForDebounceDirective = FormForDebounceDirective;
-    angular.module('formFor').directive('formForDebounce', function ($log, $sniffer, $timeout, FormForConfiguration) { return FormForDebounceDirective($log, $sniffer, $timeout, FormForConfiguration); });
+    angular.module('formFor').directive('formForDebounce', ["$log", "$sniffer", "$timeout", "FormForConfiguration", function ($log, $sniffer, $timeout, FormForConfiguration) { return FormForDebounceDirective($log, $sniffer, $timeout, FormForConfiguration); }]);
 })(formFor || (formFor = {}));
 /// <reference path="../../definitions/angular.d.ts" />
 var formFor;
@@ -1243,7 +1243,7 @@ var formFor;
         };
     }
     formFor.FormForDirective = FormForDirective;
-    angular.module('formFor').directive('formFor', function ($injector) { return FormForDirective($injector); });
+    angular.module('formFor').directive('formFor', ["$injector", function ($injector) { return FormForDirective($injector); }]);
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -1355,7 +1355,7 @@ var formFor;
         };
     }
     formFor.RadioFieldDirective = RadioFieldDirective;
-    angular.module('formFor').directive('radioField', function ($log, FormForConfiguration) { return RadioFieldDirective($log, FormForConfiguration); });
+    angular.module('formFor').directive('radioField', ["$log", "FormForConfiguration", function ($log, FormForConfiguration) { return RadioFieldDirective($log, FormForConfiguration); }]);
 })(formFor || (formFor = {}));
 /// <reference path="../services/field-helper.ts" />
 var formFor;
@@ -1614,7 +1614,7 @@ var formFor;
         };
     }
     formFor.SelectFieldDirective = SelectFieldDirective;
-    angular.module('formFor').directive('selectField', function ($document, $log, $timeout, FieldHelper) { return SelectFieldDirective($document, $log, $timeout, FieldHelper); });
+    angular.module('formFor').directive('selectField', ["$document", "$log", "$timeout", "FieldHelper", function ($document, $log, $timeout, FieldHelper) { return SelectFieldDirective($document, $log, $timeout, FieldHelper); }]);
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -1656,7 +1656,7 @@ var formFor;
     }
     formFor.SubmitButtonDirective = SubmitButtonDirective;
     ;
-    angular.module('formFor').directive('submitButton', function ($sce) { return SubmitButtonDirective($sce); });
+    angular.module('formFor').directive('submitButton', ["$sce", function ($sce) { return SubmitButtonDirective($sce); }]);
 })(formFor || (formFor = {}));
 /// <reference path="../services/field-helper.ts" />
 var formFor;
@@ -1803,7 +1803,7 @@ var formFor;
         };
     }
     formFor.TextFieldDirective = TextFieldDirective;
-    angular.module('formFor').directive('textField', function ($log, $timeout, FieldHelper) { return TextFieldDirective($log, $timeout, FieldHelper); });
+    angular.module('formFor').directive('textField', ["$log", "$timeout", "FieldHelper", function ($log, $timeout, FieldHelper) { return TextFieldDirective($log, $timeout, FieldHelper); }]);
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -2273,7 +2273,7 @@ var formFor;
         return ModelValidator;
     })();
     formFor.ModelValidator = ModelValidator;
-    angular.module('formFor').service('ModelValidator', function ($interpolate, $parse, $q, FormForConfiguration) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration); });
+    angular.module('formFor').service('ModelValidator', ["$interpolate", "$parse", "$q", "FormForConfiguration", function ($interpolate, $parse, $q, FormForConfiguration) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration); }]);
 })(formFor || (formFor = {}));
 /// <reference path="nested-object-helper.ts" />
 var formFor;
