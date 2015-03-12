@@ -44,7 +44,7 @@ angular.module('formForDocumentation').service('UserSignUp', function($q, $timeo
             return $q.reject('That email is already mine!');
           }
 
-          return $q.resolve();
+          return true; // Could also return a resolved Promise
         }
       },
       comments: {
@@ -76,6 +76,11 @@ angular.module('formForDocumentation').service('UserSignUp', function($q, $timeo
       },
       positiveNumber: {
         type: 'positive number'
+      },
+      rangeFrom2To5: {
+        minimum: 2,
+        maximum: 5,
+        type: 'number'
       }
     },
     submit: function(data) {
