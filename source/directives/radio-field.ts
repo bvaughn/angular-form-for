@@ -99,113 +99,103 @@ module formFor {
    * // To render a radio group for gender selection you might use the following markup:
    * <radio-field label="Female" attribute="gender" value="f"></radio-field>
    * <radio-field label="Male" attribute="gender" value="m"></radio-field>
+   *
+   * @param $log $injector-supplied $log service
+   * @param FormForConfiguration
    */
-  export class RadioField implements ng.IDirective {
+  export function RadioFieldDirective($log, FormForConfiguration):ng.IDirective {
+    var fieldHelper = new FieldHelper(FormForConfiguration);
+    var fieldNameToActiveRadioGroupDatumMap:{[fieldName:string]:RadioGroupDatum} = {};
 
-    require:string = '^formFor';
-    restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/radio-field.html';
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/radio-field.html',
 
-    scope:any = {
-      attribute: '@',
-      disable: '=',
-      help: '@?',
-      value: '@'
-    };
+      scope: {
+        attribute: '@',
+        disable: '=',
+        help: '@?',
+        value: '@'
+      },
 
-    private $log_:ng.ILogService;
-    private fieldHelper_:FieldHelper;
-    private fieldNameToActiveRadioGroupDatumMap_:{[fieldName:string]:RadioGroupDatum};
+      link($scope:RadioFieldScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
+        if (!$scope.attribute) {
+          $log.error('Missing required field "attribute"');
 
-    /**
-     * Constructor.
-     *
-     * @param $log $injector-supplied $log service
-     * @param FormForConfiguration
-     */
-    constructor($log, FormForConfiguration) {
-      this.$log_ = $log;
+          return;
+        }
 
-      this.fieldHelper_ = new FieldHelper(FormForConfiguration);
-      this.fieldNameToActiveRadioGroupDatumMap_ = {};
-    }
+        if (!fieldNameToActiveRadioGroupDatumMap[$scope.attribute]) {
+          fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
 
-    link($scope:RadioFieldScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
-      if (!$scope.attribute) {
-        this.$log_.error('Missing required field "attribute"');
+          fieldNameToActiveRadioGroupDatumMap[$scope.attribute] = {
+            defaultScope: $scope,
+            scopes: []
+          };
 
-        return;
-      }
+        } else {
+          // Only the primary <radio> input should show error message text
+          $scope.hideErrorMessage = true;
+        }
 
-      if (!this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute]) {
-        this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+        // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
+        // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
+        $scope.uid = $attributes['uid'] || FormForGUID.create();
 
-        this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute] = {
-          defaultScope: $scope,
-          scopes: []
+        var radioGroupDatum = fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
+        radioGroupDatum.scopes.push($scope);
+
+        fieldHelper.manageLabel($scope, $attributes, true);
+
+        $scope.tabIndex = $attributes['tabIndex'] || 0;
+
+        $scope.click = () => {
+          if (!$scope.disable && !$scope.model.disabled) {
+            $scope.model.bindable = $scope.value;
+          }
         };
 
-      } else {
-        // Only the primary <radio> input should show error message text
-        $scope.hideErrorMessage = true;
+        radioGroupDatum.defaultScope.$watch('model', (value) => {
+          $scope.model = value;
+        });
+        radioGroupDatum.defaultScope.$watch('disable', (value) => {
+          $scope.disable = value;
+        });
+        radioGroupDatum.defaultScope.$watch('model.disabled', (value) => {
+          if ($scope.model) {
+            $scope.model.disabled = value;
+          }
+        });
+
+        /**
+         * Update this RadioField (UI) whenever the group's value changes.
+         * This could be triggered by another RadioField in the group.
+         */
+        $scope.$watch('model.bindable', function(newValue:any) {
+          $scope.checked =
+            newValue !== undefined &&
+            newValue !== null &&
+            $scope.value !== undefined &&
+            $scope.value !== null &&
+            newValue.toString() === $scope.value.toString();
+        });
+
+        /**
+         * Remove this RadioField from the group when it's removed from the DOM.
+         */
+        $scope.$on('$destroy', function() {
+          radioGroupDatum.scopes.splice(
+            radioGroupDatum.scopes.indexOf($scope), 1);
+
+          if (radioGroupDatum.scopes.length === 0) {
+            delete fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
+          }
+        });
       }
-
-      // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
-      // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
-      $scope.uid = $attributes['uid'] || FormForGUID.create();
-
-      var radioGroupDatum = this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute];
-      radioGroupDatum.scopes.push($scope);
-
-      this.fieldHelper_.manageLabel($scope, $attributes, true);
-
-      $scope.tabIndex = $attributes['tabIndex'] || 0;
-
-      $scope.click = () => {
-        if (!$scope.disable && !$scope.model.disabled) {
-          $scope.model.bindable = $scope.value;
-        }
-      };
-
-      radioGroupDatum.defaultScope.$watch('model', (value) => {
-        $scope.model = value;
-      });
-      radioGroupDatum.defaultScope.$watch('disable', (value) => {
-        $scope.disable = value;
-      });
-      radioGroupDatum.defaultScope.$watch('model.disabled', (value) => {
-        if ($scope.model) {
-          $scope.model.disabled = value;
-        }
-      });
-
-      /**
-       * Update this RadioField (UI) whenever the group's value changes.
-       * This could be triggered by another RadioField in the group.
-       */
-      $scope.$watch('model.bindable', function(newValue:any) {
-        $scope.checked =
-          newValue !== undefined &&
-          newValue !== null &&
-          $scope.value !== undefined &&
-          $scope.value !== null &&
-          newValue.toString() === $scope.value.toString();
-      });
-
-      /**
-       * Remove this RadioField from the group when it's removed from the DOM.
-       */
-      $scope.$on('$destroy', function() {
-        radioGroupDatum.scopes.splice(
-          radioGroupDatum.scopes.indexOf($scope), 1);
-
-        if (radioGroupDatum.scopes.length === 0) {
-          delete this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute];
-        }
-      });
-    }
+    };
   }
 
   angular.module('formFor').directive('radioField',
-    ($log, FormForConfiguration) => new RadioField($log, FormForConfiguration));
+    ($log, FormForConfiguration) => RadioFieldDirective($log, FormForConfiguration));
 }

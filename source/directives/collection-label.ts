@@ -42,38 +42,30 @@ module formFor {
    * // To display a simple collection header:
    * <collection-label  label="Hobbies" attribute="hobbies">
    * </collection-label>
+   *
+   * @param $sce $injector-supplied $sce service
    */
-  export class CollectionLabel implements ng.IDirective {
+  export function CollectionLabelDirective($sce:ng.ISCEService):ng.IDirective {
+    return {
+      require: '^formFor',
+      restrict: 'EA',
+      templateUrl: 'form-for/templates/collection-label.html',
 
-    require:string = '^formFor';
-    restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/collection-label.html';
+      scope: {
+        attribute: '@',
+        help: '@?',
+        label: '@'
+      },
 
-    scope:any = {
-      attribute: '@',
-      help: '@?',
-      label: '@'
+      link($scope:CollectionLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
+        $scope.$watch('label', function(value) {
+          $scope.bindableLabel = $sce.trustAsHtml(value);
+        });
+
+        $scope.model = formForController.registerCollectionLabel($scope.attribute);
+      }
     };
-
-    private $sce_:ng.ISCEService;
-
-    /**
-     * Constructor.
-     *
-     * @param $sce $injector-supplied $sce service
-     */
-    constructor($sce:ng.ISCEService) {
-      this.$sce_ = $sce;
-    }
-
-    link($scope:CollectionLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
-      $scope.$watch('label', function(value) {
-        $scope.bindableLabel = this.$sce_.trustAsHtml(value);
-      });
-
-      $scope.model = formForController.registerCollectionLabel($scope.attribute);
-    }
   }
 
-  angular.module('formFor').directive('collectionLabel', ($sce) => new CollectionLabel($sce));
+  angular.module('formFor').directive('collectionLabel', ($sce) => CollectionLabelDirective($sce));
 }

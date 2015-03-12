@@ -359,8 +359,7 @@ var formFor;
      *                 attribute="accepted">
      * </checkbox-field>
      */
-    function CheckboxFieldDirective($log) {
-        var fieldHelper = new formFor.FieldHelper(formFor.FormForConfiguration);
+    function CheckboxFieldDirective($log, fieldHelper) {
         return {
             require: '^formFor',
             restrict: 'EA',
@@ -388,7 +387,7 @@ var formFor;
         };
     }
     formFor.CheckboxFieldDirective = CheckboxFieldDirective;
-    angular.module('formFor').directive('checkboxField', function ($log) { return CheckboxFieldDirective($log); });
+    angular.module('formFor').directive('checkboxField', function ($log, FieldHelper) { return CheckboxFieldDirective($log, FieldHelper); });
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -400,34 +399,29 @@ var formFor;
      * // To display a simple collection header:
      * <collection-label  label="Hobbies" attribute="hobbies">
      * </collection-label>
+     *
+     * @param $sce $injector-supplied $sce service
      */
-    var CollectionLabel = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $sce $injector-supplied $sce service
-         */
-        function CollectionLabel($sce) {
-            this.require = '^formFor';
-            this.restrict = 'EA';
-            this.templateUrl = 'form-for/templates/collection-label.html';
-            this.scope = {
+    function CollectionLabelDirective($sce) {
+        return {
+            require: '^formFor',
+            restrict: 'EA',
+            templateUrl: 'form-for/templates/collection-label.html',
+            scope: {
                 attribute: '@',
                 help: '@?',
                 label: '@'
-            };
-            this.$sce_ = $sce;
-        }
-        CollectionLabel.prototype.link = function ($scope, $element, $attributes, formForController) {
-            $scope.$watch('label', function (value) {
-                $scope.bindableLabel = this.$sce_.trustAsHtml(value);
-            });
-            $scope.model = formForController.registerCollectionLabel($scope.attribute);
+            },
+            link: function ($scope, $element, $attributes, formForController) {
+                $scope.$watch('label', function (value) {
+                    $scope.bindableLabel = $sce.trustAsHtml(value);
+                });
+                $scope.model = formForController.registerCollectionLabel($scope.attribute);
+            }
         };
-        return CollectionLabel;
-    })();
-    formFor.CollectionLabel = CollectionLabel;
-    angular.module('formFor').directive('collectionLabel', function ($sce) { return new CollectionLabel($sce); });
+    }
+    formFor.CollectionLabelDirective = CollectionLabelDirective;
+    angular.module('formFor').directive('collectionLabel', function ($sce) { return CollectionLabelDirective($sce); });
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -449,7 +443,6 @@ var formFor;
                 uid: '@'
             },
             link: function ($scope) {
-                console.log('FieldError directive $scope:' + $scope.$id); // TODO Testing
                 // No-op
             }
         };
@@ -485,7 +478,6 @@ var formFor;
                 uid: '@'
             },
             controller: function ($scope) {
-                console.log('FieldLabel directive controller $scope:' + $scope.$id); // TODO Testing
                 $scope.$watch('label', function (value) {
                     $scope.bindableLabel = $sce.trustAsHtml(value);
                 });
@@ -534,7 +526,6 @@ var formFor;
                 formForDebounce: '@'
             },
             link: function ($scope, $element, $attributes, ngModelController) {
-                console.log('FormForDebounce directive $scope:' + $scope.$id); // TODO Testing
                 if ($attributes['type'] === 'radio' || $attributes['type'] === 'checkbox') {
                     $log.warn("formForDebounce should only be used with <input type=text> and <textarea> elements");
                     return;
@@ -1268,92 +1259,88 @@ var formFor;
      * // To render a radio group for gender selection you might use the following markup:
      * <radio-field label="Female" attribute="gender" value="f"></radio-field>
      * <radio-field label="Male" attribute="gender" value="m"></radio-field>
+     *
+     * @param $log $injector-supplied $log service
+     * @param FormForConfiguration
      */
-    var RadioField = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $log $injector-supplied $log service
-         * @param FormForConfiguration
-         */
-        function RadioField($log, FormForConfiguration) {
-            this.require = '^formFor';
-            this.restrict = 'EA';
-            this.templateUrl = 'form-for/templates/radio-field.html';
-            this.scope = {
+    function RadioFieldDirective($log, FormForConfiguration) {
+        var fieldHelper = new formFor.FieldHelper(FormForConfiguration);
+        var fieldNameToActiveRadioGroupDatumMap = {};
+        return {
+            require: '^formFor',
+            restrict: 'EA',
+            templateUrl: 'form-for/templates/radio-field.html',
+            scope: {
                 attribute: '@',
                 disable: '=',
                 help: '@?',
                 value: '@'
-            };
-            this.$log_ = $log;
-            this.fieldHelper_ = new formFor.FieldHelper(FormForConfiguration);
-            this.fieldNameToActiveRadioGroupDatumMap_ = {};
-        }
-        RadioField.prototype.link = function ($scope, $element, $attributes, formForController) {
-            if (!$scope.attribute) {
-                this.$log_.error('Missing required field "attribute"');
-                return;
-            }
-            if (!this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute]) {
-                this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
-                this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute] = {
-                    defaultScope: $scope,
-                    scopes: []
+            },
+            link: function ($scope, $element, $attributes, formForController) {
+                if (!$scope.attribute) {
+                    $log.error('Missing required field "attribute"');
+                    return;
+                }
+                if (!fieldNameToActiveRadioGroupDatumMap[$scope.attribute]) {
+                    fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
+                    fieldNameToActiveRadioGroupDatumMap[$scope.attribute] = {
+                        defaultScope: $scope,
+                        scopes: []
+                    };
+                }
+                else {
+                    // Only the primary <radio> input should show error message text
+                    $scope.hideErrorMessage = true;
+                }
+                // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
+                // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
+                $scope.uid = $attributes['uid'] || formFor.FormForGUID.create();
+                var radioGroupDatum = fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
+                radioGroupDatum.scopes.push($scope);
+                fieldHelper.manageLabel($scope, $attributes, true);
+                $scope.tabIndex = $attributes['tabIndex'] || 0;
+                $scope.click = function () {
+                    if (!$scope.disable && !$scope.model.disabled) {
+                        $scope.model.bindable = $scope.value;
+                    }
                 };
+                radioGroupDatum.defaultScope.$watch('model', function (value) {
+                    $scope.model = value;
+                });
+                radioGroupDatum.defaultScope.$watch('disable', function (value) {
+                    $scope.disable = value;
+                });
+                radioGroupDatum.defaultScope.$watch('model.disabled', function (value) {
+                    if ($scope.model) {
+                        $scope.model.disabled = value;
+                    }
+                });
+                /**
+                 * Update this RadioField (UI) whenever the group's value changes.
+                 * This could be triggered by another RadioField in the group.
+                 */
+                $scope.$watch('model.bindable', function (newValue) {
+                    $scope.checked = newValue !== undefined && newValue !== null && $scope.value !== undefined && $scope.value !== null && newValue.toString() === $scope.value.toString();
+                });
+                /**
+                 * Remove this RadioField from the group when it's removed from the DOM.
+                 */
+                $scope.$on('$destroy', function () {
+                    radioGroupDatum.scopes.splice(radioGroupDatum.scopes.indexOf($scope), 1);
+                    if (radioGroupDatum.scopes.length === 0) {
+                        delete fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
+                    }
+                });
             }
-            else {
-                // Only the primary <radio> input should show error message text
-                $scope.hideErrorMessage = true;
-            }
-            // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
-            // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
-            $scope.uid = $attributes['uid'] || formFor.FormForGUID.create();
-            var radioGroupDatum = this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute];
-            radioGroupDatum.scopes.push($scope);
-            this.fieldHelper_.manageLabel($scope, $attributes, true);
-            $scope.tabIndex = $attributes['tabIndex'] || 0;
-            $scope.click = function () {
-                if (!$scope.disable && !$scope.model.disabled) {
-                    $scope.model.bindable = $scope.value;
-                }
-            };
-            radioGroupDatum.defaultScope.$watch('model', function (value) {
-                $scope.model = value;
-            });
-            radioGroupDatum.defaultScope.$watch('disable', function (value) {
-                $scope.disable = value;
-            });
-            radioGroupDatum.defaultScope.$watch('model.disabled', function (value) {
-                if ($scope.model) {
-                    $scope.model.disabled = value;
-                }
-            });
-            /**
-             * Update this RadioField (UI) whenever the group's value changes.
-             * This could be triggered by another RadioField in the group.
-             */
-            $scope.$watch('model.bindable', function (newValue) {
-                $scope.checked = newValue !== undefined && newValue !== null && $scope.value !== undefined && $scope.value !== null && newValue.toString() === $scope.value.toString();
-            });
-            /**
-             * Remove this RadioField from the group when it's removed from the DOM.
-             */
-            $scope.$on('$destroy', function () {
-                radioGroupDatum.scopes.splice(radioGroupDatum.scopes.indexOf($scope), 1);
-                if (radioGroupDatum.scopes.length === 0) {
-                    delete this.fieldNameToActiveRadioGroupDatumMap_[$scope.attribute];
-                }
-            });
         };
-        return RadioField;
-    })();
-    formFor.RadioField = RadioField;
-    angular.module('formFor').directive('radioField', function ($log, FormForConfiguration) { return new RadioField($log, FormForConfiguration); });
+    }
+    formFor.RadioFieldDirective = RadioFieldDirective;
+    angular.module('formFor').directive('radioField', function ($log, FormForConfiguration) { return RadioFieldDirective($log, FormForConfiguration); });
 })(formFor || (formFor = {}));
 /// <reference path="../services/field-helper.ts" />
 var formFor;
 (function (formFor) {
+    var MIN_TIMEOUT_INTERVAL = 10;
     /**
      * Renders a drop-down &lt;select&gt; menu along with an input label.
      * This type of component works with large enumerations and can be configured to allow for a blank/empty selection
@@ -1385,22 +1372,18 @@ var formFor;
      *               options="genders"
      *               allow-blank>
      * </select-field>
+     *
+     * @param $document $injector-supplied $document service
+     * @param $log $injector-supplied $log service
+     * @param $timeout $injector-supplied $timeout service
+     * @param fieldHelper
      */
-    var SelectField = (function () {
-        /**
-         * Constructor.
-         *
-         * @param $document $injector-supplied $document service
-         * @param $log $injector-supplied $log service
-         * @param $timeout $injector-supplied $timeout service
-         * @param $window $injector-supplied $window service
-         * @param fieldHelper
-         */
-        function SelectField($document, $log, $timeout, $window, fieldHelper) {
-            this.require = '^formFor';
-            this.restrict = 'EA';
-            this.templateUrl = 'form-for/templates/select-field.html';
-            this.scope = {
+    function SelectFieldDirective($document, $log, $timeout, fieldHelper) {
+        return {
+            require: '^formFor',
+            restrict: 'EA',
+            templateUrl: 'form-for/templates/select-field.html',
+            scope: {
                 attribute: '@',
                 disable: '=',
                 filter: '=?',
@@ -1408,218 +1391,210 @@ var formFor;
                 help: '@?',
                 multiple: '=?',
                 options: '='
-            };
-            this.$document_ = $document;
-            this.$log_ = $log;
-            this.$timeout_ = $timeout;
-            this.$window_ = angular.element($window);
-            this.fieldHelper_ = fieldHelper;
-        }
-        SelectField.prototype.link = function ($scope, $element, $attributes, formForController) {
-            var _this = this;
-            if (!$scope.attribute) {
-                this.$log_.error('Missing required field "attribute"');
-                return;
-            }
-            $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
-            $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
-            $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
-            // Read from $attributes to avoid getting any interference from $scope.
-            $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
-            $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
-            $scope.placeholder = $attributes['placeholder'] || 'Select';
-            $scope.tabIndex = $attributes['tabIndex'] || 0;
-            this.fieldHelper_.manageLabel($scope, $attributes, false);
-            this.fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
-            // Helper method for setting focus on an item after a delay
-            var setDelayedFocus = function ($target) {
-                var target = $target[0];
-                _this.$timeout_(target.focus.bind(target));
-            };
-            $scope.close = function () {
-                _this.$timeout_(function () {
-                    $scope.isOpen = false;
-                });
-            };
-            $scope.open = function () {
-                if ($scope.disable || $scope.model.disabled) {
+            },
+            link: function ($scope, $element, $attributes, formForController) {
+                if (!$scope.attribute) {
+                    $log.error('Missing required field "attribute"');
                     return;
                 }
-                _this.$timeout_(function () {
-                    $scope.isOpen = true;
-                });
-            };
-            /*****************************************************************************************
-             * The following code pertains to filtering visible options.
-             *****************************************************************************************/
-            $scope.emptyOption = {};
-            $scope.emptyOption[$scope.labelAttribute] = '';
-            $scope.emptyOption[$scope.valueAttribute] = undefined;
-            $scope.placeholderOption = {};
-            $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
-            $scope.placeholderOption[$scope.valueAttribute] = undefined;
-            $scope.filteredOptions = [];
-            // Sanitizes option and filter-text values for comparison
-            var sanitize = function (value) {
-                return value && value.toLowerCase();
-            };
-            // Updates visible <option>s based on current filter text
-            var calculateFilteredOptions = function () {
-                var options = $scope.options || [];
-                $scope.filteredOptions.splice(0);
-                if (!$scope.enableFiltering || !$scope.filter) {
-                    angular.copy(options, $scope.filteredOptions);
-                }
-                else {
-                    var filter = sanitize($scope.filter);
-                    angular.forEach(options, function (option) {
-                        var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
-                        if (index >= 0) {
-                            $scope.filteredOptions.push(option);
-                        }
+                $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
+                $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
+                $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
+                // Read from $attributes to avoid getting any interference from $scope.
+                $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
+                $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
+                $scope.placeholder = $attributes['placeholder'] || 'Select';
+                $scope.tabIndex = $attributes['tabIndex'] || 0;
+                fieldHelper.manageLabel($scope, $attributes, false);
+                fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
+                // Helper method for setting focus on an item after a delay
+                var setDelayedFocus = function ($target) {
+                    var target = $target[0];
+                    $timeout(target.focus.bind(target));
+                };
+                $scope.close = function () {
+                    $timeout(function () {
+                        $scope.isOpen = false;
                     });
-                }
-                if (!$scope.selectedOption && !$scope.multiple) {
-                    $scope.filteredOptions.unshift($scope.placeholderOption);
-                }
-                else if ($scope.allowBlank) {
-                    $scope.filteredOptions.unshift($scope.emptyOption);
-                }
-            };
-            $scope.$watch('filter', calculateFilteredOptions);
-            $scope.$watch('options.length', calculateFilteredOptions);
-            /*****************************************************************************************
-             * The following code manages setting the correct default value based on bindable model.
-             *****************************************************************************************/
-            var updateDefaultOption = function () {
-                var selected = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
-                if ($scope.model.bindable === selected) {
-                    // Default select the first item in the list
-                    // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-                    if (!$scope.allowBlank && !$scope.preventDefaultOption && $scope.options && $scope.options.length) {
-                        $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+                };
+                $scope.open = function () {
+                    if ($scope.disable || $scope.model.disabled) {
+                        return;
                     }
-                }
-            };
-            $scope.$watch('model.bindable', updateDefaultOption);
-            $scope.$watch('options.length', updateDefaultOption);
-            /*****************************************************************************************
-             * The following code deals with toggling/collapsing the drop-down and selecting values.
-             *****************************************************************************************/
-            $scope.$watch('model.bindable', function () {
-                var matchingOption = null;
-                angular.forEach($scope.options, function (option) {
-                    if (option[$scope.valueAttribute] === $scope.model.bindable) {
-                        matchingOption = option;
-                    }
-                });
-                $scope.selectedOption = matchingOption;
-                $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
-                // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-                $scope.filter = $scope.selectedOptionLabel;
-            });
-            var documentClick = function (event) {
-                // See filterTextClick() for why we check this property.
-                if (event.ignoreFor === $scope.model.uid) {
-                    return;
-                }
-                $scope.close();
-            };
-            $scope.filterTextClick = function (event) {
-                // We can't stop the event from propagating or we might prevent other inputs from closing on blur.
-                // But we can't let it proceed as normal or it may result in the $document click handler closing a newly-opened input.
-                // Instead we tag it for this particular instance of <select-field> to ignore.
-                if ($scope.isOpen) {
-                    event.ignoreFor = $scope.model.uid;
-                }
-            };
-            var pendingTimeoutId;
-            $scope.$watch('isOpen', function () {
-                if (pendingTimeoutId) {
-                    _this.$timeout_.cancel(pendingTimeoutId);
-                }
-                pendingTimeoutId = _this.$timeout_(function () {
-                    pendingTimeoutId = null;
-                    if ($scope.isOpen) {
-                        _this.$document_.on('click', undefined, documentClick);
+                    $timeout(function () {
+                        $scope.isOpen = true;
+                    });
+                };
+                /*****************************************************************************************
+                 * The following code pertains to filtering visible options.
+                 *****************************************************************************************/
+                $scope.emptyOption = {};
+                $scope.emptyOption[$scope.labelAttribute] = '';
+                $scope.emptyOption[$scope.valueAttribute] = undefined;
+                $scope.placeholderOption = {};
+                $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
+                $scope.placeholderOption[$scope.valueAttribute] = undefined;
+                $scope.filteredOptions = [];
+                // Sanitizes option and filter-text values for comparison
+                var sanitize = function (value) {
+                    return value && value.toLowerCase();
+                };
+                // Updates visible <option>s based on current filter text
+                var calculateFilteredOptions = function () {
+                    var options = $scope.options || [];
+                    $scope.filteredOptions.splice(0);
+                    if (!$scope.enableFiltering || !$scope.filter) {
+                        angular.copy(options, $scope.filteredOptions);
                     }
                     else {
-                        _this.$document_.off('click', undefined, documentClick);
+                        var filter = sanitize($scope.filter);
+                        angular.forEach(options, function (option) {
+                            var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
+                            if (index >= 0) {
+                                $scope.filteredOptions.push(option);
+                            }
+                        });
                     }
-                }, SelectField.MIN_TIMEOUT_INTERVAL);
-            });
-            $scope.$on('$destroy', function () {
-                _this.$document_.off('click', documentClick);
-            });
-            /*****************************************************************************************
-             * The following code responds to keyboard events when the drop-down is visible
-             *****************************************************************************************/
-            var filterText = $element.find('input');
-            $scope.setFilterFocus = function () {
-                setDelayedFocus(filterText);
-            };
-            $scope.mouseOver = function (index) {
-                $scope.mouseOverIndex = index;
-                $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
-            };
-            $scope.selectOption = function (option) {
-                $scope.model.bindable = option && option[$scope.valueAttribute];
-            };
-            // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
-            $scope.keyDown = function (event) {
-                switch (event.keyCode) {
-                    case 27:
-                        $scope.close();
-                        break;
-                    case 13:
+                    if (!$scope.selectedOption && !$scope.multiple) {
+                        $scope.filteredOptions.unshift($scope.placeholderOption);
+                    }
+                    else if ($scope.allowBlank) {
+                        $scope.filteredOptions.unshift($scope.emptyOption);
+                    }
+                };
+                $scope.$watch('filter', calculateFilteredOptions);
+                $scope.$watch('options.length', calculateFilteredOptions);
+                /*****************************************************************************************
+                 * The following code manages setting the correct default value based on bindable model.
+                 *****************************************************************************************/
+                var updateDefaultOption = function () {
+                    var selected = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
+                    if ($scope.model.bindable === selected) {
+                        // Default select the first item in the list
+                        // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
+                        if (!$scope.allowBlank && !$scope.preventDefaultOption && $scope.options && $scope.options.length) {
+                            $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+                        }
+                    }
+                };
+                $scope.$watch('model.bindable', updateDefaultOption);
+                $scope.$watch('options.length', updateDefaultOption);
+                /*****************************************************************************************
+                 * The following code deals with toggling/collapsing the drop-down and selecting values.
+                 *****************************************************************************************/
+                $scope.$watch('model.bindable', function () {
+                    var matchingOption = null;
+                    angular.forEach($scope.options, function (option) {
+                        if (option[$scope.valueAttribute] === $scope.model.bindable) {
+                            matchingOption = option;
+                        }
+                    });
+                    $scope.selectedOption = matchingOption;
+                    $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+                    // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
+                    $scope.filter = $scope.selectedOptionLabel;
+                });
+                var documentClick = function (event) {
+                    // See filterTextClick() for why we check this property.
+                    if (event.ignoreFor === $scope.model.uid) {
+                        return;
+                    }
+                    $scope.close();
+                };
+                $scope.filterTextClick = function (event) {
+                    // We can't stop the event from propagating or we might prevent other inputs from closing on blur.
+                    // But we can't let it proceed as normal or it may result in the $document click handler closing a newly-opened input.
+                    // Instead we tag it for this particular instance of <select-field> to ignore.
+                    if ($scope.isOpen) {
+                        event.ignoreFor = $scope.model.uid;
+                    }
+                };
+                var pendingTimeoutId;
+                $scope.$watch('isOpen', function () {
+                    if (pendingTimeoutId) {
+                        $timeout.cancel(pendingTimeoutId);
+                    }
+                    pendingTimeoutId = $timeout(function () {
+                        pendingTimeoutId = null;
                         if ($scope.isOpen) {
-                            $scope.selectOption($scope.mouseOverOption);
-                            $scope.close();
+                            $document.on('click', undefined, documentClick);
                         }
                         else {
-                            $scope.open();
+                            $document.off('click', undefined, documentClick);
                         }
-                        event.preventDefault();
-                        break;
-                    case 38:
-                        if ($scope.isOpen) {
-                            $scope.mouseOver($scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1);
-                        }
-                        else {
-                            $scope.open();
-                        }
-                        break;
-                    case 40:
-                        if ($scope.isOpen) {
-                            $scope.mouseOver($scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0);
-                        }
-                        else {
-                            $scope.open();
-                        }
-                        break;
-                    case 9:
-                    case 16:
-                        $scope.close();
-                        break;
-                    default:
-                        $scope.open();
-                        break;
-                }
-            };
-            $scope.$watchCollection('[isOpen, filteredOptions.length]', function () {
-                // Reset hover anytime our list opens/closes or our collection is refreshed.
-                $scope.mouseOver(-1);
-                // Pass focus through to filter field when select is opened
-                if ($scope.isOpen && $scope.enableFiltering) {
+                    }, MIN_TIMEOUT_INTERVAL);
+                });
+                $scope.$on('$destroy', function () {
+                    $document.off('click', documentClick);
+                });
+                /*****************************************************************************************
+                 * The following code responds to keyboard events when the drop-down is visible
+                 *****************************************************************************************/
+                var filterText = $element.find('input');
+                $scope.setFilterFocus = function () {
                     setDelayedFocus(filterText);
-                }
-            });
+                };
+                $scope.mouseOver = function (index) {
+                    $scope.mouseOverIndex = index;
+                    $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
+                };
+                $scope.selectOption = function (option) {
+                    $scope.model.bindable = option && option[$scope.valueAttribute];
+                };
+                // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
+                $scope.keyDown = function (event) {
+                    switch (event.keyCode) {
+                        case 27:
+                            $scope.close();
+                            break;
+                        case 13:
+                            if ($scope.isOpen) {
+                                $scope.selectOption($scope.mouseOverOption);
+                                $scope.close();
+                            }
+                            else {
+                                $scope.open();
+                            }
+                            event.preventDefault();
+                            break;
+                        case 38:
+                            if ($scope.isOpen) {
+                                $scope.mouseOver($scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1);
+                            }
+                            else {
+                                $scope.open();
+                            }
+                            break;
+                        case 40:
+                            if ($scope.isOpen) {
+                                $scope.mouseOver($scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0);
+                            }
+                            else {
+                                $scope.open();
+                            }
+                            break;
+                        case 9:
+                        case 16:
+                            $scope.close();
+                            break;
+                        default:
+                            $scope.open();
+                            break;
+                    }
+                };
+                $scope.$watchCollection('[isOpen, filteredOptions.length]', function () {
+                    // Reset hover anytime our list opens/closes or our collection is refreshed.
+                    $scope.mouseOver(-1);
+                    // Pass focus through to filter field when select is opened
+                    if ($scope.isOpen && $scope.enableFiltering) {
+                        setDelayedFocus(filterText);
+                    }
+                });
+            }
         };
-        SelectField.MIN_TIMEOUT_INTERVAL = 10;
-        return SelectField;
-    })();
-    formFor.SelectField = SelectField;
-    angular.module('formFor').directive('selectField', function ($document, $log, $timeout, $window, FieldHelper) { return new SelectField($document, $log, $timeout, $window, FieldHelper); });
+    }
+    formFor.SelectFieldDirective = SelectFieldDirective;
+    angular.module('formFor').directive('selectField', function ($document, $log, $timeout, FieldHelper) { return SelectFieldDirective($document, $log, $timeout, FieldHelper); });
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
@@ -1650,7 +1625,6 @@ var formFor;
                 label: '@'
             },
             link: function ($scope, $element, $attributes, formForController) {
-                console.log('SubmitButton directive link $scope:' + $scope.$id); // TODO Testing
                 $scope['buttonClass'] = $attributes['buttonClass'];
                 $scope.tabIndex = $attributes['tabIndex'] || 0;
                 $scope.$watch('label', function (value) {

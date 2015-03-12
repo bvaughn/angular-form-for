@@ -44,7 +44,6 @@ module formFor {
                      $element:ng.IAugmentedJQuery,
                      $attributes:ng.IAttributes,
                      ngModelController:ng.INgModelController):void {
-        console.log('FormForDebounce directive $scope:'+$scope.$id); // TODO Testing
 
         if ($attributes['type'] === 'radio' || $attributes['type'] === 'checkbox') {
           $log.warn("formForDebounce should only be used with <input type=text> and <textarea> elements");

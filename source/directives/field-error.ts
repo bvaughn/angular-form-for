@@ -38,7 +38,6 @@ module formFor {
       },
 
       link: function($scope:FieldErrorScope):void {
-        console.log('FieldError directive $scope:'+$scope.$id); // TODO Testing
         // No-op
       }
     };

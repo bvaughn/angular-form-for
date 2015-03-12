@@ -69,7 +69,6 @@ module formFor {
       },
 
       controller: function($scope:FieldLabelScope):void {
-        console.log('FieldLabel directive controller $scope:'+$scope.$id); // TODO Testing
         $scope.$watch('label', function(value) {
           $scope.bindableLabel = $sce.trustAsHtml(value);
         });

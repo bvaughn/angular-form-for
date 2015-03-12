@@ -72,9 +72,7 @@ module formFor {
    *                 attribute="accepted">
    * </checkbox-field>
    */
-  export function CheckboxFieldDirective($log:ng.ILogService):ng.IDirective {
-    var fieldHelper:FieldHelper = new FieldHelper(FormForConfiguration);
-
+  export function CheckboxFieldDirective($log:ng.ILogService, fieldHelper:FieldHelper):ng.IDirective {
     return {
       require: '^formFor',
       restrict: 'EA',
@@ -112,5 +110,5 @@ module formFor {
   }
 
   angular.module('formFor').directive('checkboxField',
-    ($log) => CheckboxFieldDirective($log));
+    ($log, FieldHelper) => CheckboxFieldDirective($log, FieldHelper));
 }

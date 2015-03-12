@@ -75,7 +75,6 @@ module formFor {
                      $attributes:ng.IAttributes,
                      formForController:FormForController):void {
 
-        console.log('SubmitButton directive link $scope:'+$scope.$id); // TODO Testing
         $scope['buttonClass'] = $attributes['buttonClass'];
         $scope.tabIndex = $attributes['tabIndex'] || 0;
 
