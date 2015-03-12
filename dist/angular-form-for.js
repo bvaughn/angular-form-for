@@ -2196,10 +2196,9 @@ var formFor;
         ModelValidator.prototype.validateFieldRequired_ = function (value, validationRules) {
             if (validationRules.required) {
                 var required = angular.isObject(validationRules.required) ? validationRules.required.rule : validationRules.required;
-                if (angular.isString(value)) {
-                    value = value.replace(/\s+$/, ''); // Disallow an all-whitespace string
-                }
-                if (required && !value) {
+                var stringValue = value.toString().replace(/\s+$/, ''); // Disallow an all-whitespace string
+                var numericValue = Number(value);
+                if (required && !stringValue && !numericValue) {
                     var failureMessage;
                     if (angular.isObject(validationRules.required)) {
                         failureMessage = validationRules.required.message;

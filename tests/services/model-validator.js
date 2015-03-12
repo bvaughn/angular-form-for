@@ -104,6 +104,11 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({required: true}, 'required', model.rules)).toBeResolved();
     });
 
+    it('should allow a non-empty, though potentially falsy value', function() { // See issue #93
+      expect(ModelValidator.validateField({required: 0}, 'required', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({required: '0'}, 'required', model.rules)).toBeResolved();
+    });
+
     it('should allow custom error messages for failed validations', function() {
       model.rules = {
         requiredField: {
