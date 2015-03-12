@@ -1403,7 +1403,7 @@ var formFor;
                 // Read from $attributes to avoid getting any interference from $scope.
                 $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
                 $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
-                $scope.placeholder = $attributes['placeholder'] || 'Select';
+                $scope.placeholder = $attributes.hasOwnProperty('placeholder') ? $attributes['placeholder'] : 'Select';
                 $scope.tabIndex = $attributes['tabIndex'] || 0;
                 fieldHelper.manageLabel($scope, $attributes, false);
                 fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
