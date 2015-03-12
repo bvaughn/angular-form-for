@@ -14,54 +14,15 @@
                 uid="{{model.uid}}-error">
   </field-error>
 
-  <!-- Filtered dropdowns use a type-ahead style component -->
-  <div ng-show="enableFiltering" class="input-group">
-    <input  aria-manager
-            id="{{model.uid}}-filter"
-            type="search" class="form-control filter-text-input"
-            tabindex="{{tabIndex}}"
-            placeholder="{{placeholder}}"
-            ng-disabled="disable || model.disabled"
-            ng-model="filter"
-            ng-click="filterTextClick($event)"
-            ng-focus="open()"
-            ng-keydown="keyDown($event)">
+  <span ng-if="enableFiltering"
+        ng-include form-for-include-replace
+        src="'form-for/templates/select-field/_select.html'"></span>
 
-    <ul class="dropdown-menu" ng-class="{show: isOpen}">
-      <li ng-repeat="option in filteredOptions"
-          ng-class="{active: option === selectedOption || $index === mouseOverIndex}">
+  <span ng-if="!enableFiltering && multiple"
+        ng-include form-for-include-replace
+        src="'form-for/templates/select-field/_multi-select.html'"></span>
 
-        <a  ng-bind="option[labelAttribute]"
-            ng-click="selectOption(option)"
-            ng-mouseenter="mouseOver($index)">
-        </a>
-      </li>
-    </ul>
-
-    <span class="input-group-addon" ng-click="setFilterFocus()">
-      <i class="caret"></i>
-    </span>
-  </div>
-
-  <!-- Unfiltered dropdowns use a regular [Bootstrap] select -->
-  <select aria-manager
-          ng-if="!enableFiltering && filteredOptions.length && !multiple"
-          id="{{model.uid}}"
-          class="form-control"
-          tabindex="{{tabIndex}}"
-          ng-disabled="disable || model.disabled"
-          ng-model="model.bindable"
-          ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
-  </select>
-
-  <!-- Binding to the 'multiple' attribute is not supported, even with ng-attr-multiple. -->
-  <select aria-manager multiple
-          ng-if="!enableFiltering && filteredOptions.length && multiple"
-          id="{{model.uid}}"
-          class="form-control"
-          tabindex="{{tabIndex}}"
-          ng-disabled="disable || model.disabled"
-          ng-model="model.bindable"
-          ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
-  </select>
+  <span ng-if="!enableFiltering && !multiple"
+        ng-include form-for-include-replace
+        src="'form-for/templates/select-field/_filtered-select.html'"></span>
 </div>

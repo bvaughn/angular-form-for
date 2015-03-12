@@ -611,6 +611,23 @@ var formFor;
     formFor.FormForDebounceDirective = FormForDebounceDirective;
     angular.module('formFor').directive('formForDebounce', ["$log", "$sniffer", "$timeout", "FormForConfiguration", function ($log, $sniffer, $timeout, FormForConfiguration) { return FormForDebounceDirective($log, $sniffer, $timeout, FormForConfiguration); }]);
 })(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     */
+    function FormForIncludeReplaceDirective() {
+        return {
+            require: 'ngInclude',
+            restrict: 'A',
+            link: function ($scope, $element, $attributes) {
+                $element.replaceWith($element.children());
+            }
+        };
+    }
+    formFor.FormForIncludeReplaceDirective = FormForIncludeReplaceDirective;
+    ;
+    angular.module('formFor').directive('formForIncludeReplace', function () { return FormForIncludeReplaceDirective(); });
+})(formFor || (formFor = {}));
 /// <reference path="../../definitions/angular.d.ts" />
 var formFor;
 (function (formFor) {

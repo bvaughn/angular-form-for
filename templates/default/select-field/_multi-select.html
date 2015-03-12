@@ -1,0 +1,11 @@
+<!-- Binding to the 'multiple' attribute is not supported, even with ng-attr-multiple. -->
+<select aria-manager multiple
+        id="{{model.uid}}"
+        class="select-field-select"
+        tabindex="{{tabIndex}}"
+        ng-disabled="disable || model.disabled"
+        ng-model="model.bindable"
+        ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
+</select>
+
+<i class="form-for-select-arrows"></i>

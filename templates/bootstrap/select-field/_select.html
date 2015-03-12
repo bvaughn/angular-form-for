@@ -1,0 +1,9 @@
+<!-- Unfiltered dropdowns use a regular [Bootstrap] select -->
+<select aria-manager
+        id="{{model.uid}}"
+        class="form-control"
+        tabindex="{{tabIndex}}"
+        ng-disabled="disable || model.disabled"
+        ng-model="model.bindable"
+        ng-options="option[valueAttribute] as option[labelAttribute] for option in filteredOptions">
+</select>
