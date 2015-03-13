@@ -16,7 +16,7 @@
 
   <span ng-if="enableFiltering"
         ng-include form-for-include-replace
-        src="'form-for/templates/select-field/_select.html'"></span>
+        src="'form-for/templates/select-field/_filtered-select.html'"></span>
 
   <span ng-if="!enableFiltering && multiple"
         ng-include form-for-include-replace
@@ -24,5 +24,5 @@
 
   <span ng-if="!enableFiltering && !multiple"
         ng-include form-for-include-replace
-        src="'form-for/templates/select-field/_filtered-select.html'"></span>
+        src="'form-for/templates/select-field/_select.html'"></span>
 </div>
