@@ -1423,7 +1423,6 @@ var formFor;
             scope: {
                 attribute: '@',
                 disable: '=',
-                filter: '=?',
                 filterDebounce: '@?',
                 help: '@?',
                 multiple: '=?',
@@ -1444,10 +1443,13 @@ var formFor;
                 $scope.tabIndex = $attributes['tabIndex'] || 0;
                 fieldHelper.manageLabel($scope, $attributes, false);
                 fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
+                var filterText;
                 // Helper method for setting focus on an item after a delay
-                var setDelayedFocus = function ($target) {
-                    var target = $target[0];
-                    $timeout(target.focus.bind(target));
+                var setDelayedFilterTextFocus = function () {
+                    if (!filterText) {
+                        filterText = $element.find('input');
+                    }
+                    $timeout(filterText.focus.bind(filterText));
                 };
                 $scope.close = function () {
                     $timeout(function () {
@@ -1480,11 +1482,11 @@ var formFor;
                 var calculateFilteredOptions = function () {
                     var options = $scope.options || [];
                     $scope.filteredOptions.splice(0);
-                    if (!$scope.enableFiltering || !$scope.filter) {
+                    if (!$scope.enableFiltering || !$scope.model['filter']) {
                         angular.copy(options, $scope.filteredOptions);
                     }
                     else {
-                        var filter = sanitize($scope.filter);
+                        var filter = sanitize($scope.model['filter']);
                         angular.forEach(options, function (option) {
                             var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
                             if (index >= 0) {
@@ -1499,7 +1501,7 @@ var formFor;
                         $scope.filteredOptions.unshift($scope.emptyOption);
                     }
                 };
-                $scope.$watch('filter', calculateFilteredOptions);
+                $scope.$watch('model.filter', calculateFilteredOptions);
                 $scope.$watch('options.length', calculateFilteredOptions);
                 /*****************************************************************************************
                  * The following code manages setting the correct default value based on bindable model.
@@ -1529,7 +1531,7 @@ var formFor;
                     $scope.selectedOption = matchingOption;
                     $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
                     // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-                    $scope.filter = $scope.selectedOptionLabel;
+                    $scope.model['filter'] = $scope.selectedOptionLabel;
                 });
                 var documentClick = function (event) {
                     // See filterTextClick() for why we check this property.
@@ -1567,12 +1569,8 @@ var formFor;
                 /*****************************************************************************************
                  * The following code responds to keyboard events when the drop-down is visible
                  *****************************************************************************************/
-                var filterText;
                 $scope.setFilterFocus = function () {
-                    if (!filterText) {
-                        filterText = $element.find('input');
-                    }
-                    setDelayedFocus(filterText);
+                    setDelayedFilterTextFocus();
                 };
                 $scope.mouseOver = function (index) {
                     $scope.mouseOverIndex = index;
@@ -1627,7 +1625,7 @@ var formFor;
                     $scope.mouseOver(-1);
                     // Pass focus through to filter field when select is opened
                     if ($scope.isOpen && $scope.enableFiltering) {
-                        setDelayedFocus(filterText);
+                        setDelayedFilterTextFocus();
                     }
                 });
             }

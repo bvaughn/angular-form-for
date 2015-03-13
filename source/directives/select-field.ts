@@ -230,7 +230,6 @@ module formFor {
       scope: {
         attribute: '@',
         disable: '=',
-        filter: '=?',
         filterDebounce: '@?',
         help: '@?',
         multiple: '=?',
@@ -260,11 +259,15 @@ module formFor {
         fieldHelper.manageLabel($scope, $attributes, false);
         fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
 
-        // Helper method for setting focus on an item after a delay
-        var setDelayedFocus:Function = ($target) => {
-          var target = $target[0];
+        var filterText:ng.IAugmentedJQuery;
 
-          $timeout(target.focus.bind(target));
+        // Helper method for setting focus on an item after a delay
+        var setDelayedFilterTextFocus:Function = () => {
+          if (!filterText) { // Null when link is first run because of ng-include
+            filterText = $element.find('input');
+          }
+
+          $timeout(filterText.focus.bind(filterText));
         };
 
         $scope.close = () => {
@@ -309,10 +312,10 @@ module formFor {
 
           $scope.filteredOptions.splice(0);
 
-          if (!$scope.enableFiltering || !$scope.filter) {
+          if (!$scope.enableFiltering || !$scope.model['filter']) {
             angular.copy(options, $scope.filteredOptions);
           } else {
-            var filter:string = sanitize($scope.filter);
+            var filter:string = sanitize($scope.model['filter']);
 
             angular.forEach(options, (option) => {
               var index:number = sanitize(option[$scope.labelAttribute]).indexOf(filter);
@@ -330,7 +333,7 @@ module formFor {
           }
         };
 
-        $scope.$watch('filter', calculateFilteredOptions);
+        $scope.$watch('model.filter', calculateFilteredOptions);
         $scope.$watch('options.length', calculateFilteredOptions);
 
         /*****************************************************************************************
@@ -371,7 +374,7 @@ module formFor {
           $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
 
           // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-          $scope.filter = $scope.selectedOptionLabel;
+          $scope.model['filter'] = $scope.selectedOptionLabel;
         });
 
         var documentClick = (event) => {
@@ -417,14 +420,8 @@ module formFor {
          * The following code responds to keyboard events when the drop-down is visible
          *****************************************************************************************/
 
-        var filterText:ng.IAugmentedJQuery;
-
         $scope.setFilterFocus = () => {
-          if (!filterText) { // Null when link is first run because of ng-include
-            filterText = $element.find('input');
-          }
-
-          setDelayedFocus(filterText);
+          setDelayedFilterTextFocus();
         };
 
         $scope.mouseOver = (index:number) => {
@@ -482,7 +479,7 @@ module formFor {
 
           // Pass focus through to filter field when select is opened
           if ($scope.isOpen && $scope.enableFiltering) {
-            setDelayedFocus(filterText);
+            setDelayedFilterTextFocus();
           }
         });
       }
