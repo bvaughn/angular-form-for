@@ -41,7 +41,8 @@
     "gulp-concat": "~2.5.2",
     "gulp-stylus": "~2.0.1",
     "autoprefixer-stylus": "~0.5.0",
-    "nib": "~1.1.0"
+    "nib": "~1.1.0",
+    "uglify-js": "~2.4.17"
   },
   "scripts": {
     "test": "gulp test"
