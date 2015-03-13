@@ -1567,8 +1567,11 @@ var formFor;
                 /*****************************************************************************************
                  * The following code responds to keyboard events when the drop-down is visible
                  *****************************************************************************************/
-                var filterText = $element.find('input');
+                var filterText;
                 $scope.setFilterFocus = function () {
+                    if (!filterText) {
+                        filterText = $element.find('input');
+                    }
                     setDelayedFocus(filterText);
                 };
                 $scope.mouseOver = function (index) {

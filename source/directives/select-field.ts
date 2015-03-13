@@ -417,9 +417,13 @@ module formFor {
          * The following code responds to keyboard events when the drop-down is visible
          *****************************************************************************************/
 
-        var filterText:ng.IAugmentedJQuery = $element.find('input');
+        var filterText:ng.IAugmentedJQuery;
 
         $scope.setFilterFocus = () => {
+          if (!filterText) { // Null when link is first run because of ng-include
+            filterText = $element.find('input');
+          }
+
           setDelayedFocus(filterText);
         };
 
