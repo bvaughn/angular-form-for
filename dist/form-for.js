@@ -1441,6 +1441,7 @@ var formFor;
                 $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
                 $scope.placeholder = $attributes.hasOwnProperty('placeholder') ? $attributes['placeholder'] : 'Select';
                 $scope.tabIndex = $attributes['tabIndex'] || 0;
+                $scope.scopeBuster = {};
                 fieldHelper.manageLabel($scope, $attributes, false);
                 fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
                 var filterText;
@@ -1482,11 +1483,11 @@ var formFor;
                 var calculateFilteredOptions = function () {
                     var options = $scope.options || [];
                     $scope.filteredOptions.splice(0);
-                    if (!$scope.enableFiltering || !$scope.model['filter']) {
+                    if (!$scope.enableFiltering || !$scope.scopeBuster.filter) {
                         angular.copy(options, $scope.filteredOptions);
                     }
                     else {
-                        var filter = sanitize($scope.model['filter']);
+                        var filter = sanitize($scope.scopeBuster.filter);
                         angular.forEach(options, function (option) {
                             var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
                             if (index >= 0) {
@@ -1494,26 +1495,25 @@ var formFor;
                             }
                         });
                     }
-                    if (!$scope.selectedOption && !$scope.multiple) {
+                    if (!$scope.selectedOption && !$scope.multiple && !$scope.enableFiltering) {
                         $scope.filteredOptions.unshift($scope.placeholderOption);
                     }
                     else if ($scope.allowBlank) {
                         $scope.filteredOptions.unshift($scope.emptyOption);
                     }
                 };
-                $scope.$watch('model.filter', calculateFilteredOptions);
+                $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
                 $scope.$watch('options.length', calculateFilteredOptions);
                 /*****************************************************************************************
                  * The following code manages setting the correct default value based on bindable model.
                  *****************************************************************************************/
                 var updateDefaultOption = function () {
                     var selected = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
-                    if ($scope.model.bindable === selected) {
-                        // Default select the first item in the list
-                        // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-                        if (!$scope.allowBlank && !$scope.preventDefaultOption && $scope.options && $scope.options.length) {
-                            $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
-                        }
+                    var numOptions = $scope.options && $scope.options.length;
+                    // Default select the first item in the list
+                    // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
+                    if (selected === $scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
+                        $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
                     }
                 };
                 $scope.$watch('model.bindable', updateDefaultOption);
@@ -1531,7 +1531,7 @@ var formFor;
                     $scope.selectedOption = matchingOption;
                     $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
                     // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-                    $scope.model['filter'] = $scope.selectedOptionLabel;
+                    $scope.scopeBuster.filter = $scope.selectedOptionLabel;
                 });
                 var documentClick = function (event) {
                     // See filterTextClick() for why we check this property.

@@ -118,6 +118,7 @@ var buildHelper = function(sources, directory, outputFile) {
   return gulp
     .src(sources)
     .pipe(typeScriptCompiler({
+      //declaration: true, // Generate *.d.ts declarations file as well
       module: "CommonJS",
       emitError: false,
       out: outputFile,

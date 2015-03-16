@@ -141,6 +141,11 @@ module formFor {
     preventDefaultOption:boolean;
 
     /**
+     * Used to share data between main select-field template and ngIncluded templates.
+     */
+    scopeBuster:any;
+
+    /**
      * Currently-selected option.
      */
     selectedOption:any;
@@ -240,6 +245,7 @@ module formFor {
            $element:ng.IAugmentedJQuery,
            $attributes:ng.IAttributes,
            formForController:FormForController):void {
+
         if (!$scope.attribute) {
           $log.error('Missing required field "attribute"');
 
@@ -255,6 +261,8 @@ module formFor {
         $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
         $scope.placeholder = $attributes.hasOwnProperty('placeholder') ? $attributes['placeholder'] : 'Select';
         $scope.tabIndex = $attributes['tabIndex'] || 0;
+
+        $scope.scopeBuster = {};
 
         fieldHelper.manageLabel($scope, $attributes, false);
         fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
@@ -312,10 +320,10 @@ module formFor {
 
           $scope.filteredOptions.splice(0);
 
-          if (!$scope.enableFiltering || !$scope.model['filter']) {
+          if (!$scope.enableFiltering || !$scope.scopeBuster.filter) {
             angular.copy(options, $scope.filteredOptions);
           } else {
-            var filter:string = sanitize($scope.model['filter']);
+            var filter:string = sanitize($scope.scopeBuster.filter);
 
             angular.forEach(options, (option) => {
               var index:number = sanitize(option[$scope.labelAttribute]).indexOf(filter);
@@ -326,14 +334,14 @@ module formFor {
             });
           }
 
-          if (!$scope.selectedOption && !$scope.multiple) {
+          if (!$scope.selectedOption && !$scope.multiple && !$scope.enableFiltering) {
             $scope.filteredOptions.unshift($scope.placeholderOption);
           } else if ($scope.allowBlank) {
             $scope.filteredOptions.unshift($scope.emptyOption);
           }
         };
 
-        $scope.$watch('model.filter', calculateFilteredOptions);
+        $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
         $scope.$watch('options.length', calculateFilteredOptions);
 
         /*****************************************************************************************
@@ -341,15 +349,13 @@ module formFor {
          *****************************************************************************************/
 
         var updateDefaultOption:(value?:any) => any = () => {
-          var selected = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
+          var selected:any = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
+          var numOptions:number = $scope.options && $scope.options.length;
 
-          if ($scope.model.bindable === selected) {
-
-            // Default select the first item in the list
-            // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-            if (!$scope.allowBlank && !$scope.preventDefaultOption && $scope.options && $scope.options.length) {
-              $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
-            }
+          // Default select the first item in the list
+          // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
+          if (selected === $scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
+            $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
           }
         };
 
@@ -370,11 +376,13 @@ module formFor {
               }
             });
 
-          $scope.selectedOption = matchingOption;
-          $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+          if (matchingOption) {
+            $scope.selectedOption = matchingOption;
+            $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
+          }
 
           // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-          $scope.model['filter'] = $scope.selectedOptionLabel;
+          $scope.scopeBuster.filter = $scope.selectedOptionLabel;
         });
 
         var documentClick = (event) => {
