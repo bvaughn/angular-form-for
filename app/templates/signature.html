@@ -1,0 +1,32 @@
+<div class="bs-callout bs-callout-success">
+  <div ng-if="params && params.length != 0">
+    <h4 ng-bind="heading"></h4>
+
+    <table class="table table-striped table-params">
+      <thead>
+        <tr>
+          <th style="width:20%">Parameter</th>
+          <th style="width:20%">Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="param in params">
+          <td ng-bind="param.name" ng-class="{optional: param.optional}"></td>
+          <td><code ng-bind="param.type">String</code></td>
+          <td ng-bind-html="trust(param.description)"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br ng-if="params && params.length != 0 && returnType"/>
+
+  <div ng-if="returnType">
+    <h4>Returns</h4>
+
+    <code ng-bind="returnType"></code>
+
+    <span ng-if="returnDescription" ng-bind-html="returnDescription"></span>
+  </div>
+</div>

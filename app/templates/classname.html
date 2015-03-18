@@ -1,0 +1,18 @@
+<h3 class="docs-classname">
+  <span ng-bind="name"></span>
+
+  <small class="docs-super" ng-if="super">
+    <i class="fa fa-chevron-right"></i>
+    <doclink name="{{super}}"></doclink>
+  </small>
+
+  <a class="btn btn-xs btn-primary" ng-href="https://github.com/bvaughn/angular-form-for/blob/master/source/{{source}}">
+    View Source <i class="fa fa-code"></i>
+  </a>
+  <a class="btn btn-xs btn-success" href="https://github.com/bvaughn/angular-form-for/issues/new?title={{name}}%20documentation%20bug&labels=enhancement">
+    Improve Docs <i class="fa fa-edit"></i>
+  </a>
+  <a class="btn btn-xs btn-danger" href="https://github.com/bvaughn/angular-form-for/issues/new?title={{name}}%20bug%20report&labels=bug">
+    Report Bug <i class="fa fa-bug"></i>
+  </a>
+</h3>

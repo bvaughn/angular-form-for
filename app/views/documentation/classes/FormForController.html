@@ -1,0 +1,139 @@
+<classname name="FormForController" source="utils/form-for-controller.ts"></classname>
+
+<p class="lead">
+  formFor directive controller; accessible by binding to the formFor directive <code>$scope.controller</code> property.
+</p>
+
+<h3>Instance Methods</h3>
+
+<!-- registerCollectionLabel() -->
+<h4 class="page-header">
+  registerCollectionLabel(fieldName)
+</h4>
+<p>
+  Collection headers should register themselves using this function in order to be notified of validation errors.
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Unique identifier of collection within model.'}
+]" return="{type: 'Object', description: 'A bindable wrapper object describing the state of the collection.'}"></signature>
+
+<!-- registerFormField() -->
+<h4 class="page-header">
+  registerFormField(fieldName)
+</h4>
+<p>
+  All form-input children of formFor must register using this function.
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Unique identifier of field within model; used to map errors back to input fields'}
+]" return="{type: 'Object', description: 'A bindable wrapper object describing the state of the field.'}"></signature>
+
+<!-- registerSubmitButton() -->
+<h4 class="page-header">
+  registerSubmitButton(submitButtonScope)
+</h4>
+<p>
+  All form-input children of formFor must register using this function.
+</p>
+<signature params="[
+  {name: 'submitButtonScope', type: '$scope', description: 'Scope of submit button directive.'}
+]" return="{type: 'Object', description: 'A bindable wrapper object describing the state of the button.'}"></signature>
+
+<!-- resetErrors() -->
+<h4 class="page-header">
+  resetErrors()
+</h4>
+<p>
+  Resets errors displayed on the without resetting the form data values.
+</p>
+
+<!-- resetField() -->
+<h4 class="page-header">
+  resetField(fieldName)
+</h4>
+<p>
+  Reset validation errors for an individual field.
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Field name within formFor data object (ex. <code>billing.address</code>)'}
+]"></signature>
+
+<!-- resetFields() -->
+<h4 class="page-header">
+  resetFields()
+</h4>
+<p>
+  Alias to <code>resetErrors</code>.
+</p>
+
+<!-- setFieldError() -->
+<h4 class="page-header">
+  setFieldError(fieldName, error)
+</h4>
+<p>
+  Manually set a validation error message for a given field.
+  This method should only be used when formFor's <code>validateOn</code> attribute has been set to "manual".
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Field name within formFor data object (ex. <code>billing.address</code>)'},
+  {name: 'error', type: 'String', description: 'Error message to display (or null to clear the visible error)'}
+]"></signature>
+
+<!-- unregisterFormField() -->
+<h4 class="page-header">
+  unregisterFormField(fieldName)
+</h4>
+<p>
+  Form fields created within ngRepeat or ngIf directive should clean up themselves on removal.
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Unique identifier of field within model.'}
+]"></signature>
+
+<!-- updateCollectionErrors() -->
+<h4 class="page-header">
+  updateCollectionErrors(fieldNameToErrorMap)
+</h4>
+<p>
+  Update all registered collection labels with the specified error messages.
+  Specified map should be keyed with fieldName and should container user-friendly error strings.
+</p>
+<signature params="[
+  {name: 'fieldNameToErrorMap', type: 'Object', description: 'Map of collection names (or paths) to errors'}
+]"></signature>
+
+<!-- updateFieldErrors() -->
+<h4 class="page-header">
+  updateFieldErrors(fieldNameToErrorMap)
+</h4>
+<p>
+  Update all registered form fields with the specified error messages.
+  Specified map should be keyed with fieldName and should container user-friendly error strings.
+</p>
+<signature params="[
+  {name: 'fieldNameToErrorMap', type: 'Object', description: 'Map of field names (or paths) to errors'}
+]"></signature>
+
+<!-- validateField() -->
+<h4 class="page-header">
+  validateField(fieldName)
+</h4>
+<p>
+  Force validation for an individual field.
+  If the field fails validation an error message will automatically be shown.
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Field name within formFor data object (ex. <code>billing.address</code>)'}
+]"></signature>
+
+<!-- validateForm() -->
+<h4 class="page-header">
+  validateForm(<em>showErrors</em>)
+</h4>
+<p>
+  Validate all registered form-fields.
+  This method returns a promise that is resolved or rejected with a field to error message map.
+</p>
+<signature params="[
+  {name: 'showErrors', optional: true, type: 'Boolean', description: 'Mark fields with errors as invalid (visually) after validation'}
+]"></signature>

@@ -1,0 +1,40 @@
+<classname name="FieldHelper" source="directives/field-helper.ts"></classname>
+
+<p class="lead">
+  Shared helper methods used by formFor field directives.
+</p>
+
+<p>
+  This service can be accessed via <code>$injector.get('FieldHelper')</code>
+  although it is not intended for use outside of the formFor module/library.
+</p>
+
+<h3>Static Methods</h3>
+
+<!-- manageLabel() -->
+<h4 class="page-header">
+  manageLabel($scope, $attributes, <em>humanizeValueAttribute</em>)
+</h4>
+<p>
+  Determines the field's label based on its current attributes and the FormForConfiguration configuration settings.
+  Also watches for changes in the (attributes) label and updates $scope accordingly.
+</p>
+<signature params="[
+  {name: '$scope', type: 'Scope', description: 'Directive link $scope'},
+  {name: '$attributes', type: 'Attributes', description: 'Directive link $attributes'},
+  {name: 'humanizeValueAttribute', optional: true, type: 'Boolean', description: 'Fall back to a humanized version of the <code>value</code> attribute if no label is provided; This can be useful for radio options where the label should represent the value. By default, a humanized version of the <code>attribute</code> attribute will be used.'}
+]"></signature>
+
+<!-- manageFieldRegistration() -->
+<h4 class="page-header">
+  manageFieldRegistration($scope, $attributes, formForController)
+</h4>
+<p>
+  Registers a form field and stores the bindable object returned on the $scope.
+  This method also unregisters the field on $scope $destroy.
+</p>
+<signature params="[
+  {name: '$scope', type: 'Scope', description: 'Directive link $scope'},
+  {name: '$attributes', type: 'Attributes', description: 'Directive link $attributes'},
+  {name: 'formForController', type: 'FormForController', description: 'Controller object for parent formFor directive.'}
+]"></signature>

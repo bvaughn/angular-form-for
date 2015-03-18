@@ -1,0 +1,58 @@
+<classname name="checkboxField" source="directives/checkbox-field.ts"></classname>
+
+<p class="lead">
+  Renders an <code>&lt;input type="checkbox"&gt;</code> with an optional label.
+  Well-suited for boolean attributes.
+</p>
+
+<usage parser="markup" source="app/snippets/checkbox-field-usage.html"></usage>
+
+<div class="bs-docs-constructor">
+  <signature heading="Attributes" params="[
+    {
+      name: 'attribute',
+      type: 'String',
+      description: 'Name of the attribute within the parent form-for directive\'s model object. This attributes specifies the data-binding target for the input. Dot notation (e.g. <em>address.street</em>) is supported.'
+    },
+    {
+      name: 'disable',
+      optional: true,
+      type: 'Boolean',
+      description: 'Disable input element. (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).'
+    },
+    {
+      name: 'help',
+      optional: true,
+      type: 'String',
+      description: 'Optional help tooltip to display on hover. By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.'
+    },
+    {
+      name: 'label',
+      optional: true,
+      type: 'String',
+      description: 'Optional field label displayed after the checkbox input. (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.'
+    },
+    {
+      name: 'tabIndex',
+      optional: true,
+      type: 'Integer',
+      description: 'Optional custom tab index for input; defaults to 0 (in which case the tab order is chosen by the browser).'
+    },
+    {
+      name: 'uid',
+      optional: true,
+      type: 'String',
+      description: 'Optional ID to assign to the inner element; a unique ID will be auto-generated if no value is provided.'
+    }
+  ]"></signature>
+</div>
+
+<div class="bs-docs-constructor">
+  <signature heading="Events" params="[
+    {
+      name: 'changed',
+      type: 'Function',
+      description: 'Invoked on checkbox change.'
+    }
+  ]"></signature>
+</div>

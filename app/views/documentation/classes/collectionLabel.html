@@ -1,0 +1,30 @@
+<classname name="collectionLabel" source="directives/collection-label.ts"></classname>
+
+<p class="lead">
+  Header label for collections.
+  Also shows validation errors for the collection.
+</p>
+
+<usage parser="markup" source="app/snippets/collection-label-usage.html"></usage>
+
+<div class="bs-docs-constructor">
+  <signature heading="Attributes" params="[
+    {
+      name: 'attribute',
+      type: 'String',
+      description: 'Name of collection within validation rules. Dot notation (ex \'user.emails\') is supported.'
+    },
+    {
+      name: 'help',
+      optional: true,
+      type: 'String',
+      description: 'Optional help tooltip to display on hover. By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.'
+    },
+    {
+      name: 'label',
+      optional: true,
+      type: 'String',
+      description: 'Field label string. This string can contain HTML markup.'
+    }
+  ]"></signature>
+</div>

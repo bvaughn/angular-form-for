@@ -274,3 +274,59 @@ validate-field-button {
 a {
   font-weight: 500;
 }
+
+.optional:after {
+  color: #999;
+  font-size: 80%;
+  content: " (optional)";
+}
+
+/** Documentation stlyes **/
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+    margin-bottom: 0;
+}
+.bs-callout code {
+    border-radius: 3px;
+}
+.bs-callout+.bs-callout {
+    margin-top: -5px;
+}
+.bs-callout-danger {
+    border-left-color: #ce4844;
+}
+.bs-callout-danger h4 {
+    color: #ce4844;
+}
+.bs-callout-warning {
+    border-left-color: #aa6708;
+}
+.bs-callout-warning h4 {
+    color: #aa6708;
+}
+.bs-callout-info {
+    border-left-color: #1b809e;
+}
+.bs-callout-info h4 {
+    color: #1b809e;
+}
+.bs-callout-success {
+  border-left-color: #00a86b
+}
+.bs-callout-success h4{
+  color: #00a86b
+}
+
+.bs-docs-container nav > h4 {
+  margin-top: 20px;
+}

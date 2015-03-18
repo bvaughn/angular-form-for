@@ -1,0 +1,290 @@
+<classname name="FormForConfiguration" source="service/form-for-configuration.ts"></classname>
+
+<p class="lead">
+  Can be used to configure default behavior for all instances of formFor within a project.
+</p>
+
+<p>
+  This service can be accessed via <code>$injector.get('FormForConfiguration')</code>.
+  Despite its name, this service is accessible during the Angular <em>run</em> phase (not <em>config</em>).
+</p>
+
+<h3>Static Methods</h3>
+
+<!-- disableAutoLabels() -->
+<h4 class="page-header">
+  disableAutoLabels()
+</h4>
+<p>
+  Use this method to disable auto-generated labels for formFor input fields.
+</p>
+
+<!-- enableAutoLabels() -->
+<h4 class="page-header">
+  enableAutoLabels()
+</h4>
+<p>
+  Use this method to enable auto-generated labels for formFor input fields.
+  Labels will be generated based on attribute-name for fields without a label attribute present.
+  Radio fields are an exception to this rule.
+  Their names are generated from their values.
+</p>
+
+<!-- getFailedValidationMessage() -->
+<h4 class="page-header">
+  getFailedValidationMessage(failureType)
+</h4>
+<p>
+  Returns the appropriate error message for the validation failure type.
+</p>
+<signature params="[
+  {name: 'failureType', type: 'String', description: 'Type of validation failure.'}
+]" return="{type: 'String', description: 'Error message.'}"></signature>
+
+<!-- setDefaultDebounceDuration() -->
+<h4 class="page-header">
+  setDefaultDebounceDuration(duration)
+</h4>
+<p>
+  Sets the default debounce interval (in ms) for all textField inputs.
+  This setting can be overridden on a per-input basis (see textField).
+  Defaults to 500ms.
+  To disable debounce (update only on blur) pass false.
+</p>
+<signature params="[
+  {name: 'duration', type: 'Number', description: 'Debounce duration'}
+]"></signature>
+
+<!-- setDefaultSubmitComplete() -->
+<h4 class="page-header">
+  setDefaultSubmitComplete(callback)
+</h4>
+<p>
+  Sets the default submit-complete behavior for all formFor directives.
+  This setting can be overridden on a per-form basis.
+</p>
+<p>
+  Default handler function accepting a data parameter representing the server-response returned by the submitted form.
+  This function should accept a single parameter, the response data from the form-submit method.
+</p>
+<signature params="[
+  {name: 'callback', type: 'Function', description: 'Callback function'}
+]"></signature>
+
+<!-- setDefaultSubmitError() -->
+<h4 class="page-header">
+  setDefaultSubmitError(callback)
+</h4>
+<p>
+  Sets the default submit-error behavior for all formFor directives.
+  This setting can be overridden on a per-form basis (see formFor).
+</p>
+<p>
+  This method should accept a single parameter, the error returned by the form-submit method.
+</p>
+<signature params="[
+  {name: 'callback', type: 'Function', description: 'Callback function'}
+]"></signature>
+
+<!-- setDefaultValidationFailed() -->
+<h4 class="page-header">
+  setDefaultValidationFailed(callback)
+</h4>
+<p>
+  Sets the default validation-failed behavior for all formFor directives.
+  This setting can be overridden on a per-form basis (see formFor).
+</p>
+<signature params="[
+  {name: 'callback', type: 'Function', description: 'Callback function'}
+]"></signature>
+
+<!-- setRequiredLabel() -->
+<h4 class="page-header">
+  setRequiredLabel(string)
+</h4>
+<p>
+  Sets a default label to be displayed beside each text and select input for required attributes only.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForCustomMessage() -->
+<h4 class="page-header">
+  setValidationFailedForCustomMessage(string)
+</h4>
+<p>
+  Override the default error message for failed custom validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForMaxCollectionSizeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForMaxCollectionSizeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed max collection size validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForMaximumMessage() -->
+<h4 class="page-header">
+  setValidationFailedForMaximumMessage(string)
+</h4>
+<p>
+  Override the default error message for failed maximum validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForMaxLengthMessage() -->
+<h4 class="page-header">
+  setValidationFailedForMaxLengthMessage(string)
+</h4>
+<p>
+  Override the default error message for failed maxlength validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForMinCollectionSizeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForMinCollectionSizeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed min collection size validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForMinimumMessage() -->
+<h4 class="page-header">
+  setValidationFailedForMinimumMessage(string)
+</h4>
+<p>
+  Override the default error message for failed minimum validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForMinLengthMessage() -->
+<h4 class="page-header">
+  setValidationFailedForMinLengthMessage(string)
+</h4>
+<p>
+  Override the default error message for failed minlength validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForPatternMessage() -->
+<h4 class="page-header">
+  setValidationFailedForPatternMessage(string)
+</h4>
+<p>
+  Override the default error message for failed pattern validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForRequiredMessage() -->
+<h4 class="page-header">
+  setValidationFailedForRequiredMessage(string)
+</h4>
+<p>
+  Override the default error message for failed required validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForEmailTypeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForEmailTypeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed type = 'email' validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForIntegerTypeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForIntegerTypeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed type = 'integer' validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForNegativeTypeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForNegativeTypeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed type = 'negative' validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForNonNegativeTypeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForNonNegativeTypeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed type = 'nonNegative' validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForNumericTypeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForNumericTypeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed type = 'numeric' validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>
+
+<!-- setValidationFailedForPositiveTypeMessage() -->
+<h4 class="page-header">
+  setValidationFailedForPositiveTypeMessage(string)
+</h4>
+<p>
+  Override the default error message for failed type = 'positive' validations.
+  This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+</p>
+<signature params="[
+  {name: 'string', type: 'String', description: 'Label'}
+]"></signature>

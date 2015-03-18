@@ -83,8 +83,8 @@ angular.module('formForDocumentation').value('currentTemplates', {
 
 angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
   var map = {};
-  map['default'] = ['formFor.defaultTemplates', 'http://rawgit.com/bvaughn/angular-form-for/1.7.1/dist/form-for.default-templates.js'];
-  map['bootstrap'] = ['formFor.bootstrapTemplates', 'http://rawgit.com/bvaughn/angular-form-for/1.7.1/dist/form-for.bootstrap-templates.js'];
+  map['default'] = ['formFor.defaultTemplates', '/offline/form-for.default-templates.js'];
+  map['bootstrap'] = ['formFor.bootstrapTemplates', '/offline/form-for.bootstrap-templates.js'];
 
   return {
     restrict: 'E',
@@ -120,3 +120,112 @@ angular.module('formForDocumentation').directive('templateToggler', function($oc
     }
   };
 });
+
+/**
+ * Renders a link to documentation for the specified class.
+ */
+angular.module('formForDocumentation').directive('doclink',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        name: '@'
+      },
+      templateUrl: 'app/templates/doclink.html'
+    };
+  });
+
+/**
+ * Renders a link to documentation for the specified class.
+ */
+angular.module('formForDocumentation').directive('navdoclink',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        name: '@'
+      },
+      templateUrl: 'app/templates/navdoclink.html'
+    };
+  });
+
+/**
+ * Renders example usage code snippets using the Prism JS library for syntax highlighting.
+ */
+angular.module('formForDocumentation').directive('usage',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        source: '@'
+      },
+      templateUrl: 'app/templates/usage.html',
+      link: function($scope, $element, $attributes) {
+        $scope.parser = $attributes['parser'] || 'javascript';
+        $scope.heading = $attributes['heading'] || 'Usage';
+      }
+    };
+  });
+
+/**
+ * Renders a method signature doc including (optional) typed parameters and (optional) return type information.
+ */
+angular.module('formForDocumentation').directive('signature',
+  function($sce) {
+    return {
+      restrict: 'EA',
+      scope: {
+        params: '=?',
+        returnType: '@'
+      },
+      link: function($scope, $element, $attributes) {
+        $scope.heading = $attributes['heading'] || 'Params';
+
+        $scope.trust = function(value) {
+          return $sce.trustAsHtml(value);
+        }
+        
+        if ($attributes.return) {
+          if ($attributes.return.indexOf('{') >= 0) {
+            var parsed = $scope.$eval($attributes.return);
+
+            $scope.returnDescription = $sce.trustAsHtml(parsed.description);
+            $scope.returnType = parsed.type;
+          } else {
+            $scope.returnType = $sce.trustAsHtml($attributes.return);
+          }
+        }
+      },
+      templateUrl: 'app/templates/signature.html'
+    };
+  });
+
+/**
+ * Renders a template displaying the various errors a method may throw.
+ */
+angular.module('formForDocumentation').directive('throws',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        errors: '='
+      },
+      templateUrl: 'app/templates/throws.html'
+    };
+  });
+
+/**
+ * Renders a class type with a link to the source code and a docs issue button.
+ */
+angular.module('formForDocumentation').directive('classname',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        name: '@',
+        source: '@',
+        super: '@?'
+      },
+      templateUrl: 'app/templates/classname.html'
+    };
+  });

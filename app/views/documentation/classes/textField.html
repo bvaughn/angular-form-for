@@ -1,0 +1,125 @@
+<classname name="textField" source="directives/text-field.ts"></classname>
+
+<p class="lead">
+  Displays an HTML <code>&lt;input&gt;</code> or <code>&lt;textarea&gt;</code> with an optional label.
+</p>
+
+<p>
+  Single-line (default) <code>&lt;input&gt;</code> type can be configured to allow for passwords, numbers, etc.
+</p>
+
+<usage parser="markup" source="app/snippets/text-field-usage.html"></usage>
+<usage parser="markup" heading="Text input examples" source="app/snippets/text-field-examples.html"></usage>
+
+<div class="bs-docs-constructor">
+  <signature heading="Attributes" params="[
+    {
+      name: 'autofocus',
+      optional: true,
+      type: 'attribute',
+      description: 'The presence of this attribute will auto-focus the input field.'
+    },
+    {
+      name: 'attribute',
+      type: 'String',
+      description: 'Name of the attribute within the parent form-for directive\'s model object. This attributes specifies the data-binding target for the input. Dot notation (e.g. <em>address.street</em>) is supported.'
+    },
+    {
+      name: 'debounce',
+      optional: true,
+      type: 'Integer',
+      description: 'Debounce duration (in ms) before input text is applied to model and evaluated. To disable debounce (update only on blur) specify a value of false. This value\'s default is determined by FormForConfiguration.'
+    },
+    {
+      name: 'disable',
+      optional: true,
+      type: 'Boolean',
+      description: 'Disable input element. (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).'
+    },
+    {
+      name: 'help',
+      optional: true,
+      type: 'String',
+      description: 'Optional help tooltip to display on hover. By default this makes use of the Angular Bootstrap tooltip directive and the Font Awesome icon set.'
+    },
+    {
+      name: 'iconAfter',
+      optional: true,
+      type: 'String',
+      description: 'Optional CSS class to display as an icon after the input field. An object with the following keys may also be provided: pristine, valid, invalid In this case the icon specified by a particular state will be shown based on the field\'s validation status.'
+    },
+    {
+      name: 'iconBefore',
+      optional: true,
+      type: 'String',
+      description: 'Optional CSS class to display as a icon before the input field. An object with the following keys may also be provided: pristine, valid, invalid In this case the icon specified by a particular state will be shown based on the field\'s validation status.'
+    },
+    {
+      name: 'label',
+      optional: true,
+      type: 'String',
+      description: 'Optional field label displayed before the drop-down. (Although not required, it is strongly suggested that you specify a value for this attribute.) HTML is allowed for this attribute.'
+    },
+    {
+      name: 'multiline',
+      optional: true,
+      type: 'attribute',
+      description: 'The presence of this attribute enables multi-line input.'
+    },
+    {
+      name: 'placeholder',
+      optional: true,
+      type: 'String',
+      description: 'Optional placeholder text to display if input is empty.'
+    },
+    {
+      name: 'rows',
+      optional: true,
+      type: 'Integer',
+      description: 'Optional number of rows for a multline <code>textarea</code>; defaults to 3.'
+    },
+    {
+      name: 'tabIndex',
+      optional: true,
+      type: 'Integer',
+      description: 'Optional custom tab index for input; defaults to 0 (in which case the tab order is chosen by the browser).'
+    },
+    {
+      name: 'type',
+      optional: true,
+      type: 'String',
+      description: 'Optional HTML input-type (ex. text, password, etc.). Defaults to \'text\'.'
+    },
+    {
+      name: 'uid',
+      optional: true,
+      type: 'String',
+      description: 'Optional ID to assign to the inner element; a unique ID will be auto-generated if no value is provided.'
+    }
+  ]"></signature>
+</div>
+
+<div class="bs-docs-constructor">
+  <signature heading="Events" params="[
+    {
+      name: 'blurred',
+      type: 'Function',
+      description: 'Invoked on text input blur.'
+    },
+    {
+      name: 'focused',
+      type: 'Function',
+      description: 'Invoked on text input focus.'
+    },
+    {
+      name: 'iconAfterClicked',
+      type: 'Function',
+      description: 'Invoked when the after-icon is clicked.'
+    },
+    {
+      name: 'iconBeforeClicked',
+      type: 'Function',
+      description: 'Invoked when the before-icon is clicked.'
+    }
+  ]"></signature>
+</div>

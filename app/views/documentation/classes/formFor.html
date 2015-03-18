@@ -1,0 +1,83 @@
+<classname name="formFor" source="directives/form-for.ts"></classname>
+
+<p class="lead">
+  Augments an <code>ngForm</code> directive to add validation and many other features.
+</p>
+
+<p>
+  This directive should be paired with an Angular ngForm.
+  It binds to a form-data object and runs validations each time the data is changed.
+</p>
+
+<usage parser="markup" heading="Controller-based form" source="app/snippets/form-for-controller-functions-usage.html"></usage>
+<usage parser="markup" heading="Service-based form" source="app/snippets/form-for-service-usage.html"></usage>
+
+<p>
+  For more examples refer to the "Demos" section.
+</p>
+
+<div class="bs-docs-constructor">
+  <signature heading="Attributes" params="[
+    {
+      name: 'controller',
+      optional: true,
+      type: 'Object',
+      description: 'Two way bindable attribute exposing access to the <code>FormForController</code>.<br/><br/>See the \'Form Metadata\' demo for an example.'
+    },
+    {
+      name: 'disable',
+      optional: true,
+      type: 'Boolean',
+      description: 'Form is disabled. This attribute is 2-way bindable.<br/><br/>Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute.'
+    },
+    {
+      name: 'formFor',
+      type: 'Object',
+      description: '$scope object for formFor to read and write data to.<br/><br/>It is recommended that you bind to a copied object so that you can quickly revert changes if the user cancels or if submit fails. (See angular.copy.)'
+    },
+    {
+      name: 'service',
+      optional: true,
+      type: 'String',
+      description: 'Convenience mehtod for identifying an $injector-accessible model containing both the validation rules and submit function. Validation rules should be accessible via an attribute named <code>validationRules</code> and the submit function should be named <code>submit</code>.'
+    },
+    {
+      name: 'submitWith',
+      optional: true,
+      type: 'Function',
+      description: 'Responsible for submitting the form data. This function should accept a named parameter <code>data</code> (the model object) and should return a <code>Promise</code> to be resolved/rejected based on the result of the submission. In the event of a rejection the promise can return an error string or a map of field-names to specific errors.'
+    },
+    {
+      name: 'validateOn',
+      optional: true,
+      type: 'String',
+      description: 'Controls form validation behavior. Acceptable values include: change, submit, manual. Forms validate on-change by default, which is to say that validation is run anytime a field-value is changed. To defver validation until the form is submitted, use \'submit\' and to disable auto-validation entirely use \'manual\'.'
+    },
+    {
+      name: 'validationRules',
+      optional: true,
+      type: 'Object',
+      description: 'Set of client-side validation rules (keyed by form field names) to apply to form-data before submitting. For more information refer to the Validation Types page.'
+    }
+  ]"></signature>
+</div>
+
+<div class="bs-docs-constructor">
+  <signature heading="Events" params="[
+    {
+      name: 'submitComplete',
+      type: 'Function',
+      description: 'Invoked upon a successful form submission. Use this to display custom messages or do custom routing after submit. This method should accept a <code>data</code> parameter.<br/><br/>To set a global, default submit-with handler see FormForConfiguration.'
+    },
+    {
+      name: 'submitError',
+      type: 'Function',
+      description: 'Invoked upon a failed form submission. This function should accept an <code>error</code> parameter.<br/><br/>To set a global, default submit-with handler see FormForConfiguration.'
+    },
+    {
+      name: 'validationFailed',
+      type: 'Function',
+      description: 'Invoked any time a form-submit is blocked due to a failed validation.'
+    }
+  ]"></signature>
+</div>

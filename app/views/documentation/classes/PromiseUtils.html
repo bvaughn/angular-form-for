@@ -1,0 +1,33 @@
+<classname name="PromiseUtils" source="utils/promise-utils.ts"></classname>
+
+<p class="lead">
+  Decorates the <code>$q</code> service with additional methods.
+</p>
+
+<p>
+  This object is intended for internal formFor use only and is not exposed to the <code>$injector</code>.
+</p>
+
+<h3>Instance Methods</h3>
+
+<!-- resolve() -->
+<h4 class="page-header">
+  resolve(data)
+</h4>
+<p>
+  Similar to <code>$q.reject</code>- this creates and resolves a <code>Promise</code>.
+</p>
+<signature params="[
+  {name: 'data', type: 'any', description: 'Value to resolve the promise with'}
+]" return="{type: 'Promise', description: 'resolved with the data provided'}"></signature>
+
+<!-- waitForAll() -->
+<h4 class="page-header">
+  waitForAll(promises)
+</h4>
+<p>
+  Similar to <code>$q.all</code> but waits for all promises to resolve/reject before resolving/rejecting.
+</p>
+<signature params="[
+  {name: 'promises', type: 'Array', description: 'Array of Promises'}
+]" return="{type: 'Promise', description: 'to be resolved or rejected once all of the observed promises complete'}"></signature>

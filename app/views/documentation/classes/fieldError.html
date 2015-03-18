@@ -1,0 +1,34 @@
+<classname name="fieldError" source="directives/field-error.ts"></classname>
+
+<p class="lead">
+  Displays a standard formFor field validation error message.
+</p>
+
+<p>
+  This component is used internally by other formFor directives to display validation errors.
+  You can use it within your own, custom formFor inputs as well.
+</p>
+
+<usage parser="markup" source="app/snippets/field-error-usage.html"></usage>
+
+<div class="bs-docs-constructor">
+  <signature heading="Attributes" params="[
+    {
+      name: 'error',
+      type: 'String',
+      description: 'Error messages to display (or null if field is valid or pristine).'
+    },
+    {
+      name: 'leftAligned',
+      optional: true,
+      type: 'Boolean',
+      description: 'Apply additional \'left-aligned\' class to error message. Use this to position validation errors inline beside certain types of inputs (e.g. checkbox, radio).'
+    },
+    {
+      name: 'uid',
+      optional: true,
+      type: 'String',
+      description: 'Optional ID to assign to the inner element; a unique ID will be auto-generated if no value is provided.'
+    }
+  ]"></signature>
+</div>

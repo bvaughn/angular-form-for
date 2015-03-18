@@ -1,5 +1,7 @@
 angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'formFor.bootstrapTemplates', 'ngRoute', 'ui.bootstrap', 'ui.router']).
-  config(function($stateProvider, $urlRouterProvider) {
+  config(function($logProvider, $stateProvider, $urlRouterProvider) {
+    $logProvider.debugEnabled(true);
+
     $stateProvider.state('app', {
       'abstract': true,
       url: '',
@@ -77,6 +79,30 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
       url: '/index',
       templateUrl: 'app/views/index.html',
       controller: 'IndexController'
+    });
+
+    // API docuumentation
+
+    $stateProvider.state('app.documentation', {
+      url: '/documentation',
+      templateUrl: 'app/views/documentation/layout.html'
+    });
+    $stateProvider.state('app.documentation.index', {
+      parent: 'app.documentation',
+      url: '/index',
+      templateUrl: 'app/views/documentation/index.html'
+    });
+    $stateProvider.state('app.documentation.forClass', {
+      parent: 'app.documentation',
+      url: '/:className',
+      templateUrl: 'app/views/documentation/for-class.html',
+      controller: function ($scope, $stateParams) {
+        if ($stateParams.className) {
+          $scope.templateUrl = 'app/views/documentation/classes/' + $stateParams.className + '.html';
+        } else {
+          $scope.templateUrl = 'app/views/documentation/index.html';
+        }
+      }
     });
 
     $urlRouterProvider.otherwise('/index');

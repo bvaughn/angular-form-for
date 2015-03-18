@@ -1,0 +1,12 @@
+<form
+  form-for="formData"
+  validation-rules="validationRules"
+  validation-failed="validationFailed()"
+  submit-with="submit(data)"
+  *controller="controllerObject"
+  *disable="true | false"
+  *validate-on="change | submit | manual"
+  *submit-complete="submitted(data)"
+  *submit-error="failed(error)">
+  ...
+</form>

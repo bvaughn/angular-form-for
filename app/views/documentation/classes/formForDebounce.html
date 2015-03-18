@@ -1,0 +1,24 @@
+<classname name="formForDebounce" source="directives/form-fo-debounce.ts"></classname>
+
+<p class="lead">
+  Allows <code>ngModel</code> updates to be applied asynchronously.
+</p>
+
+<p>
+  Angular introduced debouncing (via <code>ngModelOptions</code>) in version 1.3.
+  This component adds debouncing behavior for Angular 1.1.x and 1.2.x.
+  It is primarily intended for use with <code>&lt;input type=text&gt;</code> and <code>&lt;textarea&gt;</code> elements.
+</p>
+
+<usage parser="markup" heading="2-second debounce delay" source="app/snippets/form-for-debounce-example.html"></usage>
+<usage parser="markup" heading="Disabled debounce (update on-blur)" source="app/snippets/form-for-debounce-disabled-example.html"></usage>
+
+<div class="bs-docs-constructor">
+  <signature heading="Attributes" params="[
+    {
+      name: 'formForDebounce',
+      type: 'Integer | Boolean',
+      description: 'Debounce duration in milliseconds. By default this value is 1000ms. To disable the debounce interval (aka to update on blur only) a value of false should be specified.'
+    }
+  ]"></signature>
+</div>

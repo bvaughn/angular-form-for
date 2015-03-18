@@ -1,0 +1,48 @@
+<classname name="submitButton" source="directives/submit-button.ts"></classname>
+
+<p class="lead">
+  Displays a submit <code>&lt;button&gt;</code> component that is automatically disabled when a form is invalid or in the process of submitting.
+</p>
+
+<p>
+  You can use a regular <code>&lt;button&gt;</code> element within formFor as well.
+  If you choose to you must register your button with formFor's controller using <code>registerSubmitButton()</code>.
+  This method returns a model with a bindable <code>disabled</code> attribute that your button should observe.
+</p>
+
+<usage parser="markup" source="app/snippets/submit-button-usage.html"></usage>
+<usage parser="markup" heading="Examples" source="app/snippets/submit-button-examples.html"></usage>
+
+<div class="bs-docs-constructor">
+  <signature heading="Attributes" params="[
+    {
+      name: 'buttonClass',
+      optional: true,
+      type: 'String',
+      description: 'Optional CSS class names to apply to button component.'
+    },
+    {
+      name: 'disable',
+      optional: true,
+      type: 'Boolean',
+      description: 'Disable button. (Note the name is disable and not disabled to avoid collisions with the HTML5 disabled attribute).'
+    },
+    {
+      name: 'icon',
+      optional: true,
+      type: 'String',
+      description: 'Optional CSS class to display as a button icon.'
+    },
+    {
+      name: 'label',
+      type: 'String',
+      description: 'Button label. HTML is allowed for this attribute.'
+    },
+    {
+      name: 'tabIndex',
+      optional: true,
+      type: 'Integer',
+      description: 'Optional custom tab index for input; by default this is 0 (tab order chosen by the browser).'
+    }
+  ]"></signature>
+</div>

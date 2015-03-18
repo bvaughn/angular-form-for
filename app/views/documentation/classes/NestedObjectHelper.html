@@ -1,0 +1,62 @@
+<classname name="NestedObjectHelper" source="utils/nested-object-helper.ts"></classname>
+
+<p class="lead">
+  Simplifies working with nested objects (and arrays).
+</p>
+
+<p>
+  This object is intended for internal formFor use only and is not exposed to the <code>$injector</code>.
+</p>
+
+<h3>Instance Methods</h3>
+
+<!-- flattenAttribute() -->
+<h4 class="page-header">
+  flattenAttribute(fieldName)
+</h4>
+<p>
+  Converts a field name (which may contain dots or array indices) into a string that can be used to key an object
+  (e.g. <em>items[0].name</em> would be converted into <em>items___0______name</em>).
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Attribute (or dot-notation path) to read'}
+]" return="{type: 'String', description: 'Modified field name safe to use as an object key'}"></signature>
+
+<!-- flattenObjectKeys() -->
+<h4 class="page-header">
+  flattenObjectKeys(object)
+</h4>
+<p>
+  Crawls an object and returns a flattened set of all attributes using dot notation.
+  This converts an Object like: <code>{foo: {bar: true}, baz: true}</code> into an Array like <code>['foo', 'foo.bar', 'baz']</code>.
+</p>
+<signature params="[
+  {name: 'object', type: 'Object', description: 'Object to be flattened'}
+]" return="{type: 'Array', description: 'of flattened keys (perhaps containing dot notation)'}"></signature>
+
+<!-- readAttribute() -->
+<h4 class="page-header">
+  readAttribute(object, fieldName)
+</h4>
+<p>
+  Returns the value defined by the specified attribute.
+  This function guards against dot notation for nested references (e.g. <em>foo.bar</em>).
+</p>
+<signature params="[
+  {name: 'object', type: 'Object', description: 'Object to be read'},
+  {name: 'fieldName', type: 'String', description: 'Attribute (or dot-notation path) to read'}
+]" return="Value defined at the specified key"></signature>
+
+<!-- writeAttribute() -->
+<h4 class="page-header">
+  writeAttribute(object, fieldName, value)
+</h4>
+<p>
+  Writes the specified value to the specified attribute.
+  This function guards against dot notation for nested references (e.g. <em>foo.bar</em>).
+</p>
+<signature params="[
+  {name: 'object', type: 'Object', description: 'Object to be read'},
+  {name: 'fieldName', type: 'String', description: 'Attribute (or dot-notation path) to read'},
+  {name: 'value', type: 'any', description: 'Value to be written'}
+]"></signature>

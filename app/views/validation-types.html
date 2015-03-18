@@ -1,5 +1,5 @@
 <div class="container">
-  <h1>Validation Types </h1>
+  <h1>Validation Types</h1>
 
   <p>
     formFor supports the following validation rules:
@@ -10,12 +10,16 @@
     <dd>A truthy value must be specified for this field.</dd>
     <dt>minlength <code>int</code></dt>
     <dd>Field must contain at least this many characters.</dd>
+    <dt>minimum <code>int</code></dt>
+    <dd>Numeric value must be no smaller than this.</dd>
     <dt>maxlength <code>int</code></dt>
     <dd>Field must contain no more than this many characters.</dd>
+    <dt>maximum <code>int</code></dt>
+    <dd>Numeric value must be no larger than this.</dd>
     <dt>pattern <code>RegExp</code></dt>
     <dd>Field must match this regular expression.</dd>
     <dt>type <code>String</code></dt>
-    <dd>Enumeration for common validation types. Supported types include integer, number, positive, negative, and email. You can also stack types (ex. positive </integer, negative number).
+    <dd>Enumeration for common validation types. Supported types include <em>integer</em>, <em>number</em>, <em>positive</em>, <em>negative</em>, and <em>email</em>. You can also stack types (ex. <em>positive integer</em>, <em>negative number</em>).</dd>
     <dt>custom <code>Function</code></dt>
     <dd>Field must be approved by this custom validation function (see below for more details).</dd>
   </dl>
@@ -25,7 +29,7 @@
     refer to the <a href="#/demo/advanced-form">advanced form demo</a> for an example of validations.
   </p>
 
-  <h2>Validating collections</h2>
+  <h2>Collection Validations</h2>
 
   <p>
     formFor also supports the following validation rules as they apply to collections:

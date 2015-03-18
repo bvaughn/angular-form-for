@@ -1,0 +1,93 @@
+<classname name="ModelValidator" source="services/model-validator.ts"></classname>
+
+<p class="lead">
+  Used by formFor to determine if each field in the form-data passes validation rules.
+</p>
+
+<p>
+  This service can be accessed via <code>$injector.get('ModelValidator')</code>
+  although it is not intended for use outside of the formFor module/library.
+</p>
+
+<h3>Static Methods</h3>
+
+<!-- isCollectionRequired() -->
+<h4 class="page-header">
+  isCollectionRequired(fieldName, validationRuleSet)
+</h4>
+<p>
+  Determines if the specified collection is required (requires a minimum number of items).
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Name of field containing the collection'},
+  {name: 'validationRuleSet', type: 'Object', description: 'Map of field names to validation rules'}
+]" return="Boolean"></signature>
+
+<!-- isFieldRequired() -->
+<h4 class="page-header">
+  isFieldRequired(fieldName, validationRuleSet)
+</h4>
+<p>
+  Determines if the specified field is flagged as required.
+</p>
+<signature params="[
+  {name: 'fieldName', type: 'String', description: 'Name of field in question'},
+  {name: 'validationRuleSet', type: 'Object', description: 'Map of field names to validation rules'}
+]" return="Boolean"></signature>
+
+<!-- validateAll() -->
+<h4 class="page-header">
+  validateAll(formData, validationRuleSet)
+</h4>
+<p>
+  Validates the model against all rules in the validationRules.
+  This method returns a promise to be resolved on successful validation or rejected with a map of field-name to error-message.
+</p>
+<signature params="[
+  {name: 'formData', type: 'Object', description: 'Form-data object model is contained within'},
+  {name: 'validationRuleSet', type: 'Object', description: 'Map of field names to validation rules'},
+]" return="{type: 'Promise', description: 'to be resolved or rejected based on validation success or failure'}"></signature>
+
+<!-- validateCollection() -->
+<h4 class="page-header">
+  validateCollection(formData, fieldName, validationRuleSet)
+</h4>
+<p>
+  Validate the properties of a collection (but not the items within the collection).
+  This method returns a promise to be resolved on successful validation or rejected with an error message.
+</p>
+<signature params="[
+  {name: 'formData', type: 'Object', description: 'Form-data object model is contained within'},
+  {name: 'fieldName', type: 'String', description: 'Name of collection to validate'},
+  {name: 'validationRuleSet', type: 'Object', description: 'Map of field names to validation rules'}
+]" return="{type: 'Promise', description: 'to be resolved or rejected based on validation success or failure'}"></signature>
+
+<!-- validateField() -->
+<h4 class="page-header">
+  validateField(formData, fieldName, validationRuleSet)
+</h4>
+<p>
+  Validates a value against the related rule-set (within validationRules).
+  This method returns a promise to be resolved on successful validation.
+  If validation fails the promise will be rejected with an error message.
+</p>
+<signature params="[
+  {name: 'formData', type: 'Object', description: 'Form-data object model is contained within'},
+  {name: 'fieldName', type: 'String', description: 'Name of field used to associate the rule-set map with a given value'},
+  {name: 'validationRuleSet', type: 'Object', description: 'Map of field names to validation rules'}
+]" return="{type: 'Promise', description: 'to be resolved or rejected based on validation success or failure'}"></signature>
+
+<!-- validateFields() -->
+<h4 class="page-header">
+  validateFields(formData, fieldNames, validationRuleSet)
+</h4>
+<p>
+  Validates a value against the related rule-set (within validationRules).
+  This method returns a promise to be resolved on successful validation.
+  If validation fails the promise will be rejected with an error message.
+</p>
+<signature params="[
+  {name: 'formData', type: 'Object', description: 'Form-data object model is contained within'},
+  {name: 'fieldNames', type: 'Array', description: 'White-list set of fields to validate for the given model. Values outside of this list will be ignored.'},
+  {name: 'validationRuleSet', type: 'Object', description: 'Map of field names to validation rules'}
+]" return="{type: 'Promise', description: 'to be resolved or rejected based on validation success or failure'}"></signature>
