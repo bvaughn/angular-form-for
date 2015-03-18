@@ -330,3 +330,12 @@ a {
 .bs-docs-container nav > h4 {
   margin-top: 20px;
 }
+
+code {
+  background-color: #EEE;
+  color: #666;
+}
+.doclink > code {
+  color: #31708f;
+  background-color: #e8f4fa;
+}
