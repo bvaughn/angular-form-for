@@ -1528,8 +1528,10 @@ var formFor;
                             matchingOption = option;
                         }
                     });
-                    $scope.selectedOption = matchingOption;
-                    $scope.selectedOptionLabel = matchingOption && matchingOption[$scope.labelAttribute];
+                    if (matchingOption) {
+                        $scope.selectedOption = matchingOption;
+                        $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
+                    }
                     // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
                     $scope.scopeBuster.filter = $scope.selectedOptionLabel;
                 });
