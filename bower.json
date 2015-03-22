@@ -2,8 +2,8 @@
   "name": "angular-form-for",
   "version": "2.0.0",
   "main": [
-      "./dist/form-for.css",
-      "./dist/form-for.js"
+    "./dist/form-for.css",
+    "./dist/form-for.js"
   ],
   "homepage": "https://github.com/bvaughn/angular-form-for",
   "authors": [
@@ -25,16 +25,6 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "jquery": "~2.1.1",
-    "angular": "1.2.22"
-  },
-  "devDependencies": {
-    "jasmine-object-matchers": "~0.0.3",
-    "jasmine-promise-matchers": "~0.0.3",
-    "angular-mocks": "1.2.22"
-  },
-  "resolutions": {
-    "angular": "1.2.22"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
