@@ -9,11 +9,24 @@
   It binds to a form-data object and runs validations each time the data is changed.
 </p>
 
+<p>
+  formFor displays and validates your data but it requires you to provide a function that submits the data.
+  This function should return a promise that is resolved or rejected based on the outcome of submitting the form.
+  There are two ways to provide the validation and submit data to formFor.
+  The first way is to define both on your controller's <code>$scope</code> like so:
+</p>
+
 <usage parser="markup" heading="Controller-based form" source="app/snippets/form-for-controller-functions-usage.html"></usage>
+
+<p>
+  The second way is to specify a service that defines <code>validationRules</code> and <code>submit</code> (function) properties:
+</p>
+
 <usage parser="markup" heading="Service-based form" source="app/snippets/form-for-service-usage.html"></usage>
 
 <p>
-  For more examples refer to the "Demos" section.
+  Additional properties and events are available as well; (see below documentation).
+  For more usage examples refer to the <em>Demos</em> section.
 </p>
 
 <div class="bs-docs-constructor">
