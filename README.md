@@ -1,7 +1,4 @@
-# Angular formFor
-
-[![Build Status](https://travis-ci.org/bvaughn/angular-form-for.svg)](https://travis-ci.org/bvaughn/angular-form-for)
-[![Join the chat at https://gitter.im/bvaughn/angular-form-for](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bvaughn/angular-form-for?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# angular-form-for [![Build Status](https://travis-ci.org/bvaughn/angular-form-for.svg)](https://travis-ci.org/bvaughn/angular-form-for) [![Join the chat at https://gitter.im/bvaughn/angular-form-for](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bvaughn/angular-form-for?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations.
 Using *formFor* a sign-up form may look like this:
