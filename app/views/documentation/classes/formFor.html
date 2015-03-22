@@ -10,10 +10,21 @@
 </p>
 
 <p>
-  formFor displays and validates your data but it requires you to provide a function that submits the data.
-  This function should return a promise that is resolved or rejected based on the outcome of submitting the form.
+  formFor displays and validates your data but to do this it requires 3 things:
+</p>
+
+<ul>
+  <li>A bindable data object that fields can read and wite data to (<code>formData</code>).</li>
+  <li>A set of <a ui-sref="app.validationTypes">validation rules</a> to apply to the form data.</li>
+  <li>
+    A function that submits the form data.
+    This function should return a promise that is resolved or rejected based on the outcome of submitting the form.
+  </li>
+</ul>
+
+<p>
   There are two ways to provide the validation and submit data to formFor.
-  The first way is to define both on your controller's <code>$scope</code> like so:
+  The first way is to define both on your controller's <code>$scope</code> and pass them in via attributes like so:
 </p>
 
 <usage parser="markup" heading="Controller-based form" source="app/snippets/form-for-controller-functions-usage.html"></usage>
