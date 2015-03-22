@@ -1,0 +1,12 @@
+<template-toggler message="This form is created by formFor. It can use either Bootstrap styles or the default styles provided by formFor.">
+</template-toggler>
+
+<form form-for="formData" controller="formController" validation-rules="validationRules" submit-with="submit()">
+  <div class="row show-grid">
+    <div class="col-md-6"><text-field label="Email" attribute="email"></text-field></div>
+    <div class="col-md-6"><text-field label="Password" attribute="password" type="password"></text-field></div>
+  </div>
+  <checkbox-field label="I agree to the terms of service" attribute="iAgreeToTheTermsOfService"></checkbox-field>
+  <button class="btn btn-default" ng-click="reset()">Reset <i class="fa fa-undo"></i></button>
+  <button class="btn btn-primary">Sign Up <i class="fa fa-user"></i></button>
+</form>

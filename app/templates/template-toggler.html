@@ -1,5 +1,6 @@
 <p class="template-toggler">
-  Choose a template set:
+  <span ng-if="message" ng-bind="message"></span>
+  <span ng-if="!message">Choose a template set:</span>
 
   <span class="btn-group">
     <span ng-click="load('bootstrap')"

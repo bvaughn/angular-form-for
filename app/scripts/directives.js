@@ -90,6 +90,7 @@ angular.module('formForDocumentation').directive('templateToggler', function($oc
     restrict: 'E',
     templateUrl: 'app/templates/template-toggler.html',
     scope: {
+      message: '@?'
     },
     link: function($scope) {
       $scope.current = currentTemplates.key;

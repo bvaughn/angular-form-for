@@ -78,7 +78,7 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app.index', {
       url: '/index',
       templateUrl: 'app/views/index.html',
-      controller: 'IndexController'
+      controller: 'IndexFormDemoController'
     });
 
     // API docuumentation

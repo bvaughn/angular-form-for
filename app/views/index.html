@@ -39,27 +39,25 @@
 </div>
 
 <div class="container">
-  <div class="well">
-    <legend>Sample sign-up form</legend>
-    <template-toggler></template-toggler>
-    <form form-for="formData" controller="formController" validation-rules="validationRules" submit-with="submit()">
-      <div class="row show-grid">
-        <div class="col-md-6"><text-field label="Email" attribute="email"></text-field></div>
-        <div class="col-md-6"><text-field label="Password" attribute="password" type="password"></text-field></div>
-      </div>
-      <checkbox-field label="I agree to the terms of service" attribute="iAgreeToTheTermsOfService"></checkbox-field>
-      <button class="btn btn-default" ng-click="reset()">Reset <i class="fa fa-undo"></i></button>
-      <button class="btn btn-primary">Sign Up <i class="fa fa-user"></i></button>
-    </form>
-  </div>
+  <tabset justified="true">
+    <tab>
+      <tab-heading>
+        Form Demo <i class="fa fa-eye"></i>
+      </tab-heading>
+      <div class="tab-content well" ng-include="'app/demos/index-form.html'"></div>
+    </tab>
+    <tab>
+      <tab-heading>HTML Source <i class="fa fa-html5"></i></tab-heading>
+      <prism class="tab-content" source="app/demos/index-form.html"></prism>
+    </tab>
+    <tab>
+      <tab-heading>JS Source <i class="fa fa-code"></i></tab-heading>
+      <prism class="tab-content" parser="javascript" source="app/demos/index-form.js"></prism>
+    </tab>
+  </tabset>
 
   <p>
     formFor is a form-creation and validation library built on top of <a href="https://angularjs.org/">Angular JS</a>.
-  </p>
-
-  <div ng-include="'app/views/partials/parse-warning.html'"></div>
-
-  <p>
     It is incredibly flexible, offering a wide range of configuration options.
     Check out the demos and documentation to learn more!
   </p>
@@ -87,7 +85,7 @@
   <prism class="tab-content" parser="javascript" source="app/samples/module-definition.js"></prism>
 
   <p>
-    For more information about templating options see <a ui-sref="app.templateOverrides">Templates and Overrides</a>.
+    Check out the <em>Demos</em> and <em>Guides</em> sections to learn more.
   </p>
 
   <h1>License</h1>
