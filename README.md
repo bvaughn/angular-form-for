@@ -1,5 +1,7 @@
 # Angular formFor
 
+[![Join the chat at https://gitter.im/bvaughn/angular-form-for](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bvaughn/angular-form-for?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/bvaughn/angular-form-for.svg)](https://travis-ci.org/bvaughn/angular-form-for)
 [![Join the chat at https://gitter.im/bvaughn/angular-form-for](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bvaughn/angular-form-for?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
