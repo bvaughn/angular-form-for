@@ -4,6 +4,8 @@
 
 [http://bvaughn.github.io/angular-form-for/](http://bvaughn.github.io/angular-form-for/)
 
+[![Build Status](https://travis-ci.org/bvaughn/angular-form-for.svg)](https://travis-ci.org/bvaughn/angular-form-for)
+
 *formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations.
 Using *formFor* a sign-up form may look like this:
 
