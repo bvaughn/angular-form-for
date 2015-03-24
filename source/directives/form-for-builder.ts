@@ -65,7 +65,10 @@ module formFor {
           }
         }
 
-        // TODO Append a <submit> button if one isn't already present inside of $element
+        // Append a <submit> button if one isn't already present inside of $element
+        if ($element.find('input[type=button], button').length === 0) {
+          htmlString += `<submit-button label="Submit"></submit-button>`;
+        }
 
         var linkingFunction:any = $compile(htmlString);
         var compiled = linkingFunction($scope, undefined, {transcludeControllers: formForController});
