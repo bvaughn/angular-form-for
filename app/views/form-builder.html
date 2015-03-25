@@ -1,0 +1,41 @@
+<div class="container">
+  <h1>Form Builder</h1>
+
+  <p>
+    formFor can automatically generate form markup for you using the <span doclink name="formForBuilder"></span>.
+    You can shape the markup using the view-schema properties defined below on this page.
+    These properties can be mixed in with the form validation rules or provided as a separate object.
+  </p>
+
+  <p>
+    Click <a ui-sref="app.formBuilderMarkup">here</a> to see a demo of the form builder.
+  </p>
+
+  <h3>Separate View and Validation Rules</h3>
+
+  <p>
+    For example, suppose your controller's <code>$scope</code> defines a "<em>viewRules</em>" property:
+  </p>
+
+  <prism parser="javascript" source="app/samples/form-for-builder-view-rules.js"></prism>
+
+  <p>
+    You can pass these rules to the <span doclink name="formForBuilder"></span> like so:
+  </p>
+
+  <prism parser="markup" source="app/samples/form-for-builder-view-rules.html"></prism>
+
+  <h3>Merged View and Validation Rules</h3>
+
+  <p>
+    Your validation and view rules might be mixed together as shown below:
+  </p>
+
+  <prism parser="javascript" source="app/samples/form-for-builder-mixed-rules.js"></prism>
+
+  <p>
+    In that case you don't need to explicitly pass the view rules to <span doclink name="formForBuilder"></span>:
+  </p>
+
+  <prism parser="markup" source="app/samples/form-for-builder-mixed-rules.html"></prism>
+</div>

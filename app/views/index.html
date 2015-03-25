@@ -3,47 +3,26 @@
     <div class="header-splash-area-cell">
       <h1 class="header-main-text">Angular JS <em>formFor</em></h1>
       <p class="header-sub-text">the <em>fastest</em> and <em>easiest</em> way to create and validate Angular forms</p>
-
-      <div class="btn-and-tooltip-group fork-group">
-        <a class="btn btn-sm" ng-href="{{githubData.url}}" target="_blank">
-          <i class="fa fa-github"></i> Fork
-        </a>
-        <a class="tooltip fade right in" ng-href="{{githubData.forks_url}}" target="_blank">
-          <span class="tooltip-arrow"></span>
-          <span class="tooltip-inner">{{githubData.forks}}</span>
-        </a>
-      </div>
-
-      <div class="btn-and-tooltip-group watch-group">
-        <a class="btn btn-sm" ng-href="{{githubData.url}}" target="_blank">
-          <i class="fa fa-github-alt"></i> Watch
-        </a>
-        <a class="tooltip fade right in" ng-href="{{githubData.watchers_url}}" target="_blank">
-          <span class="tooltip-arrow"></span>
-          <span class="tooltip-inner">{{githubData.watchers}}</span>
-        </a>
-      </div>
-
-      <div class="btn-and-tooltip-group star-group">
-        <a class="btn btn-sm" ng-href="{{githubData.url}}" target="_blank">
-          <i class="fa fa-star"></i> Star
-        </a>
-        <a class="tooltip fade right in" ng-href="{{githubData.stargazers_url}}" target="_blank">
-          <span class="tooltip-arrow"></span>
-          <span class="tooltip-inner">{{githubData.stargazers}}</span>
-        </a>
-      </div>
-
+      <div github-info></div>
     </div>
   </div>
 </div>
 
 <div class="container">
+  <p class="lead">
+    formFor is a form-creation and validation library built on top of <a href="https://angularjs.org/">Angular JS</a>.
+    It is incredibly flexible and offers a wide range of configuration options.
+    Here's an example form:
+  </p>
+
+  <template-toggler message="Toggle between Bootstrap styles or the default styles provided by formFor:"></template-toggler>
+
   <tabset justified="true">
     <tab>
       <tab-heading>
         Form Demo <i class="fa fa-eye"></i>
       </tab-heading>
+
       <div class="tab-content well" ng-include="'app/demos/index-form.html'"></div>
     </tab>
     <tab>
@@ -55,16 +34,6 @@
       <prism class="tab-content" parser="javascript" source="app/demos/index-form.js"></prism>
     </tab>
   </tabset>
-
-  <p>
-    formFor is a form-creation and validation library built on top of <a href="https://angularjs.org/">Angular JS</a>.
-    It is incredibly flexible, offering a wide range of configuration options.
-    Check out the demos and documentation to learn more!
-  </p>
-
-  <p>
-    Reach out to me <a href="https://github.com/bvaughn" target="_blank">on Github</a> if you've got any questions.
-  </p>
 
   <h1>Installation</h1>
 

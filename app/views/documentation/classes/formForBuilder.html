@@ -1,0 +1,94 @@
+<classname name="formForBuilder" source="directives/form-for-builder.ts"></classname>
+
+<p class="lead">
+  Automatically creates form markup based on a view ruleset.
+</p>
+
+<usage parser="markup" heading="Example formForBuilder" source="app/snippets/form-for-builder.html"></usage>
+
+<p>
+  Form builder supports a variety of view rules but only one- <code>inputType</code>- is required for each field.
+  Without this attribute no form-field will be generated.
+</p>
+
+<div class="bs-docs-constructor">
+  <signature heading="View rules" params="[
+    {
+      name: 'allowBlank',
+      optional: true,
+      type: 'Boolean',
+      description: 'An empty/blank selection should be allowed. This property is only supported for <code>select</code> inputs.'
+    },
+    {
+      name: 'enableFiltering',
+      optional: true,
+      type: 'Boolean',
+      description: 'Enable filtering of list via a text input at the top of the drop-down. This property is only supported for <code>select</code> inputs.'
+    },
+    {
+      name: 'help',
+      optional: true,
+      type: 'String',
+      description: 'Optional help text providing additional context to users.'
+    },
+    {
+      name: 'inputType',
+      type: 'String',
+      description: 'Input type used by this field. The following values are supported: <code>checkbox</code>, <code>number</code>, <code>password</code>, <code>radio</code>, <code>select</code>, <code>text</code>'
+    },
+    {
+      name: 'label',
+      optional: true,
+      type: 'String',
+      description: 'Field <code>label</code>; defaults to humanized form of attribute name (e.g. &quot;firstName&quot; becomes &quot;First Name&quot;).'
+    },
+    {
+      name: 'labelAttribute',
+      optional: true,
+      type: 'String',
+      description: 'Optional override for label key in options array; defaults to &quot;label&quot;. This property is only supported for <code>select</code> inputs.'
+    },
+    {
+      name: 'multiline',
+      optional: true,
+      type: 'Boolean',
+      description: 'Designates a text input as multi-line (<code>textarea</code> vs <code>input</code>). This of property is only supported for <code>text</code> inputs.'
+    },
+    {
+      name: 'multipleSelection',
+      optional: true,
+      type: 'Boolean',
+      description: 'rop-down list should allow multiple selections. This of property is only supported for <code>text</code> inputs.'
+    },
+    {
+      name: 'placeholder',
+      optional: true,
+      type: 'String',
+      description: 'Placeholder text shown when field is empty.'
+    },
+    {
+      name: 'rows',
+      optional: true,
+      type: 'Number',
+      description: 'Specifies the number of rows for a multi-line text input. This of property is only supported for <code>text</code> inputs.'
+    },
+    {
+      name: 'uid',
+      optional: true,
+      type: 'String',
+      description: 'Optional ID attribute to assign to the input field.'
+    },
+    {
+      name: 'valueAttribute',
+      optional: true,
+      type: 'String',
+      description: 'Optional override for label key in options array; defaults to &quot;value&quot;. This property is only supported for <code>select</code> inputs.'
+    },
+    {
+      name: 'values',
+      optional: true,
+      type: 'Array<any>',
+      description: 'Enumeration of values for <code>select</code> menus or <code>radio</code> inputs. This property is only supported for <code>radio</code> and <code>select</code> inputs.'
+    }
+  ]"></signature>
+</div>

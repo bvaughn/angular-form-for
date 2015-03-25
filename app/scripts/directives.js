@@ -83,8 +83,8 @@ angular.module('formForDocumentation').value('currentTemplates', {
 
 angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
   var map = {};
-  map['default'] = ['formFor.defaultTemplates', 'http://rawgit.com/bvaughn/angular-form-for/2.0.0/dist/form-for.default-templates.js'];
-  map['bootstrap'] = ['formFor.bootstrapTemplates', 'http://rawgit.com/bvaughn/angular-form-for/2.0.0/dist/form-for.bootstrap-templates.js'];
+  map['default'] = ['formFor.defaultTemplates', 'http://rawgit.com/bvaughn/angular-form-for/2.0.1/dist/form-for.default-templates.js'];
+  map['bootstrap'] = ['formFor.bootstrapTemplates', 'http://rawgit.com/bvaughn/angular-form-for/2.0.1/dist/form-for.bootstrap-templates.js'];
 
   return {
     restrict: 'E',
@@ -118,6 +118,16 @@ angular.module('formForDocumentation').directive('templateToggler', function($oc
 
         return false;
       }
+    }
+  };
+});
+
+angular.module('formForDocumentation').directive('githubInfo', function(Github) {
+  return {
+    restrict: 'EA',
+    templateUrl: 'app/templates/github-info.html',
+    controller: function($scope) {
+      $scope.githubData = Github.load().$object;
     }
   };
 });

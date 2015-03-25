@@ -1,0 +1,29 @@
+<div class="btn-and-tooltip-group fork-group">
+  <a class="btn btn-sm" ng-href="{{githubData.url}}" target="_blank">
+    <i class="fa fa-github"></i> Fork
+  </a>
+  <a class="tooltip fade right in" ng-href="{{githubData.forks_url}}" target="_blank">
+    <span class="tooltip-arrow"></span>
+    <span class="tooltip-inner">{{githubData.forks}}</span>
+  </a>
+</div>
+
+<div class="btn-and-tooltip-group watch-group">
+  <a class="btn btn-sm" ng-href="{{githubData.url}}" target="_blank">
+    <i class="fa fa-github-alt"></i> Watch
+  </a>
+  <a class="tooltip fade right in" ng-href="{{githubData.watchers_url}}" target="_blank">
+    <span class="tooltip-arrow"></span>
+    <span class="tooltip-inner">{{githubData.watchers}}</span>
+  </a>
+</div>
+
+<div class="btn-and-tooltip-group star-group">
+  <a class="btn btn-sm" ng-href="{{githubData.url}}" target="_blank">
+    <i class="fa fa-star"></i> Star
+  </a>
+  <a class="tooltip fade right in" ng-href="{{githubData.stargazers_url}}" target="_blank">
+    <span class="tooltip-arrow"></span>
+    <span class="tooltip-inner">{{githubData.stargazers}}</span>
+  </a>
+</div>

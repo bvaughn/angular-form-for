@@ -10,16 +10,16 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
 
     // Reports
 
-    $stateProvider.state('app.simpleForm', {
-      url: '/demo/simple-form',
-      templateUrl: 'app/views/simple-form.html',
-      controller: 'SimpleFormDemoController'
+    $stateProvider.state('app.formBuilderMarkup', {
+      url: '/demo/form-builder-markup',
+      templateUrl: 'app/views/form-builder-markup.html',
+      controller: 'FormBuilderMarkupDemoController'
     });
 
-    $stateProvider.state('app.advancedForm', {
-      url: '/demo/advanced-form',
-      templateUrl: 'app/views/advanced-form.html',
-      controller: 'AdvancedFormDemoController'
+    $stateProvider.state('app.manualFormMarkup', {
+      url: '/demo/manual-form-markup',
+      templateUrl: 'app/views/manual-form-markup.html',
+      controller: 'ManualFormMarkupDemoController'
     });
 
     $stateProvider.state('app.dynamicForm', {
@@ -61,6 +61,12 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app.validationTypes', {
       url: '/demo/validation-types',
       templateUrl: 'app/views/validation-types.html'
+    });
+
+    $stateProvider.state('app.formBuilder', {
+      url: '/demo/form-builder',
+      templateUrl: 'app/views/form-builder.html',
+      controller: 'IndexFormDemoController'
     });
 
     $stateProvider.state('app.templateOverrides', {
