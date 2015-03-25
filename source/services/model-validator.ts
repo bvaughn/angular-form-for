@@ -530,7 +530,7 @@ module formFor {
                 break;
 
               case ValidationFieldType.EMAIL:
-                if (stringValue && !stringValue.match(/^.+@.+$/)) {
+                if (stringValue && !stringValue.match(/^.+@.+\..+$/)) {
                   return this.promiseUtils_.reject(
                     this.getFieldTypeFailureMessage_(validationRules, ValidationFailureType.TYPE_EMAIL));
                 }

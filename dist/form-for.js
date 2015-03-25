@@ -510,6 +510,80 @@ var formFor;
     formFor.FieldLabelDirective = FieldLabelDirective;
     angular.module('formFor').directive('fieldLabel', ["$sce", "FormForConfiguration", function ($sce, FormForConfiguration) { return FieldLabelDirective($sce, FormForConfiguration); }]);
 })(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     *
+     */
+    function FormForBuilderDirective($compile, $parse) {
+        var nestedObjectHelper = new formFor.NestedObjectHelper($parse);
+        return {
+            require: 'formFor',
+            restrict: 'A',
+            link: function ($scope, $element, $attributes, formForController) {
+                // View schema may be explicitly passed in as a separate model,
+                // Or it may be combined with the validation rules used by formFor.
+                var viewSchema;
+                if ($attributes.formForBuilder) {
+                    viewSchema = $scope.$eval($attributes.formForBuilder);
+                }
+                else if ($attributes.validationRules) {
+                    viewSchema = $scope.$eval($attributes.validationRules);
+                }
+                else if ($attributes.$service) {
+                    viewSchema = $scope.$eval($attributes.$service.validationRules);
+                }
+                // View schema may contain nested properties.
+                // We will differentiate between form-fields and other properties using the 'inputType' field.
+                var viewSchemaKeys = nestedObjectHelper.flattenObjectKeys(viewSchema);
+                var htmlString = "";
+                for (var i = 0, length = viewSchemaKeys.length; i < length; i++) {
+                    var fieldName = viewSchemaKeys[i];
+                    var viewField = nestedObjectHelper.readAttribute(viewSchema, fieldName);
+                    var html;
+                    if (viewField && viewField.hasOwnProperty('inputType')) {
+                        var help = viewField.help || '';
+                        var label = viewField.label || '';
+                        var uid = viewField.uid || '';
+                        var labelAttribute = label ? "label=\"" + label + "\"" : '';
+                        switch (viewField.inputType) {
+                            case formFor.BuilderFieldType.CHECKBOX:
+                                htmlString += "<checkbox-field attribute=\"" + fieldName + "\"\n                                               help=\"" + help + "\"\n                                               " + labelAttribute + "\n                                               uid=\"" + uid + "\">\n                               </checkbox-field>";
+                                break;
+                            case formFor.BuilderFieldType.RADIO:
+                                var radioLabel = label ? label : formFor.StringUtil.humanize(fieldName);
+                                htmlString += "<field-label help=\"" + help + "\"\n                                            label=\"" + radioLabel + "\">\n                                 </field-label>";
+                                viewField.values.forEach(function (value) {
+                                    htmlString += "<radio-field attribute=\"" + fieldName + "\"\n                                              label=\"" + formFor.StringUtil.humanize(value) + "\"\n                                              uid=\"" + uid + "\"\n                                              value=\"" + value + "\">\n                                 </radio-field>";
+                                });
+                                break;
+                            case formFor.BuilderFieldType.SELECT:
+                                var values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
+                                htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                             " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                             " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                             help=\"" + help + "\"\n                                             " + labelAttribute + "\n                                             " + labelAttribute + "\n                                             multiple=\"" + !!viewField.multipleSelection + "\"\n                                             options=\"" + values + "\"\n                                             uid=\"" + uid + "\"\n                                             value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                               </select-field>";
+                                break;
+                            case formFor.BuilderFieldType.NUMBER:
+                            case formFor.BuilderFieldType.PASSWORD:
+                            case formFor.BuilderFieldType.TEXT:
+                                htmlString += "<text-field attribute=\"" + fieldName + "\"\n                                           " + labelAttribute + "\n                                           help=\"" + help + "\"\n                                           ng-attr-multiline=\"" + !!viewField.multiline + "\"\n                                           rows=\"" + (viewField.rows || '') + "\"\n                                           type=\"" + viewField.inputType + "\"\n                                           uid=\"" + uid + "\">\n                               </text-field>";
+                                break;
+                        }
+                    }
+                }
+                // Append a submit button if one isn't already present inside of $element.
+                if ($element.find('input[type=button], button').length === 0) {
+                    htmlString += "<submit-button label=\"Submit\"></submit-button>";
+                }
+                var linkingFunction = $compile(htmlString);
+                var compiled = linkingFunction($scope, undefined, { transcludeControllers: formForController });
+                // Prepend in case the user has specified their own custom submit button(s).
+                $element.prepend(compiled);
+            }
+        };
+    }
+    formFor.FormForBuilderDirective = FormForBuilderDirective;
+    ;
+    angular.module('formFor').directive('formForBuilder', ["$compile", "$parse", function ($compile, $parse) { return FormForBuilderDirective($compile, $parse); }]);
+})(formFor || (formFor = {}));
 /// <reference path="../services/form-for-configuration.ts" />
 var formFor;
 (function (formFor) {
@@ -1828,6 +1902,21 @@ var formFor;
 var formFor;
 (function (formFor) {
     /**
+     * Input types available for auto-created forms; see {@link FieldView}.
+     */
+    (function (BuilderFieldType) {
+        BuilderFieldType[BuilderFieldType["CHECKBOX"] = "checkbox"] = "CHECKBOX";
+        BuilderFieldType[BuilderFieldType["NUMBER"] = "number"] = "NUMBER";
+        BuilderFieldType[BuilderFieldType["PASSWORD"] = "password"] = "PASSWORD";
+        BuilderFieldType[BuilderFieldType["RADIO"] = "radio"] = "RADIO";
+        BuilderFieldType[BuilderFieldType["SELECT"] = "select"] = "SELECT";
+        BuilderFieldType[BuilderFieldType["TEXT"] = "text"] = "TEXT";
+    })(formFor.BuilderFieldType || (formFor.BuilderFieldType = {}));
+    var BuilderFieldType = formFor.BuilderFieldType;
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
      * Identifies a validation failure type.
      */
     (function (ValidationFailureType) {
@@ -2280,7 +2369,7 @@ var formFor;
                                 }
                                 break;
                             case formFor.ValidationFieldType.EMAIL:
-                                if (stringValue && !stringValue.match(/^.+@.+$/)) {
+                                if (stringValue && !stringValue.match(/^.+@.+\..+$/)) {
                                     return this.promiseUtils_.reject(this.getFieldTypeFailureMessage_(validationRules, formFor.ValidationFailureType.TYPE_EMAIL));
                                 }
                                 break;
