@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.1
+Added new formForBuilder directive in order to support auto-generated form markup.
+
 ## 2.0.0
 Form For has been rewritten in TypeScript and a handful of issues have been resolved:
 
