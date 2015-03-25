@@ -442,7 +442,11 @@ describe('ModelValidator', function() {
     it('email should reject non-email', function() {
       expect(ModelValidator.validateField({email: 'abc'}, 'email', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({email: 'abc@'}, 'email', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({email: 'abc@.'}, 'email', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({email: 'abc@a.'}, 'email', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({email: 'abc@.a'}, 'email', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({email: '@'}, 'email', model.rules)).toBeRejected();
+      expect(ModelValidator.validateField({email: '@.'}, 'email', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({email: '@abc'}, 'email', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({email: '@abc.'}, 'email', model.rules)).toBeRejected();
       expect(ModelValidator.validateField({email: '@abc.com'}, 'email', model.rules)).toBeRejected();
