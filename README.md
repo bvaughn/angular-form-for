@@ -18,8 +18,7 @@ Check out the official website to learn more:
 
 ## Compatibility and Dependencies
 
-The current release of *formFor* is compatible with Angular Angular 1.2.
-(1.3 support will be added in a future release once Angular 1.3 is out of beta.)
+The current release of *formFor* is compatible with Angular Angular 1.2+.
 
 Angular 1.2.22+ is recommended due to [a `$parse` defect](https://github.com/angular/angular.js/issues/2845) that existed in previous releases.
 
