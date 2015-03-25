@@ -43,24 +43,26 @@ module formFor {
             var label:string = viewField.label || '';
             var uid:string = viewField.uid || '';
 
+            var labelAttribute:string = label ? `label="${label}"` : '';
+
             switch (viewField.inputType) {
               case BuilderFieldType.CHECKBOX:
                 htmlString += `<checkbox-field attribute="${fieldName}"
                                                help="${help}"
-                                               label="${label}"
+                                               ${labelAttribute}
                                                uid="${uid}">
                                </checkbox-field>`;
                 break;
               case BuilderFieldType.RADIO:
+                var radioLabel:string = label ? label : StringUtil.humanize(fieldName);
+
                 htmlString += `<field-label help="${help}"
-                                              label="${label}">
+                                            label="${radioLabel}">
                                  </field-label>`;
 
                 viewField.values.forEach((value:any) => {
-                  var label:string = StringUtil.humanize(value);
-
                   htmlString += `<radio-field attribute="${fieldName}"
-                                              label="${label}"
+                                              label="${StringUtil.humanize(value)}"
                                               uid="${uid}"
                                               value="${value}">
                                  </radio-field>`;
@@ -73,8 +75,8 @@ module formFor {
                                              ${viewField.allowBlank ? 'allow-blank' : ''}
                                              ${viewField.enableFiltering ? 'enable-filtering' : ''}
                                              help="${help}"
-                                             label="${label}"
-                                             label-attribute="${viewField.labelAttribute || ''}"
+                                             ${labelAttribute}
+                                             ${labelAttribute}
                                              multiple="${!!viewField.multipleSelection}"
                                              options="${values}"
                                              uid="${uid}"
@@ -85,7 +87,7 @@ module formFor {
               case BuilderFieldType.PASSWORD:
               case BuilderFieldType.TEXT:
                 htmlString += `<text-field attribute="${fieldName}"
-                                           label="${label}"
+                                           ${labelAttribute}
                                            help="${help}"
                                            ng-attr-multiline="${!!viewField.multiline}"
                                            rows="${viewField.rows || ''}"

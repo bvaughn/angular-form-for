@@ -30,7 +30,8 @@ module formFor {
     help?:string;
 
     /**
-     * Input type used by this field; defaults to BuildFieldType.TEXT.
+     * Input type used by this field.
+     * This is a required field.
      */
     inputType?:BuilderFieldType;
 
