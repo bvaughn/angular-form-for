@@ -67,15 +67,16 @@ module formFor {
                 });
                 break;
               case BuilderFieldType.SELECT:
-                // TODO Binding doesn't work for options="${viewField.values}"
+                var values:string = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
+
                 htmlString += `<select-field attribute="${fieldName}"
+                                             ${viewField.allowBlank ? 'allow-blank' : ''}
+                                             ${viewField.enableFiltering ? 'enable-filtering' : ''}
                                              help="${help}"
                                              label="${label}"
                                              label-attribute="${viewField.labelAttribute || ''}"
                                              multiple="${!!viewField.multipleSelection}"
-                                             ng-attr-allow-blank="${!!viewField.allowBlank}"
-                                             ng-attr-enable-filtering="${!!viewField.enableFiltering}"
-                                             options="${viewField.values}"
+                                             options="${values}"
                                              uid="${uid}"
                                              value-attribute="${viewField.valueAttribute || ''}">
                                </select-field>`;
