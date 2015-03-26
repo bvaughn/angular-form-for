@@ -1,15 +1,10 @@
 # angular-form-for [![Build Status](https://travis-ci.org/bvaughn/angular-form-for.svg)](https://travis-ci.org/bvaughn/angular-form-for) [![Join the chat at https://gitter.im/bvaughn/angular-form-for](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bvaughn/angular-form-for?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations.
-Using *formFor* a sign-up form may look like this:
+You can generate a complete form with as little markup as this:
 
 ```html
-<form form-for="user" service="UserSignUp">
-  <text-field attribute="email"></text-field>
-  <text-field attribute="password" type="password"></text-field>
-  <checkbox-field attribute="iAgreeToTheTerms"></checkbox-field>
-  <submit-button label="Sign Up"></submit-button>
-</form>
+<form form-for="user" service="SignUpService"></form>
 ```
 
 But that's not all! *formFor* is incredibly flexible, offering a wide range of configuration options.
@@ -18,11 +13,7 @@ Check out the official website to learn more:
 
 ## Compatibility and Dependencies
 
-The current release of *formFor* is compatible with Angular Angular 1.2+.
-
-Angular 1.2.22+ is recommended due to [a `$parse` defect](https://github.com/angular/angular.js/issues/2845) that existed in previous releases.
-
-*formFor* does not require third party libraries such as jQuery, lodash, or underscore.
+*formFor* is compatible with Angular Angular 1.2 and newer. It does not require any third party libraries such as jQuery, lodash, or underscore.
 
 ## Installation
 
