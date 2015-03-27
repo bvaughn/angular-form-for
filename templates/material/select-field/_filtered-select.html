@@ -1,0 +1,11 @@
+<md-autocomplete
+        ng-disabled="disable || model.disabled"
+        md-selected-item="scopeBuster.selectedOption"
+        md-search-text="scopeBuster.filter"
+        md-items="option in filteredOptions"
+        md-item-text="option[labelAttribute]"
+        md-selected-item-change="selectOption(option)"
+        placeholder="{{scopeBuster.filter || placeholder}}">
+
+    <span md-highlight-text="scopeBuster.filter">{{option[labelAttribute]}}</span>
+</md-autocomplete>

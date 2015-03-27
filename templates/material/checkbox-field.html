@@ -1,0 +1,13 @@
+<md-checkbox md-no-ink
+             class="md-primary"
+             aria-label="{{label}}"
+             ng-disabled="disable || model.disabled"
+             ng-model="model.bindable">
+
+    {{label}}
+
+    <field-error  error="model.error"
+                  left-aligned="true"
+                  uid="{{model.uid}}-error">
+    </field-error>
+</md-checkbox>

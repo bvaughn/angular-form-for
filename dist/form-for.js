@@ -747,10 +747,12 @@ var formFor;
                     break;
                 }
                 var data = queue.pop();
-                var prefix = data.prefix ? data.prefix + '.' : '';
+                var objectIsArray = Array.isArray(data.object);
+                var prefix = data.prefix ? data.prefix + (objectIsArray ? '[' : '.') : '';
+                var suffix = objectIsArray ? ']' : '';
                 if (typeof data.object === 'object') {
                     for (var prop in data.object) {
-                        var path = prefix + prop;
+                        var path = prefix + prop + suffix;
                         var value = data.object[prop];
                         keys.push(path);
                         queue.push({

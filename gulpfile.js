@@ -22,7 +22,7 @@ gulp.task('all', function(callback) {
 
 gulp.task('build', function(callback) {
   runSequence(
-    ['compile', 'compileBootstrapTemplates', 'compileDefaultTemplates', 'compileStylesheets'],
+    ['compile', 'compileBootstrapTemplates', 'compileDefaultTemplates', 'compileMaterialTemplates', 'compileStylesheets'],
     'uglify',
     'map',
     callback);
@@ -38,6 +38,10 @@ gulp.task('compileBootstrapTemplates', function() {
 
 gulp.task('compileDefaultTemplates', function() {
   return buildTemplatesHelper('templates/default/**/*.html', 'formFor.defaultTemplates', 'form-for.default-templates.js');
+});
+
+gulp.task('compileMaterialTemplates', function() {
+  return buildTemplatesHelper('templates/material/**/*.html', 'formFor.materialTemplates', 'form-for.material-templates.js');
 });
 
 gulp.task('compileStylesheets', function() {

@@ -1,0 +1,21 @@
+<md-input-container>
+    <strong ng-if="label" class="md-caption">
+      {{label}}
+    </strong>
+
+    <span ng-if="enableFiltering"
+          ng-include form-for-include-replace
+          src="'form-for/templates/select-field/_filtered-select.html'"></span>
+
+    <span ng-if="!enableFiltering && multiple"
+          ng-include form-for-include-replace
+          src="'form-for/templates/select-field/_multi-select.html'"></span>
+
+    <span ng-if="!enableFiltering && !multiple"
+          ng-include form-for-include-replace
+          src="'form-for/templates/select-field/_select.html'"></span>
+
+  <field-error  error="model.error"
+                uid="{{model.uid}}-error">
+  </field-error>
+</md-input-container>

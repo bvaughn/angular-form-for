@@ -1,0 +1,21 @@
+<md-input-container>
+    <field-label  ng-if="label"
+                  input-uid="{{model.uid}}"
+                  iud="{{model.uid}}-label"
+                  label="{{label}}"
+                  help="{{help}}"
+                  required="{{model.required}}">
+    </field-label>
+
+    <!-- <input> and <textarea> rendered as partials to allow for easier overrides -->
+    <span ng-if="!multiline"
+          ng-include form-for-include-replace
+          src="'form-for/templates/text-field/_input.html'"></span>
+    <span ng-if="multiline"
+          ng-include form-for-include-replace
+          src="'form-for/templates/text-field/_textarea.html'"></span>
+
+    <field-error ng-messages
+                 uid="{{model.uid}}-error"
+                 error="model.error"></field-error>
+</md-input-container>

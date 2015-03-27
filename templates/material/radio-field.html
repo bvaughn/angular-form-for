@@ -1,0 +1,16 @@
+<!-- TODO Wrap with md-input-container once radio fields are combined. -->
+<md-radio-group ng-if="!hideErrorMessage"
+                ng-model="model.bindable">
+
+    <md-radio-button ng-value="value"
+                     ng-disabled="disable || model.disabled"
+                     tabindex="{{tabIndex}}">
+        {{label}}
+    </md-radio-button>
+
+    <field-error  ng-if="!hideErrorMessage"
+                  error="model.error"
+                  left-aligned="true"
+                  uid="{{uid}}-error">
+    </field-error>
+</md-radio-group>
