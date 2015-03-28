@@ -45,17 +45,29 @@ module formFor {
     hideErrorMessage?:boolean;
 
     /**
-     * Optional field label displayed after the radio input.
-     * Although not required, it is strongly suggested that you specify a value for this attribute.
-     * HTML is allowed for this attribute
+     * Optional group label to be displayed above the radio inputs.
+     * HTML is allowed for this attribute.
      */
     label?:string;
+
+    /**
+     * Optional override for label key in options array.
+     * Defaults to "label".
+     */
+    labelAttribute?:string;
 
     /**
      * Shared between formFor and RadioField directives.
      * This same data is also shared between all <radio> instances of the current radio group.
      */
     model:BindableFieldWrapper;
+
+    /**
+     * Enumeration of radio options.
+     * Individual options may be strings or objects containing :label and :value keys.
+     * Use labelAttribute and valueAttribute to specify custom option-keys.
+     */
+    options:Array<String|Object>;
 
     /**
      * Optional custom tab index for input; by default this is 0 (tab order chosen by the browser).
@@ -69,9 +81,10 @@ module formFor {
     uid:string;
 
     /**
-     * Value to be assigned to model if this radio component is selected.
+     * Optional override for value key in options array.
+     * Defaults to "value".
      */
-    value:any;
+    valueAttribute:string;
   }
 
   /**
@@ -105,7 +118,6 @@ module formFor {
    */
   export function RadioFieldDirective($log, FormForConfiguration):ng.IDirective {
     var fieldHelper = new FieldHelper(FormForConfiguration);
-    var fieldNameToActiveRadioGroupDatumMap:{[fieldName:string]:RadioGroupDatum} = {};
 
     return {
       require: '^formFor',
@@ -116,6 +128,7 @@ module formFor {
         attribute: '@',
         disable: '=',
         help: '@?',
+        options: '=',
         value: '@'
       },
 
@@ -126,25 +139,15 @@ module formFor {
           return;
         }
 
-        if (!fieldNameToActiveRadioGroupDatumMap[$scope.attribute]) {
-          fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
+        // Read from $attributes to avoid getting any interference from $scope.
+        $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
+        $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
 
-          fieldNameToActiveRadioGroupDatumMap[$scope.attribute] = {
-            defaultScope: $scope,
-            scopes: []
-          };
-
-        } else {
-          // Only the primary <radio> input should show error message text
-          $scope.hideErrorMessage = true;
-        }
+        fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
 
         // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
         // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
         $scope.uid = $attributes['uid'] || FormForGUID.create();
-
-        var radioGroupDatum = fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
-        radioGroupDatum.scopes.push($scope);
 
         fieldHelper.manageLabel($scope, $attributes, true);
 
@@ -152,17 +155,17 @@ module formFor {
 
         $scope.click = () => {
           if (!$scope.disable && !$scope.model.disabled) {
-            $scope.model.bindable = $scope.value;
+            //$scope.model.bindable = $scope.value;
           }
         };
 
-        radioGroupDatum.defaultScope.$watch('model', (value) => {
+        $scope.$watch('model', (value) => {
           $scope.model = value;
         });
-        radioGroupDatum.defaultScope.$watch('disable', (value) => {
+        $scope.$watch('disable', (value) => {
           $scope.disable = value;
         });
-        radioGroupDatum.defaultScope.$watch('model.disabled', (value) => {
+        $scope.$watch('model.disabled', (value) => {
           if ($scope.model) {
             $scope.model.disabled = value;
           }
@@ -171,27 +174,13 @@ module formFor {
         /**
          * Update this RadioField (UI) whenever the group's value changes.
          * This could be triggered by another RadioField in the group.
-         */
         $scope.$watch('model.bindable', function(newValue:any) {
           $scope.checked =
             newValue !== undefined &&
             newValue !== null &&
-            $scope.value !== undefined &&
-            $scope.value !== null &&
             newValue.toString() === $scope.value.toString();
         });
-
-        /**
-         * Remove this RadioField from the group when it's removed from the DOM.
          */
-        $scope.$on('$destroy', function() {
-          radioGroupDatum.scopes.splice(
-            radioGroupDatum.scopes.indexOf($scope), 1);
-
-          if (radioGroupDatum.scopes.length === 0) {
-            delete fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
-          }
-        });
       }
     };
   }

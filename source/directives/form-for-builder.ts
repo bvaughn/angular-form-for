@@ -42,6 +42,7 @@ module formFor {
             var help:string = viewField.help || '';
             var label:string = viewField.label || '';
             var uid:string = viewField.uid || '';
+            var values:string;
 
             var labelAttribute:string = label ? `label="${label}"` : '';
 
@@ -54,22 +55,16 @@ module formFor {
                                </checkbox-field>`;
                 break;
               case BuilderFieldType.RADIO:
-                var radioLabel:string = label ? label : StringUtil.humanize(fieldName);
+                values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
 
-                htmlString += `<field-label help="${help}"
-                                            label="${radioLabel}">
-                                 </field-label>`;
-
-                viewField.values.forEach((value:any) => {
-                  htmlString += `<radio-field attribute="${fieldName}"
-                                              label="${StringUtil.humanize(value)}"
-                                              uid="${uid}"
-                                              value="${value}">
-                                 </radio-field>`;
-                });
+                htmlString += `<radio-field attribute="${fieldName}"
+                                            ${labelAttribute}
+                                            options="${values}"
+                                            uid="${uid}">
+                               </radio-field>`;
                 break;
-              case BuilderFieldType.SELECT:
-                var values:string = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
+          case BuilderFieldType.SELECT:
+            values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
 
                 htmlString += `<select-field attribute="${fieldName}"
                                              ${viewField.allowBlank ? 'allow-blank' : ''}

@@ -7,54 +7,58 @@ radio-field {
 }
 
 .form-for-field {
-  > input[type="radio"] {
-    @extend $form-for-hidden-input
+  > label {
+    display: block;
 
-    +label {
-      cursor: pointer;
-      display: inline-block;
+    > input[type="radio"] {
+      @extend $form-for-hidden-input
 
-      &:before {
-        @extend $form-for-toggle-ui
-
-        border-radius: 10px;
-        content: " "; // Hidden
-        font-size: 11px;
-      }
-    }
-
-    &:focus + label:before {
-      border-color: $border-color-focused;
-      box-shadow: $box-shadow-focused;
-    }
-
-    &:checked + label:before {
-      content: "\f111";
-    }
-
-    &:disabled {
-      opacity: 0;
-      cursor: default;
-      pointer-events: none;
-
-      +label {
-        cursor: default;
-        opacity: $opacity-disabled;
+      +span {
+        cursor: pointer;
+        display: inline-block;
 
         &:before {
+          @extend $form-for-toggle-ui
+
+          border-radius: 10px;
+          content: " "; // Hidden
+          font-size: 11px;
+        }
+      }
+
+      &:focus + span:before {
+        border-color: $border-color-focused;
+        box-shadow: $box-shadow-focused;
+      }
+
+      &:checked + span:before {
+        content: "\f111";
+      }
+
+      &:disabled {
+        opacity: 0;
+        cursor: default;
+        pointer-events: none;
+
+        +span {
           cursor: default;
+          opacity: $opacity-disabled;
+
+          &:before {
+            cursor: default;
+          }
         }
       }
     }
   }
 
-  > input[type="radio"]:invalid,
-  &.invalid > input[type="radio"] {
-    +label:before {
+  > label > input[type="radio"]:invalid,
+  &.invalid > label > input[type="radio"] {
+    +span:before {
       border-color: red;
     }
 
-    &:focus + label:before {
+    &:focus + span:before {
       box-shadow: $box-shadow-error-focused;
     }
   }

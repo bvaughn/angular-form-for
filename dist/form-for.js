@@ -545,20 +545,18 @@ var formFor;
                         var help = viewField.help || '';
                         var label = viewField.label || '';
                         var uid = viewField.uid || '';
+                        var values;
                         var labelAttribute = label ? "label=\"" + label + "\"" : '';
                         switch (viewField.inputType) {
                             case formFor.BuilderFieldType.CHECKBOX:
                                 htmlString += "<checkbox-field attribute=\"" + fieldName + "\"\n                                               help=\"" + help + "\"\n                                               " + labelAttribute + "\n                                               uid=\"" + uid + "\">\n                               </checkbox-field>";
                                 break;
                             case formFor.BuilderFieldType.RADIO:
-                                var radioLabel = label ? label : formFor.StringUtil.humanize(fieldName);
-                                htmlString += "<field-label help=\"" + help + "\"\n                                            label=\"" + radioLabel + "\">\n                                 </field-label>";
-                                viewField.values.forEach(function (value) {
-                                    htmlString += "<radio-field attribute=\"" + fieldName + "\"\n                                              label=\"" + formFor.StringUtil.humanize(value) + "\"\n                                              uid=\"" + uid + "\"\n                                              value=\"" + value + "\">\n                                 </radio-field>";
-                                });
+                                values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
+                                htmlString += "<radio-field attribute=\"" + fieldName + "\"\n                                            " + labelAttribute + "\n                                            options=\"" + values + "\"\n                                            uid=\"" + uid + "\">\n                               </radio-field>";
                                 break;
                             case formFor.BuilderFieldType.SELECT:
-                                var values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
+                                values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
                                 htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                             " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                             " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                             help=\"" + help + "\"\n                                             " + labelAttribute + "\n                                             " + labelAttribute + "\n                                             multiple=\"" + !!viewField.multipleSelection + "\"\n                                             options=\"" + values + "\"\n                                             uid=\"" + uid + "\"\n                                             value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                               </select-field>";
                                 break;
                             case formFor.BuilderFieldType.NUMBER:
@@ -1378,7 +1376,6 @@ var formFor;
      */
     function RadioFieldDirective($log, FormForConfiguration) {
         var fieldHelper = new formFor.FieldHelper(FormForConfiguration);
-        var fieldNameToActiveRadioGroupDatumMap = {};
         return {
             require: '^formFor',
             restrict: 'EA',
@@ -1387,6 +1384,7 @@ var formFor;
                 attribute: '@',
                 disable: '=',
                 help: '@?',
+                options: '=',
                 value: '@'
             },
             link: function ($scope, $element, $attributes, formForController) {
@@ -1394,36 +1392,26 @@ var formFor;
                     $log.error('Missing required field "attribute"');
                     return;
                 }
-                if (!fieldNameToActiveRadioGroupDatumMap[$scope.attribute]) {
-                    fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
-                    fieldNameToActiveRadioGroupDatumMap[$scope.attribute] = {
-                        defaultScope: $scope,
-                        scopes: []
-                    };
-                }
-                else {
-                    // Only the primary <radio> input should show error message text
-                    $scope.hideErrorMessage = true;
-                }
+                // Read from $attributes to avoid getting any interference from $scope.
+                $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
+                $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
+                fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
                 // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
                 // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
                 $scope.uid = $attributes['uid'] || formFor.FormForGUID.create();
-                var radioGroupDatum = fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
-                radioGroupDatum.scopes.push($scope);
                 fieldHelper.manageLabel($scope, $attributes, true);
                 $scope.tabIndex = $attributes['tabIndex'] || 0;
                 $scope.click = function () {
                     if (!$scope.disable && !$scope.model.disabled) {
-                        $scope.model.bindable = $scope.value;
                     }
                 };
-                radioGroupDatum.defaultScope.$watch('model', function (value) {
+                $scope.$watch('model', function (value) {
                     $scope.model = value;
                 });
-                radioGroupDatum.defaultScope.$watch('disable', function (value) {
+                $scope.$watch('disable', function (value) {
                     $scope.disable = value;
                 });
-                radioGroupDatum.defaultScope.$watch('model.disabled', function (value) {
+                $scope.$watch('model.disabled', function (value) {
                     if ($scope.model) {
                         $scope.model.disabled = value;
                     }
@@ -1431,19 +1419,13 @@ var formFor;
                 /**
                  * Update this RadioField (UI) whenever the group's value changes.
                  * This could be triggered by another RadioField in the group.
-                 */
-                $scope.$watch('model.bindable', function (newValue) {
-                    $scope.checked = newValue !== undefined && newValue !== null && $scope.value !== undefined && $scope.value !== null && newValue.toString() === $scope.value.toString();
+                $scope.$watch('model.bindable', function(newValue:any) {
+                  $scope.checked =
+                    newValue !== undefined &&
+                    newValue !== null &&
+                    newValue.toString() === $scope.value.toString();
                 });
-                /**
-                 * Remove this RadioField from the group when it's removed from the DOM.
                  */
-                $scope.$on('$destroy', function () {
-                    radioGroupDatum.scopes.splice(radioGroupDatum.scopes.indexOf($scope), 1);
-                    if (radioGroupDatum.scopes.length === 0) {
-                        delete fieldNameToActiveRadioGroupDatumMap[$scope.attribute];
-                    }
-                });
             }
         };
     }

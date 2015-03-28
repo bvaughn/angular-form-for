@@ -135,7 +135,7 @@ field-label {
 }
 
 
-.form-for-field > input[type="radio"] {
+.form-for-field > label > input[type="radio"] {
   position: absolute;
   opacity: 0;
   z-index: 2;
@@ -144,7 +144,7 @@ field-label {
   cursor: pointer;
   margin: 0;
 }
-.form-for-field > input[type="radio"] +label:before {
+.form-for-field > label > input[type="radio"] +span:before {
   position: absolute;
   height: 20px;
   width: 20px;
@@ -168,40 +168,43 @@ radio-field {
   display: block;
   position: relative;
 }
-.form-for-field > input[type="radio"] +label {
+.form-for-field > label {
+  display: block;
+}
+.form-for-field > label > input[type="radio"] +span {
   cursor: pointer;
   display: inline-block;
 }
-.form-for-field > input[type="radio"] +label:before {
+.form-for-field > label > input[type="radio"] +span:before {
   border-radius: 10px;
   content: " ";
   font-size: 11px;
 }
-.form-for-field > input[type="radio"]:focus + label:before {
+.form-for-field > label > input[type="radio"]:focus + span:before {
   border-color: #66afe9;
   box-shadow: 0 0 4px #66afe9;
 }
-.form-for-field > input[type="radio"]:checked + label:before {
+.form-for-field > label > input[type="radio"]:checked + span:before {
   content: "\f111";
 }
-.form-for-field > input[type="radio"]:disabled {
+.form-for-field > label > input[type="radio"]:disabled {
   opacity: 0;
   cursor: default;
   pointer-events: none;
 }
-.form-for-field > input[type="radio"]:disabled +label {
+.form-for-field > label > input[type="radio"]:disabled +span {
   cursor: default;
   opacity: 0.5;
 }
-.form-for-field > input[type="radio"]:disabled +label:before {
+.form-for-field > label > input[type="radio"]:disabled +span:before {
   cursor: default;
 }
-.form-for-field > input[type="radio"]:invalid +label:before,
-.form-for-field.invalid > input[type="radio"] +label:before {
+.form-for-field > label > input[type="radio"]:invalid +span:before,
+.form-for-field.invalid > label > input[type="radio"] +span:before {
   border-color: #e35256;
 }
-.form-for-field > input[type="radio"]:invalid:focus + label:before,
-.form-for-field.invalid > input[type="radio"]:focus + label:before {
+.form-for-field > label > input[type="radio"]:invalid:focus + span:before,
+.form-for-field.invalid > label > input[type="radio"]:focus + span:before {
   box-shadow: 0 0 4px #e35256;
 }
 
