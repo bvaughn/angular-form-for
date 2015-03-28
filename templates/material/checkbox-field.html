@@ -4,10 +4,18 @@
              ng-disabled="disable || model.disabled"
              ng-model="model.bindable">
 
-    {{label}}
+  {{label}}
 
-    <field-error  error="model.error"
-                  left-aligned="true"
-                  uid="{{model.uid}}-error">
-    </field-error>
+  <field-label  ng-if="label"
+                input-uid="{{model.uid}}"
+                iud="{{model.uid}}-label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
+
+  <field-error  error="model.error"
+                left-aligned="true"
+                uid="{{model.uid}}-error">
+  </field-error>
 </md-checkbox>

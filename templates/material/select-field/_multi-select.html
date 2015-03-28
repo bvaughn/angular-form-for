@@ -3,7 +3,9 @@
     {{label}}
   </div>
 
-  <md-select ng-model="model.bindable" multiple="true">
+  <md-select ng-model="model.bindable"
+             ng-disabled="disable || model.disabled"
+             multiple="true">
       <md-select-label>{{selectedOptionLabel || placeholder}}</md-select-label>
       <md-option ng-repeat="option in filteredOptions"
                  ng-value="option[valueAttribute]">

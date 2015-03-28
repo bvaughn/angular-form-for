@@ -1,21 +1,21 @@
 <md-radio-group ng-model="model.bindable">
-    <field-label  ng-if="label"
-                  input-uid="{{model.uid}}"
-                  iud="{{model.uid}}-label"
-                  label="{{label}}"
-                  help="{{help}}"
-                  required="{{model.required}}">
-    </field-label>
+  <field-label  ng-if="label"
+                input-uid="{{model.uid}}"
+                iud="{{model.uid}}-label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
 
-    <md-radio-button ng-repeat="option in options"
-                     ng-disabled="disable || model.disabled"
-                     ng-value="option[valueAttribute]"
-                     tabindex="{{tabIndex}}">
-        {{option[labelAttribute]}}
-    </md-radio-button>
+  <md-radio-button ng-repeat="option in options"
+                   ng-disabled="disable || model.disabled"
+                   ng-value="option[valueAttribute]"
+                   tabindex="{{tabIndex}}">
+      {{option[labelAttribute]}}
+  </md-radio-button>
 
-    <field-error  ng-if="!hideErrorMessage"
-                  error="model.error"
-                  uid="{{uid}}-error">
-    </field-error>
+  <field-error  ng-if="!hideErrorMessage"
+                error="model.error"
+                uid="{{uid}}-error">
+  </field-error>
 </md-radio-group>
