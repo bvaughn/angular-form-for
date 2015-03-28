@@ -26,7 +26,10 @@ angular.module('formForDocumentation').controller('FormBuilderMarkupDemoControll
         inputType: 'radio',
         label: 'Gender',
         required: true,
-        values: ['Female', 'Male']
+        values: [
+          {value: 'female', label: 'Female'},
+          {value: 'male', label: 'Male'}
+        ]
       },
       referralSource: {
         allowBlank: true,

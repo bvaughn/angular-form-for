@@ -39,6 +39,13 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       }
     };
 
+    $scope.validateOptions = [
+      {value: '', label: 'default (no setting)'},
+      {value: 'change', label: 'on-change'},
+      {value: 'manual', label: 'manual'},
+      {value: 'submit', label: 'on-submit'}
+    ];
+
     $scope.setFieldError = function() {
       var error = window.prompt('Enter a custom validation error message:', '');
 

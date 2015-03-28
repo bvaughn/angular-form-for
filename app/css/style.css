@@ -202,11 +202,34 @@ a:hover {
   color: #FFF;
   border: none;
 }
+.nav-tabs > li.styles-tab > a {
+  background-color: #f5f5f5;
+  color: #333;
+}
+.nav-tabs > li.styles-tab > a:hover {
+  background-color: #f5f5f5;
+}
 
 @media (max-width: 768px) {
   .nav-tabs.nav-justified > li {
     padding: 0;
   }
+  .nav-tabs > li.styles-tab {
+    height: 40px;
+  }
+}
+
+.styles-picker > li > img {
+  cursor: pointer;
+  opacity: .5;
+  height: 25px;
+  width: auto;
+}
+.styles-picker > li.active > img {
+  opacity: 1;
+}
+.styles-picker > li:hover > img {
+  opacity: 1;
 }
 
 pre[class*="language-"] {
@@ -338,4 +361,10 @@ code {
 .doclink > code {
   color: #31708f;
   background-color: #e8f4fa;
+}
+
+.well {
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }

@@ -5,7 +5,7 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
         {
           name: 'Creating forms',
           frequency: 'daily',
-          paid: 'false',
+          paid: false,
           recommend: true
         }
       ]
@@ -42,6 +42,11 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
         }
       }
     };
+
+    $scope.hobbyOptions = [
+      {value: true, label: 'Yes'},
+      {value: false, label: 'I wish'}
+    ];
 
     $scope.addHobby = function() {
       $scope.formData.hobbies.push({});

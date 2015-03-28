@@ -1,5 +1,3 @@
-<template-toggler></template-toggler>
-
 <p class="alert alert-info">
   The right-aligned buttons demonstrate how you can disable individual input controls with formFor.
 </p>
@@ -8,16 +6,7 @@
       controller="formController" valid="formIsValid" disable="formIsDisabled">
 
   <div class="well">
-    <p>
-      Validate this form on..
-    </p>
-
-    <fieldset>
-      <radio-field value="" label="Default (no setting)" attribute="validateOn" disable="disableRadio"></radio-field>
-      <radio-field value="change" attribute="validateOn" disable="disableRadio"></radio-field>
-      <radio-field value="manual" attribute="validateOn" disable="disableRadio"></radio-field>
-      <radio-field value="submit" attribute="validateOn" disable="disableRadio"></radio-field>
-    </fieldset>
+    <radio-field label="Validate this form on.." attribute="validateOn" options="validateOptions" disable="disableRadio"></radio-field>
   </div>
 
   <span class="btn btn-xs btn-default set-field-error-button" ng-click="setFieldError()">Set Custom Error</span>

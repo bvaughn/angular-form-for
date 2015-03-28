@@ -78,13 +78,14 @@ angular.module('formForDocumentation').directive('resetFieldButton', function() 
 });
 
 angular.module('formForDocumentation').value('currentTemplates', {
-  key: 'bootstrap'
+  key: 'material'
 });
 
 angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
   var map = {};
-  map['default'] = ['formFor.defaultTemplates', 'http://rawgit.com/bvaughn/angular-form-for/2.0.1/dist/form-for.default-templates.js'];
-  map['bootstrap'] = ['formFor.bootstrapTemplates', 'http://rawgit.com/bvaughn/angular-form-for/2.0.1/dist/form-for.bootstrap-templates.js'];
+  map['bootstrap'] = ['formFor.bootstrapTemplates', '/offline/form-for.bootstrap-templates.js'];
+  map['default'] = ['formFor.defaultTemplates', '/offline/form-for.default-templates.js'];
+  map['material'] = ['formFor.materialTemplates', '/offline/form-for.material-templates.js'];
 
   return {
     restrict: 'E',

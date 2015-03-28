@@ -1,18 +1,11 @@
-<p class="template-toggler">
-  <span ng-if="message" ng-bind="message"></span>
-  <span ng-if="!message">Choose a template set:</span>
-
-  <span class="btn-group">
-    <span ng-click="load('bootstrap')"
-          class="btn btn-primary"
-          ng-class="{active: current === 'bootstrap'}">
-      bootstrap
-    </span>
-
-    <span ng-click="load('default')"
-          class="btn btn-primary"
-          ng-class="{active: current === 'default'}">
-      default
-    </span>
-  </span>
-</p>
+<ul class="list-inline styles-picker">
+  <li ng-click="load('default')" ng-class="{active: current == 'default'}">
+    <img src="app/images/form-for-logo.svg" title="Default formFor templates">
+  </li>
+  <li ng-click="load('bootstrap')" ng-class="{active: current == 'bootstrap'}">
+    <img src="app/images/bootstrap.png" title="Twitter Bootstrap templates">
+  </li>
+  <li ng-click="load('material')" ng-class="{active: current == 'material'}">
+    <img src="app/images/material.png" title="Material Design templates">
+  </li>
+</ul>

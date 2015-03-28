@@ -1,5 +1,3 @@
-<template-toggler></template-toggler>
-
 <form form-for="formData" validation-rules="validationRules" submit-with="submit(data)">
 
   <text-field label="Name" attribute="name" placeholder="My name is..."></text-field>
@@ -25,9 +23,10 @@
                     allow-blank>
       </select-field>
 
-      <label>Is this a paid hobby?</label>
-      <radio-field label="Yup" attribute="hobbies[{{$index}}].paid" value="true"></radio-field>
-      <radio-field label="I wish" attribute="hobbies[{{$index}}].paid" value="false"></radio-field>
+      <radio-field  label="Is this a paid hobby?"
+                    attribute="hobbies[{{$index}}].paid"
+                    options="hobbyOptions">
+      </radio-field>
 
       <checkbox-field label="Would you recommend this hobby to a friend?"
                       attribute="hobbies[{{$index}}].recommend">

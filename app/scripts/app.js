@@ -1,4 +1,4 @@
-angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'formFor.bootstrapTemplates', 'ngRoute', 'ui.bootstrap', 'ui.router']).
+angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'formFor.materialTemplates', 'ngRoute', 'ui.bootstrap', 'ngMaterial', 'ui.router']).
   config(function($logProvider, $stateProvider, $urlRouterProvider) {
     $logProvider.debugEnabled(true);
 
