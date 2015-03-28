@@ -388,3 +388,8 @@ md-input-container input:focus,
 md-radio-button:focus {
   outline: none;
 }
+
+/* Patch material list item */
+ul li {
+  margin-top: 0;
+}
