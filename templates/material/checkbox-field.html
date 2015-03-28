@@ -1,10 +1,8 @@
-<md-checkbox md-no-ink
+<md-checkbox style="display: inline-block;"
              class="md-primary"
              aria-label="{{label}}"
              ng-disabled="disable || model.disabled"
              ng-model="model.bindable">
-
-  {{label}}
 
   <field-label  ng-if="label"
                 input-uid="{{model.uid}}"

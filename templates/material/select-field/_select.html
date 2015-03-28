@@ -1,14 +1,19 @@
-<div>
-  <div ng-if="label" class="md-caption">
+<span>
+  <span ng-if="label" class="md-caption">
     {{label}}
-  </div>
 
-  <md-select ng-model="model.bindable"
-             ng-disabled="disable || model.disabled">
-    <md-select-label>{{selectedOptionLabel || placeholder}}</md-select-label>
-    <md-option ng-repeat="option in filteredOptions"
-               ng-value="option[valueAttribute]">
-      {{option[labelAttribute]}}
-    </md-option>
-  </md-select>
-</div>
+    <md-tooltip ng-if="help" md-direction="right">{{help}}</md-tooltip>
+  </span>
+
+  <div>
+    <md-select ng-model="model.bindable"
+               ng-disabled="disable || model.disabled"
+               placeholder="{{placeholder}}">
+
+      <md-option ng-repeat="option in filteredOptions"
+                 ng-value="option[valueAttribute]">
+        {{option[labelAttribute]}}
+      </md-option>
+    </md-select>
+  </div>
+</span>
