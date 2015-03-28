@@ -5,6 +5,7 @@
         md-items="option in filteredOptions"
         md-item-text="option[labelAttribute]"
         md-selected-item-change="selectOption(option)"
+        md-floating-label="{{label}}"
         placeholder="{{scopeBuster.filter || placeholder}}">
 
     <span md-highlight-text="scopeBuster.filter">{{option[labelAttribute]}}</span>

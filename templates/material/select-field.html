@@ -1,8 +1,4 @@
-<md-input-container>
-    <strong ng-if="label" class="md-caption">
-      {{label}}
-    </strong>
-
+<div>
     <span ng-if="enableFiltering"
           ng-include form-for-include-replace
           src="'form-for/templates/select-field/_filtered-select.html'"></span>
@@ -18,4 +14,4 @@
   <field-error  error="model.error"
                 uid="{{model.uid}}-error">
   </field-error>
-</md-input-container>
+</div>

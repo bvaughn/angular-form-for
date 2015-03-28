@@ -1,7 +1,13 @@
-<md-select ng-model="model.bindable">
+<div>
+  <div ng-if="label" class="md-caption">
+    {{label}}
+  </div>
+
+  <md-select ng-model="model.bindable">
     <md-select-label>{{selectedOptionLabel || placeholder}}</md-select-label>
     <md-option ng-repeat="option in filteredOptions"
                ng-value="option[valueAttribute]">
-        {{option[labelAttribute]}}
+      {{option[labelAttribute]}}
     </md-option>
-</md-select>
+  </md-select>
+</div>
