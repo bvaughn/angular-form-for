@@ -44,16 +44,18 @@ gulp.task('compileMaterialTemplates', function() {
   return buildTemplatesHelper('templates/material/**/*.html', 'formFor.materialTemplates', 'form-for.material-templates.js');
 });
 
-gulp.task('compileStylesheets', function() {
-  var concat = require('gulp-concat');
-  var stylus = require('gulp-stylus');
-  var autoprefixer = require('autoprefixer-stylus');
-  var nib = require('nib');
+gulp.task('compileStylesheets', function(callback) {
+  runSequence(
+    ['compileDefaultStylesheets', 'compileMaterialStylesheets'],
+    callback);
+});
 
-  return gulp.src(stylesDirectory + '/**/*.styl')
-    .pipe(stylus({use: [nib(), autoprefixer()]}))
-    .pipe(concat('form-for.css'))
-    .pipe(gulp.dest(distDirectory));
+gulp.task('compileDefaultStylesheets', function() {
+  buildStyles(stylesDirectory + '/default/**/*.styl', 'form-for.css');
+});
+
+gulp.task('compileMaterialStylesheets', function() {
+  buildStyles(stylesDirectory + '/material/**/*.styl', 'form-for.material.css');
 });
 
 gulp.task('clean', function() {
@@ -130,6 +132,18 @@ var buildHelper = function(sources, directory, outputFile) {
     }))
     .pipe(ngAnnotate())
     .pipe(gulp.dest(directory));
+};
+
+var buildStyles = function(sources, outputFileName) {
+  var concat = require('gulp-concat');
+  var stylus = require('gulp-stylus');
+  var autoprefixer = require('autoprefixer-stylus');
+  var nib = require('nib');
+
+  return gulp.src(sources)
+    .pipe(stylus({use: [nib(), autoprefixer()]}))
+    .pipe(concat(outputFileName))
+    .pipe(gulp.dest(distDirectory));
 };
 
 var buildTemplatesHelper = function(templatesDirectory, moduleName, outputFile) {
