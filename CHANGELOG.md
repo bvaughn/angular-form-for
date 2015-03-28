@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.0.0
+Added support for [Angular Material](https://material.angularjs.org/#/) via a new template module: `formFor.materialTemplates`.
+
+Updated `<radio-field>` components to work with an `options` collection (similar to `<select-field>` inputs).
+Rather than declaring individual radio fields, you only need to declare one with a set of options.
+This was done to support the nested structure required by Angular Material, but also simplifies other use-cases as well.
+
+Also fixed an edge-case default with `NestedObjectHelper` that prevented it from correctly iterating over values in an array under certain conditions.
+
 ## 2.0.1
 Added new formForBuilder directive in order to support auto-generated form markup.
 
