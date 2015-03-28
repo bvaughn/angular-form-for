@@ -504,6 +504,9 @@ var formFor;
                 $scope.$watch('required', function (required) {
                     $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration.requiredLabel : null;
                 });
+            },
+            link: function ($scope, $element, $attributes) {
+                $scope.attributes = $attributes;
             }
         };
     }

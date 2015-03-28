@@ -8,6 +8,11 @@ module formFor {
   interface FieldLabelScope extends ng.IScope {
 
     /**
+     * HTML field attributes; passed along so that custom view implementations can access custom parameters.
+     */
+    attributes:any;
+
+    /**
      * Bindable label for template to display.
      */
     bindableLabel:string;
@@ -76,6 +81,13 @@ module formFor {
         $scope.$watch('required', function(required) {
           $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration.requiredLabel : null;
         });
+      },
+
+      link: function($scope:FieldLabelScope,
+                     $element:ng.IAugmentedJQuery,
+                     $attributes:ng.IAttributes):void {
+
+        $scope.attributes = $attributes;
       }
     };
   }

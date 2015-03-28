@@ -1,3 +1,6 @@
 <label ng-bind="label">
-  <md-tooltip ng-if="help" md-direction="right">{{help}}</md-tooltip>
+  <md-tooltip ng-if="help"
+              md-direction="{{attributes.direction || 'right'}}">
+    {{help}}
+  </md-tooltip>
 </label>
