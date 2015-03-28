@@ -8,9 +8,10 @@
   <div>
     <md-select ng-model="model.bindable"
                ng-disabled="disable || model.disabled"
-               placeholder="{{placeholder}}">
+               placeholder="{{model.bindable ? '' : placeholder}}"
+               md-autoselect="!preventDefaultOption">
 
-      <md-option ng-repeat="option in filteredOptions"
+      <md-option ng-repeat="option in options"
                  ng-value="option[valueAttribute]">
         {{option[labelAttribute]}}
       </md-option>
