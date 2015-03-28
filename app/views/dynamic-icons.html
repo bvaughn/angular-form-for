@@ -5,21 +5,5 @@
     This demo illustrates dynamic field icons- a featured introduced to formFor in version 1.2.10.
   </p>
 
-  <tabset justified="true">
-    <li class="styles-tab text-center">
-      <template-toggler></template-toggler>
-    </li>
-    <tab>
-      <tab-heading>Demo <i class="fa fa-eye"></i></tab-heading>
-      <div class="tab-content well" ng-include="'app/demos/dynamic-icons.html'"></div>
-    </tab>
-    <tab>
-      <tab-heading>HTML Source <i class="fa fa-html5"></i></tab-heading>
-      <prism class="tab-content" source="app/demos/dynamic-icons.html"></prism>
-    </tab>
-    <tab>
-      <tab-heading>JS Source <i class="fa fa-code"></i></tab-heading>
-      <prism class="tab-content" parser="javascript" source="app/demos/dynamic-icons.js"></prism>
-    </tab>
-  </tabset>
+  <tabbed-demo js-source="app/demos/dynamic-icons.js" html-source="app/demos/dynamic-icons.html"></tabbed-demo>
 </div>

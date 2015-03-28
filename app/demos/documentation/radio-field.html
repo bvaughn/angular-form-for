@@ -1,0 +1,20 @@
+<form form-for="{preselected: 'f'}"
+      ng-init="genders = [{value: 'f', label: 'Female'}, {value: 'm', label: 'Male'}]">
+  
+  <radio-field attribute="preselected"
+               label="Preselected radio field"
+               options="genders">
+  </radio-field>
+  
+  <radio-field attribute="help"
+               label="Radio field with help"
+               options="genders"
+               help="This is a helpful string">
+  </radio-field>
+  
+  <radio-field attribute="disabled"
+               label="Disabled radio field"
+               options="genders"
+               disable="true">
+  </radio-field>
+</form>

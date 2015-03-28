@@ -1,0 +1,60 @@
+<form form-for="{preselected: 'm', preselectedTypeahead: 'm'}"
+      ng-init="genders = [{value: 'f', label: 'Female'}, {value: 'm', label: 'Male'}]">
+
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Select</h4>
+      
+      <select-field attribute="preselected"
+                    label="Preselected select field with help"
+                    help="This is a helpful string"
+                    options="genders">
+      </select-field>
+      
+      <select-field attribute="optional"
+                    label="Optional select field"
+                    options="genders"
+                    prevent-default-option
+                    allow-blank>
+      </select-field>
+      
+      <select-field attribute="multiselect"
+                    label="Multi-select field"
+                    options="genders"
+                    multiple="true">
+      </select-field>
+      
+      <select-field attribute="disabled"
+                    label="Disabled select field"
+                    options="genders" 
+                    disable="true">
+      </select-field>
+    </div>
+
+    <div class="col-md-6">
+      <h4>Type-ahead</h4>
+
+      <select-field attribute="preselectedTypeahead"
+                    label="Preselected type-ahead field with help"
+                    help="This is a helpful string"
+                    options="genders"
+                    enable-filtering>
+      </select-field>
+      
+      <select-field attribute="optionalTypeahead"
+                    label="Optional type-ahead field"
+                    options="genders"
+                    prevent-default-option
+                    allow-blank
+                    enable-filtering>
+      </select-field>
+      
+      <select-field attribute="disabledTypeahead"
+                    label="Disabled type-ahead field"
+                    options="genders" 
+                    disable="true"
+                    enable-filtering>
+      </select-field>
+    </div>
+  </div>
+</form>

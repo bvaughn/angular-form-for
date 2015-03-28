@@ -6,21 +6,5 @@
   <a href="http://rawgit.com/bvaughn/angular-form-for/master/dist/docs/form-for.html" target="_blank">formFor directive</a>.
   </p>
 
-  <tabset justified="true">
-    <li class="styles-tab text-center">
-      <template-toggler></template-toggler>
-    </li>
-    <tab>
-      <tab-heading>Demo <i class="fa fa-eye"></i></tab-heading>
-      <div class="tab-content well" ng-include="'app/demos/form-metadata.html'"></div>
-    </tab>
-    <tab>
-      <tab-heading>HTML Source <i class="fa fa-html5"></i></tab-heading>
-      <prism class="tab-content" source="app/demos/form-metadata.html"></prism>
-    </tab>
-    <tab>
-      <tab-heading>JS Source <i class="fa fa-code"></i></tab-heading>
-      <prism class="tab-content" parser="javascript" source="app/demos/form-metadata.js"></prism>
-    </tab>
-  </tabset>
+  <tabbed-demo js-source="app/demos/form-metadata.js" html-source="app/demos/form-metadata.html"></tabbed-demo>
 </div>

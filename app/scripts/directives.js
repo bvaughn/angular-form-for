@@ -35,6 +35,17 @@ angular.module('formForDocumentation').directive('prism',
     };
 });
 
+angular.module('formForDocumentation').directive('tabbedDemo', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/templates/tabbed-demo.html',
+    link: function($scope, $element, $attributes) {
+      $scope.htmlSource = $attributes.htmlSource;
+      $scope.jsSource = $attributes.jsSource ? $attributes.jsSource : null;
+    }
+  };
+});
+
 angular.module('formForDocumentation').directive('disableFieldButton', function() {
   return {
     restrict: 'E',

@@ -8,21 +8,5 @@
 
   <div ng-include="'app/views/partials/parse-warning.html'"></div>
 
-  <tabset justified="true">
-    <li class="styles-tab text-center">
-      <template-toggler></template-toggler>
-    </li>
-    <tab>
-      <tab-heading>Demo <i class="fa fa-eye"></i></tab-heading>
-      <div class="tab-content well" ng-include="'app/demos/collections.html'"></div>
-    </tab>
-    <tab>
-      <tab-heading>HTML Source <i class="fa fa-html5"></i></tab-heading>
-      <prism class="tab-content" source="app/demos/collections.html"></prism>
-    </tab>
-    <tab>
-      <tab-heading>JS Source <i class="fa fa-code"></i></tab-heading>
-      <prism class="tab-content" parser="javascript" source="app/demos/collections.js"></prism>
-    </tab>
-  </tabset>
+  <tabbed-demo js-source="app/demos/collections.js" html-source="app/demos/collections.html"></tabbed-demo>
 </div>

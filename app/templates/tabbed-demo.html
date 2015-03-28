@@ -1,0 +1,19 @@
+<tabset justified="true">
+  <li class="styles-tab text-center">
+    <template-toggler></template-toggler>
+  </li>
+  <tab>
+    <tab-heading>
+      Demo <i class="fa fa-eye"></i>
+    </tab-heading>
+    <div class="tab-content well" ng-include="htmlSource"></div>
+  </tab>
+  <tab>
+    <tab-heading>HTML Source <i class="fa fa-html5"></i></tab-heading>
+    <prism class="tab-content" source="{{htmlSource}}"></prism>
+  </tab>
+  <tab ng-if="jsSource">
+    <tab-heading>JS Source <i class="fa fa-code"></i></tab-heading>
+    <prism class="tab-content" parser="javascript" source="{{jsSource}}"></prism>
+  </tab>
+</tabset>
