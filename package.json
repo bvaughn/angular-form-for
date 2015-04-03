@@ -1,0 +1,31 @@
+{
+  "name": "angular-form-for-docs",
+  "version": "0.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "~3.8.11",
+    "gulp-clean": "~0.3.1",
+    "gulp-concat": "~2.5.2",
+    "gulp-ng-annotate": "~0.5.2",
+    "gulp-shell": "~0.4.0",
+    "run-sequence": "~1.0.2",
+    "fs": "~0.0.2",
+    "uglify-js2": "~2.1.11",
+    "uglifyjs": "~2.4.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bvaughn/angular-form-for.git"
+  },
+  "author": "Brian Vaughn <briandavidvaughn@gmail.com> (https://github.com/bvaughn/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bvaughn/angular-form-for/issues"
+  },
+  "homepage": "https://github.com/bvaughn/angular-form-for"
+}
