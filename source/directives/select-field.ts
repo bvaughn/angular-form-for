@@ -186,6 +186,11 @@ module formFor {
 
   var MIN_TIMEOUT_INTERVAL:number = 10;
 
+  var $document_:ng.IAugmentedJQuery;
+  var $log_:ng.ILogService;
+  var $timeout_:ng.ITimeoutService;
+  var fieldHelper_:FieldHelper;
+
   /**
    * Renders a drop-down &lt;select&gt; menu along with an input label.
    * This type of component works with large enumerations and can be configured to allow for a blank/empty selection
@@ -223,278 +228,287 @@ module formFor {
    * @param $timeout $injector-supplied $timeout service
    * @param fieldHelper
    */
-  export function SelectFieldDirective($document:ng.IAugmentedJQuery,
-                                       $log:ng.ILogService,
-                                       $timeout:ng.ITimeoutService,
-                                       fieldHelper:FieldHelper):ng.IDirective {
-    return {
-      require: '^formFor',
-      restrict: 'EA',
-      templateUrl: 'form-for/templates/select-field.html',
+  export class SelectFieldDirective implements ng.IDirective {
 
-      scope: {
-        attribute: '@',
-        disable: '=',
-        filterDebounce: '@?',
-        help: '@?',
-        multiple: '=?',
-        options: '='
-      },
+    require:string = '^formFor';
+    restrict:string = 'EA';
+    templateUrl:string = 'form-for/templates/select-field.html';
 
-      link($scope:SelectFieldScope,
-           $element:ng.IAugmentedJQuery,
-           $attributes:ng.IAttributes,
-           formForController:FormForController):void {
+    scope:any = {
+      attribute: '@',
+      disable: '=',
+      filterDebounce: '@?',
+      help: '@?',
+      multiple: '=?',
+      options: '='
+    };
 
-        if (!$scope.attribute) {
-          $log.error('Missing required field "attribute"');
+    /* @ngInject */
+    constructor($document:ng.IAugmentedJQuery,
+                $log:ng.ILogService,
+                $timeout:ng.ITimeoutService,
+                fieldHelper:FieldHelper) {
+      $document_ = $document;
+      $log_ = $log;
+      $timeout_ = $timeout;
+      fieldHelper_ = fieldHelper;
+    }
 
+    /* @ngInject */
+    link($scope:SelectFieldScope,
+         $element:ng.IAugmentedJQuery,
+         $attributes:ng.IAttributes,
+         formForController:FormForController):void {
+
+      if (!$scope.attribute) {
+        $log_.error('Missing required field "attribute"');
+
+        return;
+      }
+
+      $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
+      $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
+      $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
+
+      // Read from $attributes to avoid getting any interference from $scope.
+      $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
+      $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
+      $scope.placeholder = $attributes.hasOwnProperty('placeholder') ? $attributes['placeholder'] : 'Select';
+      $scope.tabIndex = $attributes['tabIndex'] || 0;
+
+      $scope.scopeBuster = {};
+
+      fieldHelper_.manageLabel($scope, $attributes, false);
+      fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+
+      var filterText:ng.IAugmentedJQuery;
+
+      // Helper method for setting focus on an item after a delay
+      var setDelayedFilterTextFocus:Function = () => {
+        if (!filterText) { // Null when link is first run because of ng-include
+          filterText = $element.find('input');
+        }
+
+        $timeout_(filterText.focus.bind(filterText));
+      };
+
+      $scope.close = () => {
+        $timeout_(() => {
+          $scope.isOpen = false;
+        });
+      };
+
+      $scope.open = () => {
+        if ($scope.disable || $scope.model.disabled) {
           return;
         }
 
-        $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
-        $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
-        $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
-
-        // Read from $attributes to avoid getting any interference from $scope.
-        $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
-        $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
-        $scope.placeholder = $attributes.hasOwnProperty('placeholder') ? $attributes['placeholder'] : 'Select';
-        $scope.tabIndex = $attributes['tabIndex'] || 0;
-
-        $scope.scopeBuster = {};
-
-        fieldHelper.manageLabel($scope, $attributes, false);
-        fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
-
-        var filterText:ng.IAugmentedJQuery;
-
-        // Helper method for setting focus on an item after a delay
-        var setDelayedFilterTextFocus:Function = () => {
-          if (!filterText) { // Null when link is first run because of ng-include
-            filterText = $element.find('input');
-          }
-
-          $timeout(filterText.focus.bind(filterText));
-        };
-
-        $scope.close = () => {
-          $timeout(() => {
-            $scope.isOpen = false;
-          });
-        };
-
-        $scope.open = () => {
-          if ($scope.disable || $scope.model.disabled) {
-            return;
-          }
-
-          $timeout(() => {
-            $scope.isOpen = true;
-          });
-        };
-
-        /*****************************************************************************************
-         * The following code pertains to filtering visible options.
-         *****************************************************************************************/
-
-        $scope.emptyOption = {};
-        $scope.emptyOption[$scope.labelAttribute] = '';
-        $scope.emptyOption[$scope.valueAttribute] = undefined;
-
-        $scope.placeholderOption = {};
-        $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
-        $scope.placeholderOption[$scope.valueAttribute] = undefined;
-
-        $scope.filteredOptions = [];
-
-        // Sanitizes option and filter-text values for comparison
-        var sanitize:(value:string) => string =
-          (value) => {
-            return value && value.toLowerCase();
-          };
-
-        // Updates visible <option>s based on current filter text
-        var calculateFilteredOptions = () => {
-          var options:Array<any> = $scope.options || [];
-
-          $scope.filteredOptions.splice(0);
-
-          if (!$scope.enableFiltering || !$scope.scopeBuster.filter) {
-            angular.copy(options, $scope.filteredOptions);
-          } else {
-            var filter:string = sanitize($scope.scopeBuster.filter);
-
-            angular.forEach(options, (option) => {
-              var index:number = sanitize(option[$scope.labelAttribute]).indexOf(filter);
-
-              if (index >= 0) {
-                $scope.filteredOptions.push(option);
-              }
-            });
-          }
-
-          if (!$scope.selectedOption && !$scope.multiple && !$scope.enableFiltering) {
-            $scope.filteredOptions.unshift($scope.placeholderOption);
-          } else if ($scope.allowBlank) {
-            $scope.filteredOptions.unshift($scope.emptyOption);
-          }
-        };
-
-        $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
-        $scope.$watch('options.length', calculateFilteredOptions);
-
-        /*****************************************************************************************
-         * The following code manages setting the correct default value based on bindable model.
-         *****************************************************************************************/
-
-        var updateDefaultOption:(value?:any) => any = () => {
-          var selected:any = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
-          var numOptions:number = $scope.options && $scope.options.length;
-
-          // Default select the first item in the list
-          // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-          if (selected === $scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
-            $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
-          }
-        };
-
-        $scope.$watch('model.bindable', updateDefaultOption);
-        $scope.$watch('options.length', updateDefaultOption);
-
-        /*****************************************************************************************
-         * The following code deals with toggling/collapsing the drop-down and selecting values.
-         *****************************************************************************************/
-
-        $scope.$watch('model.bindable', () => {
-          var matchingOption:any = null;
-
-          angular.forEach($scope.options,
-            (option) => {
-              if (option[$scope.valueAttribute] === $scope.model.bindable) {
-                matchingOption = option;
-              }
-            });
-
-          if (matchingOption) {
-            $scope.selectedOption = matchingOption;
-            $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
-          }
-
-          // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-          $scope.scopeBuster.filter = $scope.selectedOptionLabel;
+        $timeout_(() => {
+          $scope.isOpen = true;
         });
+      };
 
-        var documentClick = (event) => {
-          // See filterTextClick() for why we check this property.
-          if (event.ignoreFor === $scope.model.uid) {
-            return;
-          }
+      /*****************************************************************************************
+       * The following code pertains to filtering visible options.
+       *****************************************************************************************/
 
-          $scope.close();
+      $scope.emptyOption = {};
+      $scope.emptyOption[$scope.labelAttribute] = '';
+      $scope.emptyOption[$scope.valueAttribute] = undefined;
+
+      $scope.placeholderOption = {};
+      $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
+      $scope.placeholderOption[$scope.valueAttribute] = undefined;
+
+      $scope.filteredOptions = [];
+
+      // Sanitizes option and filter-text values for comparison
+      var sanitize:(value:string) => string =
+        (value) => {
+          return typeof value === "string" ? value.toLowerCase() : '';
         };
 
-        $scope.filterTextClick = (event) => {
-          // We can't stop the event from propagating or we might prevent other inputs from closing on blur.
-          // But we can't let it proceed as normal or it may result in the $document click handler closing a newly-opened input.
-          // Instead we tag it for this particular instance of <select-field> to ignore.
-          if ($scope.isOpen) {
-            event.ignoreFor = $scope.model.uid;
-          }
-        };
+      // Updates visible <option>s based on current filter text
+      var calculateFilteredOptions = () => {
+        var options:Array<any> = $scope.options || [];
 
-        var pendingTimeoutId:ng.IPromise<any>;
+        $scope.filteredOptions.splice(0);
 
-        $scope.$watch('isOpen', () => {
-          if (pendingTimeoutId) {
-            $timeout.cancel(pendingTimeoutId);
-          }
-          pendingTimeoutId = $timeout(() => {
-            pendingTimeoutId = null;
+        if (!$scope.enableFiltering || !$scope.scopeBuster.filter) {
+          angular.copy(options, $scope.filteredOptions);
+        } else {
+          var filter:string = sanitize($scope.scopeBuster.filter);
 
-            if ($scope.isOpen) {
-              $document.on('click', undefined, documentClick);
-            } else {
-              $document.off('click', undefined, documentClick);
+          angular.forEach(options, (option) => {
+            var index:number = sanitize(option[$scope.labelAttribute]).indexOf(filter);
+
+            if (index >= 0) {
+              $scope.filteredOptions.push(option);
             }
-          }, MIN_TIMEOUT_INTERVAL);
-        });
+          });
+        }
 
-        $scope.$on('$destroy', () => {
-          $document.off('click', documentClick);
-        });
+        if (!$scope.selectedOption && !$scope.multiple && !$scope.enableFiltering) {
+          $scope.filteredOptions.unshift($scope.placeholderOption);
+        } else if ($scope.allowBlank) {
+          $scope.filteredOptions.unshift($scope.emptyOption);
+        }
+      };
 
-        /*****************************************************************************************
-         * The following code responds to keyboard events when the drop-down is visible
-         *****************************************************************************************/
+      $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
+      $scope.$watch('options.length', calculateFilteredOptions);
 
-        $scope.setFilterFocus = () => {
-          setDelayedFilterTextFocus();
-        };
+      /*****************************************************************************************
+       * The following code manages setting the correct default value based on bindable model.
+       *****************************************************************************************/
 
-        $scope.mouseOver = (index:number) => {
-          $scope.mouseOverIndex = index;
-          $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
-        };
+      var updateDefaultOption:(value?:any) => any = () => {
+        var selected:any = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
+        var numOptions:number = $scope.options && $scope.options.length;
 
-        $scope.selectOption = (option:any) => {
-          $scope.model.bindable = option && option[$scope.valueAttribute];
-        };
+        // Default select the first item in the list
+        // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
+        if (selected === $scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
+          $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+        }
+      };
 
-        // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
-        $scope.keyDown = (event:KeyboardEvent) => {
-          switch (event.keyCode) {
-            case 27: // Escape key
+      $scope.$watch('model.bindable', updateDefaultOption);
+      $scope.$watch('options.length', updateDefaultOption);
+
+      /*****************************************************************************************
+       * The following code deals with toggling/collapsing the drop-down and selecting values.
+       *****************************************************************************************/
+
+      $scope.$watch('model.bindable', () => {
+        var matchingOption:any = null;
+
+        angular.forEach($scope.options,
+          (option) => {
+            if (option[$scope.valueAttribute] === $scope.model.bindable) {
+              matchingOption = option;
+            }
+          });
+
+        if (matchingOption) {
+          $scope.selectedOption = matchingOption;
+          $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
+        }
+
+        // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
+        $scope.scopeBuster.filter = $scope.selectedOptionLabel;
+      });
+
+      var documentClick = (event) => {
+        // See filterTextClick() for why we check this property.
+        if (event.ignoreFor === $scope.model.uid) {
+          return;
+        }
+
+        $scope.close();
+      };
+
+      $scope.filterTextClick = (event) => {
+        // We can't stop the event from propagating or we might prevent other inputs from closing on blur.
+        // But we can't let it proceed as normal or it may result in the $document click handler closing a newly-opened input.
+        // Instead we tag it for this particular instance of <select-field> to ignore.
+        if ($scope.isOpen) {
+          event.ignoreFor = $scope.model.uid;
+        }
+      };
+
+      var pendingTimeoutId:ng.IPromise<any>;
+
+      $scope.$watch('isOpen', () => {
+        if (pendingTimeoutId) {
+          $timeout_.cancel(pendingTimeoutId);
+        }
+        pendingTimeoutId = $timeout_(() => {
+          pendingTimeoutId = null;
+
+          if ($scope.isOpen) {
+            $document_.on('click', undefined, documentClick);
+          } else {
+            $document_.off('click', undefined, documentClick);
+          }
+        }, MIN_TIMEOUT_INTERVAL);
+      });
+
+      $scope.$on('$destroy', () => {
+        $document_.off('click', documentClick);
+      });
+
+      /*****************************************************************************************
+       * The following code responds to keyboard events when the drop-down is visible
+       *****************************************************************************************/
+
+      $scope.setFilterFocus = () => {
+        setDelayedFilterTextFocus();
+      };
+
+      $scope.mouseOver = (index:number) => {
+        $scope.mouseOverIndex = index;
+        $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
+      };
+
+      $scope.selectOption = (option:any) => {
+        $scope.model.bindable = option && option[$scope.valueAttribute];
+      };
+
+      // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
+      $scope.keyDown = (event:KeyboardEvent) => {
+        switch (event.keyCode) {
+          case 27: // Escape key
+            $scope.close();
+            break;
+          case 13: // Enter key
+            if ($scope.isOpen) {
+              $scope.selectOption($scope.mouseOverOption);
               $scope.close();
-              break;
-            case 13: // Enter key
-              if ($scope.isOpen) {
-                $scope.selectOption($scope.mouseOverOption);
-                $scope.close();
-              } else {
-                $scope.open();
-              }
-
-              event.preventDefault();
-              break;
-            case 38: // Up arrow
-              if ($scope.isOpen) {
-                $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
-              } else {
-                $scope.open();
-              }
-              break;
-            case 40: // Down arrow
-              if ($scope.isOpen) {
-                $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
-              } else {
-                $scope.open();
-              }
-              break;
-            case 9: // Tabbing (in or out) should close the menu.
-            case 16:
-              $scope.close();
-              break;
-            default: // But all other key events should (they potentially indicate a changed type-ahead filter value).
+            } else {
               $scope.open();
-              break;
-          }
-        };
+            }
 
-        $scope.$watchCollection('[isOpen, filteredOptions.length]', () => {
-          // Reset hover anytime our list opens/closes or our collection is refreshed.
-          $scope.mouseOver(-1);
+            event.preventDefault();
+            break;
+          case 38: // Up arrow
+            if ($scope.isOpen) {
+              $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
+            } else {
+              $scope.open();
+            }
+            break;
+          case 40: // Down arrow
+            if ($scope.isOpen) {
+              $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
+            } else {
+              $scope.open();
+            }
+            break;
+          case 9: // Tabbing (in or out) should close the menu.
+          case 16:
+            $scope.close();
+            break;
+          default: // But all other key events should (they potentially indicate a changed type-ahead filter value).
+            $scope.open();
+            break;
+        }
+      };
 
-          // Pass focus through to filter field when select is opened
-          if ($scope.isOpen && $scope.enableFiltering) {
-            setDelayedFilterTextFocus();
-          }
-        });
-      }
-    };
+      $scope.$watchCollection('[isOpen, filteredOptions.length]', () => {
+        // Reset hover anytime our list opens/closes or our collection is refreshed.
+        $scope.mouseOver(-1);
+
+        // Pass focus through to filter field when select is opened
+        if ($scope.isOpen && $scope.enableFiltering) {
+          setDelayedFilterTextFocus();
+        }
+      });
+    }
   }
 
   angular.module('formFor').directive('selectField',
-    ($document, $log, $timeout, FieldHelper) =>
-      SelectFieldDirective($document, $log, $timeout, FieldHelper));
+    ($document, $log, $timeout, FieldHelper) => {
+      return new SelectFieldDirective($document, $log, $timeout, FieldHelper);
+    });
 }

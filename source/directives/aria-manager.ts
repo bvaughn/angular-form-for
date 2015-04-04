@@ -8,6 +8,7 @@ module formFor {
 
     restrict:string = 'A';
 
+    /* @ngInject */
     link($scope:ng.IScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
       $scope.$watch('model.uid', function(uid) {
         $attributes.$set('ariaDescribedby', uid + '-error');
@@ -20,5 +21,7 @@ module formFor {
     }
   }
 
-  angular.module('formFor').directive('ariaManager', () => new AriaManager());
+  angular.module('formFor').directive('ariaManager', () => {
+    return new AriaManager();
+  });
 }

@@ -34,6 +34,8 @@ module formFor {
     model?:BindableCollectionWrapper;
   }
 
+  var $sce_:ng.ISCEService;
+
   /**
    * Header label for collections.
    * This component displays header text as well as collection validation errors.
@@ -45,27 +47,38 @@ module formFor {
    *
    * @param $sce $injector-supplied $sce service
    */
-  export function CollectionLabelDirective($sce:ng.ISCEService):ng.IDirective {
-    return {
-      require: '^formFor',
-      restrict: 'EA',
-      templateUrl: 'form-for/templates/collection-label.html',
+  export class CollectionLabelDirective implements ng.IDirective {
 
-      scope: {
-        attribute: '@',
-        help: '@?',
-        label: '@'
-      },
+    require:string = '^formFor';
+    restrict:string = 'EA';
+    templateUrl:string = 'form-for/templates/collection-label.html';
 
-      link($scope:CollectionLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
-        $scope.$watch('label', function(value) {
-          $scope.bindableLabel = $sce.trustAsHtml(value);
-        });
-
-        $scope.model = formForController.registerCollectionLabel($scope.attribute);
-      }
+    scope:any = {
+      attribute: '@',
+      help: '@?',
+      label: '@'
     };
+
+    /* @ngInject */
+    constructor($sce:ng.ISCEService) {
+      $sce_ = $sce;
+    }
+
+    /* @ngInject */
+    link($scope:CollectionLabelScope,
+         $element:ng.IAugmentedJQuery,
+         $attributes:ng.IAttributes,
+         formForController:FormForController):void {
+
+      $scope.$watch('label', function(value) {
+        $scope.bindableLabel = $sce_.trustAsHtml(value);
+      });
+
+      $scope.model = formForController.registerCollectionLabel($scope.attribute);
+    }
   }
 
-  angular.module('formFor').directive('collectionLabel', ($sce) => CollectionLabelDirective($sce));
+  angular.module('formFor').directive('collectionLabel', ($sce) => {
+    return new CollectionLabelDirective($sce);
+  });
 }

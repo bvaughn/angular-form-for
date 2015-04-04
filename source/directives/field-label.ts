@@ -47,6 +47,9 @@ module formFor {
     uid?:string;
   }
 
+  var $sce_:ng.ISCEService;
+  var formForConfiguration_:FormForConfiguration;
+
   /**
    * This component is only intended for internal use by the formFor module.
    *
@@ -59,39 +62,45 @@ module formFor {
    * @param $sce $injector-supplied $sce service
    * @param formForConfiguration
    */
-  export function FieldLabelDirective($sce:ng.ISCEService, formForConfiguration:FormForConfiguration):ng.IDirective {
-    return {
-      replace: true, // Necessary for CSS sibling selectors
-      restrict: 'EA',
-      templateUrl:'form-for/templates/field-label.html',
+  export class FieldLabelDirective implements ng.IDirective {
 
-      scope: {
-        inputUid: '@',
-        help: '@?',
-        label: '@',
-        required: '@?',
-        uid: '@'
-      },
+    replace:boolean = true; // Necessary for CSS sibling selectors
+    restrict:string = 'EA';
+    templateUrl:string = 'form-for/templates/field-label.html';
 
-      controller: function($scope:FieldLabelScope):void {
-        $scope.$watch('label', function(value) {
-          $scope.bindableLabel = $sce.trustAsHtml(value);
-        });
-
-        $scope.$watch('required', function(required) {
-          $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration.requiredLabel : null;
-        });
-      },
-
-      link: function($scope:FieldLabelScope,
-                     $element:ng.IAugmentedJQuery,
-                     $attributes:ng.IAttributes):void {
-
-        $scope.attributes = $attributes;
-      }
+    scope:any = {
+      inputUid: '@',
+      help: '@?',
+      label: '@',
+      required: '@?',
+      uid: '@'
     };
+
+    /* @ngInject */
+    constructor($sce:ng.ISCEService, formForConfiguration:FormForConfiguration) {
+      $sce_ = $sce;
+      formForConfiguration_ = formForConfiguration;
+    }
+
+    /* @ngInject */
+    controller($scope:FieldLabelScope):void {
+      $scope.$watch('label', function(value) {
+        $scope.bindableLabel = $sce_.trustAsHtml(value);
+      });
+
+      $scope.$watch('required', function(required) {
+        $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration_.requiredLabel : null;
+      });
+    }
+
+    /* @ngInject */
+    link($scope:FieldLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
+      $scope.attributes = $attributes;
+    }
   }
 
   angular.module('formFor').directive('fieldLabel',
-    ($sce, FormForConfiguration) => FieldLabelDirective($sce, FormForConfiguration));
+    ($sce, FormForConfiguration) => {
+      return new FieldLabelDirective($sce, FormForConfiguration);
+    });
 }

@@ -1,20 +1,22 @@
 module formFor {
 
   /**
+   * Adds the ability to replace an ngInclude element with its template content.
    */
-  export function FormForIncludeReplaceDirective():ng.IDirective {
-    return {
-      require: 'ngInclude',
-      restrict: 'A', /* optional */
+  export class FormForIncludeReplaceDirective implements ng.IDirective {
+    require:string = 'ngInclude';
+    restrict:string = 'A'; /* optional */
 
-      link: function($scope:ng.IScope,
-                     $element:ng.IAugmentedJQuery,
-                     $attributes:ng.IAttributes):void {
+    /* @ngInject */
+    link($scope:ng.IScope,
+         $element:ng.IAugmentedJQuery,
+         $attributes:ng.IAttributes):void {
 
-        $element.replaceWith($element.children());
-      }
+      $element.replaceWith($element.children());
     }
-  };
+  }
 
-  angular.module('formFor').directive('formForIncludeReplace', () => FormForIncludeReplaceDirective());
+  angular.module('formFor').directive('formForIncludeReplace', () => {
+    return new FormForIncludeReplaceDirective();
+  });
 }

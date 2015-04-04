@@ -104,6 +104,9 @@ module formFor {
     scopes:Array<RadioFieldScope>;
   }
 
+  var $log_:ng.ILogService;
+  var fieldHelper_:FieldHelper;
+
   /**
    * Renders a radio &lt;input&gt; with optional label.
    * This type of component is well-suited for small enumerations.
@@ -116,75 +119,81 @@ module formFor {
    * @param $log $injector-supplied $log service
    * @param FormForConfiguration
    */
-  export function RadioFieldDirective($log, FormForConfiguration):ng.IDirective {
-    var fieldHelper = new FieldHelper(FormForConfiguration);
+  export class RadioFieldDirective implements ng.IDirective {
 
-    return {
-      require: '^formFor',
-      restrict: 'EA',
-      templateUrl: 'form-for/templates/radio-field.html',
+    require:string = '^formFor';
+    restrict:string = 'EA';
+    templateUrl:string = 'form-for/templates/radio-field.html';
 
-      scope: {
-        attribute: '@',
-        disable: '=',
-        help: '@?',
-        options: '=',
-        value: '@'
-      },
-
-      link($scope:RadioFieldScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
-        if (!$scope.attribute) {
-          $log.error('Missing required field "attribute"');
-
-          return;
-        }
-
-        // Read from $attributes to avoid getting any interference from $scope.
-        $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
-        $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
-
-        fieldHelper.manageFieldRegistration($scope, $attributes, formForController);
-
-        // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
-        // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
-        $scope.uid = $attributes['uid'] || FormForGUID.create();
-
-        fieldHelper.manageLabel($scope, $attributes, true);
-
-        $scope.tabIndex = $attributes['tabIndex'] || 0;
-
-        $scope.click = () => {
-          if (!$scope.disable && !$scope.model.disabled) {
-            //$scope.model.bindable = $scope.value;
-          }
-        };
-
-        $scope.$watch('model', (value) => {
-          $scope.model = value;
-        });
-        $scope.$watch('disable', (value) => {
-          $scope.disable = value;
-        });
-        $scope.$watch('model.disabled', (value) => {
-          if ($scope.model) {
-            $scope.model.disabled = value;
-          }
-        });
-
-        /**
-         * Update this RadioField (UI) whenever the group's value changes.
-         * This could be triggered by another RadioField in the group.
-        $scope.$watch('model.bindable', function(newValue:any) {
-          $scope.checked =
-            newValue !== undefined &&
-            newValue !== null &&
-            newValue.toString() === $scope.value.toString();
-        });
-         */
-      }
+    scope:any = {
+      attribute: '@',
+      disable: '=',
+      help: '@?',
+      options: '=',
+      value: '@'
     };
+
+    /* @ngInject */
+    constructor($log:ng.ILogService, FormForConfiguration) {
+      fieldHelper_  = new FieldHelper(FormForConfiguration);
+      $log_ = $log;
+    }
+
+    /* @ngInject */
+    link($scope:RadioFieldScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes, formForController:FormForController):void {
+      if (!$scope.attribute) {
+        $log_.error('Missing required field "attribute"');
+
+        return;
+      }
+
+      // Read from $attributes to avoid getting any interference from $scope.
+      $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
+      $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
+
+      fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+
+      // Everything inside of  $scope.model pertains to the first <input type="radio"> for this attribute/name.
+      // In order for our view's aria-* and label-for tags to function properly, we need a unique uid for this instance.
+      $scope.uid = $attributes['uid'] || FormForGUID.create();
+
+      fieldHelper_.manageLabel($scope, $attributes, true);
+
+      $scope.tabIndex = $attributes['tabIndex'] || 0;
+
+      $scope.click = () => {
+        if (!$scope.disable && !$scope.model.disabled) {
+          //$scope.model.bindable = $scope.value;
+        }
+      };
+
+      $scope.$watch('model', (value) => {
+        $scope.model = value;
+      });
+      $scope.$watch('disable', (value) => {
+        $scope.disable = value;
+      });
+      $scope.$watch('model.disabled', (value) => {
+        if ($scope.model) {
+          $scope.model.disabled = value;
+        }
+      });
+
+      /**
+       * Update this RadioField (UI) whenever the group's value changes.
+       * This could be triggered by another RadioField in the group.
+      $scope.$watch('model.bindable', function(newValue:any) {
+        $scope.checked =
+          newValue !== undefined &&
+          newValue !== null &&
+          newValue.toString() === $scope.value.toString();
+      });
+       */
+    }
   }
 
   angular.module('formFor').directive('radioField',
-    ($log, FormForConfiguration) => RadioFieldDirective($log, FormForConfiguration));
+    ($log, FormForConfiguration) => {
+      return new RadioFieldDirective($log, FormForConfiguration);
+    });
 }
