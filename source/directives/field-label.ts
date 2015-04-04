@@ -83,7 +83,9 @@ module formFor {
     }
 
     /* @ngInject */
-    controller($scope:FieldLabelScope):void {
+    link($scope:FieldLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
+      $scope.attributes = $attributes;
+
       $scope.$watch('label', function(value) {
         $scope.bindableLabel = $sce_.trustAsHtml(value);
       });
@@ -91,11 +93,6 @@ module formFor {
       $scope.$watch('required', function(required) {
         $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration_.requiredLabel : null;
       });
-    }
-
-    /* @ngInject */
-    link($scope:FieldLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
-      $scope.attributes = $attributes;
     }
   }
 

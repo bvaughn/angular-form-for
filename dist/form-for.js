@@ -533,18 +533,14 @@ var formFor;
         }
         FieldLabelDirective.$inject = ["$sce", "formForConfiguration"];
         /* @ngInject */
-        FieldLabelDirective.prototype.controller = function ($scope) {
+        FieldLabelDirective.prototype.link = function ($scope, $element, $attributes) {
+            $scope.attributes = $attributes;
             $scope.$watch('label', function (value) {
                 $scope.bindableLabel = $sce_.trustAsHtml(value);
             });
             $scope.$watch('required', function (required) {
                 $scope.requiredLabel = $scope.$eval(required) ? formForConfiguration_.requiredLabel : null;
             });
-        };
-        FieldLabelDirective.prototype.controller.$inject = ["$scope"];
-        /* @ngInject */
-        FieldLabelDirective.prototype.link = function ($scope, $element, $attributes) {
-            $scope.attributes = $attributes;
         };
         FieldLabelDirective.prototype.link.$inject = ["$scope", "$element", "$attributes"];
         return FieldLabelDirective;

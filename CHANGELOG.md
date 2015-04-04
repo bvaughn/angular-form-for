@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.2
+Fixed a minor, bizarre issue with the `fieldLabel` directive's controller.
+
 ## 3.0.1
 Greatly restructured TypeScript files so that ngAnnotate would properly annotate Directive :link and :controller functions.
 
