@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 
 var SOURCES = [
+  'app/scripts/app.js', // Defines module
   'app/demos/**/*.js',
   'app/scripts/**/*.js'
 ];
