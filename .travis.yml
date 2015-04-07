@@ -9,5 +9,3 @@ addons:
   sauce_connect:
     username: "briandavidvaughn"
     access_key: "9a4430a3-a08c-40d4-b2b0-335d795cbd8e"
-before_script:
-  - bash ./bin/sauce_connect_setup.sh
