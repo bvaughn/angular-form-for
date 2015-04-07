@@ -60,7 +60,8 @@
     "uglify-js2": "~2.1.11"
   },
   "scripts": {
-    "test": "gulp test"
+    "unit": "gulp test:unit",
+    "protractor": "protractor protractor.conf.js"
   },
   "repository": {
     "type": "git",

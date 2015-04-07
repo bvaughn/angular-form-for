@@ -89,20 +89,6 @@ gulp.task('test:integration', function() {
     'protractor protractor.conf.js',
     {cwd: process.cwd()}
   )();
-  /*
-  var angularProtractor = require('gulp-angular-protractor');
-
-  gulp.src(testFiles)
-    .pipe(angularProtractor({
-      configFile: 'protractor.conf.js',
-      args: [
-        '--baseUrl', 'http://127.0.0.1:8000/examples/'
-      ],
-      autoStartStopServer: true,
-      //debug: true
-    }))
-    .on('error', function(e) { throw e })
-  */
 });
 gulp.task('test:unit', function() {
   // Be sure to return the stream
