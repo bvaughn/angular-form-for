@@ -84,7 +84,7 @@ gulp.task('test:integration', function() {
   var shell = require('gulp-shell');
 
   return shell.task(
-    'npm run protractor',
+    'protractor protractor.conf.js',
     {cwd: process.cwd()}
   )();
 });
@@ -99,6 +99,14 @@ gulp.task('test:unit', function() {
       // Make sure failed tests cause gulp to exit non-zero
       throw error;
     });
+});
+
+gulp.task('travis', function(callback) {
+  runSequence(
+    'clean',
+    'build',
+    'test:unit',
+    callback);
 });
 
 // TODO Compile and bundle Stylus styles

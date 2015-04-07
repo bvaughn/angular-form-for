@@ -60,8 +60,7 @@
     "uglify-js2": "~2.1.11"
   },
   "scripts": {
-    "unit": "gulp test:unit",
-    "protractor": "webdriver-manager start & http-server & protractor protractor.conf.js"
+    "unit": "gulp test:unit"
   },
   "repository": {
     "type": "git",
