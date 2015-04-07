@@ -75,7 +75,36 @@ gulp.task('map', function() {
   )();
 });
 
-gulp.task('test', function() {
+gulp.task('test', function(callback) {
+  runSequence(
+    ['test:integration', 'test:unit'],
+    callback);
+});
+gulp.task('test:integration', function() {
+  var shell = require('gulp-shell');
+
+  console.log('CWD: ' + process.cwd() + '/dist');
+
+  return shell.task(
+    'protractor protractor.conf.js',
+    {cwd: process.cwd()}
+  )();
+  /*
+  var angularProtractor = require('gulp-angular-protractor');
+
+  gulp.src(testFiles)
+    .pipe(angularProtractor({
+      configFile: 'protractor.conf.js',
+      args: [
+        '--baseUrl', 'http://127.0.0.1:8000/examples/'
+      ],
+      autoStartStopServer: true,
+      //debug: true
+    }))
+    .on('error', function(e) { throw e })
+  */
+});
+gulp.task('test:unit', function() {
   // Be sure to return the stream
   return gulp.src(testFiles)
     .pipe(karma({
@@ -86,14 +115,6 @@ gulp.task('test', function() {
       // Make sure failed tests cause gulp to exit non-zero
       throw error;
     });
-});
-
-gulp.task('test:watch', function() {
-  return gulp.src(testFiles)
-    .pipe(karma({
-      configFile: 'karma.conf.js',
-      action: 'watch'
-    }));
 });
 
 // TODO Compile and bundle Stylus styles

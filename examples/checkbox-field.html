@@ -1,0 +1,44 @@
+<doctype html></doctype>
+<html lang="en">
+<head>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
+  <script src="/node_modules/angular/angular.js"></script>
+  <script src="/examples/init.js"></script>
+</head>
+<body>
+  <script>
+    init(function(module) {
+      module.controller('ExampleController', function($scope) {
+        console.log("Controller!");
+        $scope.formData = {
+          preselected: true
+        };
+
+        $scope.validation = {};
+      });
+
+      return 'ExampleController';
+    });
+  </script>
+
+  <form id="form" form-for="formData">
+    <checkbox-field attribute="enabled"
+                    label="Checkbox checkbox">
+    </checkbox-field>
+
+    <checkbox-field attribute="preselected"
+                    label="Preselected checkbox">
+    </checkbox-field>
+
+    <checkbox-field attribute="help"
+                    label="Checkbox with help"
+                    help="This is a helpful string">
+    </checkbox-field>
+
+    <checkbox-field attribute="disabled"
+                    label="Disabled checkbox"
+                    disable="true">
+    </checkbox-field>
+  </form>
+</body>
+</html>

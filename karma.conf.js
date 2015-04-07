@@ -18,7 +18,7 @@ module.exports = function(config) {
       'node_modules/jasmine-object-matchers/dist/jasmine-object-matchers.js',
       'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
       'dist/form-for.js',
-      'tests/**/*.js',
+      'tests/unit/**/*.js',
       'templates/**/*.html'
     ],
     exclude: [],
