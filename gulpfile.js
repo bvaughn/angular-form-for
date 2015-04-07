@@ -83,10 +83,8 @@ gulp.task('test', function(callback) {
 gulp.task('test:integration', function() {
   var shell = require('gulp-shell');
 
-  console.log('CWD: ' + process.cwd() + '/dist');
-
   return shell.task(
-    'protractor protractor.conf.js',
+    'npm run protractor',
     {cwd: process.cwd()}
   )();
 });
