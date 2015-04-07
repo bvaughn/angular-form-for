@@ -61,8 +61,7 @@
   },
   "scripts": {
     "unit": "gulp test:unit",
-    "preprotractor": "webdriver-manager start",
-    "protractor": "protractor protractor.conf.js"
+    "protractor": "webdriver-manager start & http-server & protractor protractor.conf.js"
   },
   "repository": {
     "type": "git",
