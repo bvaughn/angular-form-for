@@ -1,17 +1,17 @@
 <span class="field radio-field"
       ng-class="{disabled: disable || model.disabled, 'has-error': model.error}">
 
-  <field-error  ng-if="!hideErrorMessage"
-                error="model.error"
-                left-aligned="true"
-                uid="{{uid}}-error">
-  </field-error>
-
   <field-label  ng-if="label"
                 uid="{{uid}}-label"
                 label="{{label}}"
                 help="{{help}}">
   </field-label>
+
+  <field-error  ng-if="!hideErrorMessage"
+                error="model.error"
+                left-aligned="true"
+                uid="{{uid}}-error">
+  </field-error>
 
   <div ng-repeat="option in options track by $index">
     <label>

@@ -8,20 +8,32 @@
 <body>
   <script>
     init(function(module) {
-      module.controller('ExampleController', function($scope) {
-        console.log("Controller!");
+      module.controller('ExampleController', function($scope, $timeout) {
         $scope.formData = {
           preselected: true
         };
 
         $scope.validation = {};
+
+        $scope.validation = {
+          invalid: {
+            required: true
+          }
+        };
+
+        $scope.controller = {};
+        $scope.$watch('controller', function(controller) {
+          $timeout(function() {
+            controller.validateForm(true);
+          }, 1);
+        });
       });
 
       return 'ExampleController';
     });
   </script>
 
-  <form id="form" form-for="formData">
+  <form id="form" form-for="formData" validation-rules="validation" controller="controller">
     <checkbox-field attribute="enabled"
                     label="Checkbox checkbox">
     </checkbox-field>
@@ -38,6 +50,10 @@
     <checkbox-field attribute="disabled"
                     label="Disabled checkbox"
                     disable="true">
+    </checkbox-field>
+
+    <checkbox-field attribute="invalid"
+                    label="Invalid checkbox">
     </checkbox-field>
   </form>
 </body>

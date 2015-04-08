@@ -102,7 +102,7 @@ module formFor {
       }
 
       // Append a submit button if one isn't already present inside of $element.
-      if ($element.find('input[type=button], button').length === 0) {
+      if ($element.find('input[type=button], button, submit-button').length === 0) {
         htmlString += `<submit-button label="Submit"></submit-button>`;
       }
 

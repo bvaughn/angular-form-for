@@ -1,14 +1,14 @@
 <div class="form-for-field" ng-class="{'invalid': model.error}">
-  <field-error  error="model.error"
-                left-aligned="true"
-                uid="{{uid}}-error">
-  </field-error>
-
   <field-label  ng-if="label"
                 input-uid="{{uid}}"
                 label="{{label}}"
                 help="{{help}}">
   </field-label>
+
+  <field-error  error="model.error"
+                left-aligned="true"
+                uid="{{uid}}-error">
+  </field-error>
 
   <label ng-repeat="option in options track by $index">
     <input  aria-manager

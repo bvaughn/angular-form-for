@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO Test field-errors
+
 // Interface between tests (below) and the appropriate formFor Checkbox directive template
 var Facade = function(identifier) {
   browser.driver.get('http://localhost:8081/examples/checkbox-field.html?template=' + identifier);
@@ -14,6 +16,9 @@ var Facade = function(identifier) {
       this.getClickable = function(fieldName) {
         return element(by.css('[attribute=' + fieldName + '] input'));
       };
+      this.getErrorText = function(fieldName) {
+        return element(by.css('[attribute=' + fieldName + '] field-error p'));
+      };
       this.getHoverable = function(fieldName) {
         return element(by.css('[attribute=' + fieldName + '] [popover]'));
       };
@@ -25,6 +30,9 @@ var Facade = function(identifier) {
       this.getClickable = function(fieldName) {
         return element(by.css('[attribute=' + fieldName + '] label'));
       };
+      this.getErrorText = function(fieldName) {
+        return element(by.css('[attribute=' + fieldName + '] field-error p'));
+      };
       this.getHoverable = function(fieldName) {
         return element(by.css('[attribute=' + fieldName + '] .form-for-tooltip-icon'));
       };
@@ -34,8 +42,12 @@ var Facade = function(identifier) {
       break;
     case 'material':
       browser.ignoreSynchronization = true;
+
       this.getClickable = function(fieldName) {
         return element(by.css('[attribute=' + fieldName + '] md-checkbox'));
+      };
+      this.getErrorText = function(fieldName) {
+        return element(by.css('[attribute=' + fieldName + '] field-error div'));
       };
       this.getHoverable = function(fieldName) {
         return element(by.css('[attribute=' + fieldName + '] label'));
@@ -64,6 +76,15 @@ var Facade = function(identifier) {
 
       it('should show the correct label', function () {
         expect(checkbox.getText()).toBe('Checkbox checkbox');
+      });
+
+      it('should not show an error', function() {
+        facade.getErrorText('enabled').isDisplayed().then(
+          function() {
+            throw Error('Element should not be displayed');
+          },
+          function() {}
+        );
       });
 
       it('should update the model on click', function () {
@@ -133,6 +154,16 @@ var Facade = function(identifier) {
         clickable.click();
 
         expect(clickable.evaluate('model.bindable')).toBeFalsy();
+      });
+    });
+
+    describe('invalid', function() {
+      it('should show an error', function () {
+        var errorText = facade.getErrorText('invalid');
+
+        browser.wait(function () {
+          return errorText.isPresent() && errorText.isDisplayed();
+        }, 1000);
       });
     });
   });

@@ -1,0 +1,63 @@
+<doctype html></doctype>
+<html lang="en">
+<head>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
+  <script src="/node_modules/angular/angular.js"></script>
+  <script src="/examples/init.js"></script>
+</head>
+<body>
+<script>
+  init(function(module) {
+    module.controller('ExampleController', function($scope, $timeout) {
+      $scope.genders = [
+        {value: 'f', label: 'Female'},
+        {value: 'm', label: 'Male'}
+      ];
+
+      $scope.formData = {
+        preselected: 'f'
+      };
+
+      $scope.validation = {
+        invalid: {
+          required: true
+        }
+      };
+
+      $scope.controller = {};
+      $scope.$watch('controller', function(controller) {
+        $timeout(function() {
+          controller.validateForm(true);
+        }, 1);
+      });
+    });
+
+    return 'ExampleController';
+  });
+</script>
+
+<form id="form" form-for="formData" validation-rules="validation" controller="controller">
+  <radio-field attribute="preselected"
+               label="Preselected radio"
+               options="genders">
+  </radio-field>
+
+  <radio-field attribute="help"
+               label="Radio with help"
+               options="genders"
+               help="This is a helpful string">
+  </radio-field>
+
+  <radio-field attribute="disabled"
+               label="Disabled radio"
+               options="genders"
+               disable="true">
+  </radio-field>
+
+  <radio-field attribute="invalid"
+               label="Invalid radio"
+               options="genders">
+  </radio-field>
+</form>
+</body>
+</html>
