@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.3
+formForBuilder now correctly checks for input[type=button], button, and submitButton directive.
+
 ## 3.0.2
 Fixed a minor, bizarre issue with the `fieldLabel` directive's controller.
 
