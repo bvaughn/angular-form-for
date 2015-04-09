@@ -7,52 +7,58 @@ var Facade = function(identifier) {
   browser.driver.get('http://localhost:8081/examples/checkbox-field.html?template=' + identifier);
   browser.driver.wait(browser.driver.isElementPresent(by.id('form')), 5000);
 
-  this.getCheckbox = function(fieldName) {
+  var fieldName;
+
+  this.setFieldName = function(value) {
+    fieldName = value;
+  };
+
+  this.getCheckbox = function() {
     return element(by.css('[attribute=' + fieldName + ']'));
   };
 
   switch (identifier) {
     case 'bootstrap':
-      this.getClickable = function(fieldName) {
+      this.getClickable = function() {
         return element(by.css('[attribute=' + fieldName + '] input'));
       };
-      this.getErrorText = function(fieldName) {
+      this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error p'));
       };
-      this.getHoverable = function(fieldName) {
+      this.getHoverable = function() {
         return element(by.css('[attribute=' + fieldName + '] [popover]'));
       };
-      this.getTooltip = function(fieldName) {
+      this.getTooltip = function() {
         return element(by.css('[attribute=' + fieldName + '] [popover-popup]'));
       };
       break;
     case 'default':
-      this.getClickable = function(fieldName) {
+      this.getClickable = function() {
         return element(by.css('[attribute=' + fieldName + '] label'));
       };
-      this.getErrorText = function(fieldName) {
+      this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error p'));
       };
-      this.getHoverable = function(fieldName) {
+      this.getHoverable = function() {
         return element(by.css('[attribute=' + fieldName + '] .form-for-tooltip-icon'));
       };
-      this.getTooltip = function(fieldName) {
+      this.getTooltip = function() {
         return element(by.css('[attribute=' + fieldName + '] .form-for-tooltip-popover'));
       };
       break;
     case 'material':
       browser.ignoreSynchronization = true;
 
-      this.getClickable = function(fieldName) {
+      this.getClickable = function() {
         return element(by.css('[attribute=' + fieldName + '] md-checkbox'));
       };
-      this.getErrorText = function(fieldName) {
+      this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error div'));
       };
-      this.getHoverable = function(fieldName) {
+      this.getHoverable = function() {
         return element(by.css('[attribute=' + fieldName + '] label'));
       };
-      this.getTooltip = function(fieldName) {
+      this.getTooltip = function() {
         return element(by.css('md-tooltip'));
       };
       break;
@@ -66,12 +72,16 @@ var Facade = function(identifier) {
 
     beforeEach(function() {
       facade = new Facade(template);
+
+      browser.driver.manage().window().setSize(1600, 1000);
     });
 
     describe('enabled', function() {
       beforeEach(function() {
-        checkbox = facade.getCheckbox('enabled');
-        clickable = facade.getClickable('enabled');
+        facade.setFieldName('enabled');
+
+        checkbox = facade.getCheckbox();
+        clickable = facade.getClickable();
       });
 
       it('should show the correct label', function () {
@@ -79,7 +89,7 @@ var Facade = function(identifier) {
       });
 
       it('should not show an error', function() {
-        facade.getErrorText('enabled').isDisplayed().then(
+        facade.getErrorText().isDisplayed().then(
           function() {
             throw Error('Element should not be displayed');
           },
@@ -98,8 +108,10 @@ var Facade = function(identifier) {
 
     describe('preselected', function() {
       beforeEach(function() {
-        checkbox = facade.getCheckbox('preselected');
-        clickable = facade.getClickable('preselected');
+        facade.setFieldName('preselected');
+
+        checkbox = facade.getCheckbox();
+        clickable = facade.getClickable();
       });
 
       it('should show the correct label', function () {
@@ -115,29 +127,39 @@ var Facade = function(identifier) {
       });
     });
 
-    // TODO No element found using locator
     describe('help', function() {
-      xit('show not show help text by default', function() {
-        var tooltip = facade.getTooltip('help');
-
-        expect(tooltip.isPresent() && tooltip.isDisplayed()).toBeFalsy();
+      beforeEach(function() {
+        facade.setFieldName('help');
       });
 
-      xit('should show help text on hover', function() {
-        browser.actions().mouseMove(facade.getHoverable('help')).perform();
+      it('should not show help text by default', function() {
+        facade.getTooltip().isDisplayed().then(
+          function() {
+            throw Error('Help text should not be displayed');
+          },
+          function() {}
+        );
+      });
 
-        var tooltip = facade.getTooltip('help');
+      it('should show help text on hover', function() {
+        browser.actions().mouseMove(facade.getHoverable()).perform();
 
-        expect(tooltip.isPresent() && tooltip.isDisplayed()).toBeTruthy();
+        var tooltip = facade.getTooltip();
+
+        browser.wait(function () {
+          return tooltip.isPresent() && tooltip.isDisplayed();
+        }, 1000);
       });
     });
 
     describe('disabled', function() {
       beforeEach(function() {
-        checkbox = facade.getCheckbox('disabled');
-        clickable = facade.getClickable('disabled');
-        hoverable = facade.getHoverable('disabled');
-        tooltip = facade.getTooltip('disabled');
+        facade.setFieldName('disabled');
+
+        checkbox = facade.getCheckbox();
+        clickable = facade.getClickable();
+        hoverable = facade.getHoverable();
+        tooltip = facade.getTooltip();
       });
 
       it('should show the correct label', function () {
@@ -159,7 +181,9 @@ var Facade = function(identifier) {
 
     describe('invalid', function() {
       it('should show an error', function () {
-        var errorText = facade.getErrorText('invalid');
+        facade.setFieldName('invalid');
+
+        var errorText = facade.getErrorText();
 
         browser.wait(function () {
           return errorText.isPresent() && errorText.isDisplayed();

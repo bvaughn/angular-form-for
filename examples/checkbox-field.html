@@ -3,33 +3,20 @@
 <head>
   <script src="/node_modules/jquery/dist/jquery.js"></script>
   <script src="/node_modules/angular/angular.js"></script>
-  <script src="/examples/init.js"></script>
+  <script src="/examples/init-test.js"></script>
 </head>
 <body>
   <script>
-    init(function(module) {
-      module.controller('ExampleController', function($scope, $timeout) {
-        $scope.formData = {
-          preselected: true
-        };
+    init(function($scope) {
+      $scope.formData = {
+        preselected: true
+      };
 
-        $scope.validation = {};
-
-        $scope.validation = {
-          invalid: {
-            required: true
-          }
-        };
-
-        $scope.controller = {};
-        $scope.$watch('controller', function(controller) {
-          $timeout(function() {
-            controller.validateForm(true);
-          }, 1);
-        });
-      });
-
-      return 'ExampleController';
+      $scope.validation = {
+        invalid: {
+          required: true
+        }
+      };
     });
   </script>
 

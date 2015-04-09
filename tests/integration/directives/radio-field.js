@@ -5,61 +5,67 @@ var Facade = function(identifier) {
   browser.driver.get('http://localhost:8081/examples/radio-field.html?template=' + identifier);
   browser.driver.wait(browser.driver.isElementPresent(by.id('form')), 5000);
 
-  this.getRadio = function(fieldName) {
+  var fieldName;
+
+  this.setFieldName = function(value) {
+    fieldName = value;
+  };
+
+  this.getRadio = function() {
     return element(by.css('[attribute=' + fieldName + ']'));
   };
 
   switch (identifier) {
     case 'bootstrap':
-      this.getClickables = function(fieldName) {
+      this.getClickables = function() {
         return element.all(by.css('[attribute=' + fieldName + '] [ng-repeat] input'));
       };
-      this.getErrorText = function(fieldName) {
+      this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error p'));
       };
-      this.getGroupLabel = function(fieldName) {
+      this.getGroupLabel = function() {
         return element(by.css('[attribute=' + fieldName + '] label [ng-bind-html]'));
       };
-      this.getHoverable = function(fieldName) {
+      this.getHoverable = function() {
         return element(by.css('[attribute=' + fieldName + '] label [popover]'));
       };
-      this.getTooltip = function(fieldName) {
+      this.getTooltip = function() {
         return element(by.css('[attribute=' + fieldName + '] label [popover-popup]'));
       };
       break;
     case 'default':
-      this.getClickables = function(fieldName) {
+      this.getClickables = function() {
         return element.all(by.css('[attribute=' + fieldName + '] [ng-repeat] input'));
       };
-      this.getErrorText = function(fieldName) {
+      this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error p'));
       };
-      this.getGroupLabel = function(fieldName) {
+      this.getGroupLabel = function() {
         return element(by.css('[attribute=' + fieldName + '] label [ng-bind-html]'));
       };
-      this.getHoverable = function(fieldName) {
+      this.getHoverable = function() {
         return element(by.css('[attribute=' + fieldName + '] label .form-for-tooltip'));
       };
-      this.getTooltip = function(fieldName) {
+      this.getTooltip = function() {
         return element(by.css('[attribute=' + fieldName + '] label .form-for-tooltip-popover'));
       };
       break;
     case 'material':
       browser.ignoreSynchronization = true;
 
-      this.getClickables = function(fieldName) {
+      this.getClickables = function() {
         return element.all(by.css('[attribute=' + fieldName + '] md-radio-group md-radio-button'));
       };
-      this.getErrorText = function(fieldName) {
+      this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error div'));
       };
-      this.getGroupLabel = function(fieldName) {
+      this.getGroupLabel = function() {
         return element(by.css('[attribute=' + fieldName + '] md-radio-group label'));
       };
-      this.getHoverable = function(fieldName) {
+      this.getHoverable = function() {
         return element(by.css('[attribute=' + fieldName + '] md-radio-group label'));
       };
-      this.getTooltip = function(fieldName) {
+      this.getTooltip = function() {
         return element(by.css('md-tooltip'));
       };
       break;
@@ -73,14 +79,18 @@ var Facade = function(identifier) {
 
     beforeEach(function() {
       facade = new Facade(template);
+
+      browser.driver.manage().window().setSize(1600, 1000);
     });
 
     describe('preselected', function() {
       beforeEach(function() {
-        radio = facade.getRadio('preselected');
-        groupLabel = facade.getGroupLabel('preselected');
-        femaleClickable = facade.getClickables('preselected').get(0);
-        maleClickable = facade.getClickables('preselected').get(1);
+        facade.setFieldName('preselected');
+
+        radio = facade.getRadio();
+        groupLabel = facade.getGroupLabel();
+        femaleClickable = facade.getClickables().get(0);
+        maleClickable = facade.getClickables().get(1);
       });
 
       it('should show the correct label', function () {
@@ -88,7 +98,7 @@ var Facade = function(identifier) {
       });
 
       it('should not show an error', function() {
-        facade.getErrorText('preselected').isDisplayed().then(
+        facade.getErrorText().isDisplayed().then(
           function() {
             throw Error('Element should not be displayed');
           },
@@ -96,48 +106,58 @@ var Facade = function(identifier) {
         );
       });
 
-      // TODO
-      xit('should update the model on click', function() {
-        expect(radio.evaluate('model.bindable')).toBe('f');
+      it('should update the model on click', function() {
+        expect(femaleClickable.evaluate('model.bindable')).toBe('f');
+        expect(maleClickable.evaluate('model.bindable')).toBe('f');
 
         maleClickable.click();
 
-        expect(radio.evaluate('model.bindable')).toBe('m');
+        expect(femaleClickable.evaluate('model.bindable')).toBe('m');
+        expect(maleClickable.evaluate('model.bindable')).toBe('m');
 
         femaleClickable.click();
 
-        expect(radio.evaluate('model.bindable')).toBe('f');
+        expect(femaleClickable.evaluate('model.bindable')).toBe('f');
+        expect(maleClickable.evaluate('model.bindable')).toBe('f');
       });
     });
 
-    // TODO No element found using locator
     describe('help', function() {
       beforeEach(function() {
-        hoverable = facade.getHoverable('help');
-        tooltip = facade.getTooltip('help');
+        facade.setFieldName('help');
+
+        hoverable = facade.getHoverable();
+        tooltip = facade.getTooltip();
       });
 
-      xit('show not show help text by default', function() {
-        var tooltip = facade.getTooltip('help');
-
-        expect(tooltip.isPresent() && tooltip.isDisplayed()).toBeFalsy();
+      it('should not show help text by default', function() {
+        facade.getTooltip().isDisplayed().then(
+          function() {
+            throw Error('Element should not be displayed');
+          },
+          function() {}
+        );
       });
 
-      xit('should show help text on hover', function() {
-        browser.actions().mouseMove(facade.getHoverable('help')).perform();
+      it('should show help text on hover', function() {
+        browser.actions().mouseMove(facade.getHoverable()).perform();
 
-        var tooltip = facade.getTooltip('help');
+        var tooltip = facade.getTooltip();
 
-        expect(tooltip.isPresent() && tooltip.isDisplayed()).toBeTruthy();
+        browser.wait(function () {
+          return tooltip.isPresent() && tooltip.isDisplayed();
+        }, 1000);
       });
     });
 
     describe('disabled', function() {
       beforeEach(function() {
-        radio = facade.getRadio('disabled');
-        groupLabel = facade.getGroupLabel('disabled');
-        femaleClickable = facade.getClickables('disabled').get(0);
-        maleClickable = facade.getClickables('disabled').get(1);
+        facade.setFieldName('disabled');
+
+        radio = facade.getRadio();
+        groupLabel = facade.getGroupLabel();
+        femaleClickable = facade.getClickables().get(0);
+        maleClickable = facade.getClickables().get(1);
       });
 
       it('should show the correct label', function () {
@@ -149,25 +169,32 @@ var Facade = function(identifier) {
         expect(maleClickable.getAttribute('disabled')).toBe('true');
       });
 
-      // TODO
-      xit('should not update the model on click', function () {
+      it('should not update the model on click', function () {
         expect(radio.evaluate('model.bindable')).toBeFalsy();
 
-        femaleClickable.click();
-        maleClickable.click();
+        femaleClickable.click().then(
+          function() {},
+          function() {}
+        );
+        maleClickable.click().then(
+          function() {},
+          function() {}
+        );
 
         expect(radio.evaluate('model.bindable')).toBeFalsy();
       });
     });
 
-     describe('invalid', function() {
-       it('should show an error', function () {
-         var errorText = facade.getErrorText('invalid');
+    describe('invalid', function() {
+      it('should show an error', function () {
+        facade.setFieldName('invalid');
 
-         browser.wait(function () {
-           return errorText.isPresent() && errorText.isDisplayed();
-         }, 1000);
-       });
-     });
+        var errorText = facade.getErrorText();
+
+        browser.wait(function () {
+          return errorText.isPresent() && errorText.isDisplayed();
+        }, 1000);
+      });
+    });
   });
 });

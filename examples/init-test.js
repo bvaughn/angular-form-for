@@ -24,10 +24,22 @@ function init(callback) {
       console.log('Initiliazing module');
 
       var module = angular.module('ExampleApp', dependencies);
-      var controllerName = callback(module);
+      module.controller('ExampleController', function($scope, $timeout) {
+        $scope.controller = {};
+        $scope.formData = {};
+        $scope.validation = {};
+
+        callback($scope);
+
+        $scope.$watch('controller', function(controller) {
+          $timeout(function() {
+            controller.validateForm(true);
+          }, 1);
+        });
+      });
 
       var body = $('body');
-      body.attr('ng-controller', controllerName);
+      body.attr('ng-controller', 'ExampleController');
 
       angular.bootstrap(body, ['ExampleApp']);
     }
@@ -79,10 +91,12 @@ function init(callback) {
   switch (getUrlParameter('template')) {
     case 'bootstrap':
       loadScript('/dist/form-for.bootstrap-templates.js');
+      loadScript('/node_modules/angular-bootstrap-npm/dist/angular-bootstrap.js');
       loadStylesheet('/node_modules/bootstrap/dist/css/bootstrap.css');
       loadStylesheet('/node_modules/font-awesome/css/font-awesome.css');
 
       dependencies.push('formFor.bootstrapTemplates');
+      dependencies.push('ui.bootstrap');
       break;
     case 'material':
       loadScript('/dist/form-for.material-templates.js');
@@ -95,11 +109,9 @@ function init(callback) {
       break;
     case 'default':
     default:
-      loadScript('/node_modules/angular-bootstrap-npm/dist/angular-bootstrap.js');
       loadScript('/dist/form-for.default-templates.js');
       loadStylesheet('/dist/form-for.css');
 
-      dependencies.push('ui.bootstrap');
       dependencies.push('formFor.defaultTemplates');
       break;
   }

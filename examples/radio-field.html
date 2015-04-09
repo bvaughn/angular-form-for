@@ -3,12 +3,11 @@
 <head>
   <script src="/node_modules/jquery/dist/jquery.js"></script>
   <script src="/node_modules/angular/angular.js"></script>
-  <script src="/examples/init.js"></script>
+  <script src="/examples/init-test.js"></script>
 </head>
 <body>
-<script>
-  init(function(module) {
-    module.controller('ExampleController', function($scope, $timeout) {
+  <script>
+    init(function($scope) {
       $scope.genders = [
         {value: 'f', label: 'Female'},
         {value: 'm', label: 'Male'}
@@ -23,41 +22,31 @@
           required: true
         }
       };
-
-      $scope.controller = {};
-      $scope.$watch('controller', function(controller) {
-        $timeout(function() {
-          controller.validateForm(true);
-        }, 1);
-      });
     });
+  </script>
 
-    return 'ExampleController';
-  });
-</script>
+  <form id="form" form-for="formData" validation-rules="validation" controller="controller">
+    <radio-field attribute="preselected"
+                 label="Preselected radio"
+                 options="genders">
+    </radio-field>
 
-<form id="form" form-for="formData" validation-rules="validation" controller="controller">
-  <radio-field attribute="preselected"
-               label="Preselected radio"
-               options="genders">
-  </radio-field>
+    <radio-field attribute="help"
+                 label="Radio with help"
+                 options="genders"
+                 help="This is a helpful string">
+    </radio-field>
 
-  <radio-field attribute="help"
-               label="Radio with help"
-               options="genders"
-               help="This is a helpful string">
-  </radio-field>
+    <radio-field attribute="disabled"
+                 label="Disabled radio"
+                 options="genders"
+                 disable="true">
+    </radio-field>
 
-  <radio-field attribute="disabled"
-               label="Disabled radio"
-               options="genders"
-               disable="true">
-  </radio-field>
-
-  <radio-field attribute="invalid"
-               label="Invalid radio"
-               options="genders">
-  </radio-field>
-</form>
+    <radio-field attribute="invalid"
+                 label="Invalid radio"
+                 options="genders">
+    </radio-field>
+  </form>
 </body>
 </html>
