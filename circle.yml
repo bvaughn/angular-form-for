@@ -8,5 +8,5 @@ test:
         background: true
     - sleep 5
   override:
-    - npm unit
+    - npm run unit
     - npm run protractor
