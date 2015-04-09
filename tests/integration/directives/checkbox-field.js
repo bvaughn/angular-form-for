@@ -135,10 +135,14 @@ var Facade = function(identifier) {
       it('should not show help text by default', function() {
         facade.getTooltip().isDisplayed().then(
           function() {
-            throw Error('Help text should not be displayed');
+            return facade.getTooltip().getCssValue('display').then(
+              function(display) {
+                if (display !== 'none') {
+                  throw Error('Help text should not be displayed');
+                }
+              });
           },
-          function() {}
-        );
+          function() {});
       });
 
       it('should show help text on hover', function() {
