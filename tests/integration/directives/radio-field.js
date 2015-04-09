@@ -17,8 +17,11 @@ var Facade = function(identifier) {
 
   switch (identifier) {
     case 'bootstrap':
-      this.getClickables = function() {
+      this.getInputs = function() {
         return element.all(by.css('[attribute=' + fieldName + '] [ng-repeat] input'));
+      };
+      this.getLabels = function() {
+        return element.all(by.css('[attribute=' + fieldName + '] [ng-repeat] label'));
       };
       this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error p'));
@@ -34,8 +37,11 @@ var Facade = function(identifier) {
       };
       break;
     case 'default':
-      this.getClickables = function() {
+      this.getInputs = function() {
         return element.all(by.css('[attribute=' + fieldName + '] [ng-repeat] input'));
+      };
+      this.getLabels = function() {
+        return element.all(by.css('[attribute=' + fieldName + '] [ng-repeat]'));
       };
       this.getErrorText = function() {
         return element(by.css('[attribute=' + fieldName + '] field-error p'));
@@ -53,7 +59,10 @@ var Facade = function(identifier) {
     case 'material':
       browser.ignoreSynchronization = true;
 
-      this.getClickables = function() {
+      this.getInputs = function() {
+        return element.all(by.css('[attribute=' + fieldName + '] md-radio-group md-radio-button'));
+      };
+      this.getLabels = function() {
         return element.all(by.css('[attribute=' + fieldName + '] md-radio-group md-radio-button'));
       };
       this.getErrorText = function() {
@@ -75,7 +84,7 @@ var Facade = function(identifier) {
 // Test each of our templates
 ['bootstrap', 'default', 'material'].forEach(function(template) {
   describe(template, function() {
-    var radio, groupLabel, femaleClickable, maleClickable, facade, hoverable, tooltip;
+    var radio, groupLabel, femaleInput, femaleLabel, maleInput, maleLabel, facade, hoverable, tooltip;
 
     beforeEach(function() {
       facade = new Facade(template);
@@ -89,8 +98,8 @@ var Facade = function(identifier) {
 
         radio = facade.getRadio();
         groupLabel = facade.getGroupLabel();
-        femaleClickable = facade.getClickables().get(0);
-        maleClickable = facade.getClickables().get(1);
+        femaleLabel = facade.getLabels().get(0);
+        maleLabel = facade.getLabels().get(1);
       });
 
       it('should show the correct label', function () {
@@ -106,19 +115,24 @@ var Facade = function(identifier) {
         );
       });
 
+      it('should show the correct labels', function() {
+        expect(femaleLabel.getText()).toBe('Female');
+        expect(maleLabel.getText()).toBe('Male');
+      });
+
+      it('should preselect the correct initial value', function() {
+        expect(femaleLabel.evaluate('model.bindable')).toBe('f');
+        expect(maleLabel.evaluate('model.bindable')).toBe('f');
+      });
+
       it('should update the model on click', function() {
-        expect(femaleClickable.evaluate('model.bindable')).toBe('f');
-        expect(maleClickable.evaluate('model.bindable')).toBe('f');
+        maleLabel.click();
 
-        maleClickable.click();
+        expect(radio.evaluate('formData.preselected')).toBe('m');
 
-        expect(femaleClickable.evaluate('model.bindable')).toBe('m');
-        expect(maleClickable.evaluate('model.bindable')).toBe('m');
+        femaleLabel.click();
 
-        femaleClickable.click();
-
-        expect(femaleClickable.evaluate('model.bindable')).toBe('f');
-        expect(maleClickable.evaluate('model.bindable')).toBe('f');
+        expect(radio.evaluate('formData.preselected')).toBe('f');
       });
     });
 
@@ -160,8 +174,10 @@ var Facade = function(identifier) {
 
         radio = facade.getRadio();
         groupLabel = facade.getGroupLabel();
-        femaleClickable = facade.getClickables().get(0);
-        maleClickable = facade.getClickables().get(1);
+        femaleInput = facade.getInputs().get(0);
+        femaleLabel = facade.getLabels().get(0);
+        maleInput = facade.getInputs().get(1);
+        maleLabel = facade.getLabels().get(1);
       });
 
       it('should show the correct label', function () {
@@ -169,18 +185,18 @@ var Facade = function(identifier) {
       });
 
       it('should be disabled based on html attributes', function () {
-        expect(femaleClickable.getAttribute('disabled')).toBe('true');
-        expect(maleClickable.getAttribute('disabled')).toBe('true');
+        expect(femaleInput.getAttribute('disabled')).toBe('true');
+        expect(maleInput.getAttribute('disabled')).toBe('true');
       });
 
       it('should not update the model on click', function () {
         expect(radio.evaluate('model.bindable')).toBeFalsy();
 
-        femaleClickable.click().then(
+        femaleInput.click().then(
           function() {},
           function() {}
         );
-        maleClickable.click().then(
+        maleInput.click().then(
           function() {},
           function() {}
         );
