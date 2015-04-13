@@ -2216,7 +2216,7 @@ var formFor;
                 if (value === undefined || value === null) {
                     value = ""; // Escape falsy values liked null or undefined, but not ones like 0
                 }
-                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules) || this.promiseUtils_.resolve();
+                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules, fieldName) || this.promiseUtils_.resolve();
             }
             return this.promiseUtils_.resolve();
         };
@@ -2313,7 +2313,7 @@ var formFor;
             }
             return null;
         };
-        ModelValidator.prototype.validateFieldCustom_ = function (value, formData, validationRules) {
+        ModelValidator.prototype.validateFieldCustom_ = function (value, formData, validationRules, fieldName) {
             var _this = this;
             if (validationRules.custom) {
                 var defaultErrorMessage;
@@ -2327,7 +2327,7 @@ var formFor;
                     validationFunction = validationRules.custom.rule;
                 }
                 try {
-                    var returnValue = validationFunction(value, formData);
+                    var returnValue = validationFunction(value, formData, fieldName);
                 }
                 catch (error) {
                     return this.promiseUtils_.reject(error.message || defaultErrorMessage);

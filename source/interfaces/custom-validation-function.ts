@@ -15,6 +15,6 @@ module formFor {
    * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
    */
   export interface CustomValidationFunction {
-    (value:any, formData:any): boolean|ng.IPromise<string>;
+    (value:any, formData:any, fieldName:any): boolean|ng.IPromise<string>;
   };
 };

@@ -143,7 +143,7 @@ module formFor {
           this.validateFieldMaxLength_(value, validationRules) ||
           this.validateFieldType_(value, validationRules) ||
           this.validateFieldPattern_(value, validationRules) ||
-          this.validateFieldCustom_(value, formData, validationRules) ||
+          this.validateFieldCustom_(value, formData, validationRules, fieldName) ||
           this.promiseUtils_.resolve();
       }
 
@@ -282,14 +282,14 @@ module formFor {
       return null;
     }
 
-    private validateFieldCustom_(value:any, formData:any, validationRules:ValidationRules):any {
+    private validateFieldCustom_(value:any, formData:any, validationRules:ValidationRules, fieldName:any):any {
       if (validationRules.custom) {
         var defaultErrorMessage:string;
         var validationFunction:CustomValidationFunction;
 
         if (angular.isFunction(validationRules.custom)) {
           defaultErrorMessage = this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.CUSTOM);
-          validationFunction = <(value:any, formData:any) => boolean> validationRules.custom;
+          validationFunction = <(value:any, formData:any, fieldName:any) => boolean> validationRules.custom;
         } else {
           defaultErrorMessage = (<ValidationRuleCustom> validationRules.custom).message;
           validationFunction = (<ValidationRuleCustom> validationRules.custom).rule;
@@ -301,7 +301,7 @@ module formFor {
         // A falsy value
 
         try {
-          var returnValue:any = validationFunction(value, formData);
+          var returnValue:any = validationFunction(value, formData, fieldName);
         } catch (error) {
           return this.promiseUtils_.reject(error.message || defaultErrorMessage);
         }
