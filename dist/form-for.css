@@ -470,9 +470,10 @@ text-field {
   cursor: default;
 }
 .form-for-tooltip-icon:hover {
-  background-color: tooltip-icon-background-color-hover;
+  background-color: #3d3f3e;
 }
 .form-for-tooltip-popover {
+  pointer-events: none;
   display: none;
   position: relative;
   z-index: 2;
