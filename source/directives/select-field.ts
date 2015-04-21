@@ -427,9 +427,9 @@ module formFor {
           pendingTimeoutId = null;
 
           if ($scope.isOpen) {
-            $document_.on('click', undefined, documentClick);
+            $document_.on('click', documentClick);
           } else {
-            $document_.off('click', undefined, documentClick);
+            $document_.off('click', documentClick);
           }
         }, MIN_TIMEOUT_INTERVAL);
       });

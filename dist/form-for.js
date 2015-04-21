@@ -720,16 +720,16 @@ var formFor;
                     }, duration);
                 };
                 if ($sniffer_.hasEvent('input')) {
-                    $element.on('input', undefined, inputChangeHandler);
+                    $element.on('input', inputChangeHandler);
                 }
                 else {
-                    $element.on('keydown', undefined, inputChangeHandler);
+                    $element.on('keydown', inputChangeHandler);
                     if ($sniffer_.hasEvent('paste')) {
-                        $element.on('paste', undefined, inputChangeHandler);
+                        $element.on('paste', inputChangeHandler);
                     }
                 }
             }
-            $element.on('blur', undefined, function () {
+            $element.on('blur', function () {
                 $scope.$apply(function () {
                     ngModelController.$setViewValue($element.val());
                 });
@@ -1343,7 +1343,7 @@ var formFor;
         FormForDirective.prototype.controller.$inject = ["$scope"];
         /* @ngInject */
         FormForDirective.prototype.link = function ($scope, $element, $attributes) {
-            $element.on('submit', undefined, function () {
+            $element.on('submit', function () {
                 $scope.formForStateHelper.setFormSubmitted(true);
                 $scope.disable = true;
                 var validationPromise;
@@ -1724,10 +1724,10 @@ var formFor;
                 pendingTimeoutId = $timeout_(function () {
                     pendingTimeoutId = null;
                     if ($scope.isOpen) {
-                        $document_.on('click', undefined, documentClick);
+                        $document_.on('click', documentClick);
                     }
                     else {
-                        $document_.off('click', undefined, documentClick);
+                        $document_.off('click', documentClick);
                     }
                 }, MIN_TIMEOUT_INTERVAL);
             });

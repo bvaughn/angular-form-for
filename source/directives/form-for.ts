@@ -121,7 +121,7 @@ module formFor {
 
     /* @ngInject */
     link($scope:FormForScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
-      $element.on('submit', undefined, // Override form submit to trigger overall validation.
+      $element.on('submit', // Override form submit to trigger overall validation.
         () => {
           $scope.formForStateHelper.setFormSubmitted(true);
           $scope.disable = true;

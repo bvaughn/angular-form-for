@@ -122,7 +122,6 @@ field-label {
 }
 .field-label:hover .form-for-tooltip .form-for-tooltip-popover {
   display: inline-block;
-  opacity: 1;
 }
 .field-label-required-label {
   color: #848b88;
@@ -475,7 +474,6 @@ text-field {
 }
 .form-for-tooltip-popover {
   display: none;
-  opacity: 0;
   position: relative;
   z-index: 2;
   -webkit-flex: 0 0 350px;

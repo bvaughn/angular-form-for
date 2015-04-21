@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.4
+Patched a bad version of the jQuery definitions file in order to resolve a jqLite-incompatible `element.on()` listener format.
+
 ## 3.0.3
 formForBuilder now correctly checks for input[type=button], button, and submitButton directive.
 
