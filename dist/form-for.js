@@ -407,6 +407,7 @@ var formFor;
                 $log_.error('Missing required field "attribute"');
                 return;
             }
+            $scope.attributes = $attributes;
             $scope.tabIndex = $attributes['tabIndex'] || 0;
             $scope.toggle = function toggle() {
                 if (!$scope.disable && !$scope.model.disabled) {

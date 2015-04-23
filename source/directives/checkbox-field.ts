@@ -44,6 +44,8 @@ module formFor {
      */
     model:BindableFieldWrapper;
 
+    attributes:any;
+
     /**
      * Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
      */
@@ -104,6 +106,8 @@ module formFor {
 
         return;
       }
+
+      $scope.attributes = $attributes;
 
       $scope.tabIndex = $attributes['tabIndex'] || 0;
 
