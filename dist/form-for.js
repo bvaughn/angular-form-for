@@ -750,25 +750,31 @@ var formFor;
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
+    var $compile_;
     /**
      * Adds the ability to replace an ngInclude element with its template content.
      */
     var FormForIncludeReplaceDirective = (function () {
-        function FormForIncludeReplaceDirective() {
+        /* @ngInject */
+        function FormForIncludeReplaceDirective($compile) {
             this.require = 'ngInclude';
             this.restrict = 'A'; /* optional */
+            $compile_ = $compile;
         }
+        FormForIncludeReplaceDirective.$inject = ["$compile"];
         /* @ngInject */
         FormForIncludeReplaceDirective.prototype.link = function ($scope, $element, $attributes) {
-            $element.replaceWith($element.children());
+            var html = $element.prop('innerHTML');
+            var compiled = $compile_(html)($scope);
+            $element.replaceWith(compiled);
         };
         FormForIncludeReplaceDirective.prototype.link.$inject = ["$scope", "$element", "$attributes"];
         return FormForIncludeReplaceDirective;
     })();
     formFor.FormForIncludeReplaceDirective = FormForIncludeReplaceDirective;
-    angular.module('formFor').directive('formForIncludeReplace', function () {
-        return new FormForIncludeReplaceDirective();
-    });
+    angular.module('formFor').directive('formForIncludeReplace', ["$compile", function ($compile) {
+        return new FormForIncludeReplaceDirective($compile);
+    }]);
 })(formFor || (formFor = {}));
 /// <reference path="../../definitions/angular.d.ts" />
 var formFor;
