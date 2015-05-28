@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.6
+formForBuilder respects the view-schema "placeholder" attribute (if present) for text and select fields.
+
 ## 3.0.5
 formForIncludeReplace directive now re-compiles included content before replacing. This fixes an issue with jqLite that caused partials (e.g. select-field/_select.html) to become disconnected from their parent directives. This should also remove the jQuery dependency on the Angular Material templates.
 
