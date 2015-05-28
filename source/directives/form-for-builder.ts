@@ -92,6 +92,7 @@ module formFor {
                                          ${labelAttribute}
                                          help="${help}"
                                          ng-attr-multiline="${!!viewField.multiline}"
+                                         placeholder="${viewField.placeholder}"
                                          rows="${viewField.rows || ''}"
                                          type="${viewField.inputType}"
                                          uid="${uid}">
