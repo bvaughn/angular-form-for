@@ -591,9 +591,13 @@ var formFor;
                 if (viewField && viewField.hasOwnProperty('inputType')) {
                     var help = viewField.help || '';
                     var label = viewField.label || '';
+                    var placeholderAttribute = '';
                     var uid = viewField.uid || '';
                     var values;
                     var labelAttribute = label ? "label=\"" + label + "\"" : '';
+                    if (viewField.hasOwnProperty('placeholder')) {
+                        placeholderAttribute = "placeholder=\"" + viewField.placeholder + "\"";
+                    }
                     switch (viewField.inputType) {
                         case formFor.BuilderFieldType.CHECKBOX:
                             htmlString += "<checkbox-field attribute=\"" + fieldName + "\"\n                                             help=\"" + help + "\"\n                                             " + labelAttribute + "\n                                             uid=\"" + uid + "\">\n                             </checkbox-field>";
@@ -604,12 +608,16 @@ var formFor;
                             break;
                         case formFor.BuilderFieldType.SELECT:
                             values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
-                            htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                           " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                           " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                           help=\"" + help + "\"\n                                           " + labelAttribute + "\n                                           " + labelAttribute + "\n                                           multiple=\"" + !!viewField.multipleSelection + "\"\n                                           options=\"" + values + "\"\n                                           uid=\"" + uid + "\"\n                                           value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                             </select-field>";
+                            htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                           " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                           " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                           help=\"" + help + "\"\n                                           " + labelAttribute + "\n                                           multiple=\"" + !!viewField.multipleSelection + "\"\n                                           options=\"" + values + "\"\n                                           " + placeholderAttribute + "\n                                           uid=\"" + uid + "\"\n                                           value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                             </select-field>";
                             break;
                         case formFor.BuilderFieldType.NUMBER:
                         case formFor.BuilderFieldType.PASSWORD:
                         case formFor.BuilderFieldType.TEXT:
-                            htmlString += "<text-field attribute=\"" + fieldName + "\"\n                                         " + labelAttribute + "\n                                         help=\"" + help + "\"\n                                         ng-attr-multiline=\"" + !!viewField.multiline + "\"\n                                         placeholder=\"" + viewField.placeholder + "\"\n                                         rows=\"" + (viewField.rows || '') + "\"\n                                         type=\"" + viewField.inputType + "\"\n                                         uid=\"" + uid + "\">\n                             </text-field>";
+                            var placeholderAttribute;
+                            if (viewField.hasOwnProperty('placeholder')) {
+                                placeholderAttribute = "placeholder=\"" + viewField.placeholder + "\"";
+                            }
+                            htmlString += "<text-field attribute=\"" + fieldName + "\"\n                                         " + labelAttribute + "\n                                         help=\"" + help + "\"\n                                         ng-attr-multiline=\"" + !!viewField.multiline + "\"\n                                         " + placeholderAttribute + "\n                                         rows=\"" + (viewField.rows || '') + "\"\n                                         type=\"" + viewField.inputType + "\"\n                                         uid=\"" + uid + "\">\n                             </text-field>";
                             break;
                     }
                 }

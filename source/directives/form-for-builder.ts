@@ -48,10 +48,15 @@ module formFor {
         if (viewField && viewField.hasOwnProperty('inputType')) {
           var help:string = viewField.help || '';
           var label:string = viewField.label || '';
+          var placeholderAttribute:string = '';
           var uid:string = viewField.uid || '';
           var values:string;
 
           var labelAttribute:string = label ? `label="${label}"` : '';
+
+          if (viewField.hasOwnProperty('placeholder')) {
+            placeholderAttribute = `placeholder="${viewField.placeholder}"`;
+          }
 
           switch (viewField.inputType) {
             case BuilderFieldType.CHECKBOX:
@@ -78,9 +83,9 @@ module formFor {
                                            ${viewField.enableFiltering ? 'enable-filtering' : ''}
                                            help="${help}"
                                            ${labelAttribute}
-                                           ${labelAttribute}
                                            multiple="${!!viewField.multipleSelection}"
                                            options="${values}"
+                                           ${placeholderAttribute}
                                            uid="${uid}"
                                            value-attribute="${viewField.valueAttribute || ''}">
                              </select-field>`;
@@ -88,11 +93,17 @@ module formFor {
             case BuilderFieldType.NUMBER:
             case BuilderFieldType.PASSWORD:
             case BuilderFieldType.TEXT:
+              var placeholderAttribute:string;
+
+              if (viewField.hasOwnProperty('placeholder')) {
+                placeholderAttribute = `placeholder="${viewField.placeholder}"`;
+              }
+
               htmlString += `<text-field attribute="${fieldName}"
                                          ${labelAttribute}
                                          help="${help}"
                                          ng-attr-multiline="${!!viewField.multiline}"
-                                         placeholder="${viewField.placeholder}"
+                                         ${placeholderAttribute}
                                          rows="${viewField.rows || ''}"
                                          type="${viewField.inputType}"
                                          uid="${uid}">
