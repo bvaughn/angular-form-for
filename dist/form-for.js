@@ -1692,8 +1692,14 @@ var formFor;
                 var numOptions = $scope.options && $scope.options.length;
                 // Default select the first item in the list
                 // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-                if (selected === $scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
+                if (!$scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
                     $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+                }
+                // Certain falsy values may indicate a non-selection.
+                // In this case, the placeholder (empty) option needs to match the falsy selected value,
+                // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
+                if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
+                    $scope.placeholderOption[$scope.valueAttribute] = $scope.model.bindable;
                 }
             };
             $scope.$watch('model.bindable', updateDefaultOption);
@@ -1704,7 +1710,8 @@ var formFor;
             $scope.$watch('model.bindable', function () {
                 var matchingOption = null;
                 angular.forEach($scope.options, function (option) {
-                    if (option[$scope.valueAttribute] === $scope.model.bindable) {
+                    var optionValue = option[$scope.valueAttribute];
+                    if (optionValue === $scope.model.bindable) {
                         matchingOption = option;
                     }
                 });
