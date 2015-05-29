@@ -13,7 +13,7 @@ angular.module('myAngularModule').directive('customField',
       link: function($scope, $element, $attributes, formForController) {
         // It is not necessary to use FieldHelper, but it simplifies registration.
         // $scope will have a 'model' attribute after this method has executed.
-        FieldHelper.manageFieldRegistration($scope, formForController);
+        FieldHelper.manageFieldRegistration($scope, $attributes, formForController);
       }
     };
   }
