@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.7
+Select menus without an initially-selected values more gracefully handle falsy values of null, undefined, and empty-string in order to prevent an additional, empty <option> from being generated
+
 ## 3.0.6
 formForBuilder respects the view-schema "placeholder" attribute (if present) for text and select fields.
 
