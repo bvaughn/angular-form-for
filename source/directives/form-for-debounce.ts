@@ -105,17 +105,17 @@ module formFor {
         };
 
         if ($sniffer_.hasEvent('input')) {
-          $element.on('input', undefined, inputChangeHandler);
+          $element.on('input', inputChangeHandler);
         } else {
-          $element.on('keydown', undefined, inputChangeHandler);
+          $element.on('keydown', inputChangeHandler);
 
           if ($sniffer_.hasEvent('paste')) {
-            $element.on('paste', undefined, inputChangeHandler);
+            $element.on('paste', inputChangeHandler);
           }
         }
       }
 
-      $element.on('blur', undefined, () => {
+      $element.on('blur', () => {
         $scope.$apply(function () {
           ngModelController.$setViewValue($element.val());
         });

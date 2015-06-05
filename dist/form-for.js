@@ -592,9 +592,13 @@ var formFor;
                 if (viewField && viewField.hasOwnProperty('inputType')) {
                     var help = viewField.help || '';
                     var label = viewField.label || '';
+                    var placeholderAttribute = '';
                     var uid = viewField.uid || '';
                     var values;
                     var labelAttribute = label ? "label=\"" + label + "\"" : '';
+                    if (viewField.hasOwnProperty('placeholder')) {
+                        placeholderAttribute = "placeholder=\"" + viewField.placeholder + "\"";
+                    }
                     switch (viewField.inputType) {
                         case formFor.BuilderFieldType.CHECKBOX:
                             htmlString += "<checkbox-field attribute=\"" + fieldName + "\"\n                                             help=\"" + help + "\"\n                                             " + labelAttribute + "\n                                             uid=\"" + uid + "\">\n                             </checkbox-field>";
@@ -605,12 +609,16 @@ var formFor;
                             break;
                         case formFor.BuilderFieldType.SELECT:
                             values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
-                            htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                           " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                           " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                           help=\"" + help + "\"\n                                           " + labelAttribute + "\n                                           " + labelAttribute + "\n                                           multiple=\"" + !!viewField.multipleSelection + "\"\n                                           options=\"" + values + "\"\n                                           uid=\"" + uid + "\"\n                                           value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                             </select-field>";
+                            htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                           " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                           " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                           help=\"" + help + "\"\n                                           " + labelAttribute + "\n                                           multiple=\"" + !!viewField.multipleSelection + "\"\n                                           options=\"" + values + "\"\n                                           " + placeholderAttribute + "\n                                           uid=\"" + uid + "\"\n                                           value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                             </select-field>";
                             break;
                         case formFor.BuilderFieldType.NUMBER:
                         case formFor.BuilderFieldType.PASSWORD:
                         case formFor.BuilderFieldType.TEXT:
-                            htmlString += "<text-field attribute=\"" + fieldName + "\"\n                                         " + labelAttribute + "\n                                         help=\"" + help + "\"\n                                         ng-attr-multiline=\"" + !!viewField.multiline + "\"\n                                         rows=\"" + (viewField.rows || '') + "\"\n                                         type=\"" + viewField.inputType + "\"\n                                         uid=\"" + uid + "\">\n                             </text-field>";
+                            var placeholderAttribute;
+                            if (viewField.hasOwnProperty('placeholder')) {
+                                placeholderAttribute = "placeholder=\"" + viewField.placeholder + "\"";
+                            }
+                            htmlString += "<text-field attribute=\"" + fieldName + "\"\n                                         " + labelAttribute + "\n                                         help=\"" + help + "\"\n                                         ng-attr-multiline=\"" + !!viewField.multiline + "\"\n                                         " + placeholderAttribute + "\n                                         rows=\"" + (viewField.rows || '') + "\"\n                                         type=\"" + viewField.inputType + "\"\n                                         uid=\"" + uid + "\">\n                             </text-field>";
                             break;
                     }
                 }
@@ -721,16 +729,16 @@ var formFor;
                     }, duration);
                 };
                 if ($sniffer_.hasEvent('input')) {
-                    $element.on('input', undefined, inputChangeHandler);
+                    $element.on('input', inputChangeHandler);
                 }
                 else {
-                    $element.on('keydown', undefined, inputChangeHandler);
+                    $element.on('keydown', inputChangeHandler);
                     if ($sniffer_.hasEvent('paste')) {
-                        $element.on('paste', undefined, inputChangeHandler);
+                        $element.on('paste', inputChangeHandler);
                     }
                 }
             }
-            $element.on('blur', undefined, function () {
+            $element.on('blur', function () {
                 $scope.$apply(function () {
                     ngModelController.$setViewValue($element.val());
                 });
@@ -751,25 +759,31 @@ var formFor;
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
+    var $compile_;
     /**
      * Adds the ability to replace an ngInclude element with its template content.
      */
     var FormForIncludeReplaceDirective = (function () {
-        function FormForIncludeReplaceDirective() {
+        /* @ngInject */
+        function FormForIncludeReplaceDirective($compile) {
             this.require = 'ngInclude';
             this.restrict = 'A'; /* optional */
+            $compile_ = $compile;
         }
+        FormForIncludeReplaceDirective.$inject = ["$compile"];
         /* @ngInject */
         FormForIncludeReplaceDirective.prototype.link = function ($scope, $element, $attributes) {
-            $element.replaceWith($element.children());
+            var html = $element.prop('innerHTML');
+            var compiled = $compile_(html)($scope);
+            $element.replaceWith(compiled);
         };
         FormForIncludeReplaceDirective.prototype.link.$inject = ["$scope", "$element", "$attributes"];
         return FormForIncludeReplaceDirective;
     })();
     formFor.FormForIncludeReplaceDirective = FormForIncludeReplaceDirective;
-    angular.module('formFor').directive('formForIncludeReplace', function () {
-        return new FormForIncludeReplaceDirective();
-    });
+    angular.module('formFor').directive('formForIncludeReplace', ["$compile", function ($compile) {
+        return new FormForIncludeReplaceDirective($compile);
+    }]);
 })(formFor || (formFor = {}));
 /// <reference path="../../definitions/angular.d.ts" />
 var formFor;
@@ -1344,7 +1358,7 @@ var formFor;
         FormForDirective.prototype.controller.$inject = ["$scope"];
         /* @ngInject */
         FormForDirective.prototype.link = function ($scope, $element, $attributes) {
-            $element.on('submit', undefined, function () {
+            $element.on('submit', function () {
                 $scope.formForStateHelper.setFormSubmitted(true);
                 $scope.disable = true;
                 var validationPromise;
@@ -1679,8 +1693,14 @@ var formFor;
                 var numOptions = $scope.options && $scope.options.length;
                 // Default select the first item in the list
                 // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-                if (selected === $scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
+                if (!$scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
                     $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+                }
+                // Certain falsy values may indicate a non-selection.
+                // In this case, the placeholder (empty) option needs to match the falsy selected value,
+                // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
+                if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
+                    $scope.placeholderOption[$scope.valueAttribute] = $scope.model.bindable;
                 }
             };
             $scope.$watch('model.bindable', updateDefaultOption);
@@ -1691,7 +1711,8 @@ var formFor;
             $scope.$watch('model.bindable', function () {
                 var matchingOption = null;
                 angular.forEach($scope.options, function (option) {
-                    if (option[$scope.valueAttribute] === $scope.model.bindable) {
+                    var optionValue = option[$scope.valueAttribute];
+                    if (optionValue === $scope.model.bindable) {
                         matchingOption = option;
                     }
                 });
@@ -1725,10 +1746,10 @@ var formFor;
                 pendingTimeoutId = $timeout_(function () {
                     pendingTimeoutId = null;
                     if ($scope.isOpen) {
-                        $document_.on('click', undefined, documentClick);
+                        $document_.on('click', documentClick);
                     }
                     else {
-                        $document_.off('click', undefined, documentClick);
+                        $document_.off('click', documentClick);
                     }
                 }, MIN_TIMEOUT_INTERVAL);
             });

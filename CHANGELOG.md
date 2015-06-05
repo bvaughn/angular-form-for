@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.0.7
+Select menus without an initially-selected values more gracefully handle falsy values of null, undefined, and empty-string in order to prevent an additional, empty <option> from being generated
+
+## 3.0.6
+formForBuilder respects the view-schema "placeholder" attribute (if present) for text and select fields.
+
+## 3.0.5
+formForIncludeReplace directive now re-compiles included content before replacing. This fixes an issue with jqLite that caused partials (e.g. select-field/_select.html) to become disconnected from their parent directives. This should also remove the jQuery dependency on the Angular Material templates.
+
+## 3.0.4
+Patched a bad version of the jQuery definitions file in order to resolve a jqLite-incompatible `element.on()` listener format.
+
 ## 3.0.3
 formForBuilder now correctly checks for input[type=button], button, and submitButton directive.
 

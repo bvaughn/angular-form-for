@@ -9,6 +9,8 @@ module formFor {
 
     /**
      * Allow an empty/blank option in the <select>.
+     * Note that this is a display setting only and is not related to form validation.
+     * (Fields with blank options may still be required.)
      */
     allowBlank:boolean;
 
@@ -41,7 +43,7 @@ module formFor {
      */
     enableFiltering?:boolean;
 
-     /**
+    /**
      * Two-way bindable filter string.
      * $watch this property to load remote options based on filter text.
      * (Refer to this Plunker demo for an example.)
@@ -368,8 +370,17 @@ module formFor {
 
         // Default select the first item in the list
         // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-        if (selected === $scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
+        if (!$scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
           $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+        }
+
+        // Certain falsy values may indicate a non-selection.
+        // In this case, the placeholder (empty) option needs to match the falsy selected value,
+        // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
+        if ($scope.model.bindable === null ||
+            $scope.model.bindable === undefined ||
+            $scope.model.bindable === '') {
+          $scope.placeholderOption[$scope.valueAttribute] = $scope.model.bindable;
         }
       };
 
@@ -385,7 +396,9 @@ module formFor {
 
         angular.forEach($scope.options,
           (option) => {
-            if (option[$scope.valueAttribute] === $scope.model.bindable) {
+            var optionValue:any = option[$scope.valueAttribute];
+
+            if (optionValue === $scope.model.bindable) {
               matchingOption = option;
             }
           });
@@ -427,9 +440,9 @@ module formFor {
           pendingTimeoutId = null;
 
           if ($scope.isOpen) {
-            $document_.on('click', undefined, documentClick);
+            $document_.on('click', documentClick);
           } else {
-            $document_.off('click', undefined, documentClick);
+            $document_.off('click', documentClick);
           }
         }, MIN_TIMEOUT_INTERVAL);
       });

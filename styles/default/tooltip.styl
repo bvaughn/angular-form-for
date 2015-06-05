@@ -22,11 +22,12 @@
   cursor: default;
 
   &:hover {
-    background-color: tooltip-icon-background-color-hover;
+    background-color: $color-text-2;
   }
 }
 
 .form-for-tooltip-popover {
+  pointer-events: none;
   display: none;
   position: relative;
   z-index: 2;

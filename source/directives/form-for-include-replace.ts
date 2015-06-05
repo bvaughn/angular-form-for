@@ -1,4 +1,5 @@
 module formFor {
+  var $compile_: ng.ICompileService;
 
   /**
    * Adds the ability to replace an ngInclude element with its template content.
@@ -8,15 +9,22 @@ module formFor {
     restrict:string = 'A'; /* optional */
 
     /* @ngInject */
+    constructor($compile) {
+      $compile_ = $compile;
+    }
+
+    /* @ngInject */
     link($scope:ng.IScope,
          $element:ng.IAugmentedJQuery,
          $attributes:ng.IAttributes):void {
 
-      $element.replaceWith($element.children());
+      var html = $element.prop('innerHTML');
+      var compiled = $compile_(html)($scope);
+      $element.replaceWith(compiled);
     }
   }
 
-  angular.module('formFor').directive('formForIncludeReplace', () => {
-    return new FormForIncludeReplaceDirective();
+  angular.module('formFor').directive('formForIncludeReplace', ($compile) => {
+    return new FormForIncludeReplaceDirective($compile);
   });
 }
