@@ -4,7 +4,7 @@ var config = {
   capabilities: {
     browserName: 'chrome',
     shardTestFiles: true,
-    maxInstances: 2
+    maxInstances: 1
   },
 
   specs: [
