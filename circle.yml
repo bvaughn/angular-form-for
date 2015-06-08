@@ -6,7 +6,7 @@ test:
   pre:
     - npm start:
         background: true
-    - sleep 5
+    - sleep 15
   override:
     - npm run unit
     - npm run protractor
