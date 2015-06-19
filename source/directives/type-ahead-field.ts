@@ -8,23 +8,11 @@ module formFor {
   interface SelectFieldScope extends ng.IScope {
 
     /**
-     * Allow an empty/blank option in the <select>.
-     * Note that this is a display setting only and is not related to form validation.
-     * (Fields with blank options may still be required.)
-     */
-    allowBlank:boolean;
-
-    /**
      * Name of the attribute within the parent form-for directive's model object.
      * This attributes specifies the data-binding target for the input.
      * Dot notation (ex "address.street") is supported.
      */
     attribute:string;
-
-    /**
-     * Views must call this callback to notify of the <select> menu having been closed.
-     */
-    close:Function;
 
     /**
      * Disable input element.
@@ -34,9 +22,21 @@ module formFor {
     disable:boolean;
 
     /**
-     * Empty option created if select menu allows empty selection.
+     * Two-way bindable filter string.
+     * $watch this property to load remote options based on filter text.
+     * (Refer to the documentation for coding examples.)
      */
-    emptyOption:any;
+    filter?:string;
+
+    /**
+     * Visible options, shown after filtering.
+     */
+    filteredOptions:Array<any>;
+
+    /**
+     * Callback to apply filtered text.
+     */
+    filterTextClick:Function;
 
     /**
      * Optional help tooltip to display on hover.
@@ -88,11 +88,6 @@ module formFor {
     mouseOverIndex:number;
 
     /**
-     * Drop-down list should allow multiple selections.
-     */
-    multiple?:boolean;
-
-    /**
      * Views must call this callback to notify of the <select> menu having been opened.
      */
     open:Function;
@@ -104,21 +99,9 @@ module formFor {
     options:Array<Object>;
 
     /**
-     * Optional placeholder text to display if no value has been selected.
-     * The text "Select" will be displayed if no placeholder is provided.
+     * Optional placeholder text to display if no value has been selected and no filter text has been entered.
      */
     placeholder?:string;
-
-    /**
-     * Placeholder option shown before/unless a real option is selected.
-     */
-    placeholderOption:any;
-
-    /**
-     * Optional attribute to override default selection of the first list option.
-     * Without this attribute, lists with `allow-blank` will default select the first option in the options array.
-     */
-    preventDefaultOption:boolean;
 
     /**
      * Used to share data between main select-field template and ngIncluded templates.
@@ -139,6 +122,12 @@ module formFor {
      * Selects the specified option.
      */
     selectOption:(option:any) => void;
+
+    /**
+     * Sets focus on filter field after a small delay.
+     * Can be used to auto-focus on filter field when select menu has been opened.
+     */
+    setFilterFocus:Function;
 
     /**
      * Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
@@ -166,16 +155,8 @@ module formFor {
   var fieldHelper_:FieldHelper;
 
   /**
-   * Renders a drop-down &lt;select&gt; menu along with an input label.
-   * This type of component works with large enumerations and can be configured to allow for a blank/empty selection
-   * by way of an allow-blank attribute.
-   *
-   * The following HTML attributes are supported by this directive:
-   * <ul>
-   * <li>allow-blank: The presence of this attribute indicates that an empty/blank selection should be allowed.
-   * <li>prevent-default-option: Optional attribute to override default selection of the first list option.
-   *       Without this attribute, lists with `allow-blank` will default select the first option in the options array.
-   *</ul>
+   * Renders an &lt;input type="text"&gt; component with type-ahead functionality.
+   * This type of component works with a large set of options that can be loaded asynchronously if needed.
    *
    * @example
    * // To use this component you'll first need to define a set of options. For instance:
@@ -185,34 +166,27 @@ module formFor {
    * ];
    *
    * // To render a drop-down input using the above options:
-   * <select-field attribute="gender"
-   *               label="Gender"
-   *               options="genders">
-   * </select-field>
-   *
-   * // If you want to make this attribute optional you can use the allow-blank attribute as follows:
-   * <select-field attribute="gender"
-   *               label="Gender"
-   *               options="genders"
-   *               allow-blank>
-   * </select-field>
+   * <type-ahead-field attribute="gender"
+   *                   label="Gender"
+   *                   options="genders">
+   * </type-ahead-field>
    *
    * @param $document $injector-supplied $document service
    * @param $log $injector-supplied $log service
    * @param $timeout $injector-supplied $timeout service
    * @param fieldHelper
    */
-  export class SelectFieldDirective implements ng.IDirective {
+  export class TypeAheadFieldDirective implements ng.IDirective {
 
     require:string = '^formFor';
     restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/select-field.html';
+    templateUrl:string = 'form-for/templates/type-ahead-field.html';
 
     scope:any = {
       attribute: '@',
       disable: '=',
+      filterDebounce: '@?',
       help: '@?',
-      multiple: '=?',
       options: '='
     };
 
@@ -239,10 +213,6 @@ module formFor {
         return;
       }
 
-      $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
-      $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
-      $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
-
       // Read from $attributes to avoid getting any interference from $scope.
       $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
       $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
@@ -253,6 +223,17 @@ module formFor {
 
       fieldHelper_.manageLabel($scope, $attributes, false);
       fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+
+      var filterText:ng.IAugmentedJQuery;
+
+      // Helper method for setting focus on an item after a delay
+      var setDelayedFilterTextFocus:Function = () => {
+        if (!filterText) { // Null when link is first run because of ng-include
+          filterText = $element.find('input');
+        }
+
+        $timeout_(filterText.focus.bind(filterText));
+      };
 
       $scope.close = () => {
         $timeout_(() => {
@@ -270,13 +251,47 @@ module formFor {
         });
       };
 
-      $scope.emptyOption = {};
-      $scope.emptyOption[$scope.labelAttribute] = '';
-      $scope.emptyOption[$scope.valueAttribute] = undefined;
+      /*****************************************************************************************
+       * The following code pertains to filtering visible options.
+       *****************************************************************************************/
 
-      $scope.placeholderOption = {};
-      $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
-      $scope.placeholderOption[$scope.valueAttribute] = undefined;
+      $scope.filteredOptions = [];
+
+      // Sanitizes option and filter-text values for comparison
+      var sanitize:(value:string) => string =
+        (value) => {
+          return typeof value === "string" ? value.toLowerCase() : '';
+        };
+
+      // Updates visible <option>s based on current filter text
+      var calculateFilteredOptions = () => {
+        var options:Array<any> = $scope.options || [];
+
+        $scope.filteredOptions.splice(0);
+
+        if (!$scope.scopeBuster.filter) {
+          angular.copy(options, $scope.filteredOptions);
+        } else {
+          var filter:string = sanitize($scope.scopeBuster.filter);
+
+          angular.forEach(options, (option) => {
+            var index:number = sanitize(option[$scope.labelAttribute]).indexOf(filter);
+
+            if (index >= 0) {
+              $scope.filteredOptions.push(option);
+            }
+          });
+        }
+
+        if (!$scope.selectedOption && !$scope.multiple) {
+          $scope.filteredOptions.unshift($scope.placeholderOption);
+        } else if ($scope.allowBlank) {
+          $scope.filteredOptions.unshift($scope.emptyOption);
+        }
+      };
+
+      $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
+      $scope.$watch('options.length', calculateFilteredOptions);
 
       /*****************************************************************************************
        * The following code manages setting the correct default value based on bindable model.
@@ -296,8 +311,8 @@ module formFor {
         // In this case, the placeholder (empty) option needs to match the falsy selected value,
         // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
         if ($scope.model.bindable === null ||
-            $scope.model.bindable === undefined ||
-            $scope.model.bindable === '') {
+          $scope.model.bindable === undefined ||
+          $scope.model.bindable === '') {
           $scope.placeholderOption[$scope.valueAttribute] = $scope.model.bindable;
         }
       };
@@ -425,11 +440,21 @@ module formFor {
             break;
         }
       };
+
+      $scope.$watchCollection('[isOpen, filteredOptions.length]', () => {
+        // Reset hover anytime our list opens/closes or our collection is refreshed.
+        $scope.mouseOver(-1);
+
+        // Pass focus through to filter field when select is opened
+        if ($scope.isOpen) {
+          setDelayedFilterTextFocus();
+        }
+      });
     }
   }
 
-  angular.module('formFor').directive('selectField',
+  angular.module('formFor').directive('typeAheadField',
     ($document, $log, $timeout, FieldHelper) => {
-      return new SelectFieldDirective($document, $log, $timeout, FieldHelper);
+      return new TypeAheadFieldDirective($document, $log, $timeout, FieldHelper);
     });
 }

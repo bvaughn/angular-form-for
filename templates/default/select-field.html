@@ -1,6 +1,6 @@
 <div class="form-for-field with-icon-after" ng-class="{'invalid': model.error}">
   <field-label  ng-if="label"
-                input-uid="{{enableFiltering ? model.uid + '-filter' : model.uid}}"
+                input-uid="{{model.uid}}"
                 iud="{{model.uid}}-label"
                 label="{{label}}"
                 help="{{help}}"
@@ -9,15 +9,11 @@
 
   <field-error uid="{{model.uid}}-error" error="model.error"></field-error>
 
-  <span ng-if="enableFiltering"
-        ng-include form-for-include-replace
-        src="'form-for/templates/select-field/_filtered-select.html'"></span>
-
-  <span ng-if="!enableFiltering && multiple"
+  <span ng-if="multiple"
         ng-include form-for-include-replace
         src="'form-for/templates/select-field/_multi-select.html'"></span>
 
-  <span ng-if="!enableFiltering && !multiple"
+  <span ng-if="!multiple"
         ng-include form-for-include-replace
         src="'form-for/templates/select-field/_select.html'"></span>
 </div>

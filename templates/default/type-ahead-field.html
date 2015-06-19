@@ -1,0 +1,36 @@
+<div class="form-for-field with-icon-after" ng-class="{'invalid': model.error}">
+  <field-label  ng-if="label"
+                input-uid="{{model.uid + '-filter'}}"
+                iud="{{model.uid}}-label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
+
+  <field-error uid="{{model.uid}}-error" error="model.error"></field-error>
+
+  <!-- Filtered dropdowns use a type-ahead style component -->
+  <input  aria-manager
+          id="{{model.uid}}-filter"
+          name="{{attribute}}"
+          type="search"
+          tabindex="{{tabIndex}}"
+          placeholder="{{placeholder}}"
+          ng-disabled="disable || model.disabled"
+          ng-model="scopeBuster.filter"
+          ng-click="filterTextClick($event)"
+          ng-focus="open()"
+          ng-keydown="keyDown($event)">
+
+  <ul>
+    <li ng-repeat="option in filteredOptions"
+        ng-class="{ 'form-for-typeahead-list-item-active': option === selectedOption,
+                    'form-for-typeahead-list-item-hover':  $index === mouseOverIndex}"
+        ng-bind="option[labelAttribute]"
+        ng-mousedown="selectOption(option)"
+        ng-mouseenter="mouseOver($index)">
+    </li>
+  </ul>
+
+  <i class="form-for-input-icon-right fa fa-search"></i>
+</div>
