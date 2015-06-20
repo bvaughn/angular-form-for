@@ -1,28 +1,28 @@
 angular.module('formForDocumentation').controller('ManualFormMarkupDemoController',
-  function($scope, $timeout, flashr) {
-    $scope.formData = {};
+  function($timeout, flashr) {
+   this.formData = {};
 
     // Simulate a delay in loading remote data
     $timeout(function() {
-      $scope.formData = {
+      this.formData = {
         password: 'password'
       };
     },1000);
 
-    $scope.genders = [
+    this.genders = [
       {label: 'Male', value: '1'},
       {label: 'Female', value: '2'},
       {label: 'Unspecified', value: '3'}
     ];
 
-    $scope.hobbies = [
+    this.hobbies = [
       {value: 'art', label: 'Art'},
       {value: 'music', label: 'Music'},
       {value: 'running', label: 'Running'},
       {value: 'video_games', label: 'Video Games'}
     ];
 
-    $scope.submitFailed = function(error) {
+    this.submitFailed = function(error) {
       flashr.now.info(error);
     };
 });

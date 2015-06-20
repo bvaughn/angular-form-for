@@ -1,6 +1,6 @@
 angular.module('formForDocumentation').controller('CollectionsDemoController',
-  function($scope, flashr) {
-    $scope.formData = {
+  function(flashr) {
+    this.formData = {
       hobbies: [
         {
           name: 'Creating forms',
@@ -11,13 +11,13 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
       ]
     };
 
-    $scope.hobbyFrequencyOptions = [
+    this.hobbyFrequencyOptions = [
       {label: 'Daily', value: 'daily'},
       {label: 'Weekly', value: 'weekly'},
       {label: 'Monthly', value: 'monthly'}
     ];
 
-    $scope.validationRules = {
+    this.validationRules = {
       name: {
         required: true
       },
@@ -43,20 +43,20 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
       }
     };
 
-    $scope.hobbyOptions = [
+    this.hobbyOptions = [
       {value: true, label: 'Yes'},
       {value: false, label: 'I wish'}
     ];
 
-    $scope.addHobby = function() {
-      $scope.formData.hobbies.push({});
+    this.addHobby = function() {
+      this.formData.hobbies.push({});
     };
-    $scope.removeHobby = function(hobby) {
-      $scope.formData.hobbies.splice(
-        $scope.formData.hobbies.indexOf(hobby), 1);
+    this.removeHobby = function(hobby) {
+      this.formData.hobbies.splice(
+        this.formData.hobbies.indexOf(hobby), 1);
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   });

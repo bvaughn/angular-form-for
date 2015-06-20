@@ -9,6 +9,12 @@
     <div class="tab-content well" ng-include="htmlSource"></div>
   </tab>
   <tab>
+    <tab-heading>Form Data <i class="fa fa-file-text-o"></i></tab-heading>
+    <div class="tab-content">
+      <form-data-inspector form-data="formData"></form-data-inspector>
+    </div>
+  </tab>
+  <tab>
     <tab-heading>HTML Source <i class="fa fa-html5"></i></tab-heading>
     <prism class="tab-content" source="{{htmlSource}}"></prism>
   </tab>

@@ -2,45 +2,54 @@
   The right-aligned buttons demonstrate how you can disable individual input controls with formFor.
 </p>
 
-<form form-for="formData" validation-rules="validationRules" submit-with="submit(data)" validate-on="formData.validateOn"
-      controller="formController" valid="formIsValid" disable="formIsDisabled">
+<form form-for="ctrl.formData"
+      validation-rules="ctrl.validationRules"
+      submit-with="ctrl.submit(data)"
+      validate-on="ctrl.formData.validateOn"
+      controller="ctrl.formController"
+      valid="ctrl.formIsValid"
+      disable="ctrl.formIsDisabled">
 
   <div class="well">
-    <radio-field label="Validate this form on.." attribute="validateOn" options="validateOptions" disable="disableRadio"></radio-field>
+    <radio-field label="Validate this form on.."
+                 attribute="validateOn"
+                 options="ctrl.validateOptions"
+                 disable="ctrl.ctrl.disableRadio">
+    </radio-field>
   </div>
 
-  <span class="btn btn-xs btn-default set-field-error-button" ng-click="setFieldError()">Set Custom Error</span>
-  <reset-field-button form-controller="formController" field-name="plainText"></reset-field-button>
-  <validate-field-button form-controller="formController" field-name="plainText"></validate-field-button>
-  <disable-field-button is-disabled="disablePlainText"></disable-field-button>
-  <text-field attribute="plainText" disable="disablePlainText"
-              focused="onFocus()" blurred="onBlur()" label="Plain Text ({{focused ? 'focused' : 'blurred'}})"
+  <span class="btn btn-xs btn-default set-field-error-button" ng-click="ctrl.setFieldError()">Set Custom Error</span>
+  <reset-field-button form-controller="ctrl.formController" field-name="plainText"></reset-field-button>
+  <validate-field-button form-controller="ctrl.formController" field-name="plainText"></validate-field-button>
+  <disable-field-button is-disabled="ctrl.disablePlainText"></disable-field-button>
+  <text-field attribute="plainText" disable="ctrl.disablePlainText"
+              focused="ctrl.onFocus()" blurred="ctrl.onBlur()" label="Plain Text ({{ctrl.focused ? 'focused' : 'blurred'}})"
               icon-after="{pristine: 'fa fa-user', invalid: 'fa fa-times', valid: 'fa fa-check'}">
   </text-field>
 
-  <reset-field-button form-controller="formController" field-name="password"></reset-field-button>
-  <validate-field-button form-controller="formController" field-name="password"></validate-field-button>
-  <disable-field-button is-disabled="disablePassword"></disable-field-button>
-  <text-field attribute="password" type="password" disable="disablePassword"></text-field>
+  <reset-field-button form-controller="ctrl.formController" field-name="password"></reset-field-button>
+  <validate-field-button form-controller="ctrl.formController" field-name="password"></validate-field-button>
+  <disable-field-button is-disabled="ctrl.disablePassword"></disable-field-button>
+  <text-field attribute="password" type="password" disable="ctrl.disablePassword"></text-field>
 
-  <reset-field-button form-controller="formController" field-name="checkSomething"></reset-field-button>
-  <validate-field-button form-controller="formController" field-name="checkSomething"></validate-field-button>
-  <disable-field-button is-disabled="disableCheckbox"></disable-field-button>
-  <checkbox-field attribute="checkSomething" disable="disableCheckbox"></checkbox-field>
+  <reset-field-button form-controller="ctrl.formController" field-name="checkSomething"></reset-field-button>
+  <validate-field-button form-controller="ctrl.formController" field-name="checkSomething"></validate-field-button>
+  <disable-field-button is-disabled="ctrl.disableCheckbox"></disable-field-button>
+  <checkbox-field attribute="checkSomething" disable="ctrl.disableCheckbox"></checkbox-field>
 
-  <reset-field-button form-controller="formController" field-name="selectSomething"></reset-field-button>
-  <validate-field-button form-controller="formController" field-name="selectSomething"></validate-field-button>
-  <disable-field-button is-disabled="disableSelect"></disable-field-button>
-  <select-field allow-blank attribute="selectSomething" options="options" disable="disableSelect"></select-field>
+  <reset-field-button form-controller="ctrl.formController" field-name="selectSomething"></reset-field-button>
+  <validate-field-button form-controller="ctrl.formController" field-name="selectSomething"></validate-field-button>
+  <disable-field-button is-disabled="ctrl.disableSelect"></disable-field-button>
+  <select-field allow-blank attribute="selectSomething" options="options" disable="ctrl.disableSelect"></select-field>
 
   <fieldset>
-    <reset-field-button form-controller="formController" field-name="gender"></reset-field-button>
-    <validate-field-button form-controller="formController" field-name="gender"></validate-field-button>
-    <disable-field-button is-disabled="disableRadio"></disable-field-button>
+    <reset-field-button form-controller="ctrl.formController" field-name="gender"></reset-field-button>
+    <validate-field-button form-controller="ctrl.formController" field-name="gender"></validate-field-button>
+    <disable-field-button is-disabled="ctrl.disableRadio"></disable-field-button>
   </fieldset>
 
-  <disable-field-button is-disabled="disableButton"></disable-field-button>
-  <submit-button label="Sign Up" button-class="btn btn-primary" disable="disableButton"></submit-button>
+  <disable-field-button is-disabled="ctrl.disableButton"></disable-field-button>
+  <submit-button label="Sign Up" button-class="btn btn-primary" disable="ctrl.disableButton"></submit-button>
 </form>
 
 <br/>
@@ -56,26 +65,26 @@
   </li>
   <li>
     <button class="btn"
-            ng-class="{'btn-default': !formIsDisabled, 'btn-danger': formIsDisabled}"
-            ng-click="formIsDisabled = !formIsDisabled">
+            ng-class="{'btn-default': !ctrl.formIsDisabled, 'btn-danger': ctrl.formIsDisabled}"
+            ng-click="ctrl.formIsDisabled = !ctrl.formIsDisabled">
       {{formIsDisabled ? 'Enable' : 'Disable'}} form
     </button>
   </li>
   <li>
     <button class="btn btn-default"
-            ng-click="formController.resetErrors()">
+            ng-click="ctrl.formController.resetErrors()">
       Clear validation errors
     </button>
   </li>
   <li>
     <button class="btn btn-default"
-            ng-click="manuallyTriggerValidations()">
+            ng-click="ctrl.manuallyTriggerValidations()">
       Validate Form
     </button>
   </li>
   <li>
     <button class="btn btn-default"
-            ng-click="manuallyTriggerValidations(true)">
+            ng-click="ctrl.manuallyTriggerValidations(true)">
       Validate Form (show errors)
     </button>
   </li>

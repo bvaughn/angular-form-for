@@ -1,12 +1,12 @@
 angular.module('formForDocumentation').controller('FormBuilderMarkupDemoController',
-  function($scope, flashr) {
+  function(flashr) {
 
     // Form inputs will write values to this object
-    $scope.formData = {};
+    this.formData = {};
 
     // This object defines the shape of your data (validation rules)
     // As well as the presentational rules (view schema)
-    $scope.schema = {
+    this.schema = {
       email: {
         inputType: 'text',
         label: 'Email',
@@ -57,7 +57,7 @@ angular.module('formForDocumentation').controller('FormBuilderMarkupDemoControll
     };
 
     // Custom submit function triggered only when a valid form is submitted
-    $scope.submit = function() {
+    this.submit = function() {
       flashr.now.success('Your form has been submitted');
     };
   });

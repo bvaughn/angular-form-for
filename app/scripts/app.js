@@ -13,13 +13,15 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app.formBuilderMarkup', {
       url: '/demo/form-builder-markup',
       templateUrl: 'app/views/form-builder-markup.html',
-      controller: 'FormBuilderMarkupDemoController'
+      controller: 'FormBuilderMarkupDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.manualFormMarkup', {
       url: '/demo/manual-form-markup',
       templateUrl: 'app/views/manual-form-markup.html',
-      controller: 'ManualFormMarkupDemoController'
+      controller: 'ManualFormMarkupDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.selectField', {
@@ -39,19 +41,22 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app.dynamicIcons', {
       url: '/demo/dynamic-icons',
       templateUrl: 'app/views/dynamic-icons.html',
-      controller: 'DynamicIconsDemoController'
+      controller: 'DynamicIconsDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.collectionsForm', {
       url: '/demo/collections-form',
       templateUrl: 'app/views/collections.html',
-      controller: 'CollectionsDemoController'
+      controller: 'CollectionsDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.formMetadata', {
       url: '/demo/form-metadata',
       templateUrl: 'app/views/form-metadata.html',
-      controller: 'FormMetadataDemoController'
+      controller: 'FormMetadataDemoController',
+      controllerAs: 'ctrl'
     });
 
     // Guides

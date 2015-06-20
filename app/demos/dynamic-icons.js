@@ -1,14 +1,14 @@
 angular.module('formForDocumentation').controller('DynamicIconsDemoController',
-  function($scope, FormForConfiguration, flashr) {
+  function(FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
-    $scope.bindableAfterIcon = 'fa fa-arrow-circle-o-left';
-    $scope.bindableBeforeIcon = 'fa fa-arrow-circle-o-right';
+    this.bindableAfterIcon = 'fa fa-arrow-circle-o-left';
+    this.bindableBeforeIcon = 'fa fa-arrow-circle-o-right';
 
-    $scope.formController = {};
-    $scope.formData = {};
+    this.formController = {};
+    this.formData = {};
 
-    $scope.validationRules = {
+    this.validationRules = {
       email: {
         required: true,
         pattern: /\w+@\w+\.\w+/
@@ -22,7 +22,7 @@ angular.module('formForDocumentation').controller('DynamicIconsDemoController',
       }
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   });

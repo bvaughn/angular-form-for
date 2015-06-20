@@ -1,21 +1,30 @@
-<form form-for="formData" controller="formController"
-      validation-rules="validationRules" submit-with="submit(data)" validation-failed="validationFailed()">
+<form form-for="ctrl.formData"
+      controller="ctrl.formController"
+      validation-rules="ctrl.validationRules"
+      submit-with="ctrl.submit(data)"
+      validation-failed="ctrl.validationFailed()">
 
-  <text-field attribute="email" label="Email (dynamic icons)"
+  <text-field label="Email (dynamic icons)"
+              attribute="email"
               icon-before="{pristine: 'fa fa-arrow-right', invalid: 'fa fa-times', valid: 'fa fa-check'}"
               icon-after="{pristine: 'fa fa-arrow-left', invalid: 'fa fa-times', valid: 'fa fa-check'}">
   </text-field>
 
-  <text-field attribute="password" type="password" label="Password (static icons)"
-              icon-before="fa fa-angle-double-right" icon-after="fa fa-angle-double-left">
+  <text-field type="password"
+              label="Password (static icons)"
+              attribute="password"
+              icon-before="fa fa-angle-double-right"
+              icon-after="fa fa-angle-double-left">
   </text-field>
 
-  <text-field attribute="name" label="Name (interpolated icons)"
-              icon-before="{{bindableBeforeIcon}}" icon-after="{{bindableAfterIcon}}">
+  <text-field label="Name (interpolated icons)"
+              attribute="name"
+              icon-before="{{ctrl.bindableBeforeIcon}}"
+              icon-after="{{ctrl.bindableAfterIcon}}">
   </text-field>
 
   <p>
-    <div class="btn btn-default" ng-click="formController.resetErrors()">
+    <div class="btn btn-default" ng-click="ctrl.formController.resetErrors()">
       Clear validation errors
     </div>
 

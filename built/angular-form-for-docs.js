@@ -13,13 +13,15 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app.formBuilderMarkup', {
       url: '/demo/form-builder-markup',
       templateUrl: 'app/views/form-builder-markup.html',
-      controller: 'FormBuilderMarkupDemoController'
+      controller: 'FormBuilderMarkupDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.manualFormMarkup', {
       url: '/demo/manual-form-markup',
       templateUrl: 'app/views/manual-form-markup.html',
-      controller: 'ManualFormMarkupDemoController'
+      controller: 'ManualFormMarkupDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.selectField', {
@@ -39,19 +41,22 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app.dynamicIcons', {
       url: '/demo/dynamic-icons',
       templateUrl: 'app/views/dynamic-icons.html',
-      controller: 'DynamicIconsDemoController'
+      controller: 'DynamicIconsDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.collectionsForm', {
       url: '/demo/collections-form',
       templateUrl: 'app/views/collections.html',
-      controller: 'CollectionsDemoController'
+      controller: 'CollectionsDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.formMetadata', {
       url: '/demo/form-metadata',
       templateUrl: 'app/views/form-metadata.html',
-      controller: 'FormMetadataDemoController'
+      controller: 'FormMetadataDemoController',
+      controllerAs: 'ctrl'
     });
 
     // Guides
@@ -217,8 +222,8 @@ angular.module('formForDocumentation').service('UserSignUp', ["$q", "$timeout", 
 }]);
 
 angular.module('formForDocumentation').controller('CollectionsDemoController',
-  ["$scope", "flashr", function($scope, flashr) {
-    $scope.formData = {
+  ["flashr", function(flashr) {
+    this.formData = {
       hobbies: [
         {
           name: 'Creating forms',
@@ -229,13 +234,13 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
       ]
     };
 
-    $scope.hobbyFrequencyOptions = [
+    this.hobbyFrequencyOptions = [
       {label: 'Daily', value: 'daily'},
       {label: 'Weekly', value: 'weekly'},
       {label: 'Monthly', value: 'monthly'}
     ];
 
-    $scope.validationRules = {
+    this.validationRules = {
       name: {
         required: true
       },
@@ -261,35 +266,35 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
       }
     };
 
-    $scope.hobbyOptions = [
+    this.hobbyOptions = [
       {value: true, label: 'Yes'},
       {value: false, label: 'I wish'}
     ];
 
-    $scope.addHobby = function() {
-      $scope.formData.hobbies.push({});
+    this.addHobby = function() {
+      this.formData.hobbies.push({});
     };
-    $scope.removeHobby = function(hobby) {
-      $scope.formData.hobbies.splice(
-        $scope.formData.hobbies.indexOf(hobby), 1);
+    this.removeHobby = function(hobby) {
+      this.formData.hobbies.splice(
+        this.formData.hobbies.indexOf(hobby), 1);
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   }]);
 
 angular.module('formForDocumentation').controller('DynamicIconsDemoController',
-  ["$scope", "FormForConfiguration", "flashr", function($scope, FormForConfiguration, flashr) {
+  ["FormForConfiguration", "flashr", function(FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
-    $scope.bindableAfterIcon = 'fa fa-arrow-circle-o-left';
-    $scope.bindableBeforeIcon = 'fa fa-arrow-circle-o-right';
+    this.bindableAfterIcon = 'fa fa-arrow-circle-o-left';
+    this.bindableBeforeIcon = 'fa fa-arrow-circle-o-right';
 
-    $scope.formController = {};
-    $scope.formData = {};
+    this.formController = {};
+    this.formData = {};
 
-    $scope.validationRules = {
+    this.validationRules = {
       email: {
         required: true,
         pattern: /\w+@\w+\.\w+/
@@ -303,20 +308,20 @@ angular.module('formForDocumentation').controller('DynamicIconsDemoController',
       }
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   }]);
 
 angular.module('formForDocumentation').controller('FormBuilderMarkupDemoController',
-  ["$scope", "flashr", function($scope, flashr) {
+  ["flashr", function(flashr) {
 
     // Form inputs will write values to this object
-    $scope.formData = {};
+    this.formData = {};
 
     // This object defines the shape of your data (validation rules)
     // As well as the presentational rules (view schema)
-    $scope.schema = {
+    this.schema = {
       email: {
         inputType: 'text',
         label: 'Email',
@@ -367,34 +372,34 @@ angular.module('formForDocumentation').controller('FormBuilderMarkupDemoControll
     };
 
     // Custom submit function triggered only when a valid form is submitted
-    $scope.submit = function() {
+    this.submit = function() {
       flashr.now.success('Your form has been submitted');
     };
   }]);
 
 angular.module('formForDocumentation').controller('FormMetadataDemoController',
-  ["$scope", "FormForConfiguration", "flashr", function($scope, FormForConfiguration, flashr) {
+  ["FormForConfiguration", "flashr", function(FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
-    $scope.formData = {
+    this.formData = {
       validateOn: 'manual'
     };
-    $scope.formController = {};
+    this.formController = {};
 
-    $scope.options = [
+    this.options = [
       {label: 'Option One', value: 1},
       {label: 'Option Two', value: 2},
       {label: 'Option Three', value: 3}
     ];
 
-    $scope.disableButton = false;
-    $scope.disableCheckbox = false;
-    $scope.disablePassword = false;
-    $scope.disablePlainText = false;
-    $scope.disableRadio = false;
-    $scope.disableSelect = false;
+    this.disableButton = false;
+    this.disableCheckbox = false;
+    this.disablePassword = false;
+    this.disablePlainText = false;
+    this.disableRadio = false;
+    this.disableSelect = false;
 
-    $scope.validationRules = {
+    this.validationRules = {
       plainText: {
         required: true,
         minlength: 3
@@ -413,29 +418,29 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       }
     };
 
-    $scope.validateOptions = [
+    this.validateOptions = [
       {value: '', label: 'default (no setting)'},
       {value: 'change', label: 'on-change'},
       {value: 'manual', label: 'manual'},
       {value: 'submit', label: 'on-submit'}
     ];
 
-    $scope.setFieldError = function() {
+    this.setFieldError = function() {
       var error = window.prompt('Enter a custom validation error message:', '');
 
-      $scope.formController.setFieldError('plainText', error);
+      this.formController.setFieldError('plainText', error);
     };
 
-    $scope.onFocus = function() {
-      $scope.focused = true;
+    this.onFocus = function() {
+      this.focused = true;
     };
 
-    $scope.onBlur = function() {
-      $scope.focused = false;
+    this.onBlur = function() {
+      this.focused = false;
     };
 
-    $scope.manuallyTriggerValidations = function(showErrors) {
-      $scope.formController.validateForm(showErrors).then(
+    this.manuallyTriggerValidations = function(showErrors) {
+      this.formController.validateForm(showErrors).then(
         function() {
           flashr.now.success('Your form is valid');
         },
@@ -444,7 +449,7 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
         });
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   }]);
@@ -478,30 +483,30 @@ angular.module('formForDocumentation').controller('IndexFormDemoController',
   }]);
 
 angular.module('formForDocumentation').controller('ManualFormMarkupDemoController',
-  ["$scope", "$timeout", "flashr", function($scope, $timeout, flashr) {
-    $scope.formData = {};
+  ["$timeout", "flashr", function($timeout, flashr) {
+   this.formData = {};
 
     // Simulate a delay in loading remote data
     $timeout(function() {
-      $scope.formData = {
+      this.formData = {
         password: 'password'
       };
     },1000);
 
-    $scope.genders = [
+    this.genders = [
       {label: 'Male', value: '1'},
       {label: 'Female', value: '2'},
       {label: 'Unspecified', value: '3'}
     ];
 
-    $scope.hobbies = [
+    this.hobbies = [
       {value: 'art', label: 'Art'},
       {value: 'music', label: 'Music'},
       {value: 'running', label: 'Running'},
       {value: 'video_games', label: 'Video Games'}
     ];
 
-    $scope.submitFailed = function(error) {
+    this.submitFailed = function(error) {
       flashr.now.info(error);
     };
 }]);
@@ -721,6 +726,7 @@ angular.module('formForDocumentation').directive('tabbedDemo', function() {
     link: function($scope, $element, $attributes) {
       $scope.htmlSource = $attributes.htmlSource;
       $scope.jsSource = $attributes.jsSource ? $attributes.jsSource : null;
+      $scope.formData = $scope.ctrl.formData;
     }
   };
 });

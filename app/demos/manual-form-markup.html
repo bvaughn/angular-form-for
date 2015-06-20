@@ -1,23 +1,67 @@
-<form form-for="formData" service="UserSignUp" submit-error="submitFailed(error)">
-  <text-field label="Username" attribute="username" icon-after="fa fa-user" placeholder="brian" help="This username will be visible to others"></text-field>
-  <text-field label="Password" attribute="password" icon-before="fa fa-key" type="password" placeholder="Pick a good one" help="Strong passwords usually have mixed-case letters and numbers"></text-field>
+<form form-for="ctrl.formData"
+      service="UserSignUp"
+      submit-error="ctrl.submitFailed(error)">
 
-  <text-field label="Comments" attribute="comments" multiline rows="4" placeholder="Go ahead, say anything."></text-field>
+  <text-field label="Username"
+              attribute="username"
+              icon-after="fa fa-user"
+              placeholder="brian"
+              help="This username will be visible to others">
+  </text-field>
 
-  <radio-field attribute="gender" label="Gender" options="genders"></radio-field>
+  <text-field label="Password"
+              attribute="password"
+              icon-before="fa fa-key"
+              type="password"
+              placeholder="Pick a good one"
+              help="Strong passwords usually have mixed-case letters and numbers">
+  </text-field>
+
+  <text-field label="Comments"
+              attribute="comments"
+              multiline
+              rows="4"
+              placeholder="Go ahead, say anything.">
+  </text-field>
+
+  <radio-field attribute="gender"
+               label="Gender"
+               options="ctrl.genders">
+  </radio-field>
 
   <h4>Select Menus</h4>
-  <select-field attribute="hobbies" label="Hobbies" options="hobbies"></select-field>
-  <select-field attribute="hobbiesMulti" label="Hobbies (multi)" options="hobbies" multiple="true"></select-field>
+  <select-field attribute="hobbies"
+                label="Hobbies"
+                options="ctrl.hobbies">
+  </select-field>
+  <select-field attribute="hobbiesMulti"
+                label="Hobbies (multi)"
+                options="ctrl.hobbies"
+                multiple="true">
+  </select-field>
 
   <h4>Type validations</h4>
-  <text-field label="Email" attribute="email"></text-field>
-  <text-field label="Negative integer" attribute="negativeInteger"></text-field>
-  <text-field label="Positive number" attribute="positiveNumber"></text-field>
-  <text-field label="Custom (email)" attribute="signupEmail" placeholder="Any email other than briandavidvaughn@gmail.com"></text-field>
-  <text-field label="Range between 2 and 5" attribute="rangeFrom2To5"></text-field>
+  <text-field label="Email"
+              attribute="email">
+  </text-field>
+  <text-field label="Negative integer"
+              attribute="negativeInteger">
+  </text-field>
+  <text-field label="Positive number"
+              attribute="positiveNumber">
+  </text-field>
+  <text-field label="Custom (email)"
+              attribute="signupEmail"
+              placeholder="Any email other than briandavidvaughn@gmail.com">
+  </text-field>
+  <text-field label="Range between 2 and 5"
+              attribute="rangeFrom2To5">
+  </text-field>
 
-  <checkbox-field label="I agree to the TOS" attribute="agreed"></checkbox-field>
+  <checkbox-field label="I agree to the TOS"
+              attribute="agreed">
+  </checkbox-field>
 
-  <submit-button label="Sign Up"></submit-button>
+  <submit-button label="Sign Up">
+  </submit-button>
 </form>

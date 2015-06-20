@@ -249,9 +249,13 @@ pre[class*="language-"] {
   margin-top: 0;
   border: none;
 }
-.tab-content > pre[class*="language-"] {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+
+@media (min-width : 769px) {
+  .tab-content,
+  .tab-content > pre[class*="language-"],
+  .tab-content > form-data-inspector pre[class*="language-"] {
+    border-top-right-radius: 0;
+  }
 }
 .object-inspector > pre[class*="language-"] {
   font-size: 10px;

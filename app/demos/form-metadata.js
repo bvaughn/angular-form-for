@@ -1,26 +1,26 @@
 angular.module('formForDocumentation').controller('FormMetadataDemoController',
-  function($scope, FormForConfiguration, flashr) {
+  function(FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
-    $scope.formData = {
+    this.formData = {
       validateOn: 'manual'
     };
-    $scope.formController = {};
+    this.formController = {};
 
-    $scope.options = [
+    this.options = [
       {label: 'Option One', value: 1},
       {label: 'Option Two', value: 2},
       {label: 'Option Three', value: 3}
     ];
 
-    $scope.disableButton = false;
-    $scope.disableCheckbox = false;
-    $scope.disablePassword = false;
-    $scope.disablePlainText = false;
-    $scope.disableRadio = false;
-    $scope.disableSelect = false;
+    this.disableButton = false;
+    this.disableCheckbox = false;
+    this.disablePassword = false;
+    this.disablePlainText = false;
+    this.disableRadio = false;
+    this.disableSelect = false;
 
-    $scope.validationRules = {
+    this.validationRules = {
       plainText: {
         required: true,
         minlength: 3
@@ -39,29 +39,29 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
       }
     };
 
-    $scope.validateOptions = [
+    this.validateOptions = [
       {value: '', label: 'default (no setting)'},
       {value: 'change', label: 'on-change'},
       {value: 'manual', label: 'manual'},
       {value: 'submit', label: 'on-submit'}
     ];
 
-    $scope.setFieldError = function() {
+    this.setFieldError = function() {
       var error = window.prompt('Enter a custom validation error message:', '');
 
-      $scope.formController.setFieldError('plainText', error);
+      this.formController.setFieldError('plainText', error);
     };
 
-    $scope.onFocus = function() {
-      $scope.focused = true;
+    this.onFocus = function() {
+      this.focused = true;
     };
 
-    $scope.onBlur = function() {
-      $scope.focused = false;
+    this.onBlur = function() {
+      this.focused = false;
     };
 
-    $scope.manuallyTriggerValidations = function(showErrors) {
-      $scope.formController.validateForm(showErrors).then(
+    this.manuallyTriggerValidations = function(showErrors) {
+      this.formController.validateForm(showErrors).then(
         function() {
           flashr.now.success('Your form is valid');
         },
@@ -70,7 +70,7 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
         });
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   });

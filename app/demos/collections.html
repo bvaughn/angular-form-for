@@ -1,31 +1,37 @@
-<form form-for="formData" validation-rules="validationRules" submit-with="submit(data)">
+<form form-for="ctrl.formData"
+      validation-rules="ctrl.validationRules"
+      submit-with="ctrl.submit(data)">
 
   <text-field label="Name" attribute="name" placeholder="My name is..."></text-field>
 
-  <collection-label attribute="hobbies" label="My Hobbies" help="Hobbies are things you enjoy doing">
+  <collection-label attribute="hobbies"
+                    label="My Hobbies"
+                    help="Hobbies are things you enjoy doing">
   </collection-label>
 
-  <div class="btn btn-primary" ng-click="addHobby()">
+  <div class="btn btn-primary" ng-click="ctrl.addHobby()">
     Add
     <i class="fa fa-plus"></i>
   </div>
 
   <ul class="list-unstyled">
-    <li ng-repeat="hobby in formData.hobbies">
-      <text-field label="Name" attribute="hobbies[{{$index}}].name"
+    <li ng-repeat="hobby in ctrl.formData.hobbies">
+      <text-field label="Name"
+                  attribute="hobbies[{{$index}}].name"
                   placeholder="What exactly is it..that you say..you do here?"
-                  icon-after="fa fa-times" icon-after-clicked="removeHobby(hobby)">
+                  icon-after="fa fa-times"
+                  icon-after-clicked="ctrl.removeHobby(hobby)">
       </text-field>
 
       <select-field label="How often do you participate in this hobby"
                     attribute="hobbies[{{$index}}].frequency"
-                    options="hobbyFrequencyOptions"
+                    options="ctrl.hobbyFrequencyOptions"
                     allow-blank>
       </select-field>
 
       <radio-field  label="Is this a paid hobby?"
                     attribute="hobbies[{{$index}}].paid"
-                    options="hobbyOptions">
+                    options="ctrl.hobbyOptions">
       </radio-field>
 
       <checkbox-field label="Would you recommend this hobby to a friend?"
@@ -36,5 +42,3 @@
 
   <submit-button label="Sign Up"></submit-button>
 </form>
-
-<form-data-inspector form-data="formData"></form-data-inspector>
