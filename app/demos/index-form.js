@@ -1,10 +1,10 @@
 angular.module('formForDocumentation').controller('IndexFormDemoController',
-  function($scope, FormForConfiguration, flashr) {
+  function(FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
-    $scope.formData = {};
+    this.formData = {};
 
-    $scope.validationAndViewRules = {
+    this.validationAndViewRules = {
       email: {
         inputType: 'text',
         pattern: /\w+@\w+\.\w+/,
@@ -20,7 +20,7 @@ angular.module('formForDocumentation').controller('IndexFormDemoController',
       }
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   });

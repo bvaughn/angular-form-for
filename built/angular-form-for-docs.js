@@ -97,7 +97,8 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
     $stateProvider.state('app.index', {
       url: '/index',
       templateUrl: 'app/views/index.html',
-      controller: 'IndexFormDemoController'
+      controller: 'IndexFormDemoController',
+      controllerAs: 'ctrl'
     });
 
     // API docuumentation
@@ -456,12 +457,12 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
 
 
 angular.module('formForDocumentation').controller('IndexFormDemoController',
-  ["$scope", "FormForConfiguration", "flashr", function($scope, FormForConfiguration, flashr) {
+  ["FormForConfiguration", "flashr", function(FormForConfiguration, flashr) {
     FormForConfiguration.enableAutoLabels();
 
-    $scope.formData = {};
+    this.formData = {};
 
-    $scope.validationAndViewRules = {
+    this.validationAndViewRules = {
       email: {
         inputType: 'text',
         pattern: /\w+@\w+\.\w+/,
@@ -477,7 +478,7 @@ angular.module('formForDocumentation').controller('IndexFormDemoController',
       }
     };
 
-    $scope.submit = function(data) {
+    this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
   }]);
