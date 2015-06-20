@@ -611,7 +611,7 @@ angular.module('formForDocumentation').controller('SelectFieldDemoController',
   });
 
 angular.module('formForDocumentation').controller('TypeAheadDemoController',
-  ["$scope", "$timeout", function($scope, $timeout) {
+  ["$timeout", function($timeout) {
     this.formData = {
       preselectedLocale: 'es',
       remotelyFilteredLocale: undefined,
@@ -643,22 +643,26 @@ angular.module('formForDocumentation').controller('TypeAheadDemoController',
       {value: 'vi', label: 'Vietnamese'}
     ];
 
-    $scope.$watch('ctrl.bindableFilterText', function(filterText) {
+    var timeoutId;
+    this.filterTextChanged = function(filterText) {
       this.remoteLocaleOptions = null;
 
-      var latency = 1000 + 2000 * Math.random();
+      if (timeoutId) {
+        $timeout.cancel(timeoutId);
+      }
+
+      var latency = 1000 + 1000 * Math.random();
 
       // This demo doesn't actually load data remotely.
       // It simulates the latency of a remotely-loaded list though.
       // It also simulates simple filtering.
-      $timeout(function() {
+      timeoutId = $timeout(function() {
         this.remoteLocaleOptions = this.localeOptions.filter(
           function(localeOption) {
             return localeOption.label.indexOf(filterText) >= 0;
           });
-        console.log('Filtered options ['+filterText+']',this.remoteLocaleOptions);
       }.bind(this), latency);
-    }.bind(this));
+    };
   }]);
 
 
