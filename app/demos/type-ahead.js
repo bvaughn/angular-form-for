@@ -1,10 +1,12 @@
-angular.module('formForDocumentation').controller('DynamicDropdownsDemoController',
+angular.module('formForDocumentation').controller('TypeAheadDemoController',
   function($scope, $timeout) {
-    $scope.formData = {
-      preselectedLocaleOption: 'es'
+    this.formData = {
+      preselectedLocale: 'es',
+      remotelyFilteredLocale: undefined,
+      unspecifiedLocale: undefined
     };
 
-    $scope.localeOptions = [
+    this.localeOptions = [
       {value: 'ar', label: 'Arabic'},
       {value: 'zh', label: 'Chinese'},
       {value: 'nl', label: 'Dutch'},
@@ -29,19 +31,20 @@ angular.module('formForDocumentation').controller('DynamicDropdownsDemoControlle
       {value: 'vi', label: 'Vietnamese'}
     ];
 
-    $scope.$watch('filterText', function(value) {
-      $scope.remoteOptions = null;
+    $scope.$watch('ctrl.bindableFilterText', function(filterText) {
+      this.remoteLocaleOptions = null;
 
-      // Simulate delay to load a remote list
+      var latency = 1000 + 2000 * Math.random();
+
+      // This demo doesn't actually load data remotely.
+      // It simulates the latency of a remotely-loaded list though.
+      // It also simulates simple filtering.
       $timeout(function() {
-        var filter = $scope.filterText || '';
-        var max = Math.round(Math.random() * 20) + 1;
-
-        $scope.remoteOptions = [];
-
-        for (var i = 1; i <= max; i++) {
-          $scope.remoteOptions.push({value: i, label: 'Fake result #' + i + ' for "' + filter + '"'});
-        }
-      }, 1000);
-    });
+        this.remoteLocaleOptions = this.localeOptions.filter(
+          function(localeOption) {
+            return localeOption.label.indexOf(filterText) >= 0;
+          });
+        console.log('Filtered options ['+filterText+']',this.remoteLocaleOptions);
+      }.bind(this), latency);
+    }.bind(this));
   });

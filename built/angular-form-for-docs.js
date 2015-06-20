@@ -22,10 +22,18 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
       controller: 'ManualFormMarkupDemoController'
     });
 
-    $stateProvider.state('app.dynamicForm', {
-      url: '/demo/dynamic-form',
-      templateUrl: 'app/views/dynamic-dropdowns.html',
-      controller: 'DynamicDropdownsDemoController'
+    $stateProvider.state('app.selectField', {
+      url: '/demo/select-field',
+      templateUrl: 'app/views/select-field.html',
+      controller: 'SelectFieldDemoController',
+      controllerAs: 'ctrl'
+    });
+
+    $stateProvider.state('app.typeAhead', {
+      url: '/demo/type-ahead',
+      templateUrl: 'app/views/type-ahead.html',
+      controller: 'TypeAheadDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.dynamicIcons', {
@@ -269,54 +277,6 @@ angular.module('formForDocumentation').controller('CollectionsDemoController',
     $scope.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
-  }]);
-
-angular.module('formForDocumentation').controller('DynamicDropdownsDemoController',
-  ["$scope", "$timeout", function($scope, $timeout) {
-    $scope.formData = {
-      preselectedLocaleOption: 'es'
-    };
-
-    $scope.localeOptions = [
-      {value: 'ar', label: 'Arabic'},
-      {value: 'zh', label: 'Chinese'},
-      {value: 'nl', label: 'Dutch'},
-      {value: 'en', label: 'English'},
-      {value: 'fi', label: 'Finnish'},
-      {value: 'fr', label: 'French'},
-      {value: 'de', label: 'German'},
-      {value: 'el', label: 'Greek'},
-      {value: 'iw', label: 'Hebrew'},
-      {value: 'ga', label: 'Irish'},
-      {value: 'it', label: 'Italian'},
-      {value: 'ja', label: 'Japanese'},
-      {value: 'ko', label: 'Korean'},
-      {value: 'mt', label: 'Maltese'},
-      {value: 'pl', label: 'Polish'},
-      {value: 'ru', label: 'Russian'},
-      {value: 'sk', label: 'Slovak'},
-      {value: 'es', label: 'Spanish'},
-      {value: 'sv', label: 'Swedish'},
-      {value: 'th', label: 'Thai'},
-      {value: 'uk', label: 'Ukrainian'},
-      {value: 'vi', label: 'Vietnamese'}
-    ];
-
-    $scope.$watch('filterText', function(value) {
-      $scope.remoteOptions = null;
-
-      // Simulate delay to load a remote list
-      $timeout(function() {
-        var filter = $scope.filterText || '';
-        var max = Math.round(Math.random() * 20) + 1;
-
-        $scope.remoteOptions = [];
-
-        for (var i = 1; i <= max; i++) {
-          $scope.remoteOptions.push({value: i, label: 'Fake result #' + i + ' for "' + filter + '"'});
-        }
-      }, 1000);
-    });
   }]);
 
 angular.module('formForDocumentation').controller('DynamicIconsDemoController',
@@ -612,6 +572,90 @@ angular.module('formForDocumentation').service('UserSignUp', ["$q", "$timeout", 
   }
 }]);
 
+angular.module('formForDocumentation').controller('SelectFieldDemoController',
+  function() {
+    this.formData = {
+      preselectedLocale: 'es',
+      unspecifiedLocale: undefined
+    };
+
+    this.localeOptions = [
+      {value: 'ar', label: 'Arabic'},
+      {value: 'zh', label: 'Chinese'},
+      {value: 'nl', label: 'Dutch'},
+      {value: 'en', label: 'English'},
+      {value: 'fi', label: 'Finnish'},
+      {value: 'fr', label: 'French'},
+      {value: 'de', label: 'German'},
+      {value: 'el', label: 'Greek'},
+      {value: 'iw', label: 'Hebrew'},
+      {value: 'ga', label: 'Irish'},
+      {value: 'it', label: 'Italian'},
+      {value: 'ja', label: 'Japanese'},
+      {value: 'ko', label: 'Korean'},
+      {value: 'mt', label: 'Maltese'},
+      {value: 'pl', label: 'Polish'},
+      {value: 'ru', label: 'Russian'},
+      {value: 'sk', label: 'Slovak'},
+      {value: 'es', label: 'Spanish'},
+      {value: 'sv', label: 'Swedish'},
+      {value: 'th', label: 'Thai'},
+      {value: 'uk', label: 'Ukrainian'},
+      {value: 'vi', label: 'Vietnamese'}
+    ];
+  });
+
+angular.module('formForDocumentation').controller('TypeAheadDemoController',
+  ["$scope", "$timeout", function($scope, $timeout) {
+    this.formData = {
+      preselectedLocale: 'es',
+      remotelyFilteredLocale: undefined,
+      unspecifiedLocale: undefined
+    };
+
+    this.localeOptions = [
+      {value: 'ar', label: 'Arabic'},
+      {value: 'zh', label: 'Chinese'},
+      {value: 'nl', label: 'Dutch'},
+      {value: 'en', label: 'English'},
+      {value: 'fi', label: 'Finnish'},
+      {value: 'fr', label: 'French'},
+      {value: 'de', label: 'German'},
+      {value: 'el', label: 'Greek'},
+      {value: 'iw', label: 'Hebrew'},
+      {value: 'ga', label: 'Irish'},
+      {value: 'it', label: 'Italian'},
+      {value: 'ja', label: 'Japanese'},
+      {value: 'ko', label: 'Korean'},
+      {value: 'mt', label: 'Maltese'},
+      {value: 'pl', label: 'Polish'},
+      {value: 'ru', label: 'Russian'},
+      {value: 'sk', label: 'Slovak'},
+      {value: 'es', label: 'Spanish'},
+      {value: 'sv', label: 'Swedish'},
+      {value: 'th', label: 'Thai'},
+      {value: 'uk', label: 'Ukrainian'},
+      {value: 'vi', label: 'Vietnamese'}
+    ];
+
+    $scope.$watch('ctrl.bindableFilterText', function(filterText) {
+      this.remoteLocaleOptions = null;
+
+      var latency = 1000 + 2000 * Math.random();
+
+      // This demo doesn't actually load data remotely.
+      // It simulates the latency of a remotely-loaded list though.
+      // It also simulates simple filtering.
+      $timeout(function() {
+        this.remoteLocaleOptions = this.localeOptions.filter(
+          function(localeOption) {
+            return localeOption.label.indexOf(filterText) >= 0;
+          });
+        console.log('Filtered options ['+filterText+']',this.remoteLocaleOptions);
+      }.bind(this), latency);
+    }.bind(this));
+  }]);
+
 
 angular.module('formForDocumentation').directive('prism',
   ["$compile", "$http", function($compile, $http) {
@@ -643,12 +687,32 @@ angular.module('formForDocumentation').directive('prism',
                 }
               }).
             error(showError);
+        } else if ($attributes.hasOwnProperty('data')) {
+          $attributes.$observe('data', function(data) {
+            highlight(data);
+          });
         } else {
           highlight($element.html());
         }
       }
     };
 }]);
+
+angular.module('formForDocumentation').directive('formDataInspector', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/templates/form-data-inspector.html',
+    scope: {
+      formData: '='
+    },
+    link: function($scope, $element, $attributes) {
+      $scope.formDataName = $attributes.formDataName || 'formData';
+      $scope.$watch('formData', function(formData) {
+        $scope.formDataJson = angular.toJson(formData, true);
+      }, true);
+    }
+  };
+});
 
 angular.module('formForDocumentation').directive('tabbedDemo', function() {
   return {
@@ -709,9 +773,9 @@ angular.module('formForDocumentation').value('currentTemplates', {
 
 angular.module('formForDocumentation').directive('templateToggler', ["$ocLazyLoad", "$state", "$stateParams", "currentTemplates", function($ocLazyLoad, $state, $stateParams, currentTemplates) {
   var map = {};
-  map['bootstrap'] = ['formFor.bootstrapTemplates', 'https://rawgit.com/bvaughn/angular-form-for/3.0.7/dist/form-for.bootstrap-templates.js'];
-  map['default'] = ['formFor.defaultTemplates', 'https://rawgit.com/bvaughn/angular-form-for/3.0.7/dist/form-for.default-templates.js'];
-  map['material'] = ['formFor.materialTemplates', 'https://rawgit.com/bvaughn/angular-form-for/3.0.7/dist/form-for.material-templates.js'];
+  map['bootstrap'] = ['formFor.bootstrapTemplates', '/offline/form-for.bootstrap-templates.js'];
+  map['default'] = ['formFor.defaultTemplates', '/offline/form-for.default-templates.js'];
+  map['material'] = ['formFor.materialTemplates', '/offline/form-for.material-templates.js'];
 
   return {
     restrict: 'E',

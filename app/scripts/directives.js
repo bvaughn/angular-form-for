@@ -28,11 +28,31 @@ angular.module('formForDocumentation').directive('prism',
                 }
               }).
             error(showError);
+        } else if ($attributes.hasOwnProperty('data')) {
+          $attributes.$observe('data', function(data) {
+            highlight(data);
+          });
         } else {
           highlight($element.html());
         }
       }
     };
+});
+
+angular.module('formForDocumentation').directive('formDataInspector', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/templates/form-data-inspector.html',
+    scope: {
+      formData: '='
+    },
+    link: function($scope, $element, $attributes) {
+      $scope.formDataName = $attributes.formDataName || 'formData';
+      $scope.$watch('formData', function(formData) {
+        $scope.formDataJson = angular.toJson(formData, true);
+      }, true);
+    }
+  };
 });
 
 angular.module('formForDocumentation').directive('tabbedDemo', function() {
@@ -94,9 +114,9 @@ angular.module('formForDocumentation').value('currentTemplates', {
 
 angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
   var map = {};
-  map['bootstrap'] = ['formFor.bootstrapTemplates', 'https://rawgit.com/bvaughn/angular-form-for/3.0.7/dist/form-for.bootstrap-templates.js'];
-  map['default'] = ['formFor.defaultTemplates', 'https://rawgit.com/bvaughn/angular-form-for/3.0.7/dist/form-for.default-templates.js'];
-  map['material'] = ['formFor.materialTemplates', 'https://rawgit.com/bvaughn/angular-form-for/3.0.7/dist/form-for.material-templates.js'];
+  map['bootstrap'] = ['formFor.bootstrapTemplates', '/offline/form-for.bootstrap-templates.js'];
+  map['default'] = ['formFor.defaultTemplates', '/offline/form-for.default-templates.js'];
+  map['material'] = ['formFor.materialTemplates', '/offline/form-for.material-templates.js'];
 
   return {
     restrict: 'E',

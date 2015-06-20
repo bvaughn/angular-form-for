@@ -1,4 +1,4 @@
-text-field, select-field, checkbox-field {
+text-field, select-field, checkbox-field, type-ahead-field {
   margin-bottom: 5px;
 }
 radio-field {
@@ -249,10 +249,13 @@ pre[class*="language-"] {
   margin-top: 0;
   border: none;
 }
-.tab-content,
-pre[class*="language-"] {
+.tab-content > pre[class*="language-"] {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+.object-inspector > pre[class*="language-"] {
+  font-size: 10px;
+  padding: 3px 6px;
 }
 
 #toast-container {

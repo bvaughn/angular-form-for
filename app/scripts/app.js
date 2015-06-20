@@ -22,10 +22,18 @@ angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'for
       controller: 'ManualFormMarkupDemoController'
     });
 
-    $stateProvider.state('app.dynamicForm', {
-      url: '/demo/dynamic-form',
-      templateUrl: 'app/views/dynamic-dropdowns.html',
-      controller: 'DynamicDropdownsDemoController'
+    $stateProvider.state('app.selectField', {
+      url: '/demo/select-field',
+      templateUrl: 'app/views/select-field.html',
+      controller: 'SelectFieldDemoController',
+      controllerAs: 'ctrl'
+    });
+
+    $stateProvider.state('app.typeAhead', {
+      url: '/demo/type-ahead',
+      templateUrl: 'app/views/type-ahead.html',
+      controller: 'TypeAheadDemoController',
+      controllerAs: 'ctrl'
     });
 
     $stateProvider.state('app.dynamicIcons', {

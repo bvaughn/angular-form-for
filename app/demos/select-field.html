@@ -1,0 +1,19 @@
+<form form-for="ctrl.formData">
+  <select-field label="Field with pre-selected value"
+                attribute="preselectedLocale"
+                options="ctrl.localeOptions"
+                allow-blank>
+  </select-field>
+
+  <select-field label="Field with no pre-selected"
+                attribute="unspecifiedLocale"
+                options="ctrl.localeOptions"
+                prevent-default-option>
+  </select-field>
+
+  <select-field label="Field with no options"
+                attribute="unselectableOption">
+  </select-field>
+</form>
+
+<form-data-inspector form-data="ctrl.formData"></form-data-inspector>
