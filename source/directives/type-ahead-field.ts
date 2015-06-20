@@ -5,7 +5,7 @@ module formFor {
   /**
    * SelectField $scope.
    */
-  interface SelectFieldScope extends ng.IScope {
+  interface TypeAheadFieldScope extends ng.IScope {
 
     /**
      * Name of the attribute within the parent form-for directive's model object.
@@ -13,6 +13,16 @@ module formFor {
      * Dot notation (ex "address.street") is supported.
      */
     attribute:string;
+
+    /**
+     * Views must call this callback to notify of the <select> menu having been closed.
+     */
+    close:Function;
+
+    /**
+     * Debounce duration (in ms) before filter text is applied to options.
+     */
+    debounce?:number;
 
     /**
      * Disable input element.
@@ -32,6 +42,12 @@ module formFor {
      * Visible options, shown after filtering.
      */
     filteredOptions:Array<any>;
+
+    /**
+     * Optional function to be invoked when the filter text has changed.
+     * Use this function to implement server-side filtering.
+     */
+    filterTextChanged?:(data:{[text:string]:string}) => void;
 
     /**
      * Callback to apply filtered text.
@@ -67,7 +83,7 @@ module formFor {
     labelAttribute?:string;
 
     /**
-     * Shared between formFor and SelectField directives.
+     * Shared between formFor and TypeAheadField directives.
      */
     model:BindableFieldWrapper;
 
@@ -107,16 +123,6 @@ module formFor {
      * Used to share data between main select-field template and ngIncluded templates.
      */
     scopeBuster:any;
-
-    /**
-     * Currently-selected option.
-     */
-    selectedOption:any;
-
-    /**
-     * Visible label for selected option.
-     */
-    selectedOptionLabel:string;
 
     /**
      * Selects the specified option.
@@ -184,8 +190,10 @@ module formFor {
 
     scope:any = {
       attribute: '@',
+      debounce: '@?',
       disable: '=',
       filterDebounce: '@?',
+      filterTextChanged: '&?',
       help: '@?',
       options: '='
     };
@@ -202,7 +210,7 @@ module formFor {
     }
 
     /* @ngInject */
-    link($scope:SelectFieldScope,
+    link($scope:TypeAheadFieldScope,
          $element:ng.IAugmentedJQuery,
          $attributes:ng.IAttributes,
          formForController:FormForController):void {
@@ -225,6 +233,10 @@ module formFor {
       fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
 
       var filterText:ng.IAugmentedJQuery;
+
+      /*****************************************************************************************
+       * The following code pertains to opening and closing the filter.
+       *****************************************************************************************/
 
       // Helper method for setting focus on an item after a delay
       var setDelayedFilterTextFocus:Function = () => {
@@ -269,10 +281,10 @@ module formFor {
 
         $scope.filteredOptions.splice(0);
 
-        if (!$scope.scopeBuster.filter) {
+        if (!$scope.filter) {
           angular.copy(options, $scope.filteredOptions);
         } else {
-          var filter:string = sanitize($scope.scopeBuster.filter);
+          var filter:string = sanitize($scope.filter);
 
           angular.forEach(options, (option) => {
             var index:number = sanitize(option[$scope.labelAttribute]).indexOf(filter);
@@ -282,68 +294,14 @@ module formFor {
             }
           });
         }
-
-        if (!$scope.selectedOption && !$scope.multiple) {
-          $scope.filteredOptions.unshift($scope.placeholderOption);
-        } else if ($scope.allowBlank) {
-          $scope.filteredOptions.unshift($scope.emptyOption);
-        }
       };
 
-      $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
+      $scope.$watch('filter', calculateFilteredOptions);
       $scope.$watch('options.length', calculateFilteredOptions);
-
-      /*****************************************************************************************
-       * The following code manages setting the correct default value based on bindable model.
-       *****************************************************************************************/
-
-      var updateDefaultOption:(value?:any) => any = () => {
-        var selected:any = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
-        var numOptions:number = $scope.options && $scope.options.length;
-
-        // Default select the first item in the list
-        // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
-        if (!$scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
-          $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
-        }
-
-        // Certain falsy values may indicate a non-selection.
-        // In this case, the placeholder (empty) option needs to match the falsy selected value,
-        // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
-        if ($scope.model.bindable === null ||
-          $scope.model.bindable === undefined ||
-          $scope.model.bindable === '') {
-          $scope.placeholderOption[$scope.valueAttribute] = $scope.model.bindable;
-        }
-      };
-
-      $scope.$watch('model.bindable', updateDefaultOption);
-      $scope.$watch('options.length', updateDefaultOption);
 
       /*****************************************************************************************
        * The following code deals with toggling/collapsing the drop-down and selecting values.
        *****************************************************************************************/
-
-      $scope.$watch('model.bindable', () => {
-        var matchingOption:any = null;
-
-        angular.forEach($scope.options,
-          (option) => {
-            var optionValue:any = option[$scope.valueAttribute];
-
-            if (optionValue === $scope.model.bindable) {
-              matchingOption = option;
-            }
-          });
-
-        if (matchingOption) {
-          $scope.selectedOption = matchingOption;
-          $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
-        }
-
-        // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-        $scope.scopeBuster.filter = $scope.selectedOptionLabel;
-      });
 
       var documentClick = (event) => {
         // See filterTextClick() for why we check this property.
@@ -401,6 +359,19 @@ module formFor {
         $scope.model.bindable = option && option[$scope.valueAttribute];
       };
 
+      var syncFilterText = function() {
+        if ($scope.model.bindable && $scope.options) {
+          $scope.options.forEach((option:any) => {
+            if ($scope.model.bindable === option[$scope.valueAttribute]) {
+              $scope.filter = option[$scope.labelAttribute];
+            }
+          });
+        }
+      };
+
+      $scope.$watch('model.bindable', syncFilterText);
+      $scope.$watch('options.length', syncFilterText);
+
       // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
       $scope.keyDown = (event:KeyboardEvent) => {
         switch (event.keyCode) {
@@ -450,6 +421,12 @@ module formFor {
           setDelayedFilterTextFocus();
         }
       });
+
+      if ($attributes.hasOwnProperty('filterTextChanged')) {
+        $scope.$watch('filter', (text) => {
+          $scope.filterTextChanged({text: text});
+        });
+      }
     }
   }
 

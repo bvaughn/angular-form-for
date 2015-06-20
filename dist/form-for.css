@@ -499,3 +499,7 @@ text-field {
   border-right-color: #ebf6ff;
   color: #252726;
 }
+
+type-ahead-field {
+  display: block;
+}

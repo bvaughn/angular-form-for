@@ -16,13 +16,14 @@
           type="search"
           tabindex="{{tabIndex}}"
           placeholder="{{placeholder}}"
+          form-for-debounce="{{debounce}}"
           ng-disabled="disable || model.disabled"
-          ng-model="scopeBuster.filter"
+          ng-model="filter"
           ng-click="filterTextClick($event)"
           ng-focus="open()"
           ng-keydown="keyDown($event)">
 
-  <ul>
+  <ul ng-if="options.length">
     <li ng-repeat="option in filteredOptions"
         ng-class="{ 'form-for-typeahead-list-item-active': option === selectedOption,
                     'form-for-typeahead-list-item-hover':  $index === mouseOverIndex}"

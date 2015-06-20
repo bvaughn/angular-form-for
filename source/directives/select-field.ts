@@ -240,7 +240,6 @@ module formFor {
       }
 
       $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
-      $scope.enableFiltering = $attributes.hasOwnProperty('enableFiltering');
       $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
 
       // Read from $attributes to avoid getting any interference from $scope.
@@ -339,15 +338,6 @@ module formFor {
         $scope.close();
       };
 
-      $scope.filterTextClick = (event) => {
-        // We can't stop the event from propagating or we might prevent other inputs from closing on blur.
-        // But we can't let it proceed as normal or it may result in the $document click handler closing a newly-opened input.
-        // Instead we tag it for this particular instance of <select-field> to ignore.
-        if ($scope.isOpen) {
-          event.ignoreFor = $scope.model.uid;
-        }
-      };
-
       var pendingTimeoutId:ng.IPromise<any>;
 
       $scope.$watch('isOpen', () => {
@@ -373,13 +363,9 @@ module formFor {
        * The following code responds to keyboard events when the drop-down is visible
        *****************************************************************************************/
 
-      $scope.setFilterFocus = () => {
-        setDelayedFilterTextFocus();
-      };
-
       $scope.mouseOver = (index:number) => {
         $scope.mouseOverIndex = index;
-        $scope.mouseOverOption = index >= 0 ? $scope.filteredOptions[index] : null;
+        $scope.mouseOverOption = index >= 0 ? $scope.options[index] : null;
       };
 
       $scope.selectOption = (option:any) => {
@@ -404,14 +390,14 @@ module formFor {
             break;
           case 38: // Up arrow
             if ($scope.isOpen) {
-              $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.filteredOptions.length - 1 );
+              $scope.mouseOver( $scope.mouseOverIndex > 0 ? $scope.mouseOverIndex - 1 : $scope.options.length - 1 );
             } else {
               $scope.open();
             }
             break;
           case 40: // Down arrow
             if ($scope.isOpen) {
-              $scope.mouseOver( $scope.mouseOverIndex < $scope.filteredOptions.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
+              $scope.mouseOver( $scope.mouseOverIndex < $scope.options.length - 1 ? $scope.mouseOverIndex + 1 : 0 );
             } else {
               $scope.open();
             }

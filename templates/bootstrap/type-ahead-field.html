@@ -23,13 +23,14 @@
             type="text"
             tabindex="{{tabIndex}}"
             placeholder="{{placeholder}}"
+            form-for-debounce="{{debounce}}"
             ng-disabled="disable || model.disabled"
-            ng-model="scopeBuster.filter"
+            ng-model="filter"
             ng-click="filterTextClick($event)"
             ng-focus="open()"
             ng-keydown="keyDown($event)">
 
-    <ul class="dropdown-menu" ng-class="{show: isOpen}">
+    <ul ng-if="options.length" class="dropdown-menu" ng-class="{show: isOpen}">
       <li ng-repeat="option in filteredOptions"
           ng-class="{active: option === selectedOption || $index === mouseOverIndex}">
 
