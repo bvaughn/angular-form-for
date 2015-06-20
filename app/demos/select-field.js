@@ -1,8 +1,8 @@
 angular.module('formForDocumentation').controller('SelectFieldDemoController',
-  function() {
+  function($timeout) {
     this.formData = {
-      preselectedLocale: 'es',
-      unspecifiedLocale: undefined
+      preselectedLocale: 'en',
+      asynchronousLocale: 'en'
     };
 
     this.localeOptions = [
@@ -29,4 +29,10 @@ angular.module('formForDocumentation').controller('SelectFieldDemoController',
       {value: 'uk', label: 'Ukrainian'},
       {value: 'vi', label: 'Vietnamese'}
     ];
+
+    $timeout(function() {
+      this.asynchronousLocaleOptions = [];
+
+      angular.copy(this.localeOptions, this.asynchronousLocaleOptions);
+    }.bind(this), 1000);
   });

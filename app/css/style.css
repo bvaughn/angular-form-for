@@ -400,3 +400,10 @@ md-radio-button:focus {
 ul li {
   margin-top: 0;
 }
+
+.field-options-list .fa-check-circle {
+  color: #3A6;
+}
+.field-options-list .fa-times-circle {
+  color: #C44;
+}

@@ -1,14 +1,31 @@
 <form form-for="ctrl.formData">
   <select-field label="Field with pre-selected value"
                 attribute="preselectedLocale"
-                options="ctrl.localeOptions"
-                allow-blank>
+                options="ctrl.localeOptions">
   </select-field>
 
-  <select-field label="Field with no pre-selected"
-                attribute="unspecifiedLocale"
+  <select-field label="Required field with default selection"
+                attribute="requiredDefaultLocale"
+                options="ctrl.localeOptions">
+  </select-field>
+
+  <select-field label="Required field with no default selection"
+                attribute="requiredUnspecifiedLocale"
                 options="ctrl.localeOptions"
                 prevent-default-option>
+  </select-field>
+
+  <select-field label="Optional field with custom placeholder"
+                attribute="optionalWithPlaceholderLocale"
+                options="ctrl.localeOptions"
+                placeholder="This is an optional field"
+                allow-blank
+                prevent-default-option>
+  </select-field>
+
+  <select-field label="Asynchronously loaded options"
+                attribute="asynchronousLocale"
+                options="ctrl.asynchronousLocaleOptions">
   </select-field>
 
   <select-field label="Field with no options"

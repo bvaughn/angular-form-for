@@ -578,10 +578,10 @@ angular.module('formForDocumentation').service('UserSignUp', ["$q", "$timeout", 
 }]);
 
 angular.module('formForDocumentation').controller('SelectFieldDemoController',
-  function() {
+  ["$timeout", function($timeout) {
     this.formData = {
-      preselectedLocale: 'es',
-      unspecifiedLocale: undefined
+      preselectedLocale: 'en',
+      asynchronousLocale: 'en'
     };
 
     this.localeOptions = [
@@ -608,7 +608,13 @@ angular.module('formForDocumentation').controller('SelectFieldDemoController',
       {value: 'uk', label: 'Ukrainian'},
       {value: 'vi', label: 'Vietnamese'}
     ];
-  });
+
+    $timeout(function() {
+      this.asynchronousLocaleOptions = [];
+
+      angular.copy(this.localeOptions, this.asynchronousLocaleOptions);
+    }.bind(this), 1000);
+  }]);
 
 angular.module('formForDocumentation').controller('TypeAheadDemoController',
   ["$timeout", function($timeout) {
