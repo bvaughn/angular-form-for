@@ -22,6 +22,12 @@ module formFor {
     attribute:string;
 
     /**
+     * Set of options the directive template should bind to.
+     * This set contains all of the "options" as well as an empty/placeholder option under certain conditions.
+     */
+    bindableOptions:Array<Object>;
+
+    /**
      * Views must call this callback to notify of the <select> menu having been closed.
      */
     close:Function;
@@ -108,11 +114,6 @@ module formFor {
      * The text "Select" will be displayed if no placeholder is provided.
      */
     placeholder?:string;
-
-    /**
-     * Placeholder option shown before/unless a real option is selected.
-     */
-    placeholderOption:any;
 
     /**
      * Optional attribute to override default selection of the first list option.
@@ -269,26 +270,27 @@ module formFor {
         });
       };
 
-      $scope.emptyOption = {};
-      $scope.emptyOption[$scope.labelAttribute] = '';
-      $scope.emptyOption[$scope.valueAttribute] = undefined;
+      $scope.bindableOptions = [];
 
-      $scope.placeholderOption = {};
-      $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
-      $scope.placeholderOption[$scope.valueAttribute] = undefined;
+      $scope.emptyOption = {};
+      $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
+      $scope.emptyOption[$scope.valueAttribute] = undefined;
 
       /*****************************************************************************************
        * The following code manages setting the correct default value based on bindable model.
        *****************************************************************************************/
 
+      $scope.selectOption = (option:any) => {
+        $scope.model.bindable = option && option[$scope.valueAttribute];
+      };
+
       var updateDefaultOption:(value?:any) => any = () => {
-        var selected:any = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
         var numOptions:number = $scope.options && $scope.options.length;
 
         // Default select the first item in the list
         // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
         if (!$scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
-          $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+          $scope.selectOption($scope.options[0]);
         }
 
         // Certain falsy values may indicate a non-selection.
@@ -297,7 +299,20 @@ module formFor {
         if ($scope.model.bindable === null ||
             $scope.model.bindable === undefined ||
             $scope.model.bindable === '') {
-          $scope.placeholderOption[$scope.valueAttribute] = $scope.model.bindable;
+          $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
+        }
+
+        $scope.bindableOptions = [];
+
+        angular.copy($scope.options, $scope.bindableOptions);
+
+        if (!$scope.model.bindable || $scope.allowBlank) {
+          $scope.bindableOptions.unshift($scope.emptyOption);
+        }
+
+        // Once a value has been selected, clear the placeholder prompt.
+        if ($scope.model.bindable) {
+          $scope.emptyOption[$scope.labelAttribute] = '';
         }
       };
 
@@ -324,17 +339,9 @@ module formFor {
           $scope.selectedOption = matchingOption;
           $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
         }
-
-        // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-        $scope.scopeBuster.filter = $scope.selectedOptionLabel;
       });
 
       var documentClick = (event) => {
-        // See filterTextClick() for why we check this property.
-        if (event.ignoreFor === $scope.model.uid) {
-          return;
-        }
-
         $scope.close();
       };
 
@@ -366,10 +373,6 @@ module formFor {
       $scope.mouseOver = (index:number) => {
         $scope.mouseOverIndex = index;
         $scope.mouseOverOption = index >= 0 ? $scope.options[index] : null;
-      };
-
-      $scope.selectOption = (option:any) => {
-        $scope.model.bindable = option && option[$scope.valueAttribute];
       };
 
       // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.

@@ -11,7 +11,7 @@
                placeholder="{{model.bindable ? '' : placeholder}}"
                md-autoselect="!preventDefaultOption">
 
-      <md-option ng-repeat="option in options"
+      <md-option ng-repeat="option in bindableOptions"
                  ng-value="option[valueAttribute]">
         {{option[labelAttribute]}}
       </md-option>

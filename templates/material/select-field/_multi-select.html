@@ -12,7 +12,7 @@
                md-autoselect="!preventDefaultOption"
                multiple>
 
-      <md-option ng-repeat="option in options"
+      <md-option ng-repeat="option in bindableOptions"
                  ng-value="option[valueAttribute]">
         {{option[labelAttribute]}}
       </md-option>

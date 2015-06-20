@@ -1635,28 +1635,37 @@ var formFor;
                     $scope.isOpen = true;
                 });
             };
+            $scope.bindableOptions = [];
             $scope.emptyOption = {};
-            $scope.emptyOption[$scope.labelAttribute] = '';
+            $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
             $scope.emptyOption[$scope.valueAttribute] = undefined;
-            $scope.placeholderOption = {};
-            $scope.placeholderOption[$scope.labelAttribute] = $scope.placeholder;
-            $scope.placeholderOption[$scope.valueAttribute] = undefined;
             /*****************************************************************************************
              * The following code manages setting the correct default value based on bindable model.
              *****************************************************************************************/
+            $scope.selectOption = function (option) {
+                $scope.model.bindable = option && option[$scope.valueAttribute];
+            };
             var updateDefaultOption = function () {
-                var selected = $scope.selectedOption && $scope.selectedOption[$scope.valueAttribute];
                 var numOptions = $scope.options && $scope.options.length;
                 // Default select the first item in the list
                 // Do not do this if a blank option is allowed OR if the user has explicitly disabled this function
                 if (!$scope.model.bindable && !$scope.allowBlank && !$scope.preventDefaultOption && numOptions) {
-                    $scope.model.bindable = $scope.options[0][$scope.valueAttribute];
+                    $scope.selectOption($scope.options[0]);
                 }
                 // Certain falsy values may indicate a non-selection.
                 // In this case, the placeholder (empty) option needs to match the falsy selected value,
                 // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
                 if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
-                    $scope.placeholderOption[$scope.valueAttribute] = $scope.model.bindable;
+                    $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
+                }
+                $scope.bindableOptions = [];
+                angular.copy($scope.options, $scope.bindableOptions);
+                if (!$scope.model.bindable || $scope.allowBlank) {
+                    $scope.bindableOptions.unshift($scope.emptyOption);
+                }
+                // Once a value has been selected, clear the placeholder prompt.
+                if ($scope.model.bindable) {
+                    $scope.emptyOption[$scope.labelAttribute] = '';
                 }
             };
             $scope.$watch('model.bindable', updateDefaultOption);
@@ -1676,14 +1685,8 @@ var formFor;
                     $scope.selectedOption = matchingOption;
                     $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
                 }
-                // Make sure our filtered text reflects the currently selected label (important for Bootstrap styles).
-                $scope.scopeBuster.filter = $scope.selectedOptionLabel;
             });
             var documentClick = function (event) {
-                // See filterTextClick() for why we check this property.
-                if (event.ignoreFor === $scope.model.uid) {
-                    return;
-                }
                 $scope.close();
             };
             var pendingTimeoutId;
@@ -1710,9 +1713,6 @@ var formFor;
             $scope.mouseOver = function (index) {
                 $scope.mouseOverIndex = index;
                 $scope.mouseOverOption = index >= 0 ? $scope.options[index] : null;
-            };
-            $scope.selectOption = function (option) {
-                $scope.model.bindable = option && option[$scope.valueAttribute];
             };
             // Listen to key down, not up, because ENTER key sometimes gets converted into a click event.
             $scope.keyDown = function (event) {
@@ -2213,6 +2213,42 @@ var formFor;
 })(formFor || (formFor = {}));
 var formFor;
 (function (formFor) {
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    /**
+     * Wrapper object for a form-field attribute that exposes field-state to field directives.
+     *
+     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
+     */
+    var BindableFieldWrapper = (function () {
+        function BindableFieldWrapper() {
+        }
+        return BindableFieldWrapper;
+    })();
+    formFor.BindableFieldWrapper = BindableFieldWrapper;
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
     /**
      * Input types available for auto-created forms; see {@link FieldView}.
      */
@@ -2267,42 +2303,6 @@ var formFor;
         ValidationFieldType[ValidationFieldType["POSITIVE"] = "positive"] = "POSITIVE";
     })(formFor.ValidationFieldType || (formFor.ValidationFieldType = {}));
     var ValidationFieldType = formFor.ValidationFieldType;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    /**
-     * Wrapper object for a form-field attribute that exposes field-state to field directives.
-     *
-     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
-     */
-    var BindableFieldWrapper = (function () {
-        function BindableFieldWrapper() {
-        }
-        return BindableFieldWrapper;
-    })();
-    formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
     ;
 })(formFor || (formFor = {}));
 ;
