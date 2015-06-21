@@ -1,28 +1,24 @@
 <classname name="selectField" source="directives/select-field.ts"></classname>
 
 <p class="lead">
-  Renders a <code>&lt;select&gt;</code> menu along with an input label.
-  Well suited for enumerations.
+  Renders a text <code>&lt;input&gt;</code> with search-ahead capabilities.
+  Well suited for enumerations and asynchronous data.
 </p>
 
-<p>
-  Select field can be configured to allow for a blank/empty selection by way of an <code>allow-blank</code> attribute.
-</p>
-
-<tabbed-demo html-source="app/demos/documentation/select-field.html"></tabbed-demo>
+<tabbed-demo html-source="app/demos/documentation/type-ahead-field.html"></tabbed-demo>
 
 <div class="bs-docs-constructor">
   <signature heading="Attributes" params="[
     {
-      name: 'allowBlank',
-      optional: true,
-      type: 'attribute',
-      description: 'The presence of this attribute indicates that an empty/blank selection should be allowed.'
-    },
-    {
       name: 'attribute',
       type: 'String',
       description: 'Name of the attribute within the parent form-for directive\'s model object. This attributes specifies the data-binding target for the input. Dot notation (e.g. <em>address.street</em>) is supported.'
+    },
+    {
+      name: 'debounce',
+      optional: true,
+      type: 'Integer',
+      description: 'Debounce duration (in ms) before input text is applied to model and evaluated. To disable debounce (update only on blur) specify a value of false. This value\'s default is determined by FormForConfiguration.'
     },
     {
       name: 'disable',
@@ -49,12 +45,6 @@
       description: 'Optional override for label key in options array. Defaults to \'label\'.'
     },
     {
-      name: 'multiple',
-      optional: true,
-      type: 'Boolean',
-      description: 'Drop-down list should allow multiple selections.'
-    },
-    {
       name: 'options',
       type: 'Array',
       description: 'Set of options, each containing a label and value key. The label is displayed to the user and the value is assigned to the corresponding model attribute on selection.'
@@ -64,11 +54,6 @@
       optional: true,
       type: 'String',
       description: 'Optional placeholder text to display if no value has been selected. The text \'Select\' will be displayed if no placeholder is provided.'
-    },
-    {
-      name: 'preventDefaultOption',
-      type: 'attribute',
-      description: 'Optional attribute to override default selection of the first list option. Without this attribute, lists with allow-blank will default select the first option in the options array.'
     },
     {
       name: 'tabIndex',
@@ -88,5 +73,15 @@
       type: 'String',
       description: 'Optional override for value key in options array. Defaults to \'value\'.'
     },
+  ]"></signature>
+</div>
+
+<div class="bs-docs-constructor">
+  <signature heading="Events" params="[
+    {
+      name: 'filterTextChanged',
+      type: 'Function',
+      description: 'Invoked when the filter text has changed. Use this function to implement server-side filtering.'
+    }
   ]"></signature>
 </div>

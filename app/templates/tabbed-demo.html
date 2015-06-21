@@ -8,7 +8,7 @@
     </tab-heading>
     <div class="tab-content well" ng-include="htmlSource"></div>
   </tab>
-  <tab>
+  <tab ng-if="formData">
     <tab-heading>Form Data <i class="fa fa-file-text-o"></i></tab-heading>
     <div class="tab-content">
       <form-data-inspector form-data="formData"></form-data-inspector>
