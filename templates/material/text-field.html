@@ -10,10 +10,10 @@
 
     <!-- <input> and <textarea> rendered as partials to allow for easier overrides -->
     <span ng-if="!multiline"
-          ng-include form-for-include-replace
+          ng-include
           src="'form-for/templates/text-field/_input.html'"></span>
     <span ng-if="multiline"
-          ng-include form-for-include-replace
+          ng-include
           src="'form-for/templates/text-field/_textarea.html'"></span>
 
     <field-error ng-messages

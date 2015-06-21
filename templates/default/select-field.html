@@ -10,10 +10,10 @@
   <field-error uid="{{model.uid}}-error" error="model.error"></field-error>
 
   <span ng-if="multiple"
-        ng-include form-for-include-replace
+        ng-include
         src="'form-for/templates/select-field/_multi-select.html'"></span>
 
   <span ng-if="!multiple"
-        ng-include form-for-include-replace
+        ng-include
         src="'form-for/templates/select-field/_select.html'"></span>
 </div>
