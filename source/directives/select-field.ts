@@ -302,7 +302,7 @@ module formFor {
           $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
         }
 
-        $scope.bindableOptions = [];
+        $scope.bindableOptions.splice(0);
 
         angular.copy($scope.options, $scope.bindableOptions);
 

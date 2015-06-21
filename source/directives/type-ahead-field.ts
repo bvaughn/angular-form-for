@@ -124,6 +124,8 @@ module formFor {
      */
     scopeBuster:any;
 
+    searchTextChange?:(text:string) => void;
+
     /**
      * Selects the specified option.
      */
@@ -227,16 +229,18 @@ module formFor {
       $scope.placeholder = $attributes.hasOwnProperty('placeholder') ? $attributes['placeholder'] : 'Select';
       $scope.tabIndex = $attributes['tabIndex'] || 0;
 
-      $scope.scopeBuster = {};
+      $scope.scopeBuster = {
+        filter: ''
+      };
 
       fieldHelper_.manageLabel($scope, $attributes, false);
       fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
 
-      var filterText:ng.IAugmentedJQuery;
-
       /*****************************************************************************************
        * The following code pertains to opening and closing the filter.
        *****************************************************************************************/
+
+      var filterText:ng.IAugmentedJQuery;
 
       // Helper method for setting focus on an item after a delay
       var setDelayedFilterTextFocus:Function = () => {
@@ -281,10 +285,10 @@ module formFor {
 
         $scope.filteredOptions.splice(0);
 
-        if (!$scope.filter) {
+        if (!$scope.scopeBuster.filter) {
           angular.copy(options, $scope.filteredOptions);
         } else {
-          var filter:string = sanitize($scope.filter);
+          var filter:string = sanitize($scope.scopeBuster.filter);
 
           angular.forEach(options, (option) => {
             var index:number = sanitize(option[$scope.labelAttribute]).indexOf(filter);
@@ -296,7 +300,11 @@ module formFor {
         }
       };
 
-      $scope.$watch('filter', calculateFilteredOptions);
+      $scope.searchTextChange = (text:string) => {
+        // No-op required by Angular Material
+      };
+
+      $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
       $scope.$watch('options.length', calculateFilteredOptions);
 
       /*****************************************************************************************
@@ -363,7 +371,7 @@ module formFor {
         if ($scope.model.bindable && $scope.options) {
           $scope.options.forEach((option:any) => {
             if ($scope.model.bindable === option[$scope.valueAttribute]) {
-              $scope.filter = option[$scope.labelAttribute];
+              $scope.scopeBuster.filter = option[$scope.labelAttribute];
             }
           });
         }
@@ -422,8 +430,8 @@ module formFor {
         }
       });
 
-      if ($attributes.hasOwnProperty('filterTextChanged')) {
-        $scope.$watch('filter', (text) => {
+      if ($scope.filterTextChanged instanceof Function) {
+        $scope.$watch('scopeBuster.filter', (text) => {
           $scope.filterTextChanged({text: text});
         });
       }

@@ -1658,7 +1658,7 @@ var formFor;
                 if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
                     $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
                 }
-                $scope.bindableOptions = [];
+                $scope.bindableOptions.splice(0);
                 angular.copy($scope.options, $scope.bindableOptions);
                 if (!$scope.model.bindable || $scope.allowBlank) {
                     $scope.bindableOptions.unshift($scope.emptyOption);
@@ -2034,13 +2034,15 @@ var formFor;
             $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
             $scope.placeholder = $attributes.hasOwnProperty('placeholder') ? $attributes['placeholder'] : 'Select';
             $scope.tabIndex = $attributes['tabIndex'] || 0;
-            $scope.scopeBuster = {};
+            $scope.scopeBuster = {
+                filter: ''
+            };
             fieldHelper_.manageLabel($scope, $attributes, false);
             fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
-            var filterText;
             /*****************************************************************************************
              * The following code pertains to opening and closing the filter.
              *****************************************************************************************/
+            var filterText;
             // Helper method for setting focus on an item after a delay
             var setDelayedFilterTextFocus = function () {
                 if (!filterText) {
@@ -2073,11 +2075,11 @@ var formFor;
             var calculateFilteredOptions = function () {
                 var options = $scope.options || [];
                 $scope.filteredOptions.splice(0);
-                if (!$scope.filter) {
+                if (!$scope.scopeBuster.filter) {
                     angular.copy(options, $scope.filteredOptions);
                 }
                 else {
-                    var filter = sanitize($scope.filter);
+                    var filter = sanitize($scope.scopeBuster.filter);
                     angular.forEach(options, function (option) {
                         var index = sanitize(option[$scope.labelAttribute]).indexOf(filter);
                         if (index >= 0) {
@@ -2086,7 +2088,10 @@ var formFor;
                     });
                 }
             };
-            $scope.$watch('filter', calculateFilteredOptions);
+            $scope.searchTextChange = function (text) {
+                // No-op required by Angular Material
+            };
+            $scope.$watch('scopeBuster.filter', calculateFilteredOptions);
             $scope.$watch('options.length', calculateFilteredOptions);
             /*****************************************************************************************
              * The following code deals with toggling/collapsing the drop-down and selecting values.
@@ -2141,7 +2146,7 @@ var formFor;
                 if ($scope.model.bindable && $scope.options) {
                     $scope.options.forEach(function (option) {
                         if ($scope.model.bindable === option[$scope.valueAttribute]) {
-                            $scope.filter = option[$scope.labelAttribute];
+                            $scope.scopeBuster.filter = option[$scope.labelAttribute];
                         }
                     });
                 }
@@ -2197,8 +2202,8 @@ var formFor;
                     setDelayedFilterTextFocus();
                 }
             });
-            if ($attributes.hasOwnProperty('filterTextChanged')) {
-                $scope.$watch('filter', function (text) {
+            if ($scope.filterTextChanged instanceof Function) {
+                $scope.$watch('scopeBuster.filter', function (text) {
                     $scope.filterTextChanged({ text: text });
                 });
             }
@@ -2211,42 +2216,6 @@ var formFor;
         return new TypeAheadFieldDirective($document, $log, $timeout, FieldHelper);
     }]);
 })(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    /**
-     * Wrapper object for a form-field attribute that exposes field-state to field directives.
-     *
-     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
-     */
-    var BindableFieldWrapper = (function () {
-        function BindableFieldWrapper() {
-        }
-        return BindableFieldWrapper;
-    })();
-    formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
 var formFor;
 (function (formFor) {
     /**
@@ -2303,6 +2272,42 @@ var formFor;
         ValidationFieldType[ValidationFieldType["POSITIVE"] = "positive"] = "POSITIVE";
     })(formFor.ValidationFieldType || (formFor.ValidationFieldType = {}));
     var ValidationFieldType = formFor.ValidationFieldType;
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    /**
+     * Wrapper object for a form-field attribute that exposes field-state to field directives.
+     *
+     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
+     */
+    var BindableFieldWrapper = (function () {
+        function BindableFieldWrapper() {
+        }
+        return BindableFieldWrapper;
+    })();
+    formFor.BindableFieldWrapper = BindableFieldWrapper;
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
     ;
 })(formFor || (formFor = {}));
 ;
