@@ -12,14 +12,14 @@
       md-selected-item="selectedOption"
       md-search-text="scopeBuster.filter"
       md-search-text-change="searchTextChange(scopeBuster.filter)"
-      md-selected-item-change="selectOption(item)"
-      md-items="item in filteredOptions"
-      md-item-text="item.label"
+      md-selected-item-change="selectOption(option)"
+      md-items="option in filteredOptions"
+      md-item-text="option[labelAttribute]"
       placeholder="{{placeholder}}">
 
     <md-item-template>
       <span md-highlight-text="scopeBuster.filter">
-        {{item.label}}
+        {{option[labelAttribute]}}
       </span>
     </md-item-template>
 

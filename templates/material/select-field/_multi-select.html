@@ -12,8 +12,8 @@
              multiple>
 
     <md-option ng-repeat="option in bindableOptions"
-               ng-value="{{option.value}}">
-      {{option.label}}
+               ng-value="option[valueAttribute]">
+      {{option[labelAttribute]}}
     </md-option>
   </md-select>
 </span>
