@@ -1,7 +1,7 @@
 machine:
   node:
     version:
-      0.10.28
+      0.12.4
 test:
   pre:
     - npm start:
@@ -9,4 +9,3 @@ test:
     - sleep 5
   override:
     - npm run unit
-    - npm run protractor
