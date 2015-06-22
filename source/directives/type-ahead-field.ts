@@ -365,6 +365,7 @@ module formFor {
 
       $scope.selectOption = (option:any) => {
         $scope.model.bindable = option && option[$scope.valueAttribute];
+        $scope.scopeBuster.filter = option && option[$scope.labelAttribute];
       };
 
       var syncFilterText = function() {

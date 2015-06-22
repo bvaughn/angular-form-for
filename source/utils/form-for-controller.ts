@@ -190,9 +190,8 @@ module formFor {
       fieldDatum.unwatchers.push(
         $scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable',
           (newValue:any, oldValue:any) => {
-            if (newValue !== oldValue) {
-              setter($scope.formFor, newValue);
-            }
+            // Keep the form data object and our bindable wrapper in-sync
+            setter($scope.formFor, newValue);
           }));
 
       var formDataWatcherInitialized:boolean;

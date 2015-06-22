@@ -1,15 +1,35 @@
-<md-input-container>
-  <span ng-if="multiple"
-        ng-include
-        src="'form-for/templates/select-field/_multi-select.html'">
-  </span>
+<div>
+  <label ng-if="label"
+         ng-bind="label"></label>
 
-  <span ng-if="!multiple"
-        ng-include
-        src="'form-for/templates/select-field/_select.html'">
-  </span>
+  <md-input-container>
+    <md-select ng-if="multiple"
+               ng-model="model.bindable"
+               ng-disabled="disable || model.disabled"
+               placeholder="{{placeholder}}"
+               md-autoselect="!preventDefaultOption"
+               multiple>
 
-  <field-error  error="model.error"
-                uid="{{model.uid}}-error">
-  </field-error>
-</md-input-container>
+      <md-option ng-repeat="option in bindableOptions"
+                 ng-value="option[valueAttribute]">
+        {{option[labelAttribute]}}
+      </md-option>
+    </md-select>
+
+    <md-select ng-if="!multiple"
+               ng-model="model.bindable"
+               ng-disabled="disable || model.disabled"
+               placeholder="{{placeholder}}"
+               md-autoselect="!preventDefaultOption">
+
+      <md-option ng-repeat="option in bindableOptions"
+                 ng-value="option[valueAttribute]">
+        {{option[labelAttribute]}}
+      </md-option>
+    </md-select>
+
+    <field-error  error="model.error"
+                  uid="{{model.uid}}-error">
+    </field-error>
+  </md-input-container>
+</div>

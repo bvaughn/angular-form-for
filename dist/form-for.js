@@ -1046,9 +1046,8 @@ var formFor;
             var setter = getter.assign;
             // Changes made by our field should be synced back to the form-data model.
             fieldDatum.unwatchers.push($scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function (newValue, oldValue) {
-                if (newValue !== oldValue) {
-                    setter($scope.formFor, newValue);
-                }
+                // Keep the form data object and our bindable wrapper in-sync
+                setter($scope.formFor, newValue);
             }));
             var formDataWatcherInitialized;
             // Changes made to the form-data model should likewise be synced to the field's bindable model.
@@ -2113,6 +2112,7 @@ var formFor;
             };
             $scope.selectOption = function (option) {
                 $scope.model.bindable = option && option[$scope.valueAttribute];
+                $scope.scopeBuster.filter = option && option[$scope.labelAttribute];
             };
             var syncFilterText = function () {
                 if ($scope.model.bindable && $scope.options) {
