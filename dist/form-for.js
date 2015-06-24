@@ -1642,8 +1642,13 @@ var formFor;
                     $scope.emptyOption[$scope.labelAttribute] = '';
                 }
             };
-            $scope.$watch('model.bindable', updateDefaultOption);
-            $scope.$watch('options.length', updateDefaultOption);
+            // Allow the current $digest cycle (if we're in one) to complete so that the FormForController has a chance to set
+            // the bindable model attribute to that of the external formData field. This way we won't overwrite the default
+            // value with one of our own.
+            $timeout_(function () {
+                $scope.$watch('model.bindable', updateDefaultOption);
+                $scope.$watch('options.length', updateDefaultOption);
+            });
             /*****************************************************************************************
              * The following code deals with toggling/collapsing the drop-down and selecting values.
              *****************************************************************************************/
