@@ -1,6 +1,11 @@
 field-error {
   display: block;
 }
+field-error .text-danger {
+  font-size: 12px;
+  line-height: 24px;
+  color: #f44336;
+}
 
 md-checkbox {
   display: inline-block !important;
