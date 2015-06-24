@@ -1,4 +1,4 @@
-angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'formFor.materialTemplates', 'ngRoute', 'ui.bootstrap', 'ngMaterial', 'ui.router']).
+angular.module('formForDocumentation', ['oc.lazyLoad', 'flashr', 'formFor', 'formFor.defaultTemplates', 'ngRoute', 'ui.bootstrap', 'ngMaterial', 'ui.router']).
   config(["$logProvider", "$stateProvider", "$urlRouterProvider", function($logProvider, $stateProvider, $urlRouterProvider) {
     $logProvider.debugEnabled(true);
 
@@ -785,7 +785,7 @@ angular.module('formForDocumentation').directive('resetFieldButton', function() 
 });
 
 angular.module('formForDocumentation').value('currentTemplates', {
-  key: 'material'
+  key: 'default'
 });
 
 angular.module('formForDocumentation').directive('templateToggler', ["$ocLazyLoad", "$state", "$stateParams", "currentTemplates", function($ocLazyLoad, $state, $stateParams, currentTemplates) {

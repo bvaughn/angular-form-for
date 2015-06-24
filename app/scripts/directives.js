@@ -110,7 +110,7 @@ angular.module('formForDocumentation').directive('resetFieldButton', function() 
 });
 
 angular.module('formForDocumentation').value('currentTemplates', {
-  key: 'material'
+  key: 'default'
 });
 
 angular.module('formForDocumentation').directive('templateToggler', function($ocLazyLoad, $state, $stateParams, currentTemplates) {
