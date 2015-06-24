@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.0
+Refactored SelectFieldDirective to break out filterable behavior into a new directive, TypeAheadFieldDirective.
+
+A secondary change is included in this release to address some Angular Material issues. Namely, the formForIncludeReplace has been removed. This means that there is now an ext
+ra div in between <text-field> and the inner <input>/<textarea> as well as <select-field> and its inner <select>. Some small CSS adjustements will be required for users who ar
+e customizing formFor CSS.
+
 ## 3.0.7
 Select menus without an initially-selected values more gracefully handle falsy values of null, undefined, and empty-string in order to prevent an additional, empty <option> from being generated
 
