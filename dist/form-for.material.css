@@ -6,3 +6,7 @@ md-checkbox {
   display: inline-block !important;
 }
 
+
+select-field md-select {
+  padding: 0;
+}

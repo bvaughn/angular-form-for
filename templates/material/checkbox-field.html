@@ -1,18 +1,14 @@
-<md-checkbox class="md-primary"
-             aria-label="{{label}}"
-             ng-disabled="disable || model.disabled"
-             ng-model="model.bindable">
+<md-input-container>
+  <md-checkbox class="md-primary"
+               aria-label="{{label}}"
+               ng-disabled="disable || model.disabled"
+               ng-model="model.bindable">
 
-  <field-label  ng-if="label"
-                input-uid="{{model.uid}}"
-                iud="{{model.uid}}-label"
-                label="{{label}}"
-                help="{{help}}"
-                required="{{model.required}}">
-  </field-label>
+    {{label}}
+  </md-checkbox>
 
   <field-error  error="model.error"
                 left-aligned="true"
                 uid="{{model.uid}}-error">
   </field-error>
-</md-checkbox>
+</md-input-container>

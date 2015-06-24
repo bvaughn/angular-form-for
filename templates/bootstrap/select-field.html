@@ -3,7 +3,7 @@
                   'has-error': model.error }">
 
   <field-label  ng-if="label"
-                input-uid="{{enableFiltering ? model.uid + '-filter' : model.uid}}"
+                input-uid="{{model.uid}}"
                 iud="{{model.uid}}-label"
                 label="{{label}}"
                 help="{{help}}"
@@ -14,15 +14,11 @@
                 uid="{{model.uid}}-error">
   </field-error>
 
-  <span ng-if="enableFiltering"
-        ng-include form-for-include-replace
-        src="'form-for/templates/select-field/_filtered-select.html'"></span>
-
-  <span ng-if="!enableFiltering && multiple"
-        ng-include form-for-include-replace
+  <span ng-if="multiple"
+        ng-include
         src="'form-for/templates/select-field/_multi-select.html'"></span>
 
-  <span ng-if="!enableFiltering && !multiple"
-        ng-include form-for-include-replace
+  <span ng-if="!multiple"
+        ng-include
         src="'form-for/templates/select-field/_select.html'"></span>
 </div>

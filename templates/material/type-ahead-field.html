@@ -1,0 +1,34 @@
+<span>
+  <field-label  ng-if="label"
+                input-uid="{{model.uid}}"
+                iud="{{model.uid}}-label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
+
+  <md-autocomplete
+      ng-disabled="disable || model.disabled"
+      md-selected-item="selectedOption"
+      md-search-text="scopeBuster.filter"
+      md-search-text-change="searchTextChange(scopeBuster.filter)"
+      md-selected-item-change="selectOption(option)"
+      md-items="option in filteredOptions"
+      md-item-text="option[labelAttribute]"
+      placeholder="{{placeholder}}">
+
+    <md-item-template>
+      <span md-highlight-text="scopeBuster.filter">
+        {{option[labelAttribute]}}
+      </span>
+    </md-item-template>
+
+    <md-not-found>
+      No matches found for "{{scopeBuster.filter}}".
+    </md-not-found>
+  </md-autocomplete>
+
+  <field-error  error="model.error"
+                uid="{{model.uid}}-error">
+  </field-error>
+</span>
