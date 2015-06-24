@@ -1046,8 +1046,11 @@ var formFor;
             var setter = getter.assign;
             // Changes made by our field should be synced back to the form-data model.
             fieldDatum.unwatchers.push($scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function (newValue, oldValue) {
-                // Keep the form data object and our bindable wrapper in-sync
-                setter($scope.formFor, newValue);
+                // Don't update the value unless it changes; (this prevents us from wiping out the default model value).
+                if (newValue || newValue != oldValue) {
+                    // Keep the form data object and our bindable wrapper in-sync
+                    setter($scope.formFor, newValue);
+                }
             }));
             var formDataWatcherInitialized;
             // Changes made to the form-data model should likewise be synced to the field's bindable model.
