@@ -1,22 +1,32 @@
 <md-input-container>
-    <field-label  ng-if="label"
-                  input-uid="{{model.uid}}"
-                  iud="{{model.uid}}-label"
-                  label="{{label}}"
-                  help="{{help}}"
-                  direction="bottom"
-                  required="{{model.required}}">
-    </field-label>
+  <label ng-if="label"
+         ng-bind="label"></label>
 
-    <!-- <input> and <textarea> rendered as partials to allow for easier overrides -->
-    <span ng-if="!multiline"
-          ng-include form-for-include-replace
-          src="'form-for/templates/text-field/_input.html'"></span>
-    <span ng-if="multiline"
-          ng-include form-for-include-replace
-          src="'form-for/templates/text-field/_textarea.html'"></span>
+  <input  ng-if="!multiline"
+          aria-manager
+          id="{{model.uid}}"
+          name="{{attribute}}"
+          type="{{type}}"
+          tabindex="{{tabIndex}}"
+          ng-model="model.bindable"
+          ng-disabled="disable || model.disabled"
+          ng-click="onFocus()"
+          ng-blur="onBlur()" />
 
-    <field-error ng-messages
-                 uid="{{model.uid}}-error"
-                 error="model.error"></field-error>
+  <textarea ng-if="multiline"
+            aria-manageraria-manager
+            id="{{model.uid}}"
+            name="{{attribute}}"
+            class="form-control"
+            ng-disabled="disable || model.disabled"
+            tabindex="{{tabIndex}}"
+            rows="{{rows}}"
+            ng-model="model.bindable"
+            ng-click="onFocus()"
+            ng-blur="onBlur()">
+  </textarea>
+
+  <field-error ng-messages
+               uid="{{model.uid}}-error"
+               error="model.error"></field-error>
 </md-input-container>

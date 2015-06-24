@@ -1,17 +1,35 @@
-<span>
-    <span ng-if="enableFiltering"
-          ng-include form-for-include-replace
-          src="'form-for/templates/select-field/_filtered-select.html'"></span>
+<div>
+  <label ng-if="label"
+         ng-bind="label"></label>
 
-    <span ng-if="!enableFiltering && multiple"
-          ng-include form-for-include-replace
-          src="'form-for/templates/select-field/_multi-select.html'"></span>
+  <md-input-container>
+    <md-select ng-if="multiple"
+               ng-model="model.bindable"
+               ng-disabled="disable || model.disabled"
+               placeholder="{{placeholder}}"
+               md-autoselect="!preventDefaultOption"
+               multiple>
 
-    <span ng-if="!enableFiltering && !multiple"
-          ng-include form-for-include-replace
-          src="'form-for/templates/select-field/_select.html'"></span>
+      <md-option ng-repeat="option in bindableOptions"
+                 ng-value="option[valueAttribute]">
+        {{option[labelAttribute]}}
+      </md-option>
+    </md-select>
 
-  <field-error  error="model.error"
-                uid="{{model.uid}}-error">
-  </field-error>
-</span>
+    <md-select ng-if="!multiple"
+               ng-model="model.bindable"
+               ng-disabled="disable || model.disabled"
+               placeholder="{{placeholder}}"
+               md-autoselect="!preventDefaultOption">
+
+      <md-option ng-repeat="option in bindableOptions"
+                 ng-value="option[valueAttribute]">
+        {{option[labelAttribute]}}
+      </md-option>
+    </md-select>
+
+    <field-error  error="model.error"
+                  uid="{{model.uid}}-error">
+    </field-error>
+  </md-input-container>
+</div>

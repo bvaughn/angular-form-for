@@ -1,0 +1,48 @@
+<div  class="form-group"
+      ng-class="{ 'disabled': disable || model.disabled,
+                  'has-error': model.error }">
+
+  <field-label  ng-if="label"
+                input-uid="{{model.uid + '-filter'}}"
+                iud="{{model.uid}}-label"
+                label="{{label}}"
+                help="{{help}}"
+                required="{{model.required}}">
+  </field-label>
+
+  <field-error  error="model.error"
+                uid="{{model.uid}}-error">
+  </field-error>
+
+  <!-- Filtered dropdowns use a type-ahead style component -->
+  <div class="input-group">
+    <input  aria-manager
+            id="{{model.uid}}-filter"
+            name="{{attribute}}"
+            class="form-control filter-text-input"
+            type="text"
+            tabindex="{{tabIndex}}"
+            placeholder="{{placeholder}}"
+            form-for-debounce="{{debounce}}"
+            ng-disabled="disable || model.disabled"
+            ng-model="scopeBuster.filter"
+            ng-click="filterTextClick($event)"
+            ng-focus="open()"
+            ng-keydown="keyDown($event)">
+
+    <ul ng-if="options.length" class="dropdown-menu" ng-class="{show: isOpen}">
+      <li ng-repeat="option in filteredOptions"
+          ng-class="{active: option === selectedOption || $index === mouseOverIndex}">
+
+        <a  ng-bind="option[labelAttribute]"
+            ng-click="selectOption(option)"
+            ng-mouseenter="mouseOver($index)">
+        </a>
+      </li>
+    </ul>
+
+    <span class="input-group-addon" ng-click="setFilterFocus()">
+      <i class="caret"></i>
+    </span>
+  </div>
+</div>

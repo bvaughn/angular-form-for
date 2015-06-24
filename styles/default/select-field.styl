@@ -8,7 +8,7 @@ select-field {
 /************************* Select *************************/
 
 .form-for-field {
-  > select {
+  select {
     @extend $form-for-input
 
     background: linear-gradient(top, white, $color-fill-2);
@@ -31,7 +31,7 @@ select-field {
     }
   }
 
-  &.invalid > select {
+  &.invalid select {
     border-color: red;
 
     &:focus {
@@ -65,7 +65,7 @@ select-field {
 /************************* Typeahead *************************/
 
 .form-for-field {
-  > input[type="search"] {
+  input[type="search"] {
     @extend $form-for-input
 
     box-shadow: inset 0 1px 4px rgba(0,0,0, 0.15);
@@ -120,8 +120,8 @@ select-field {
     }
   }
 
-  &.invalid > input[type="search"],
-  > input[type="search"]:invalid {
+  &.invalid input[type="search"],
+  input[type="search"]:invalid {
     border-color: red;
 
     +ul {
