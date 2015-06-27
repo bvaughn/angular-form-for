@@ -9,6 +9,7 @@ module formFor {
   export class FormForConfiguration {
 
     private autoGenerateLabels_:boolean = false;
+    private autoTrimValues_:boolean = false;
     private defaultDebounceDuration_:number = 500;
     private defaultSubmitComplete_:(formData:any) => void = angular.noop;
     private defaultSubmitError_:(error:any) => void = angular.noop;
@@ -32,10 +33,12 @@ module formFor {
 
     // Getters and setters ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    // TODO Add better documentation
-
     public get autoGenerateLabels():boolean {
       return this.autoGenerateLabels_;
+    }
+
+    public get autoTrimValues():boolean {
+      return this.autoTrimValues_;
     }
 
     public get defaultDebounceDuration():number {
@@ -75,6 +78,20 @@ module formFor {
      */
     public enableAutoLabels():void {
       this.autoGenerateLabels_ = true;
+    }
+
+    /**
+     * Disable auto-trim.
+     */
+    public disableAutoTrimValues():void {
+      this.autoTrimValues_ = false;
+    }
+
+    /**
+     * Auto-trim leading and trailing whitespace from values before syncing back to the formData object.
+     */
+    public enableAutoTrimValues():void {
+      this.autoTrimValues_ = true;
     }
 
     /**

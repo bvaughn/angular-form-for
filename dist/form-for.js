@@ -38,6 +38,7 @@ var formFor;
     var FormForConfiguration = (function () {
         function FormForConfiguration() {
             this.autoGenerateLabels_ = false;
+            this.autoTrimValues_ = false;
             this.defaultDebounceDuration_ = 500;
             this.defaultSubmitComplete_ = angular.noop;
             this.defaultSubmitError_ = angular.noop;
@@ -61,9 +62,15 @@ var formFor;
         }
         Object.defineProperty(FormForConfiguration.prototype, "autoGenerateLabels", {
             // Getters and setters ///////////////////////////////////////////////////////////////////////////////////////////////
-            // TODO Add better documentation
             get: function () {
                 return this.autoGenerateLabels_;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FormForConfiguration.prototype, "autoTrimValues", {
+            get: function () {
+                return this.autoTrimValues_;
             },
             enumerable: true,
             configurable: true
@@ -118,6 +125,18 @@ var formFor;
          */
         FormForConfiguration.prototype.enableAutoLabels = function () {
             this.autoGenerateLabels_ = true;
+        };
+        /**
+         * Disable auto-trim.
+         */
+        FormForConfiguration.prototype.disableAutoTrimValues = function () {
+            this.autoTrimValues_ = false;
+        };
+        /**
+         * Auto-trim leading and trailing whitespace from values before syncing back to the formData object.
+         */
+        FormForConfiguration.prototype.enableAutoTrimValues = function () {
+            this.autoTrimValues_ = true;
         };
         /**
          * Returns the appropriate error message for the validation failure type.
@@ -984,8 +1003,9 @@ var formFor;
      * @param $q Injector-supplied $q service
      * @param $scope formFor directive $scope
      * @param modelValidator ModelValidator service
+     * @param formForConfiguration
      */
-    function createFormForController(target, $parse, $q, $scope, modelValidator) {
+    function createFormForController(target, $parse, $q, $scope, modelValidator, formForConfiguration) {
         var nestedObjectHelper = new formFor.NestedObjectHelper($parse);
         var promiseUtils = new formFor.PromiseUtils($q);
         /**
@@ -1048,6 +1068,9 @@ var formFor;
             fieldDatum.unwatchers.push($scope.$watch('fields.' + bindableFieldName + '.bindableWrapper.bindable', function (newValue, oldValue) {
                 // Don't update the value unless it changes; (this prevents us from wiping out the default model value).
                 if (newValue || newValue != oldValue) {
+                    if (formForConfiguration.autoTrimValues && typeof newValue == 'string') {
+                        newValue = newValue.trim();
+                    }
                     // Keep the form data object and our bindable wrapper in-sync
                     setter($scope.formFor, newValue);
                 }
@@ -1290,7 +1313,7 @@ var formFor;
                 $scope.$validationRuleset = $scope.$service.validationRules;
             }
             // Attach FormForController (interface) methods to the directive's controller (this).
-            formFor.createFormForController(this, $parse_, promiseUtils_, $scope, modelValidator_);
+            formFor.createFormForController(this, $parse_, promiseUtils_, $scope, modelValidator_, formForConfiguration_);
             // Expose controller methods to the shared, bindable $scope.controller
             if ($scope.controller) {
                 angular.copy(this, $scope.controller);

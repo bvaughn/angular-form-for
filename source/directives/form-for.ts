@@ -71,7 +71,7 @@ module formFor {
       }
 
       // Attach FormForController (interface) methods to the directive's controller (this).
-      createFormForController(this, $parse_, promiseUtils_, $scope, modelValidator_);
+      createFormForController(this, $parse_, promiseUtils_, $scope, modelValidator_, formForConfiguration_);
 
       // Expose controller methods to the shared, bindable $scope.controller
       if ($scope.controller) {
