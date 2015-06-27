@@ -450,6 +450,16 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
         });
     };
 
+    this.toggleAutoTrim = function() {
+      this.autoTrimIsEnabled = !this.autoTrimIsEnabled;
+
+      if (this.autoTrimIsEnabled) {
+        FormForConfiguration.enableAutoTrimValues(); 
+      } else {
+        FormForConfiguration.disableAutoTrimValues(); 
+      }
+    };
+
     this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
@@ -789,7 +799,7 @@ angular.module('formForDocumentation').value('currentTemplates', {
 });
 
 angular.module('formForDocumentation').directive('templateToggler', ["$ocLazyLoad", "$state", "$stateParams", "currentTemplates", function($ocLazyLoad, $state, $stateParams, currentTemplates) {
-  var baseUrl = 'http://rawgit.com/bvaughn/angular-form-for/4.0.0/dist/';
+  var baseUrl = 'http://rawgit.com/bvaughn/angular-form-for/4.0.1/dist/';
   var map = {};
   map['bootstrap'] = ['formFor.bootstrapTemplates', baseUrl + 'form-for.bootstrap-templates.js'];
   map['default'] = ['formFor.defaultTemplates', baseUrl + 'form-for.default-templates.js'];

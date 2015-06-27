@@ -61,13 +61,13 @@
 <ul class="list-inline">
   <li>
     Is form disabled?
-    <strong>{{formIsDisabled ? 'Yes' : 'No'}}</strong>
+    <strong>{{ctrl.formIsDisabled ? 'Yes' : 'No'}}</strong>
   </li>
   <li>
     <button class="btn"
             ng-class="{'btn-default': !ctrl.formIsDisabled, 'btn-danger': ctrl.formIsDisabled}"
             ng-click="ctrl.formIsDisabled = !ctrl.formIsDisabled">
-      {{formIsDisabled ? 'Enable' : 'Disable'}} form
+      {{ctrl.formIsDisabled ? 'Enable' : 'Disable'}} form
     </button>
   </li>
   <li>
@@ -86,6 +86,13 @@
     <button class="btn btn-default"
             ng-click="ctrl.manuallyTriggerValidations(true)">
       Validate Form (show errors)
+    </button>
+  </li>
+  <li>
+    <button class="btn"
+            ng-class="{'btn-default': !ctrl.autoTrimIsEnabled, 'btn-danger': ctrl.autoTrimIsEnabled}"
+            ng-click="ctrl.toggleAutoTrim()">
+      {{ctrl.autoTrimIsEnabled ? 'Disable' : 'Enable'}} auto-trim
     </button>
   </li>
 </ul>

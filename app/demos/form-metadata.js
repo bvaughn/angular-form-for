@@ -70,6 +70,16 @@ angular.module('formForDocumentation').controller('FormMetadataDemoController',
         });
     };
 
+    this.toggleAutoTrim = function() {
+      this.autoTrimIsEnabled = !this.autoTrimIsEnabled;
+
+      if (this.autoTrimIsEnabled) {
+        FormForConfiguration.enableAutoTrimValues(); 
+      } else {
+        FormForConfiguration.disableAutoTrimValues(); 
+      }
+    };
+
     this.submit = function(data) {
       flashr.now.info('Your form has been submitted');
     };
