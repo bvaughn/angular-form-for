@@ -1935,22 +1935,22 @@ var formFor;
                 $scope.$watch('model.pristine', updateIconBefore);
             }
             $scope.onIconAfterClick = function () {
-                if ($attributes.hasOwnProperty('iconAfterClicked')) {
+                if ($scope.hasOwnProperty('iconAfterClicked')) {
                     $scope.iconAfterClicked();
                 }
             };
             $scope.onIconBeforeClick = function () {
-                if ($attributes.hasOwnProperty('iconBeforeClicked')) {
+                if ($scope.hasOwnProperty('iconBeforeClicked')) {
                     $scope.iconBeforeClicked();
                 }
             };
             $scope.onFocus = function () {
-                if ($attributes.hasOwnProperty('focused')) {
+                if ($scope.hasOwnProperty('focused')) {
                     $scope.focused();
                 }
             };
             $scope.onBlur = function () {
-                if ($attributes.hasOwnProperty('blurred')) {
+                if ($scope.hasOwnProperty('blurred')) {
                     $scope.blurred();
                 }
             };

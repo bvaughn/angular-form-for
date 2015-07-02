@@ -297,22 +297,22 @@ module formFor {
       }
 
       $scope.onIconAfterClick = () => {
-        if ($attributes.hasOwnProperty('iconAfterClicked')) {
+        if ($scope.hasOwnProperty('iconAfterClicked')) {
           $scope.iconAfterClicked();
         }
       };
       $scope.onIconBeforeClick = () => {
-        if ($attributes.hasOwnProperty('iconBeforeClicked')) {
+        if ($scope.hasOwnProperty('iconBeforeClicked')) {
           $scope.iconBeforeClicked();
         }
       };
       $scope.onFocus = () => {
-        if ($attributes.hasOwnProperty('focused')) {
+        if ($scope.hasOwnProperty('focused')) {
           $scope.focused();
         }
       };
       $scope.onBlur = () => {
-        if ($attributes.hasOwnProperty('blurred')) {
+        if ($scope.hasOwnProperty('blurred')) {
           $scope.blurred();
         }
       };
