@@ -8,7 +8,7 @@ In return, they should reciprocate that respect in addressing your issue or asse
 
 ## Using the issue tracker
 
-The issue tracker is the preferred channel for [bug reports](#bugs), [features requests](#features) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
+The issue tracker is the preferred channel for [bug reports](#bugs), [features requests](#features), [submitting pull requests](#pull-requests), and [running tests](#running-tests) but please respect the following restrictions:
 
 * Please **do not** use the issue tracker for personal support requests (use [Gitter](https://gitter.im/bvaughn/angular-form-for)).
 * Please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of others.
@@ -119,3 +119,41 @@ Follow this process if you'd like your work considered for inclusion in the proj
     with a clear title and description.
 
 **IMPORTANT**: By submitting a patch, you agree to allow the project owner to license your work under the same license as that used by this project (MIT).
+
+<a name="running-tests"></a>
+## Running Tests
+
+### Unit Tests
+
+All unit tests must pass before a pull request will be approved. You can run unit tests with Gulp like so:
+
+```bash
+cd <form-for-root>
+gulp test:unit
+```
+
+### Integration Tests
+
+Integration tests are a bit more complicated to run.
+They require web-driver to be running as well as a local HTTP server.
+
+To start web-driver:
+
+```bash
+cd <form-for-root>
+webdriver-manager start
+```
+
+To start the HTTP server:
+
+```bash
+cd <form-for-root>
+http-server -p 8000
+```
+
+Then run the integration tests with Gulp like so:
+
+```bash
+cd <form-for-root>
+gulp test:unit
+```

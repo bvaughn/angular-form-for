@@ -2,7 +2,7 @@
 
 // Interface between tests (below) and the appropriate formFor Radio directive template
 var Facade = function(identifier) {
-  browser.driver.get('http://localhost:8081/examples/radio-field.html?template=' + identifier);
+  browser.driver.get('http://localhost:8000/examples/radio-field.html?template=' + identifier);
   browser.driver.wait(browser.driver.isElementPresent(by.id('form')), 5000);
 
   var fieldName;
