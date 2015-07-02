@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.2
+Resolved a minor CSS issue with Angular Material select fields and their floating labels.
+
+## 4.0.1
+Added auto-trim option (off by default) to FormForConfiguration.
+Refactored handling of non-selected, falsy values in select field directive to work around Angular 1.2.x-1.3.x bug.
+
 ## 4.0.0
 Refactored SelectFieldDirective to break out filterable behavior into a new directive, TypeAheadFieldDirective.
 

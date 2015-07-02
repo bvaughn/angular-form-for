@@ -104,12 +104,14 @@ module formFor {
    * @param $q Injector-supplied $q service
    * @param $scope formFor directive $scope
    * @param modelValidator ModelValidator service
+   * @param formForConfiguration
    */
   export function createFormForController(target:any,
                                           $parse:ng.IParseService,
                                           $q:ng.IQService,
                                           $scope:FormForScope,
-                                          modelValidator:ModelValidator):FormForController {
+                                          modelValidator:ModelValidator,
+                                          formForConfiguration:FormForConfiguration):FormForController {
 
     var nestedObjectHelper = new NestedObjectHelper($parse);
     var promiseUtils = new PromiseUtils($q);
@@ -192,6 +194,10 @@ module formFor {
           (newValue:any, oldValue:any) => {
             // Don't update the value unless it changes; (this prevents us from wiping out the default model value).
             if (newValue || newValue != oldValue) {
+              if (formForConfiguration.autoTrimValues && typeof newValue == 'string') {
+                newValue = newValue.trim();
+              }
+
               // Keep the form data object and our bindable wrapper in-sync
               setter($scope.formFor, newValue);
             }

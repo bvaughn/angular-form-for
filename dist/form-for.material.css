@@ -15,3 +15,6 @@ md-checkbox {
 select-field md-select {
   padding: 0;
 }
+select-field md-input-container label {
+  display: none;
+}

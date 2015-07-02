@@ -127,16 +127,6 @@ module formFor {
     scopeBuster:any;
 
     /**
-     * Currently-selected option.
-     */
-    selectedOption:any;
-
-    /**
-     * Visible label for selected option.
-     */
-    selectedOptionLabel:string;
-
-    /**
      * Selects the specified option.
      */
     selectOption:(option:any) => void;
@@ -296,19 +286,20 @@ module formFor {
         // Certain falsy values may indicate a non-selection.
         // In this case, the placeholder (empty) option needs to match the falsy selected value,
         // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
+        // Angular 1.2.x-1.3.x may generate an empty <option> regardless, unless the non-selection is undefined.
         if ($scope.model.bindable === null ||
             $scope.model.bindable === undefined ||
             $scope.model.bindable === '') {
-          $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
+          $scope.model.bindable = undefined;
         }
 
         $scope.bindableOptions.splice(0);
 
-        angular.copy($scope.options, $scope.bindableOptions);
-
         if (!$scope.model.bindable || $scope.allowBlank) {
-          $scope.bindableOptions.unshift($scope.emptyOption);
+          $scope.bindableOptions.push($scope.emptyOption);
         }
+
+        $scope.bindableOptions.push.apply($scope.bindableOptions, $scope.options);
 
         // Once a value has been selected, clear the placeholder prompt.
         if ($scope.model.bindable) {
@@ -327,24 +318,6 @@ module formFor {
       /*****************************************************************************************
        * The following code deals with toggling/collapsing the drop-down and selecting values.
        *****************************************************************************************/
-
-      $scope.$watch('model.bindable', () => {
-        var matchingOption:any = null;
-
-        angular.forEach($scope.options,
-          (option) => {
-            var optionValue:any = option[$scope.valueAttribute];
-
-            if (optionValue === $scope.model.bindable) {
-              matchingOption = option;
-            }
-          });
-
-        if (matchingOption) {
-          $scope.selectedOption = matchingOption;
-          $scope.selectedOptionLabel = matchingOption[$scope.labelAttribute];
-        }
-      });
 
       var documentClick = (event) => {
         $scope.close();
