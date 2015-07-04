@@ -950,7 +950,7 @@ var formFor;
             var results = {};
             var counter = 0;
             var errored = false;
-            function udpateResult(key, data) {
+            function updateResult(key, data) {
                 if (!results.hasOwnProperty(key)) {
                     results[key] = data;
                     counter--;
@@ -970,10 +970,10 @@ var formFor;
             angular.forEach(promises, function (promise, key) {
                 counter++;
                 promise.then(function (data) {
-                    udpateResult(key, data);
+                    updateResult(key, data);
                 }, function (data) {
                     errored = true;
-                    udpateResult(key, data);
+                    updateResult(key, data);
                 });
             });
             checkForDone(); // Handle empty Array

@@ -64,7 +64,7 @@ module formFor {
       var counter:number = 0;
       var errored:boolean = false;
 
-      function udpateResult(key:string, data:any):void {
+      function updateResult(key:string, data:any):void {
         if (!results.hasOwnProperty(key)) {
           results[key] = data;
 
@@ -89,12 +89,12 @@ module formFor {
 
         promise.then(
           (data:any) => {
-            udpateResult(key, data);
+            updateResult(key, data);
           },
           (data:any) => {
             errored = true;
 
-            udpateResult(key, data);
+            updateResult(key, data);
           });
       });
 
