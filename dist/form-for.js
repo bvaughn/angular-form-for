@@ -2268,11 +2268,6 @@ var formFor;
 ;
 var formFor;
 (function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
     /**
      * Wrapper object for a form-field attribute that exposes field-state to field directives.
      *
@@ -2284,21 +2279,6 @@ var formFor;
         return BindableFieldWrapper;
     })();
     formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
     ;
 })(formFor || (formFor = {}));
 ;
@@ -2792,49 +2772,4 @@ var formFor;
     })();
     formFor.StringUtil = StringUtil;
 })(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
 /// <reference path="../../../definitions/angular.d.ts" />
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
