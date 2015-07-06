@@ -13,6 +13,11 @@
   <span ng-if="!multiline" ng-include src="'form-for/templates/text-field/_input.html'"></span>
   <span ng-if="multiline"  ng-include src="'form-for/templates/text-field/_textarea.html'"></span>
 
-  <i class="form-for-input-icon-left"  ng-class="iconBefore"></i>
-  <i class="form-for-input-icon-right" ng-class="iconAfter"></i>
+  <i class="form-for-input-icon-left"
+     ng-class="iconBefore"
+     ng-click="onIconBeforeClick()"></i>
+
+  <i class="form-for-input-icon-right"
+     ng-class="iconAfter"
+     ng-click="onIconAfterClick()"></i>
 </div>
