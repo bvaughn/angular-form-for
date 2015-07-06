@@ -8,13 +8,14 @@ module formFor {
    */
   export class FormForConfiguration {
 
-    private autoGenerateLabels_:boolean = false;
-    private autoTrimValues_:boolean = false;
-    private defaultDebounceDuration_:number = 500;
-    private defaultSubmitComplete_:(formData:any) => void = angular.noop;
-    private defaultSubmitError_:(error:any) => void = angular.noop;
-    private defaultValidationFailed_:(error:any) => void = angular.noop;
-    private requiredLabel_:string = null;
+    public autoGenerateLabels:boolean = false;
+    public autoTrimValues:boolean = false;
+    public defaultDebounceDuration:number = 500;
+    public defaultSubmitComplete:(formData:any) => void = angular.noop;
+    public defaultSubmitError:(error:any) => void = angular.noop;
+    public defaultValidationFailed:(error:any) => void = angular.noop;
+    public requiredLabel:string = null;
+
     private validationFailedForCustomMessage_:string = "Failed custom validation";
     private validationFailedForEmailTypeMessage_:string = "Invalid email format";
     private validationFailedForIntegerTypeMessage_:string = "Must be an integer";
@@ -31,43 +32,13 @@ module formFor {
     private validationFailedForPositiveTypeMessage_:string = "Must be positive";
     private validationFailedForRequiredMessage_:string = "Required field";
 
-    // Getters and setters ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    public get autoGenerateLabels():boolean {
-      return this.autoGenerateLabels_;
-    }
-
-    public get autoTrimValues():boolean {
-      return this.autoTrimValues_;
-    }
-
-    public get defaultDebounceDuration():number {
-      return this.defaultDebounceDuration_;
-    }
-
-    public get defaultSubmitComplete():(formData:any) => void {
-      return this.defaultSubmitComplete_;
-    }
-
-    public get defaultSubmitError():(error:any) => void {
-      return this.defaultSubmitError_;
-    }
-
-    public get defaultValidationFailed():(error:any) => void {
-      return this.defaultValidationFailed_;
-    }
-
-    public get requiredLabel():string {
-      return this.requiredLabel_;
-    }
-
     // Public methods ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Use this method to disable auto-generated labels for formFor input fields.
      */
     public disableAutoLabels():void {
-      this.autoGenerateLabels_ = false;
+      this.autoGenerateLabels = false;
     }
 
     /**
@@ -77,21 +48,21 @@ module formFor {
      * Their names are generated from their values.
      */
     public enableAutoLabels():void {
-      this.autoGenerateLabels_ = true;
+      this.autoGenerateLabels = true;
     }
 
     /**
      * Disable auto-trim.
      */
     public disableAutoTrimValues():void {
-      this.autoTrimValues_ = false;
+      this.autoTrimValues = false;
     }
 
     /**
      * Auto-trim leading and trailing whitespace from values before syncing back to the formData object.
      */
     public enableAutoTrimValues():void {
-      this.autoTrimValues_ = true;
+      this.autoTrimValues = true;
     }
 
     /**
@@ -139,7 +110,7 @@ module formFor {
      * To disable debounce (update only on blur) pass false.
      */
     public setDefaultDebounceDuration(value:number):void {
-      this.defaultDebounceDuration_ = value;
+      this.defaultDebounceDuration = value;
     }
 
     /**
@@ -150,7 +121,7 @@ module formFor {
      * This function should accept a single parameter, the response data from the form-submit method.
      */
     public setDefaultSubmitComplete(value:(formData:any) => void):void {
-      this.defaultSubmitComplete_ = value;
+      this.defaultSubmitComplete = value;
     }
 
     /**
@@ -161,7 +132,7 @@ module formFor {
      * This function should accept a single parameter, the error returned by the form-submit method.
      */
     public setDefaultSubmitError(value:(error:any) => void):void {
-      this.defaultSubmitError_ = value;
+      this.defaultSubmitError = value;
     }
 
     /**
@@ -171,14 +142,14 @@ module formFor {
      * @param {Function} method Default function invoked when local form validation fails.
      */
     public setDefaultValidationFailed(value:(error:any) => void):void {
-      this.defaultValidationFailed_ = value;
+      this.defaultValidationFailed = value;
     }
 
     /**
      * Sets a default label to be displayed beside each text and select input for required attributes only.
      */
     public setRequiredLabel(value:string):void {
-      this.requiredLabel_ = value;
+      this.requiredLabel = value;
     }
 
     /**
