@@ -45,6 +45,11 @@ module formFor {
      * Optional UID for HTML element containing the label string
      */
     uid?:string;
+
+    /**
+    * Use Glyphicons in the Bootstrap templates rather than Font Awesome
+    */
+    useGlyphicons:boolean;
   }
 
   var $sce_:ng.ISCEService;
@@ -73,7 +78,8 @@ module formFor {
       help: '@?',
       label: '@',
       required: '@?',
-      uid: '@'
+      uid: '@',
+      useGlyphicons: '@'
     };
 
     /* @ngInject */
@@ -85,6 +91,10 @@ module formFor {
     /* @ngInject */
     link($scope:FieldLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
       $scope.attributes = $attributes;
+
+      $scope.$watch('useGlyphicons', function(useGlyphicons) {
+        $scope.useGlyphicons = formForConfiguration_.useGlyphicons;
+      });
 
       $scope.$watch('label', function(value) {
         $scope.bindableLabel = $sce_.trustAsHtml(value);

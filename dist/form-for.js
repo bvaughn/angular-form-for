@@ -44,6 +44,7 @@ var formFor;
             this.defaultSubmitError = angular.noop;
             this.defaultValidationFailed = angular.noop;
             this.requiredLabel = null;
+            this.useGlyphicons = false;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
             this.validationFailedForIntegerTypeMessage_ = "Must be an integer";
@@ -168,6 +169,18 @@ var formFor;
          */
         FormForConfiguration.prototype.setRequiredLabel = function (value) {
             this.requiredLabel = value;
+        };
+        /**
+        * Disable using Bootstrap Glyphicons
+        */
+        FormForConfiguration.prototype.disableGlyphicons = function () {
+            this.useGlyphicons = false;
+        };
+        /**
+        * Enable using Bootstrap Glyphicons
+        */
+        FormForConfiguration.prototype.enableGlyphicons = function () {
+            this.useGlyphicons = true;
         };
         /**
          * Override the default error message for failed custom validations.
@@ -495,7 +508,8 @@ var formFor;
                 help: '@?',
                 label: '@',
                 required: '@?',
-                uid: '@'
+                uid: '@',
+                useGlyphicons: '@'
             };
             $sce_ = $sce;
             formForConfiguration_ = formForConfiguration;
@@ -504,6 +518,9 @@ var formFor;
         /* @ngInject */
         FieldLabelDirective.prototype.link = function ($scope, $element, $attributes) {
             $scope.attributes = $attributes;
+            $scope.$watch('useGlyphicons', function (useGlyphicons) {
+                $scope.useGlyphicons = formForConfiguration_.useGlyphicons;
+            });
             $scope.$watch('label', function (value) {
                 $scope.bindableLabel = $sce_.trustAsHtml(value);
             });

@@ -15,6 +15,7 @@ module formFor {
     public defaultSubmitError:(error:any) => void = angular.noop;
     public defaultValidationFailed:(error:any) => void = angular.noop;
     public requiredLabel:string = null;
+    public useGlyphicons:boolean = false;
 
     private validationFailedForCustomMessage_:string = "Failed custom validation";
     private validationFailedForEmailTypeMessage_:string = "Invalid email format";
@@ -150,6 +151,20 @@ module formFor {
      */
     public setRequiredLabel(value:string):void {
       this.requiredLabel = value;
+    }
+
+    /**
+    * Disable using Bootstrap Glyphicons
+    */
+    public disableGlyphicons():void {
+      this.useGlyphicons = false;
+    }
+
+    /**
+    * Enable using Bootstrap Glyphicons
+    */
+    public enableGlyphicons():void {
+      this.useGlyphicons = true;
     }
 
     /**
