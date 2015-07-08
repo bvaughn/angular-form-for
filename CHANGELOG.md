@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.4
+Adds supports to formFor default template for before/after icon click handlers.
+
+## 4.0.3
+Fixed on-focus/on-blur handling for textField in Angular 1.4.x
+
 ## 4.0.2
 Resolved a minor CSS issue with Angular Material select fields and their floating labels.
 

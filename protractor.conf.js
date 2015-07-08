@@ -14,7 +14,7 @@ var config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   baseUrl: 'http://localhost:8000/examples/',
 
-  framework: 'jasmine',
+  framework: 'jasmine2',
   rootElement: 'body',
 
   jasmineNodeOpts: {

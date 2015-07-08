@@ -133,6 +133,11 @@ gulp.task('uglify', function() {
 var buildHelper = function(sources, directory, outputFile) {
   var typeScriptCompiler = require('gulp-tsc');
   var ngAnnotate = require('gulp-ng-annotate');
+  var replace = require('gulp-replace');
+
+  // TypeScript creates a lot of empty, IIAFs for some reason.
+  // This pattern strips them out.
+  var pattern = "\nvar formFor;\n(function (formFor) {\n    ;\n})(formFor || (formFor = {}));\n;";
 
   return gulp
     .src(sources)
@@ -144,6 +149,7 @@ var buildHelper = function(sources, directory, outputFile) {
       target: 'ES5'
     }))
     .pipe(ngAnnotate())
+    .pipe(replace(pattern, ''))
     .pipe(gulp.dest(directory));
 };
 

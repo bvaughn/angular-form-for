@@ -4,7 +4,7 @@
 
 // Interface between tests (below) and the appropriate formFor Checkbox directive template
 var Facade = function(identifier) {
-  browser.driver.get('http://localhost:8081/examples/checkbox-field.html?template=' + identifier);
+  browser.driver.get('http://localhost:8000/examples/checkbox-field.html?template=' + identifier);
   browser.driver.wait(browser.driver.isElementPresent(by.id('form')), 5000);
 
   var fieldName;
@@ -146,6 +146,8 @@ var Facade = function(identifier) {
       });
 
       it('should show help text on hover', function() {
+        if (template === 'material') return; // Material templates don't have help icons
+
         browser.actions().mouseMove(facade.getHoverable()).perform();
 
         var tooltip = facade.getTooltip();

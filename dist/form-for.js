@@ -37,13 +37,13 @@ var formFor;
      */
     var FormForConfiguration = (function () {
         function FormForConfiguration() {
-            this.autoGenerateLabels_ = false;
-            this.autoTrimValues_ = false;
-            this.defaultDebounceDuration_ = 500;
-            this.defaultSubmitComplete_ = angular.noop;
-            this.defaultSubmitError_ = angular.noop;
-            this.defaultValidationFailed_ = angular.noop;
-            this.requiredLabel_ = null;
+            this.autoGenerateLabels = false;
+            this.autoTrimValues = false;
+            this.defaultDebounceDuration = 500;
+            this.defaultSubmitComplete = angular.noop;
+            this.defaultSubmitError = angular.noop;
+            this.defaultValidationFailed = angular.noop;
+            this.requiredLabel = null;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
             this.validationFailedForIntegerTypeMessage_ = "Must be an integer";
@@ -60,62 +60,12 @@ var formFor;
             this.validationFailedForPositiveTypeMessage_ = "Must be positive";
             this.validationFailedForRequiredMessage_ = "Required field";
         }
-        Object.defineProperty(FormForConfiguration.prototype, "autoGenerateLabels", {
-            // Getters and setters ///////////////////////////////////////////////////////////////////////////////////////////////
-            get: function () {
-                return this.autoGenerateLabels_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "autoTrimValues", {
-            get: function () {
-                return this.autoTrimValues_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultDebounceDuration", {
-            get: function () {
-                return this.defaultDebounceDuration_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultSubmitComplete", {
-            get: function () {
-                return this.defaultSubmitComplete_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultSubmitError", {
-            get: function () {
-                return this.defaultSubmitError_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "defaultValidationFailed", {
-            get: function () {
-                return this.defaultValidationFailed_;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormForConfiguration.prototype, "requiredLabel", {
-            get: function () {
-                return this.requiredLabel_;
-            },
-            enumerable: true,
-            configurable: true
-        });
         // Public methods ////////////////////////////////////////////////////////////////////////////////////////////////////
         /**
          * Use this method to disable auto-generated labels for formFor input fields.
          */
         FormForConfiguration.prototype.disableAutoLabels = function () {
-            this.autoGenerateLabels_ = false;
+            this.autoGenerateLabels = false;
         };
         /**
          * Use this method to enable auto-generated labels for formFor input fields.
@@ -124,19 +74,19 @@ var formFor;
          * Their names are generated from their values.
          */
         FormForConfiguration.prototype.enableAutoLabels = function () {
-            this.autoGenerateLabels_ = true;
+            this.autoGenerateLabels = true;
         };
         /**
          * Disable auto-trim.
          */
         FormForConfiguration.prototype.disableAutoTrimValues = function () {
-            this.autoTrimValues_ = false;
+            this.autoTrimValues = false;
         };
         /**
          * Auto-trim leading and trailing whitespace from values before syncing back to the formData object.
          */
         FormForConfiguration.prototype.enableAutoTrimValues = function () {
-            this.autoTrimValues_ = true;
+            this.autoTrimValues = true;
         };
         /**
          * Returns the appropriate error message for the validation failure type.
@@ -182,7 +132,7 @@ var formFor;
          * To disable debounce (update only on blur) pass false.
          */
         FormForConfiguration.prototype.setDefaultDebounceDuration = function (value) {
-            this.defaultDebounceDuration_ = value;
+            this.defaultDebounceDuration = value;
         };
         /**
          * Sets the default submit-complete behavior for all formFor directives.
@@ -192,7 +142,7 @@ var formFor;
          * This function should accept a single parameter, the response data from the form-submit method.
          */
         FormForConfiguration.prototype.setDefaultSubmitComplete = function (value) {
-            this.defaultSubmitComplete_ = value;
+            this.defaultSubmitComplete = value;
         };
         /**
          * Sets the default submit-error behavior for all formFor directives.
@@ -202,7 +152,7 @@ var formFor;
          * This function should accept a single parameter, the error returned by the form-submit method.
          */
         FormForConfiguration.prototype.setDefaultSubmitError = function (value) {
-            this.defaultSubmitError_ = value;
+            this.defaultSubmitError = value;
         };
         /**
          * Sets the default validation-failed behavior for all formFor directives.
@@ -211,13 +161,13 @@ var formFor;
          * @param {Function} method Default function invoked when local form validation fails.
          */
         FormForConfiguration.prototype.setDefaultValidationFailed = function (value) {
-            this.defaultValidationFailed_ = value;
+            this.defaultValidationFailed = value;
         };
         /**
          * Sets a default label to be displayed beside each text and select input for required attributes only.
          */
         FormForConfiguration.prototype.setRequiredLabel = function (value) {
-            this.requiredLabel_ = value;
+            this.requiredLabel = value;
         };
         /**
          * Override the default error message for failed custom validations.
@@ -951,7 +901,7 @@ var formFor;
             var results = {};
             var counter = 0;
             var errored = false;
-            function udpateResult(key, data) {
+            function updateResult(key, data) {
                 if (!results.hasOwnProperty(key)) {
                     results[key] = data;
                     counter--;
@@ -971,10 +921,10 @@ var formFor;
             angular.forEach(promises, function (promise, key) {
                 counter++;
                 promise.then(function (data) {
-                    udpateResult(key, data);
+                    updateResult(key, data);
                 }, function (data) {
                     errored = true;
-                    udpateResult(key, data);
+                    updateResult(key, data);
                 });
             });
             checkForDone(); // Handle empty Array
@@ -2269,11 +2219,6 @@ var formFor;
 ;
 var formFor;
 (function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
     /**
      * Wrapper object for a form-field attribute that exposes field-state to field directives.
      *
@@ -2285,21 +2230,6 @@ var formFor;
         return BindableFieldWrapper;
     })();
     formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
     ;
 })(formFor || (formFor = {}));
 ;
@@ -2793,49 +2723,4 @@ var formFor;
     })();
     formFor.StringUtil = StringUtil;
 })(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
 /// <reference path="../../../definitions/angular.d.ts" />
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    ;
-})(formFor || (formFor = {}));
-;
