@@ -17,7 +17,7 @@ Refactored handling of non-selected, falsy values in select field directive to w
 Refactored SelectFieldDirective to break out filterable behavior into a new directive, TypeAheadFieldDirective.
 
 A secondary change is included in this release to address some Angular Material issues. Namely, the formForIncludeReplace has been removed. This means that there is now an ext
-ra div in between <text-field> and the inner <input>/<textarea> as well as <select-field> and its inner <select>. Some small CSS adjustements will be required for users who ar
+ra div in between `<text-field>` and the inner `<input>/<textarea>` as well as <select-field> and its inner `<select>`. Some small CSS adjustements will be required for users who ar
 e customizing formFor CSS.
 
 ## 3.0.7
