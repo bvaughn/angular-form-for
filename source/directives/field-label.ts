@@ -24,6 +24,12 @@ module formFor {
     help:string;
 
     /**
+    * Class(es) to be used for the help icon.
+    * By default a Font Awesome help icon will be used.
+    */
+    helpIcon:string;
+
+    /**
      * ID of the associated input field element; used as the :for attribute of the inner <label>.
      */
     inputUid:string;
@@ -45,11 +51,6 @@ module formFor {
      * Optional UID for HTML element containing the label string
      */
     uid?:string;
-
-    /**
-    * Use Glyphicons in the Bootstrap templates rather than Font Awesome
-    */
-    useGlyphicons:boolean;
   }
 
   var $sce_:ng.ISCEService;
@@ -78,8 +79,7 @@ module formFor {
       help: '@?',
       label: '@',
       required: '@?',
-      uid: '@',
-      useGlyphicons: '@'
+      uid: '@'
     };
 
     /* @ngInject */
@@ -92,9 +92,7 @@ module formFor {
     link($scope:FieldLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
       $scope.attributes = $attributes;
 
-      $scope.$watch('useGlyphicons', function(useGlyphicons) {
-        $scope.useGlyphicons = formForConfiguration_.useGlyphicons;
-      });
+      $scope.helpIcon = formForConfiguration_.helpIcon;
 
       $scope.$watch('label', function(value) {
         $scope.bindableLabel = $sce_.trustAsHtml(value);

@@ -14,8 +14,8 @@ module formFor {
     public defaultSubmitComplete:(formData:any) => void = angular.noop;
     public defaultSubmitError:(error:any) => void = angular.noop;
     public defaultValidationFailed:(error:any) => void = angular.noop;
+    public helpIcon:string = "fa fa-question-circle";
     public requiredLabel:string = null;
-    public useGlyphicons:boolean = false;
 
     private validationFailedForCustomMessage_:string = "Failed custom validation";
     private validationFailedForEmailTypeMessage_:string = "Invalid email format";
@@ -147,24 +147,20 @@ module formFor {
     }
 
     /**
+    * Sets the class(es) to be used on the help icon span.
+    * It defaults to Font Awesome but any imported Icon set can be used.
+    * @memberof FormForConfiguration
+    * @param {string} class(es) for the desired icon, multiple classes are space separated
+    */
+    public setHelpIcon(value:string):void {
+      this.helpIcon = value;
+    }
+
+    /**
      * Sets a default label to be displayed beside each text and select input for required attributes only.
      */
     public setRequiredLabel(value:string):void {
       this.requiredLabel = value;
-    }
-
-    /**
-    * Disable using Bootstrap Glyphicons
-    */
-    public disableGlyphicons():void {
-      this.useGlyphicons = false;
-    }
-
-    /**
-    * Enable using Bootstrap Glyphicons
-    */
-    public enableGlyphicons():void {
-      this.useGlyphicons = true;
     }
 
     /**

@@ -43,8 +43,8 @@ var formFor;
             this.defaultSubmitComplete = angular.noop;
             this.defaultSubmitError = angular.noop;
             this.defaultValidationFailed = angular.noop;
+            this.helpIcon = "fa fa-question-circle";
             this.requiredLabel = null;
-            this.useGlyphicons = false;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
             this.validationFailedForIntegerTypeMessage_ = "Must be an integer";
@@ -165,22 +165,19 @@ var formFor;
             this.defaultValidationFailed = value;
         };
         /**
+        * Sets the class(es) to be used on the help icon span.
+        * It defaults to Font Awesome but any imported Icon set can be used.
+        * @memberof FormForConfiguration
+        * @param {string} class(es) for the desired icon, multiple classes are space separated
+        */
+        FormForConfiguration.prototype.setHelpIcon = function (value) {
+            this.helpIcon = value;
+        };
+        /**
          * Sets a default label to be displayed beside each text and select input for required attributes only.
          */
         FormForConfiguration.prototype.setRequiredLabel = function (value) {
             this.requiredLabel = value;
-        };
-        /**
-        * Disable using Bootstrap Glyphicons
-        */
-        FormForConfiguration.prototype.disableGlyphicons = function () {
-            this.useGlyphicons = false;
-        };
-        /**
-        * Enable using Bootstrap Glyphicons
-        */
-        FormForConfiguration.prototype.enableGlyphicons = function () {
-            this.useGlyphicons = true;
         };
         /**
          * Override the default error message for failed custom validations.
@@ -508,8 +505,7 @@ var formFor;
                 help: '@?',
                 label: '@',
                 required: '@?',
-                uid: '@',
-                useGlyphicons: '@'
+                uid: '@'
             };
             $sce_ = $sce;
             formForConfiguration_ = formForConfiguration;
@@ -518,9 +514,7 @@ var formFor;
         /* @ngInject */
         FieldLabelDirective.prototype.link = function ($scope, $element, $attributes) {
             $scope.attributes = $attributes;
-            $scope.$watch('useGlyphicons', function (useGlyphicons) {
-                $scope.useGlyphicons = formForConfiguration_.useGlyphicons;
-            });
+            $scope.helpIcon = formForConfiguration_.helpIcon;
             $scope.$watch('label', function (value) {
                 $scope.bindableLabel = $sce_.trustAsHtml(value);
             });
