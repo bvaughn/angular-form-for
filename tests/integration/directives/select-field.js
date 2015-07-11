@@ -40,6 +40,9 @@ var Facade = function(identifier) {
       this.getSelectedOption = function() {
         return element(by.css('[attribute=' + fieldName + '] select option:checked'));
       };
+      this.getSelectedOptions = function() {
+        return element.all(by.css('[attribute=' + fieldName + '] select option:checked'));
+      };
       this.getOptions = function() {
         return element.all(by.css('[attribute=' + fieldName + '] select option'));
       };
@@ -65,6 +68,9 @@ var Facade = function(identifier) {
       };
       this.getSelectedOption = function() {
         return element(by.css('[attribute=' + fieldName + '] select option:checked'));
+      };
+      this.getSelectedOptions = function() {
+        return element.all(by.css('[attribute=' + fieldName + '] select option:checked'));
       };
       this.getOptions = function() {
         return element.all(by.css('[attribute=' + fieldName + '] select option'));
@@ -98,6 +104,12 @@ var Facade = function(identifier) {
         browser.driver.sleep(500); // Wait for the renderings to take effect
 
         return element(by.css('md-select-menu md-option[selected]'));
+      };
+      this.getSelectedOptions = function() {
+        this.getSelect().click();  // Open the select
+        browser.driver.sleep(500); // Wait for the renderings to take effect
+
+        return element.all(by.css('md-select-menu md-option[selected]'));
       };
       this.getOptions = function() {
         return element.all(by.css('md-select-menu md-option'));
@@ -237,9 +249,65 @@ var Facade = function(identifier) {
       });
     });
 
-    // TODO Test optional
-    // TODO Verify 4 options (1 blank, 3 valid)
+    describe('optional', function() {
+      beforeEach(function() {
+        setNameAndGetVariables('optional');
+      });
 
-    // TODO Test multi-select
+      it('should contain the proper number of options', function () {
+        facade.assertOptionsCount(4); // 1 blank, 3 valid
+        facade.selectOption('Female');
+        facade.assertOptionsCount(4); // blank option should stay around
+      });
+
+      it('should not select a default option', function () {
+        facade.selectOption('Select'); // Placeholder
+      });
+    });
+
+    describe('multiselect', function() {
+      var selectedOptions;
+
+      beforeEach(function() {
+        setNameAndGetVariables('multiselect');
+
+        selectedOptions = facade.getSelectedOptions();
+      });
+
+      it('should preselect the correct initial values', function() {
+        selectedOptions.then(function(options) {
+          expect(options.length).toBe(2); // Male, Female
+        });
+        testHelper.getFormDataValue('multiselect').then(function(values) {
+          expect(values.length).toBe(2);
+          expect(values).toContain('f');
+          expect(values).toContain('m');
+        });
+      });
+
+      it('should unselect a value on click', function() {
+        femaleOption.click();
+        selectedOptions.then(function(options) {
+          expect(options.length).toBe(1); // Male
+        });
+        testHelper.getFormDataValue('multiselect').then(function(values) {
+          expect(values.length).toBe(1);
+          expect(values).toContain('m');
+        });
+      });
+
+      it('should select an additional value on click', function() {
+        unspecifiedOption.click();
+        selectedOptions.then(function(options) {
+          expect(options.length).toBe(3); // Male, Female, Unspecified
+        });
+        testHelper.getFormDataValue('multiselect').then(function(values) {
+          expect(values.length).toBe(3);
+          expect(values).toContain('f');
+          expect(values).toContain('m');
+          expect(values).toContain('u');
+        });
+      });
+    });
   });
 });

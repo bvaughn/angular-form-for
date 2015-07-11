@@ -15,7 +15,7 @@ exports.assertElementIsNotClickable = function(element, opt_timeout) {
 };
 
 exports.assertFormDataValue = function(fieldName, expectedValue) {
-  expect(element(by.css('form')).evaluate('formData.' + fieldName)).toBe(expectedValue);
+  expect(exports.getFormDataValue(fieldName)).toBe(expectedValue);
 };
 
 exports.assertIsDisplayed = function(element, opt_timeout) {
@@ -39,6 +39,10 @@ exports.assertIsNotDisplayed = function(element) {
 
 exports.doMouseOver = function(element) {
   browser.actions().mouseMove(element).perform();
+};
+
+exports.getFormDataValue = function(fieldName) {
+  return element(by.css('form')).evaluate('formData.' + fieldName);
 };
 
 exports.goToPage = function(url) {
