@@ -4,8 +4,13 @@
         class="select-field-select"
         tabindex="{{tabIndex}}"
         ng-disabled="disable || model.disabled"
-        ng-model="model.bindable"
-        ng-options="option[valueAttribute] as option[labelAttribute] for option in bindableOptions">
+        ng-model="model.bindable">
+
+  <option ng-repeat="option in bindableOptions"
+          ng-selected="option[valueAttribute] === model.bindable"
+          value="{{option[valueAttribute]}}"
+          ng-bind="option[labelAttribute]">
+  </option>
 </select>
 
 <i class="form-for-select-arrows"></i>
