@@ -2165,6 +2165,22 @@ var formFor;
 var formFor;
 (function (formFor) {
     /**
+     * Wrapper object for a form-field attribute that exposes field-state to field directives.
+     *
+     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
+     */
+    var BindableFieldWrapper = (function () {
+        function BindableFieldWrapper() {
+        }
+        return BindableFieldWrapper;
+    })();
+    formFor.BindableFieldWrapper = BindableFieldWrapper;
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    /**
      * Input types available for auto-created forms; see {@link FieldView}.
      */
     (function (BuilderFieldType) {
@@ -2218,22 +2234,6 @@ var formFor;
         ValidationFieldType[ValidationFieldType["POSITIVE"] = "positive"] = "POSITIVE";
     })(formFor.ValidationFieldType || (formFor.ValidationFieldType = {}));
     var ValidationFieldType = formFor.ValidationFieldType;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    /**
-     * Wrapper object for a form-field attribute that exposes field-state to field directives.
-     *
-     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
-     */
-    var BindableFieldWrapper = (function () {
-        function BindableFieldWrapper() {
-        }
-        return BindableFieldWrapper;
-    })();
-    formFor.BindableFieldWrapper = BindableFieldWrapper;
     ;
 })(formFor || (formFor = {}));
 ;

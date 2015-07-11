@@ -18,6 +18,12 @@ var Facade = function(identifier) {
     testHelper.assertFormDataValue(fieldName, expectedValue);
   }
 
+  this.assertOptionsCount = function(expectedCount) {
+    this.getOptions().then(function(options) {
+      expect(options.length).toBe(expectedCount);
+    });
+  };
+
   this.selectOption = function(text) {
     this.getSelect().click();
     this.getOptionByText(text).click();
@@ -32,7 +38,10 @@ var Facade = function(identifier) {
         return element(by.cssContainingText('[attribute=' + fieldName + '] select option', text));
       };
       this.getSelectedOption = function() {
-        return element(by.css('[attribute=' + fieldName + '] select option[selected]'));
+        return element(by.css('[attribute=' + fieldName + '] select option:checked'));
+      };
+      this.getOptions = function() {
+        return element.all(by.css('[attribute=' + fieldName + '] select option'));
       };
       this.getLabel = function() {
         return element(by.css('[attribute=' + fieldName + '] label span[ng-bind-html]'));
@@ -55,7 +64,10 @@ var Facade = function(identifier) {
         return element(by.cssContainingText('[attribute=' + fieldName + '] select option', text));
       };
       this.getSelectedOption = function() {
-        return element(by.css('[attribute=' + fieldName + '] select option[selected]'));
+        return element(by.css('[attribute=' + fieldName + '] select option:checked'));
+      };
+      this.getOptions = function() {
+        return element.all(by.css('[attribute=' + fieldName + '] select option'));
       };
       this.getLabel = function() {
         return element(by.css('[attribute=' + fieldName + '] label span[ng-bind-html]'));
@@ -86,6 +98,9 @@ var Facade = function(identifier) {
         browser.driver.sleep(500); // Wait for the renderings to take effect
 
         return element(by.css('md-select-menu md-option[selected]'));
+      };
+      this.getOptions = function() {
+        return element.all(by.css('md-select-menu md-option'));
       };
       this.getLabel = function() {
         return element(by.css('[attribute=' + fieldName + '] label'));
@@ -154,12 +169,6 @@ var Facade = function(identifier) {
         expect(unspecifiedOption.getText()).toBe('Unspecified');
       });
 
-       it('should contain the correct option values', function() {
-       expect(maleOption.getAttribute('value')).toBe('m');
-       expect(femaleOption.getAttribute('value')).toBe('f');
-       expect(unspecifiedOption.getAttribute('value')).toBe('u');
-       });
-
       it('should preselect the correct initial value', function() {
         expect(selectedOption.getText()).toBe('Male');
       });
@@ -211,6 +220,12 @@ var Facade = function(identifier) {
         setNameAndGetVariables('invalid');
       });
 
+      it('should contain the proper number of options', function () {
+        facade.assertOptionsCount(4); // 1 blank, 3 valid
+        facade.selectOption('Female');
+        facade.assertOptionsCount(3); // blank disappears once valid selected
+      });
+
       it('should show an error', function () {
         testHelper.assertIsDisplayed(facade.getErrorText());
       });
@@ -223,6 +238,7 @@ var Facade = function(identifier) {
     });
 
     // TODO Test optional
+    // TODO Verify 4 options (1 blank, 3 valid)
 
     // TODO Test multi-select
   });
