@@ -240,15 +240,21 @@ module formFor {
        * The following code pertains to opening and closing the filter.
        *****************************************************************************************/
 
-      var filterText:ng.IAugmentedJQuery;
+      var filterText:HTMLElement;
 
       // Helper method for setting focus on an item after a delay
       var setDelayedFilterTextFocus:Function = () => {
         if (!filterText) { // Null when link is first run because of ng-include
-          filterText = $element.find('input');
+          var filterTextSelector:ng.IAugmentedJQuery = $element.find('input');
+
+          if (filterTextSelector.length) {
+            filterText = filterTextSelector[0];
+          }
         }
 
-        $timeout_(filterText.focus.bind(filterText));
+        if (filterText) {
+          $timeout_(filterText.focus.bind(filterText));
+        }
       };
 
       $scope.close = () => {
@@ -425,7 +431,7 @@ module formFor {
         // Reset hover anytime our list opens/closes or our collection is refreshed.
         $scope.mouseOver(-1);
 
-        // Pass focus through to filter field when select is opened
+        // Pass focus through to filter field when the type-ahead is opened
         if ($scope.isOpen) {
           setDelayedFilterTextFocus();
         }

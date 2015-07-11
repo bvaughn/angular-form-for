@@ -1986,9 +1986,14 @@ var formFor;
             // Helper method for setting focus on an item after a delay
             var setDelayedFilterTextFocus = function () {
                 if (!filterText) {
-                    filterText = $element.find('input');
+                    var filterTextSelector = $element.find('input');
+                    if (filterTextSelector.length) {
+                        filterText = filterTextSelector[0];
+                    }
                 }
-                $timeout_(filterText.focus.bind(filterText));
+                if (filterText) {
+                    $timeout_(filterText.focus.bind(filterText));
+                }
             };
             $scope.close = function () {
                 $timeout_(function () {
@@ -2138,7 +2143,7 @@ var formFor;
             $scope.$watchCollection('[isOpen, filteredOptions.length]', function () {
                 // Reset hover anytime our list opens/closes or our collection is refreshed.
                 $scope.mouseOver(-1);
-                // Pass focus through to filter field when select is opened
+                // Pass focus through to filter field when the type-ahead is opened
                 if ($scope.isOpen) {
                     setDelayedFilterTextFocus();
                 }
