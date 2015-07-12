@@ -3,12 +3,16 @@
 
   <span ng-bind-html="bindableLabel"></span>
 
-  <span ng-if="help" class="fa-stack"
-        popover="{{help}}"
-        popover-trigger="mouseenter"
-        popover-placement="right">
-    <i class="fa fa-stack-2x fa-circle"></i>
-    <i class="fa fa-stack-1x fa-inverse fa-question"></i>
+  <span ng-if="help">
+    <span ng-if="helpIcon" class="{{helpIcon}}"
+          popover="{{help}}"
+          popover-trigger="mouseenter"
+          popover-placement="right"></span>
+
+    <span ng-if="!helpIcon" class="fa fa-question-circle"
+          popover="{{help}}"
+          popover-trigger="mouseenter"
+          popover-placement="right"></span>
   </span>
 
   <span class="label label-default" ng-if="requiredLabel" ng-bind="requiredLabel"></span>

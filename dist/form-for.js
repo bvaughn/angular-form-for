@@ -43,6 +43,7 @@ var formFor;
             this.defaultSubmitComplete = angular.noop;
             this.defaultSubmitError = angular.noop;
             this.defaultValidationFailed = angular.noop;
+            this.helpIcon = null;
             this.requiredLabel = null;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
@@ -162,6 +163,16 @@ var formFor;
          */
         FormForConfiguration.prototype.setDefaultValidationFailed = function (value) {
             this.defaultValidationFailed = value;
+        };
+        /**
+        * Sets the class(es) to be used on the help icon span in Bootstrap templates or
+        * the defualt templates. It defaults to Font Awesome for Bootstrap templates and a custom icon
+        * for default templates, but any imported icon set can be used.
+        * @memberof FormForConfiguration
+        * @param {string} class(es) for the desired icon, multiple classes are space separated
+        */
+        FormForConfiguration.prototype.setHelpIcon = function (value) {
+            this.helpIcon = value;
         };
         /**
          * Sets a default label to be displayed beside each text and select input for required attributes only.
@@ -504,6 +515,7 @@ var formFor;
         /* @ngInject */
         FieldLabelDirective.prototype.link = function ($scope, $element, $attributes) {
             $scope.attributes = $attributes;
+            $scope.helpIcon = formForConfiguration_.helpIcon;
             $scope.$watch('label', function (value) {
                 $scope.bindableLabel = $sce_.trustAsHtml(value);
             });
@@ -2165,22 +2177,6 @@ var formFor;
 var formFor;
 (function (formFor) {
     /**
-     * Wrapper object for a form-field attribute that exposes field-state to field directives.
-     *
-     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
-     */
-    var BindableFieldWrapper = (function () {
-        function BindableFieldWrapper() {
-        }
-        return BindableFieldWrapper;
-    })();
-    formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    /**
      * Input types available for auto-created forms; see {@link FieldView}.
      */
     (function (BuilderFieldType) {
@@ -2234,6 +2230,22 @@ var formFor;
         ValidationFieldType[ValidationFieldType["POSITIVE"] = "positive"] = "POSITIVE";
     })(formFor.ValidationFieldType || (formFor.ValidationFieldType = {}));
     var ValidationFieldType = formFor.ValidationFieldType;
+    ;
+})(formFor || (formFor = {}));
+;
+var formFor;
+(function (formFor) {
+    /**
+     * Wrapper object for a form-field attribute that exposes field-state to field directives.
+     *
+     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
+     */
+    var BindableFieldWrapper = (function () {
+        function BindableFieldWrapper() {
+        }
+        return BindableFieldWrapper;
+    })();
+    formFor.BindableFieldWrapper = BindableFieldWrapper;
     ;
 })(formFor || (formFor = {}));
 ;

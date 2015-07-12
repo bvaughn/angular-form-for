@@ -24,6 +24,12 @@ module formFor {
     help:string;
 
     /**
+    * Class(es) to be used for the help icon.
+    * By default a Font Awesome help icon will be used.
+    */
+    helpIcon:string;
+
+    /**
      * ID of the associated input field element; used as the :for attribute of the inner <label>.
      */
     inputUid:string;
@@ -85,6 +91,8 @@ module formFor {
     /* @ngInject */
     link($scope:FieldLabelScope, $element:ng.IAugmentedJQuery, $attributes:ng.IAttributes):void {
       $scope.attributes = $attributes;
+
+      $scope.helpIcon = formForConfiguration_.helpIcon;
 
       $scope.$watch('label', function(value) {
         $scope.bindableLabel = $sce_.trustAsHtml(value);
