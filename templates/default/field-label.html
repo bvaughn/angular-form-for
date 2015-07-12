@@ -1,10 +1,17 @@
 <label id="{{uid}}" for="{{inputUid}}" class="field-label">
   <span ng-bind-html="bindableLabel"></span>
 
-  <span ng-if="help" class="form-for-tooltip">
-    <div class="form-for-tooltip-icon">?</div>
-    <div class="form-for-tooltip-popover" ng-bind="help"></div>
-  </span>
+  <span ng-if="help">
+     <span ng-if="helpIcon" class="{{helpIcon}}"
+           popover="{{help}}"
+           popover-trigger="mouseenter"
+           popover-placement="right"></span>
+
+     <span ng-if="!helpIcon" class="form-for-tooltip">
+       <div class="form-for-tooltip-icon">?</div>
+       <div class="form-for-tooltip-popover" ng-bind="help"></div>
+     </span>
+   </span>
 
   <span ng-if="requiredLabel" class="field-label-required-label" ng-bind="requiredLabel"></span>
 </label>

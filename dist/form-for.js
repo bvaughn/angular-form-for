@@ -43,7 +43,7 @@ var formFor;
             this.defaultSubmitComplete = angular.noop;
             this.defaultSubmitError = angular.noop;
             this.defaultValidationFailed = angular.noop;
-            this.helpIcon = "fa fa-question-circle";
+            this.helpIcon = null;
             this.requiredLabel = null;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
@@ -165,8 +165,9 @@ var formFor;
             this.defaultValidationFailed = value;
         };
         /**
-        * Sets the class(es) to be used on the help icon span.
-        * It defaults to Font Awesome but any imported Icon set can be used.
+        * Sets the class(es) to be used on the help icon span in Bootstrap templates or
+        * the defualt templates. It defaults to Font Awesome for Bootstrap templates and a custom icon
+        * for default templates, but any imported icon set can be used.
         * @memberof FormForConfiguration
         * @param {string} class(es) for the desired icon, multiple classes are space separated
         */
