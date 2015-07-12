@@ -24,9 +24,8 @@ module formFor {
     help:string;
 
     /**
-    * Class(es) to be used for the help icon.
-    * By default a Font Awesome help icon will be used.
-    */
+     * Overridden class(es) to be used for the help icon (if :help has been specified).
+     */
     helpIcon:string;
 
     /**

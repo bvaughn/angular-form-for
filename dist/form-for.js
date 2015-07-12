@@ -165,12 +165,11 @@ var formFor;
             this.defaultValidationFailed = value;
         };
         /**
-        * Sets the class(es) to be used on the help icon span in Bootstrap templates or
-        * the defualt templates. It defaults to Font Awesome for Bootstrap templates and a custom icon
-        * for default templates, but any imported icon set can be used.
-        * @memberof FormForConfiguration
-        * @param {string} class(es) for the desired icon, multiple classes are space separated
-        */
+         * Sets the class(es) to be used as the help icon in supported templates.
+         * Each template specifies its own default help icon that can be overridden with this method.
+         * @memberof FormForConfiguration
+         * @param {string} class(es) for the desired icon, multiple classes are space separated
+         */
         FormForConfiguration.prototype.setHelpIcon = function (value) {
             this.helpIcon = value;
         };

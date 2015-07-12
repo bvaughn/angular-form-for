@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.6
+Default help icon can be overidden with `FormForConfiguration.setHelpIcon`.
+
 ## 4.0.5
 TypeAheadField now properly accounts for the fact that jqLite doesn't implement the `focus` method like jQuery does. Native HTMLElement method is used instead.
 
