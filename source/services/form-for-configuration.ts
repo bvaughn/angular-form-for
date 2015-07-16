@@ -14,6 +14,7 @@ module formFor {
     public defaultSubmitComplete:(formData:any) => void = angular.noop;
     public defaultSubmitError:(error:any) => void = angular.noop;
     public defaultValidationFailed:(error:any) => void = angular.noop;
+    public helpIcon:string = null;
     public requiredLabel:string = null;
 
     private validationFailedForCustomMessage_:string = "Failed custom validation";
@@ -143,6 +144,16 @@ module formFor {
      */
     public setDefaultValidationFailed(value:(error:any) => void):void {
       this.defaultValidationFailed = value;
+    }
+
+    /**
+     * Sets the class(es) to be used as the help icon in supported templates.
+     * Each template specifies its own default help icon that can be overridden with this method.
+     * @memberof FormForConfiguration
+     * @param {string} class(es) for the desired icon, multiple classes are space separated
+     */
+    public setHelpIcon(value:string):void {
+      this.helpIcon = value;
     }
 
     /**

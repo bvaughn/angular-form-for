@@ -1,11 +1,12 @@
 'use strict';
 
+var testHelper = require('../test-helper');
+
 // TODO Test field-errors
 
 // Interface between tests (below) and the appropriate formFor Checkbox directive template
 var Facade = function(identifier) {
-  browser.driver.get('http://localhost:8000/examples/checkbox-field.html?template=' + identifier);
-  browser.driver.wait(browser.driver.isElementPresent(by.id('form')), 5000);
+  testHelper.goToPage('http://localhost:8000/examples/checkbox-field.html?template=' + identifier);
 
   var fieldName;
 
@@ -66,7 +67,11 @@ var Facade = function(identifier) {
 };
 
 // Test each of our templates
-['bootstrap', 'default', 'material'].forEach(function(template) {
+[
+  'bootstrap',
+  'default',
+  'material'
+].forEach(function(template) {
   describe(template, function() {
     var checkbox, clickable, facade, hoverable, tooltip;
 
@@ -89,12 +94,7 @@ var Facade = function(identifier) {
       });
 
       it('should not show an error', function() {
-        facade.getErrorText().isDisplayed().then(
-          function() {
-            throw Error('Element should not be displayed');
-          },
-          function() {}
-        );
+        testHelper.assertIsNotDisplayed(facade.getErrorText());
       });
 
       it('should update the model on click', function () {
@@ -133,28 +133,16 @@ var Facade = function(identifier) {
       });
 
       it('should not show help text by default', function() {
-        facade.getTooltip().isDisplayed().then(
-          function() {
-            return facade.getTooltip().getCssValue('display').then(
-              function(display) {
-                if (display !== 'none') {
-                  throw Error('Help text should not be displayed');
-                }
-              });
-          },
-          function() {});
+        if (template === 'material') return; // Material template doesn't expose a help tooltip
+
+        testHelper.assertIsNotDisplayed(facade.getTooltip());
       });
 
       it('should show help text on hover', function() {
         if (template === 'material') return; // Material templates don't have help icons
 
-        browser.actions().mouseMove(facade.getHoverable()).perform();
-
-        var tooltip = facade.getTooltip();
-
-        browser.wait(function () {
-          return tooltip.isPresent() && tooltip.isDisplayed();
-        }, 1000);
+        testHelper.doMouseOver(facade.getHoverable());
+        testHelper.assertIsDisplayed(facade.getTooltip());
       });
     });
 
@@ -189,11 +177,7 @@ var Facade = function(identifier) {
       it('should show an error', function () {
         facade.setFieldName('invalid');
 
-        var errorText = facade.getErrorText();
-
-        browser.wait(function () {
-          return errorText.isPresent() && errorText.isDisplayed();
-        }, 1000);
+        testHelper.assertIsDisplayed(facade.getErrorText());
       });
     });
   });

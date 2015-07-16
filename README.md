@@ -32,6 +32,10 @@ Lastly just include the *formFor* module in your Angular application like so:
 angular.module('myAngularApp', ['formFor']);
 ```
 
+## Contributions
+
+Interested in contributing? Check out the [contribution guidelines](CONTRIBUTING.md)!
+
 ## License
 
 Copyright (c) 2014 Brian Vaughn. Licensed under the MIT license.

@@ -1,0 +1,62 @@
+<doctype html></doctype>
+<html lang="en">
+<head>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
+  <script src="/node_modules/angular/angular.js"></script>
+  <script src="/examples/init-test.js"></script>
+</head>
+<body>
+<script>
+  init(function($scope) {
+    $scope.genders = [
+      {value: 'f', label: 'Female'},
+      {value: 'm', label: 'Male'},
+      {value: 'u', label: 'Unspecified'}
+    ];
+
+    $scope.formData = {
+      preselected: 'm',
+      multiselect: ['m', 'f'] // This makes no sense! ;)
+    };
+
+    $scope.validation = {
+      invalid: {
+        required: true
+      }
+    };
+  });
+</script>
+
+<form id="form" form-for="formData" validation-rules="validation" controller="controller">
+  <select-field attribute="preselected"
+                label="Preselected select field with help"
+                help="This is a helpful string"
+                options="genders">
+  </select-field>
+
+  <select-field attribute="optional"
+                label="Optional select field"
+                options="genders"
+                allow-blank>
+  </select-field>
+
+  <select-field attribute="multiselect"
+                label="Multi-select field"
+                options="genders"
+                multiple="true">
+  </select-field>
+
+  <select-field attribute="disabled"
+                label="Disabled select field"
+                options="genders"
+                disable="true">
+  </select-field>
+
+  <select-field attribute="invalid"
+                label="Required"
+                options="genders"
+                prevent-default-option>
+  </select-field>
+</form>
+</body>
+</html>

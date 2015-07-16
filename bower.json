@@ -1,6 +1,6 @@
 {
   "name": "angular-form-for",
-  "version": "4.0.4",
+  "version": "4.0.6",
   "main": [
     "./dist/form-for.css",
     "./dist/form-for.js"

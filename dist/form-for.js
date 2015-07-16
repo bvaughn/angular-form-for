@@ -43,6 +43,7 @@ var formFor;
             this.defaultSubmitComplete = angular.noop;
             this.defaultSubmitError = angular.noop;
             this.defaultValidationFailed = angular.noop;
+            this.helpIcon = null;
             this.requiredLabel = null;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
@@ -162,6 +163,15 @@ var formFor;
          */
         FormForConfiguration.prototype.setDefaultValidationFailed = function (value) {
             this.defaultValidationFailed = value;
+        };
+        /**
+         * Sets the class(es) to be used as the help icon in supported templates.
+         * Each template specifies its own default help icon that can be overridden with this method.
+         * @memberof FormForConfiguration
+         * @param {string} class(es) for the desired icon, multiple classes are space separated
+         */
+        FormForConfiguration.prototype.setHelpIcon = function (value) {
+            this.helpIcon = value;
         };
         /**
          * Sets a default label to be displayed beside each text and select input for required attributes only.
@@ -505,6 +515,7 @@ var formFor;
         /* @ngInject */
         FieldLabelDirective.prototype.link = function ($scope, $element, $attributes) {
             $scope.attributes = $attributes;
+            $scope.helpIcon = formForConfiguration_.helpIcon;
             $scope.$watch('label', function (value) {
                 $scope.bindableLabel = $sce_.trustAsHtml(value);
             });
@@ -1987,9 +1998,14 @@ var formFor;
             // Helper method for setting focus on an item after a delay
             var setDelayedFilterTextFocus = function () {
                 if (!filterText) {
-                    filterText = $element.find('input');
+                    var filterTextSelector = $element.find('input');
+                    if (filterTextSelector.length) {
+                        filterText = filterTextSelector[0];
+                    }
                 }
-                $timeout_(filterText.focus.bind(filterText));
+                if (filterText) {
+                    $timeout_(filterText.focus.bind(filterText));
+                }
             };
             $scope.close = function () {
                 $timeout_(function () {
@@ -2139,7 +2155,7 @@ var formFor;
             $scope.$watchCollection('[isOpen, filteredOptions.length]', function () {
                 // Reset hover anytime our list opens/closes or our collection is refreshed.
                 $scope.mouseOver(-1);
-                // Pass focus through to filter field when select is opened
+                // Pass focus through to filter field when the type-ahead is opened
                 if ($scope.isOpen) {
                     setDelayedFilterTextFocus();
                 }

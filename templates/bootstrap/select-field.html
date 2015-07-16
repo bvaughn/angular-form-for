@@ -14,6 +14,10 @@
                 uid="{{model.uid}}-error">
   </field-error>
 
+  <!-- Binding to the 'multiple' attribute is not supported, even with ng-attr-multiple.
+       This means that single and multiple select menus need to be defined separately.
+       For ease of customization, they're also separated into their own partials. -->
+
   <span ng-if="multiple"
         ng-include
         src="'form-for/templates/select-field/_multi-select.html'"></span>
