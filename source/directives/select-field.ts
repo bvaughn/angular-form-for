@@ -73,6 +73,11 @@ module formFor {
     labelAttribute?:string;
 
     /**
+     * Optional class-name for field <label>.
+     */
+    labelClass?:string;
+
+    /**
      * Shared between formFor and SelectField directives.
      */
     model:BindableFieldWrapper;

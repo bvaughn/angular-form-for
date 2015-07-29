@@ -51,6 +51,11 @@ module formFor {
     label?:string;
 
     /**
+     * Optional class-name for field <label>.
+     */
+    labelClass?:string;
+
+    /**
      * Optional override for label key in options array.
      * Defaults to "label".
      */

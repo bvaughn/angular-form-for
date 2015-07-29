@@ -40,6 +40,11 @@ module formFor {
     label?:string;
 
     /**
+     * Optional class-name for field <label>.
+     */
+    labelClass?:string;
+
+    /**
      * Shared between formFor and CheckboxField directives.
      */
     model:BindableFieldWrapper;

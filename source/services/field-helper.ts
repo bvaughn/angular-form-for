@@ -24,17 +24,28 @@ module formFor {
      *                               By default, a humanized version of the :attribute attribute will be used.
      */
     manageLabel($scope:ng.IScope, $attributes:ng.IAttributes, humanizeValueAttribute:boolean):void {
+      if (this.formForConfiguration_.autoGenerateLabels) {
+        $scope['label'] =
+          humanizeValueAttribute ?
+            StringUtil.humanize($scope['value']) :
+            StringUtil.humanize($scope['attribute']);
+      }
+
+      if (this.formForConfiguration_.labelClass) {
+        $scope['labelClass'] =
+          this.formForConfiguration_.labelClass;
+      }
+
       if ($attributes.hasOwnProperty('label')) {
         $attributes.$observe('label', function (label) {
           $scope['label'] = label;
         });
       }
 
-      if (this.formForConfiguration_.autoGenerateLabels) {
-        $scope['label'] =
-          humanizeValueAttribute ?
-            StringUtil.humanize($scope['value']) :
-            StringUtil.humanize($scope['attribute']);
+      if ($attributes.hasOwnProperty('labelClass')) {
+        $attributes.$observe('labelClass', function (labelClass) {
+          $scope['labelClass'] = labelClass;
+        });
       }
     }
 

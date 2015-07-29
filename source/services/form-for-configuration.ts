@@ -15,6 +15,7 @@ module formFor {
     public defaultSubmitError:(error:any) => void = angular.noop;
     public defaultValidationFailed:(error:any) => void = angular.noop;
     public helpIcon:string = null;
+    public labelClass:string = null;
     public requiredLabel:string = null;
 
     private validationFailedForCustomMessage_:string = "Failed custom validation";
@@ -154,6 +155,14 @@ module formFor {
      */
     public setHelpIcon(value:string):void {
       this.helpIcon = value;
+    }
+
+
+    /**
+     * Global class-name for field <label>s.
+     */
+    public setLabelClass(value:string):void {
+      this.labelClass = value;
     }
 
     /**

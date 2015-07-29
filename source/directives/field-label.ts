@@ -41,6 +41,11 @@ module formFor {
     label:string;
 
     /**
+     * Optional class-name for <label>.
+     */
+    labelClass?:string;
+
+    /**
      * Optional attribute specifies that this field is a required field.
      * If a required label has been provided, this component displays that value for required fields.
      */
@@ -77,6 +82,7 @@ module formFor {
       inputUid: '@',
       help: '@?',
       label: '@',
+      labelClass: '@?',
       required: '@?',
       uid: '@'
     };
