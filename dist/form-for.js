@@ -2579,7 +2579,7 @@ var formFor;
             if (validationRules.pattern) {
                 var isRegExp = validationRules.pattern instanceof RegExp;
                 var regExp = isRegExp ? validationRules.pattern : validationRules.pattern.rule;
-                if (!regExp.exec(value)) {
+                if (value && !regExp.exec(value)) {
                     var failureMessage = isRegExp ? this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.PATTERN) : validationRules.pattern.message;
                     return this.promiseUtils_.reject(failureMessage);
                 }
