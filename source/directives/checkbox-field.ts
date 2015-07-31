@@ -118,6 +118,11 @@ module formFor {
         }
       };
 
+      $scope.$watch('model.bindable', function (value) {
+        if (!$scope.model) return;
+        $scope.model.bindable = value || undefined;
+      });
+
       fieldHelper_.manageLabel($scope, $attributes, false);
       fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
     }
