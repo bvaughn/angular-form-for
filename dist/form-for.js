@@ -1636,7 +1636,9 @@ var formFor;
                 // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
                 // Angular 1.2.x-1.3.x may generate an empty <option> regardless, unless the non-selection is undefined.
                 if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
-                    $scope.model.bindable = undefined;
+                    // Rather than sanitizing `$scope.model.bindable` to undefined, update the empty option's value.
+                    // This way users are able to choose between undefined, null, and empty string ~ see #141
+                    $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
                 }
                 $scope.bindableOptions.splice(0);
                 if (!$scope.model.bindable || $scope.allowBlank) {

@@ -295,7 +295,10 @@ module formFor {
         if ($scope.model.bindable === null ||
             $scope.model.bindable === undefined ||
             $scope.model.bindable === '') {
-          $scope.model.bindable = undefined;
+
+          // Rather than sanitizing `$scope.model.bindable` to undefined, update the empty option's value.
+          // This way users are able to choose between undefined, null, and empty string ~ see #141
+          $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
         }
 
         $scope.bindableOptions.splice(0);
