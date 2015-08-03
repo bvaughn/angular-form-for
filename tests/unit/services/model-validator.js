@@ -321,6 +321,15 @@ describe('ModelValidator', function() {
       };
     });
 
+    it('should not reject null or undefined value', function () {
+      expect(ModelValidator.validateField({number: null}, 'number', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({number: undefined}, 'number', model.rules)).toBeResolved();
+    });
+
+    it('should not reject an empty string', function () {
+      expect(ModelValidator.validateField({number: ''}, 'number', model.rules)).toBeResolved();
+    });
+
     it('number should accept numeric input', function() {
       expect(ModelValidator.validateField({number: 123}, 'number', model.rules)).toBeResolved();
       expect(ModelValidator.validateField({number: -123}, 'number', model.rules)).toBeResolved();
@@ -509,9 +518,13 @@ describe('ModelValidator', function() {
       };
     });
 
-    it('should reject a null or undefined value', function() {
-      expect(ModelValidator.validateField({patternField: null}, 'patternField', model.rules)).toBeRejected();
-      expect(ModelValidator.validateField({patternField: undefined}, 'patternField', model.rules)).toBeRejected();
+    it('should not reject null or undefined value', function () {
+      expect(ModelValidator.validateField({patternField: null}, 'patternField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({patternField: undefined}, 'patternField', model.rules)).toBeResolved();
+    });
+
+    it('should not reject an empty string', function () {
+      expect(ModelValidator.validateField({patternField: ''}, 'patternField', model.rules)).toBeResolved();
     });
 
     it('should reject strings not matching the specified pattern', function() {

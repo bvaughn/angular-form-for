@@ -40,6 +40,11 @@ module formFor {
     label?:string;
 
     /**
+     * Optional class-name for field <label>.
+     */
+    labelClass?:string;
+
+    /**
      * Shared between formFor and CheckboxField directives.
      */
     model:BindableFieldWrapper;
@@ -116,6 +121,11 @@ module formFor {
           $scope.model.bindable = !$scope.model.bindable;
         }
       };
+
+      $scope.$watch('model.bindable', function (value) {
+        if (!$scope.model) return;
+        $scope.model.bindable = value || undefined;
+      });
 
       fieldHelper_.manageLabel($scope, $attributes, false);
       fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);

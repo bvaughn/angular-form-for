@@ -465,7 +465,7 @@ module formFor {
           <RegExp> validationRules.pattern :
           (<ValidationRuleRegExp> validationRules.pattern).rule;
 
-        if (!regExp.exec(value)) {
+        if (value && !regExp.exec(value)) {
           var failureMessage:string = isRegExp ?
             this.formForConfiguration_.getFailedValidationMessage(ValidationFailureType.PATTERN) :
             (<ValidationRuleRegExp> validationRules.pattern).message;

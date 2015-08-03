@@ -44,6 +44,7 @@ var formFor;
             this.defaultSubmitError = angular.noop;
             this.defaultValidationFailed = angular.noop;
             this.helpIcon = null;
+            this.labelClass = null;
             this.requiredLabel = null;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
@@ -172,6 +173,12 @@ var formFor;
          */
         FormForConfiguration.prototype.setHelpIcon = function (value) {
             this.helpIcon = value;
+        };
+        /**
+         * Global class-name for field <label>s.
+         */
+        FormForConfiguration.prototype.setLabelClass = function (value) {
+            this.labelClass = value;
         };
         /**
          * Sets a default label to be displayed beside each text and select input for required attributes only.
@@ -312,13 +319,21 @@ var formFor;
          *                               By default, a humanized version of the :attribute attribute will be used.
          */
         FieldHelper.prototype.manageLabel = function ($scope, $attributes, humanizeValueAttribute) {
+            if (this.formForConfiguration_.autoGenerateLabels) {
+                $scope['label'] = humanizeValueAttribute ? formFor.StringUtil.humanize($scope['value']) : formFor.StringUtil.humanize($scope['attribute']);
+            }
+            if (this.formForConfiguration_.labelClass) {
+                $scope['labelClass'] = this.formForConfiguration_.labelClass;
+            }
             if ($attributes.hasOwnProperty('label')) {
                 $attributes.$observe('label', function (label) {
                     $scope['label'] = label;
                 });
             }
-            if (this.formForConfiguration_.autoGenerateLabels) {
-                $scope['label'] = humanizeValueAttribute ? formFor.StringUtil.humanize($scope['value']) : formFor.StringUtil.humanize($scope['attribute']);
+            if ($attributes.hasOwnProperty('labelClass')) {
+                $attributes.$observe('labelClass', function (labelClass) {
+                    $scope['labelClass'] = labelClass;
+                });
             }
         };
         /**
@@ -393,6 +408,11 @@ var formFor;
                     $scope.model.bindable = !$scope.model.bindable;
                 }
             };
+            $scope.$watch('model.bindable', function (value) {
+                if (!$scope.model)
+                    return;
+                $scope.model.bindable = value || undefined;
+            });
             fieldHelper_.manageLabel($scope, $attributes, false);
             fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
         };
@@ -505,6 +525,7 @@ var formFor;
                 inputUid: '@',
                 help: '@?',
                 label: '@',
+                labelClass: '@?',
                 required: '@?',
                 uid: '@'
             };
@@ -1616,7 +1637,9 @@ var formFor;
                 // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
                 // Angular 1.2.x-1.3.x may generate an empty <option> regardless, unless the non-selection is undefined.
                 if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
-                    $scope.model.bindable = undefined;
+                    // Rather than sanitizing `$scope.model.bindable` to undefined, update the empty option's value.
+                    // This way users are able to choose between undefined, null, and empty string ~ see #141
+                    $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
                 }
                 $scope.bindableOptions.splice(0);
                 if (!$scope.model.bindable || $scope.allowBlank) {
@@ -2580,7 +2603,7 @@ var formFor;
             if (validationRules.pattern) {
                 var isRegExp = validationRules.pattern instanceof RegExp;
                 var regExp = isRegExp ? validationRules.pattern : validationRules.pattern.rule;
-                if (!regExp.exec(value)) {
+                if (value && !regExp.exec(value)) {
                     var failureMessage = isRegExp ? this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.PATTERN) : validationRules.pattern.message;
                     return this.promiseUtils_.reject(failureMessage);
                 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.1
+Better support falsy initial values for optional select fields.
+Unchecked checkbox fields set their corresponding form data field to undefined instead of false.
+
+## 4.1.0
+Added `labelClass` to each form elements as well as a global default `FormForConfiguration.setLabelClass`.
+Also changed the behavior for pattern validations so that falsy values aren't validated.
+
 ## 4.0.6
 Default help icon can be overidden with `FormForConfiguration.setHelpIcon`.
 

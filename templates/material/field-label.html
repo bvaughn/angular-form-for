@@ -1,4 +1,4 @@
-<label ng-bind="label">
+<label ng-bind="label" ng-class="[labelClass]">
   <md-tooltip ng-if="help"
               md-direction="{{attributes.direction || 'right'}}">
     {{help}}

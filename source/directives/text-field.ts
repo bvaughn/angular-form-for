@@ -84,6 +84,11 @@ module formFor {
     label?:string;
 
     /**
+     * Optional class-name for field <label>.
+     */
+    labelClass?:string;
+
+    /**
      * Data shared between formFor and textField directives.
      */
     model:BindableFieldWrapper;
