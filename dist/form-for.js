@@ -1765,6 +1765,7 @@ var formFor;
             this.templateUrl = 'form-for/templates/submit-button.html';
             this.scope = {
                 disable: '=',
+                buttonClass: '@',
                 icon: '@',
                 label: '@'
             };
@@ -1773,7 +1774,6 @@ var formFor;
         SubmitButtonDirective.$inject = ["$sce"];
         /* @ngInject */
         SubmitButtonDirective.prototype.link = function ($scope, $element, $attributes, formForController) {
-            $scope['buttonClass'] = $attributes['buttonClass'];
             $scope.tabIndex = $attributes['tabIndex'] || 0;
             $scope.$watch('label', function (value) {
                 $scope.bindableLabel = $sce_.trustAsHtml(value);

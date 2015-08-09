@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.2
+PR from @nickguletskii moving `<submit-button>`'s `button-class` attribute to the scope for better dynamic support.
+
 ## 4.1.1
 Better support falsy initial values for optional select fields.
 Unchecked checkbox fields set their corresponding form data field to undefined instead of false.
