@@ -68,6 +68,7 @@ module formFor {
 
     scope:any = {
       disable: '=',
+      buttonClass: '@',
       icon: '@',
       label: '@'
     };
@@ -83,7 +84,6 @@ module formFor {
          $attributes:ng.IAttributes,
          formForController:FormForController):void {
 
-      $scope['buttonClass'] = $attributes['buttonClass'];
       $scope.tabIndex = $attributes['tabIndex'] || 0;
 
       $scope.$watch('label', function (value) {
