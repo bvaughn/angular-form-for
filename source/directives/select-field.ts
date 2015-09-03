@@ -160,6 +160,7 @@ module formFor {
   var $log_:ng.ILogService;
   var $timeout_:ng.ITimeoutService;
   var fieldHelper_:FieldHelper;
+  var formForConfiguration_:FormForConfiguration;
 
   /**
    * Renders a drop-down &lt;select&gt; menu along with an input label.
@@ -197,6 +198,7 @@ module formFor {
    * @param $log $injector-supplied $log service
    * @param $timeout $injector-supplied $timeout service
    * @param fieldHelper
+   * @param formForConfiguration
    */
   export class SelectFieldDirective implements ng.IDirective {
 
@@ -216,11 +218,13 @@ module formFor {
     constructor($document:ng.IAugmentedJQuery,
                 $log:ng.ILogService,
                 $timeout:ng.ITimeoutService,
-                fieldHelper:FieldHelper) {
+                fieldHelper:FieldHelper,
+                formForConfiguration:FormForConfiguration) {
       $document_ = $document;
       $log_ = $log;
       $timeout_ = $timeout;
       fieldHelper_ = fieldHelper;
+      formForConfiguration_ = formForConfiguration;
     }
 
     /* @ngInject */
@@ -269,7 +273,7 @@ module formFor {
 
       $scope.emptyOption = {};
       $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
-      $scope.emptyOption[$scope.valueAttribute] = undefined;
+      $scope.emptyOption[$scope.valueAttribute] = formForConfiguration_.defaultSelectEmptyOptionValue;
 
       /*****************************************************************************************
        * The following code manages setting the correct default value based on bindable model.
@@ -298,6 +302,7 @@ module formFor {
 
           // Rather than sanitizing `$scope.model.bindable` to undefined, update the empty option's value.
           // This way users are able to choose between undefined, null, and empty string ~ see #141
+          $scope.model.bindable = formForConfiguration_.defaultSelectEmptyOptionValue;
           $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
         }
 
@@ -404,7 +409,7 @@ module formFor {
   }
 
   angular.module('formFor').directive('selectField',
-    ($document, $log, $timeout, FieldHelper) => {
-      return new SelectFieldDirective($document, $log, $timeout, FieldHelper);
+    ($document, $log, $timeout, FieldHelper, FormForConfiguration) => {
+      return new SelectFieldDirective($document, $log, $timeout, FieldHelper, FormForConfiguration);
     });
 }
