@@ -14,6 +14,7 @@ module formFor {
     public defaultSubmitComplete:(formData:any) => void = angular.noop;
     public defaultSubmitError:(error:any) => void = angular.noop;
     public defaultValidationFailed:(error:any) => void = angular.noop;
+    public defaultSelectEmptyOptionValue:any = undefined;
     public helpIcon:string = null;
     public labelClass:string = null;
     public requiredLabel:string = null;
@@ -145,6 +146,14 @@ module formFor {
      */
     public setDefaultValidationFailed(value:(error:any) => void):void {
       this.defaultValidationFailed = value;
+    }
+
+    /**
+     * Sets the default value of empty option for selectField inputs.
+     * Defaults to undefined.
+     */
+    public setDefaultSelectEmptyOptionValue(value:number):void {
+      this.defaultSelectEmptyOptionValue = value;
     }
 
     /**

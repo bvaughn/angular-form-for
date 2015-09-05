@@ -43,6 +43,7 @@ var formFor;
             this.defaultSubmitComplete = angular.noop;
             this.defaultSubmitError = angular.noop;
             this.defaultValidationFailed = angular.noop;
+            this.defaultSelectEmptyOptionValue = undefined;
             this.helpIcon = null;
             this.labelClass = null;
             this.requiredLabel = null;
@@ -164,6 +165,13 @@ var formFor;
          */
         FormForConfiguration.prototype.setDefaultValidationFailed = function (value) {
             this.defaultValidationFailed = value;
+        };
+        /**
+         * Sets the default value of empty option for selectField inputs.
+         * Defaults to undefined.
+         */
+        FormForConfiguration.prototype.setDefaultSelectEmptyOptionValue = function (value) {
+            this.defaultSelectEmptyOptionValue = value;
         };
         /**
          * Sets the class(es) to be used as the help icon in supported templates.
@@ -401,6 +409,7 @@ var formFor;
                 $log_.error('Missing required field "attribute"');
                 return;
             }
+            $scope.attributes = $attributes;
             $scope.tabIndex = $attributes['tabIndex'] || 0;
             $scope.toggle = function toggle() {
                 if (!$scope.disable && !$scope.model.disabled) {
@@ -1529,6 +1538,7 @@ var formFor;
     var $log_;
     var $timeout_;
     var fieldHelper_;
+    var formForConfiguration_;
     /**
      * Renders a drop-down &lt;select&gt; menu along with an input label.
      * This type of component works with large enumerations and can be configured to allow for a blank/empty selection
@@ -1565,10 +1575,11 @@ var formFor;
      * @param $log $injector-supplied $log service
      * @param $timeout $injector-supplied $timeout service
      * @param fieldHelper
+     * @param formForConfiguration
      */
     var SelectFieldDirective = (function () {
         /* @ngInject */
-        function SelectFieldDirective($document, $log, $timeout, fieldHelper) {
+        function SelectFieldDirective($document, $log, $timeout, fieldHelper, formForConfiguration) {
             this.require = '^formFor';
             this.restrict = 'EA';
             this.templateUrl = 'form-for/templates/select-field.html';
@@ -1583,8 +1594,9 @@ var formFor;
             $log_ = $log;
             $timeout_ = $timeout;
             fieldHelper_ = fieldHelper;
+            formForConfiguration_ = formForConfiguration;
         }
-        SelectFieldDirective.$inject = ["$document", "$log", "$timeout", "fieldHelper"];
+        SelectFieldDirective.$inject = ["$document", "$log", "$timeout", "fieldHelper", "formForConfiguration"];
         /* @ngInject */
         SelectFieldDirective.prototype.link = function ($scope, $element, $attributes, formForController) {
             if (!$scope.attribute) {
@@ -1617,7 +1629,7 @@ var formFor;
             $scope.bindableOptions = [];
             $scope.emptyOption = {};
             $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
-            $scope.emptyOption[$scope.valueAttribute] = undefined;
+            $scope.emptyOption[$scope.valueAttribute] = formForConfiguration_.defaultSelectEmptyOptionValue;
             /*****************************************************************************************
              * The following code manages setting the correct default value based on bindable model.
              *****************************************************************************************/
@@ -1638,6 +1650,7 @@ var formFor;
                 if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
                     // Rather than sanitizing `$scope.model.bindable` to undefined, update the empty option's value.
                     // This way users are able to choose between undefined, null, and empty string ~ see #141
+                    $scope.model.bindable = formForConfiguration_.defaultSelectEmptyOptionValue;
                     $scope.emptyOption[$scope.valueAttribute] = $scope.model.bindable;
                 }
                 $scope.bindableOptions.splice(0);
@@ -1734,8 +1747,8 @@ var formFor;
         return SelectFieldDirective;
     })();
     formFor.SelectFieldDirective = SelectFieldDirective;
-    angular.module('formFor').directive('selectField', ["$document", "$log", "$timeout", "FieldHelper", function ($document, $log, $timeout, FieldHelper) {
-        return new SelectFieldDirective($document, $log, $timeout, FieldHelper);
+    angular.module('formFor').directive('selectField', ["$document", "$log", "$timeout", "FieldHelper", "FormForConfiguration", function ($document, $log, $timeout, FieldHelper, FormForConfiguration) {
+        return new SelectFieldDirective($document, $log, $timeout, FieldHelper, FormForConfiguration);
     }]);
 })(formFor || (formFor = {}));
 var formFor;
@@ -2379,7 +2392,7 @@ var formFor;
                 if (value === undefined || value === null) {
                     value = ""; // Escape falsy values liked null or undefined, but not ones like 0
                 }
-                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules) || this.promiseUtils_.resolve();
+                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules, fieldName) || this.promiseUtils_.resolve();
             }
             return this.promiseUtils_.resolve();
         };
@@ -2476,7 +2489,7 @@ var formFor;
             }
             return null;
         };
-        ModelValidator.prototype.validateFieldCustom_ = function (value, formData, validationRules) {
+        ModelValidator.prototype.validateFieldCustom_ = function (value, formData, validationRules, fieldName) {
             var _this = this;
             if (validationRules.custom) {
                 var defaultErrorMessage;
@@ -2490,7 +2503,7 @@ var formFor;
                     validationFunction = validationRules.custom.rule;
                 }
                 try {
-                    var returnValue = validationFunction(value, formData);
+                    var returnValue = validationFunction(value, formData, fieldName);
                 }
                 catch (error) {
                     return this.promiseUtils_.reject(error.message || defaultErrorMessage);
