@@ -16,6 +16,11 @@ module formFor {
     attribute:string;
 
     /**
+     * HTML field attributes; passed along so that custom view implementations can access custom parameters.
+     */
+    attributes: any;
+
+    /**
      * Optional function to be invoked on checkbox change.
      */
     changed?:Function;
@@ -48,8 +53,6 @@ module formFor {
      * Shared between formFor and CheckboxField directives.
      */
     model:BindableFieldWrapper;
-
-    attributes:any;
 
     /**
      * Optional custom tab index for input; by default this is 0 (tab order chosen by the browser)
