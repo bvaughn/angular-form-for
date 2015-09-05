@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.3
+New `defaultSelectEmptyOptionValue` property added to `FormForConfiguration` allowing for greater control over "empty" select menus.
+Checkbox directive exposes all HTML attributes via scope for custom renderer use.
+Field name passed in as 4th parameter to custom validation functions in case it is convenient.
+Thanks to @palodelincak for contributing this release!
+
 ## 4.1.2
 PR from @nickguletskii moving `<submit-button>`'s `button-class` attribute to the scope for better dynamic support.
 
