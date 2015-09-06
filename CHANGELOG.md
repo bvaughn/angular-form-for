@@ -83,7 +83,7 @@ Form For has been rewritten in TypeScript and a handful of issues have been reso
 * 92: select-field : empty placeholder
 * 85: validating number precision
 
-This is a major release due to a slight change in markup structure for select-fields that may break existing custom styles. An additional <span> element has been added around the <select> inputs.
+This is a major release due to a slight change in markup structure for select-fields that may break existing custom styles. An additional `<span>` element has been added around the `<select>` inputs.
 
 ## 1.7.2
 Fixed edge-case validation issue for required fields. Also fixed broken logic in unit tests.
@@ -127,7 +127,7 @@ Fixed small CSS bug for checkbox and radio buttons in disabled state (default fo
 Refactored form field markup and stylesheets for simplicity.
 
 ## 1.4.3
-textField directive now allows for overriding of individual <input> and <textarea> elements separately from the surrounding template.
+textField directive now allows for overriding of individual `<input>` and `<textarea>` elements separately from the surrounding template.
 Validation 'types' no longer require values.
 
 ## 1.4.2
