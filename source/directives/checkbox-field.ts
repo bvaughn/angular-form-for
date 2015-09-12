@@ -127,7 +127,7 @@ module formFor {
 
       $scope.$watch('model.bindable', function (value) {
         if (!$scope.model) return;
-        $scope.model.bindable = value || undefined;
+        $scope.model.bindable = !$scope.model.required ? !!value : (value || undefined);
       });
 
       fieldHelper_.manageLabel($scope, $attributes, false);
