@@ -2566,9 +2566,11 @@ var formFor;
             if (validationRules.maximum) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
-                var maximum = angular.isObject(validationRules.maximum) ?
-                    validationRules.maximum.rule :
-                    validationRules.maximum;
+                var maximum = angular.isObject(validationRules.maximum)
+                    ? validationRules.maximum.rule
+                    : angular.isFunction(validationRules.maximum)
+                        ? validationRules.maximum.call(this, value)
+                        : validationRules.maximum;
                 if (stringValue && !isNaN(numericValue) && numericValue > maximum) {
                     var failureMessage;
                     if (angular.isObject(validationRules.maximum)) {
@@ -2606,9 +2608,11 @@ var formFor;
             if (validationRules.minimum) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
-                var minimum = angular.isObject(validationRules.minimum) ?
-                    validationRules.minimum.rule :
-                    validationRules.minimum;
+                var minimum = angular.isObject(validationRules.minimum)
+                    ? validationRules.minimum.rule
+                    : angular.isFunction(validationRules.minimum)
+                        ? validationRules.minimum.call(this, value)
+                        : validationRules.minimum;
                 if (stringValue && !isNaN(numericValue) && numericValue < minimum) {
                     var failureMessage;
                     if (angular.isObject(validationRules.minimum)) {
