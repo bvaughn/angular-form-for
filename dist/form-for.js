@@ -1458,6 +1458,7 @@ var formFor;
 /// <reference path="../utils/form-for-guid.ts" />
 var formFor;
 (function (formFor) {
+    var $sce_;
     var $log_;
     var fieldHelper_;
     /**
@@ -1469,12 +1470,13 @@ var formFor;
      * <radio-field label="Female" attribute="gender" value="f"></radio-field>
      * <radio-field label="Male" attribute="gender" value="m"></radio-field>
      *
+     * @param $sce $injector-supplied $sce service
      * @param $log $injector-supplied $log service
      * @param FormForConfiguration
      */
     var RadioFieldDirective = (function () {
         /* @ngInject */
-        function RadioFieldDirective($log, FormForConfiguration) {
+        function RadioFieldDirective($sce, $log, FormForConfiguration) {
             this.require = '^formFor';
             this.restrict = 'EA';
             this.templateUrl = 'form-for/templates/radio-field.html';
@@ -1486,9 +1488,10 @@ var formFor;
                 value: '@'
             };
             fieldHelper_ = new formFor.FieldHelper(FormForConfiguration);
+            $sce_ = $sce;
             $log_ = $log;
         }
-        RadioFieldDirective.$inject = ["$log", "FormForConfiguration"];
+        RadioFieldDirective.$inject = ["$sce", "$log", "FormForConfiguration"];
         /* @ngInject */
         RadioFieldDirective.prototype.link = function ($scope, $element, $attributes, formForController) {
             if (!$scope.attribute) {
@@ -1508,6 +1511,12 @@ var formFor;
                 if (!$scope.disable && !$scope.model.disabled) {
                 }
             };
+            $scope.$watch('options', function (options) {
+                options.forEach(function (option) {
+                    if (!angular.isObject(option[$scope.labelAttribute]))
+                        option[$scope.labelAttribute] = $sce_.trustAsHtml(option[$scope.labelAttribute]);
+                });
+            }, true);
             $scope.$watch('model', function (value) {
                 $scope.model = value;
             });
@@ -1534,8 +1543,8 @@ var formFor;
         return RadioFieldDirective;
     })();
     formFor.RadioFieldDirective = RadioFieldDirective;
-    angular.module('formFor').directive('radioField', ["$log", "FormForConfiguration", function ($log, FormForConfiguration) {
-        return new RadioFieldDirective($log, FormForConfiguration);
+    angular.module('formFor').directive('radioField', ["$sce", "$log", "FormForConfiguration", function ($sce, $log, FormForConfiguration) {
+        return new RadioFieldDirective($sce, $log, FormForConfiguration);
     }]);
 })(formFor || (formFor = {}));
 /// <reference path="../services/field-helper.ts" />

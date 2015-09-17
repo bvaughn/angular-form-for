@@ -12,7 +12,7 @@
                    ng-disabled="disable || model.disabled"
                    ng-value="option[valueAttribute]"
                    tabindex="{{tabIndex}}">
-      {{option[labelAttribute]}}
+      <span ng-bind-html="option[labelAttribute]"></span>
   </md-radio-button>
 
   <field-error  ng-if="!hideErrorMessage"

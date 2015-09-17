@@ -109,6 +109,7 @@ module formFor {
     scopes:Array<RadioFieldScope>;
   }
 
+  var $sce_:ng.ISCEService;
   var $log_:ng.ILogService;
   var fieldHelper_:FieldHelper;
 
@@ -121,6 +122,7 @@ module formFor {
    * <radio-field label="Female" attribute="gender" value="f"></radio-field>
    * <radio-field label="Male" attribute="gender" value="m"></radio-field>
    *
+   * @param $sce $injector-supplied $sce service
    * @param $log $injector-supplied $log service
    * @param FormForConfiguration
    */
@@ -139,8 +141,9 @@ module formFor {
     };
 
     /* @ngInject */
-    constructor($log:ng.ILogService, FormForConfiguration) {
+    constructor($sce:ng.ISCEService, $log:ng.ILogService, FormForConfiguration) {
       fieldHelper_  = new FieldHelper(FormForConfiguration);
+      $sce_ = $sce;
       $log_ = $log;
     }
 
@@ -172,6 +175,12 @@ module formFor {
         }
       };
 
+      $scope.$watch('options', (options) => {
+        options.forEach((option) => {
+          if (!angular.isObject(option[$scope.labelAttribute]))
+            option[$scope.labelAttribute] = $sce_.trustAsHtml(option[$scope.labelAttribute]);
+        });
+      }, true);
       $scope.$watch('model', (value) => {
         $scope.model = value;
       });
@@ -198,7 +207,7 @@ module formFor {
   }
 
   angular.module('formFor').directive('radioField',
-    ($log, FormForConfiguration) => {
-      return new RadioFieldDirective($log, FormForConfiguration);
+    ($sce, $log, FormForConfiguration) => {
+      return new RadioFieldDirective($sce, $log, FormForConfiguration);
     });
 }
