@@ -1864,7 +1864,8 @@ var formFor;
                 iconAfterClicked: '&?',
                 iconBeforeClicked: '&?',
                 placeholder: '@?',
-                rows: '=?'
+                rows: '=?',
+                controller: '='
             };
             $log_ = $log;
             $timeout_ = $timeout;
@@ -1882,6 +1883,9 @@ var formFor;
             $scope.type = $attributes['type'] || 'text';
             $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes['multiline'] !== 'false';
             $scope.tabIndex = $attributes['tabIndex'] || 0;
+            $timeout_(function () {
+                $scope.controller = $element.find($scope.multiline ? 'textarea' : 'input').controller('ngModel');
+            });
             if ($attributes.hasOwnProperty('autofocus')) {
                 $timeout_(function () {
                     $element.find($scope.multiline ? 'textarea' : 'input')[0].focus();
