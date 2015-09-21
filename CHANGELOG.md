@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.4
+The `checkbox-field` behaves more inline with native AngularJS checkbox regarding true/false values based on selection.
+The `text-field` now allows users to bind to the inner `NgModelController` for increased functionality.
+The `radio-field` now allows its options to contain HTML for their display.
+Minimum and maximum validation rules now display a meaningful validation-failure message by default.
+For more information refer to pull-requests #157, #158, #159, and #160.
+Thanks to @indrimuska for contributing this release!
+
 ## 4.1.3
 New `defaultSelectEmptyOptionValue` property added to `FormForConfiguration` allowing for greater control over "empty" select menus.
 Checkbox directive exposes all HTML attributes via scope for custom renderer use.

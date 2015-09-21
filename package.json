@@ -1,6 +1,6 @@
 {
   "name": "angular-form-for",
-  "version": "4.1.3",
+  "version": "4.1.4",
   "description": "Set of Angular directives to simplify creating and validating HTML forms.",
   "keywords": [
     "angular",
