@@ -25,7 +25,7 @@
               ng-value="option[valueAttribute]"
               ng-disabled="disable || model.disabled">
 
-      {{option[labelAttribute]}}
+      <span ng-bind-html="option[labelAttribute]"></span>
     </label>
   </div>
 </span>
