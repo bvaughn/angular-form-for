@@ -148,6 +148,11 @@ module formFor {
      * A unique ID will be auto-generated if no value is provided.
      */
     uid?:string;
+
+    /**
+     * NgModelController of the input.
+     */
+    controller:any;
   }
 
   var $log_:ng.ILogService;
@@ -201,7 +206,8 @@ module formFor {
       iconAfterClicked: '&?',
       iconBeforeClicked: '&?',
       placeholder: '@?',
-      rows: '=?'
+      rows: '=?',
+      controller: '='
     };
 
     /* @ngInject */
@@ -231,6 +237,10 @@ module formFor {
       $scope.type = $attributes['type'] || 'text';
       $scope.multiline = $attributes.hasOwnProperty('multiline') && $attributes['multiline'] !== 'false';
       $scope.tabIndex = $attributes['tabIndex'] || 0;
+
+      $timeout_(() => {
+        $scope.controller = $element.find($scope.multiline ? 'textarea' : 'input').controller('ngModel');
+      });
 
       if ($attributes.hasOwnProperty('autofocus')) {
         $timeout_(() => {
