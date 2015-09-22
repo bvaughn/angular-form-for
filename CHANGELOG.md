@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.5
+Fixed a small oversight in `text-field` that made the `controller` scope property required (when it should be optional).
+
 ## 4.1.4
 The `checkbox-field` behaves more inline with native AngularJS checkbox regarding true/false values based on selection.
 The `text-field` now allows users to bind to the inner `NgModelController` for increased functionality.

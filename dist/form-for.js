@@ -1875,7 +1875,7 @@ var formFor;
                 iconBeforeClicked: '&?',
                 placeholder: '@?',
                 rows: '=?',
-                controller: '='
+                controller: '=?'
             };
             $log_ = $log;
             $timeout_ = $timeout;
@@ -2312,106 +2312,6 @@ var formFor;
     ;
 })(formFor || (formFor = {}));
 ;
-/// <reference path="nested-object-helper.ts" />
-var formFor;
-(function (formFor) {
-    /*
-     * Organizes state management for form-submission and field validity.
-     *
-     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
-     */
-    var FormForStateHelper = (function () {
-        // TODO Add some documentation
-        function FormForStateHelper($parse, $scope) {
-            this.formForScope_ = $scope;
-            this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
-            this.formForScope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
-            this.formForScope_.valid = true;
-            this.fieldNameToModifiedStateMap_ = {};
-            this.formSubmitted_ = false;
-            this.fieldNameToErrorMap_ = {};
-            this.watchable = 0;
-        }
-        FormForStateHelper.prototype.getFieldError = function (fieldName) {
-            return this.nestedObjectHelper_.readAttribute(this.formForScope_.fieldNameToErrorMap, fieldName);
-        };
-        FormForStateHelper.prototype.hasFieldBeenModified = function (fieldName) {
-            return this.nestedObjectHelper_.readAttribute(this.fieldNameToModifiedStateMap_, fieldName);
-        };
-        FormForStateHelper.prototype.hasFormBeenSubmitted = function () {
-            return this.formSubmitted_;
-        };
-        FormForStateHelper.prototype.isFormInvalid = function () {
-            return !this.isFormValid();
-        };
-        FormForStateHelper.prototype.isFormValid = function () {
-            for (var prop in this.fieldNameToErrorMap_) {
-                return false;
-            }
-            return true;
-        };
-        FormForStateHelper.prototype.resetFieldErrors = function () {
-            this.formForScope_.fieldNameToErrorMap = {};
-        };
-        FormForStateHelper.prototype.setFieldError = function (fieldName, error) {
-            var safeFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
-            this.nestedObjectHelper_.writeAttribute(this.formForScope_.fieldNameToErrorMap, fieldName, error);
-            if (error) {
-                this.fieldNameToErrorMap_[safeFieldName] = error;
-            }
-            else {
-                delete this.fieldNameToErrorMap_[safeFieldName];
-            }
-            this.formForScope_.valid = this.isFormValid();
-            this.watchable++;
-        };
-        FormForStateHelper.prototype.setFieldHasBeenModified = function (fieldName, hasBeenModified) {
-            this.nestedObjectHelper_.writeAttribute(this.fieldNameToModifiedStateMap_, fieldName, hasBeenModified);
-            this.watchable++;
-        };
-        FormForStateHelper.prototype.setFormSubmitted = function (submitted) {
-            this.formSubmitted_ = submitted;
-            this.watchable++;
-        };
-        return FormForStateHelper;
-    })();
-    formFor.FormForStateHelper = FormForStateHelper;
-})(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    /**
-     * Utility for working with strings.
-     *
-     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
-     */
-    var StringUtil = (function () {
-        function StringUtil() {
-        }
-        /**
-         * Converts text in common variable formats to humanized form.
-         *
-         * @param text Name of variable to be humanized (ex. myVariable, my_variable)
-         * @returns Humanized string (ex. 'My Variable')
-         */
-        StringUtil.humanize = function (text) {
-            if (!text) {
-                return '';
-            }
-            text = text.replace(/[A-Z]/g, function (match) {
-                return ' ' + match;
-            });
-            text = text.replace(/_([a-z])/g, function (match, $1) {
-                return ' ' + $1.toUpperCase();
-            });
-            text = text.replace(/\s+/g, ' ');
-            text = text.trim();
-            text = text.charAt(0).toUpperCase() + text.slice(1);
-            return text;
-        };
-        return StringUtil;
-    })();
-    formFor.StringUtil = StringUtil;
-})(formFor || (formFor = {}));
 /// <reference path="../../definitions/angular.d.ts" />
 /// <reference path="form-for-configuration.ts" />
 /// <reference path="../utils/nested-object-helper.ts" />
@@ -2852,5 +2752,105 @@ var formFor;
     angular.module('formFor').service('ModelValidator', ["$interpolate", "$parse", "$q", "FormForConfiguration", function ($interpolate, $parse, $q, FormForConfiguration) {
         return new ModelValidator($interpolate, $parse, $q, FormForConfiguration);
     }]);
+})(formFor || (formFor = {}));
+/// <reference path="nested-object-helper.ts" />
+var formFor;
+(function (formFor) {
+    /*
+     * Organizes state management for form-submission and field validity.
+     *
+     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
+     */
+    var FormForStateHelper = (function () {
+        // TODO Add some documentation
+        function FormForStateHelper($parse, $scope) {
+            this.formForScope_ = $scope;
+            this.nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
+            this.formForScope_.fieldNameToErrorMap = $scope.fieldNameToErrorMap || {};
+            this.formForScope_.valid = true;
+            this.fieldNameToModifiedStateMap_ = {};
+            this.formSubmitted_ = false;
+            this.fieldNameToErrorMap_ = {};
+            this.watchable = 0;
+        }
+        FormForStateHelper.prototype.getFieldError = function (fieldName) {
+            return this.nestedObjectHelper_.readAttribute(this.formForScope_.fieldNameToErrorMap, fieldName);
+        };
+        FormForStateHelper.prototype.hasFieldBeenModified = function (fieldName) {
+            return this.nestedObjectHelper_.readAttribute(this.fieldNameToModifiedStateMap_, fieldName);
+        };
+        FormForStateHelper.prototype.hasFormBeenSubmitted = function () {
+            return this.formSubmitted_;
+        };
+        FormForStateHelper.prototype.isFormInvalid = function () {
+            return !this.isFormValid();
+        };
+        FormForStateHelper.prototype.isFormValid = function () {
+            for (var prop in this.fieldNameToErrorMap_) {
+                return false;
+            }
+            return true;
+        };
+        FormForStateHelper.prototype.resetFieldErrors = function () {
+            this.formForScope_.fieldNameToErrorMap = {};
+        };
+        FormForStateHelper.prototype.setFieldError = function (fieldName, error) {
+            var safeFieldName = this.nestedObjectHelper_.flattenAttribute(fieldName);
+            this.nestedObjectHelper_.writeAttribute(this.formForScope_.fieldNameToErrorMap, fieldName, error);
+            if (error) {
+                this.fieldNameToErrorMap_[safeFieldName] = error;
+            }
+            else {
+                delete this.fieldNameToErrorMap_[safeFieldName];
+            }
+            this.formForScope_.valid = this.isFormValid();
+            this.watchable++;
+        };
+        FormForStateHelper.prototype.setFieldHasBeenModified = function (fieldName, hasBeenModified) {
+            this.nestedObjectHelper_.writeAttribute(this.fieldNameToModifiedStateMap_, fieldName, hasBeenModified);
+            this.watchable++;
+        };
+        FormForStateHelper.prototype.setFormSubmitted = function (submitted) {
+            this.formSubmitted_ = submitted;
+            this.watchable++;
+        };
+        return FormForStateHelper;
+    })();
+    formFor.FormForStateHelper = FormForStateHelper;
+})(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Utility for working with strings.
+     *
+     * <p>Intended for use only by formFor directive; this class is not exposed to the $injector.
+     */
+    var StringUtil = (function () {
+        function StringUtil() {
+        }
+        /**
+         * Converts text in common variable formats to humanized form.
+         *
+         * @param text Name of variable to be humanized (ex. myVariable, my_variable)
+         * @returns Humanized string (ex. 'My Variable')
+         */
+        StringUtil.humanize = function (text) {
+            if (!text) {
+                return '';
+            }
+            text = text.replace(/[A-Z]/g, function (match) {
+                return ' ' + match;
+            });
+            text = text.replace(/_([a-z])/g, function (match, $1) {
+                return ' ' + $1.toUpperCase();
+            });
+            text = text.replace(/\s+/g, ' ');
+            text = text.trim();
+            text = text.charAt(0).toUpperCase() + text.slice(1);
+            return text;
+        };
+        return StringUtil;
+    })();
+    formFor.StringUtil = StringUtil;
 })(formFor || (formFor = {}));
 /// <reference path="../../../definitions/angular.d.ts" />

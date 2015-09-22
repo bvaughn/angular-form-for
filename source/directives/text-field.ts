@@ -207,7 +207,7 @@ module formFor {
       iconBeforeClicked: '&?',
       placeholder: '@?',
       rows: '=?',
-      controller: '='
+      controller: '=?'
     };
 
     /* @ngInject */
