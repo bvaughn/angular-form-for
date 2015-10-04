@@ -161,7 +161,7 @@ module formFor {
                   if ($attributes['submitComplete']) {
                     $scope.submitComplete({data: response});
                   } else {
-                    formForConfiguration_.defaultSubmitComplete(response);
+                    formForConfiguration_.defaultSubmitComplete(response, $scope.controller);
                   }
                 },
                 (errorMessageOrErrorMap:any) => {
@@ -179,7 +179,7 @@ module formFor {
                   if ($attributes['submitError']) {
                     $scope.submitError({error: errorMessageOrErrorMap});
                   } else {
-                    formForConfiguration_.defaultSubmitError(errorMessageOrErrorMap);
+                    formForConfiguration_.defaultSubmitError(errorMessageOrErrorMap, $scope.controller);
                   }
                 });
               promise['finally'](

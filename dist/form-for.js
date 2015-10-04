@@ -1389,7 +1389,7 @@ var formFor;
                             $scope.submitComplete({ data: response });
                         }
                         else {
-                            formForConfiguration_.defaultSubmitComplete(response);
+                            formForConfiguration_.defaultSubmitComplete(response, $scope.controller);
                         }
                     }, function (errorMessageOrErrorMap) {
                         // If the remote response returned inline-errors update our error map.
@@ -1406,7 +1406,7 @@ var formFor;
                             $scope.submitError({ error: errorMessageOrErrorMap });
                         }
                         else {
-                            formForConfiguration_.defaultSubmitError(errorMessageOrErrorMap);
+                            formForConfiguration_.defaultSubmitError(errorMessageOrErrorMap, $scope.controller);
                         }
                     });
                     promise['finally'](function () {
