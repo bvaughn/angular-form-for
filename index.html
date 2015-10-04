@@ -3,7 +3,11 @@
   <head>
     <meta charset="utf-8">
 
-    <base href="/angular-form-for/#/">
+    <script type="text/javascript">
+        if (!location.host.match('localhost')) {
+            document.write('<base href="/angular-form-for/#/">');
+        }
+    </script>
 
     <title>Angular formFor - Create and validate HTML forms with Angular JS</title>
 

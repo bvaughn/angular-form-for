@@ -62,7 +62,7 @@ angular.module('formForDocumentation').directive('tabbedDemo', function() {
     link: function($scope, $element, $attributes) {
       $scope.htmlSource = $attributes.htmlSource;
       $scope.jsSource = $attributes.jsSource ? $attributes.jsSource : null;
-      $scope.formData = $scope.ctrl.formData;
+      $scope.formData = $scope.ctrl ? $scope.ctrl.formData : {};
     }
   };
 });
