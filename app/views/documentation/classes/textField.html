@@ -24,6 +24,12 @@
       description: 'Name of the attribute within the parent form-for directive\'s model object. This attributes specifies the data-binding target for the input. Dot notation (e.g. <em>address.street</em>) is supported.'
     },
     {
+      name: 'controller',
+      optional: true,
+      type: 'Object',
+      description: 'Two way bindable attribute exposing access to the <code>NgModelController</code> of the inner input.
+    },
+    {
       name: 'debounce',
       optional: true,
       type: 'Integer',

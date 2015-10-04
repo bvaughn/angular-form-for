@@ -94,8 +94,12 @@
 </p>
 <p>
   Default handler function accepting a data parameter representing the server-response returned by the submitted form.
-  This function should accept a single parameter, the response data from the form-submit method.
+  This function should accept two parameters:
 </p>
+<ol>
+  <li>The response data from the form-submit method</li>
+  <li>The <code>FormForController</code> (used to update error messages, etc.) if one has been bound to in the parent <code>FormFor</code> directive.</li>
+</ol>
 <signature params="[
   {name: 'callback', type: 'Function', description: 'Callback function'}
 ]"></signature>
@@ -109,8 +113,12 @@
   This setting can be overridden on a per-form basis (see formFor).
 </p>
 <p>
-  This method should accept a single parameter, the error returned by the form-submit method.
+  This function should accept two parameters:
 </p>
+<ol>
+  <li>Tthe error returned by the form-submit method</li>
+  <li>The <code>FormForController</code> (used to update error messages, etc.) if one has been bound to in the parent <code>FormFor</code> directive.</li>
+</ol>
 <signature params="[
   {name: 'callback', type: 'Function', description: 'Callback function'}
 ]"></signature>
