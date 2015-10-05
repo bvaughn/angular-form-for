@@ -76,7 +76,9 @@ module formFor {
 
     replace:boolean = true; // Necessary for CSS sibling selectors
     restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/field-label.html';
+    templateUrl:string = ($element, $attributes) => {
+        return $attributes['template'] || 'form-for/templates/field-label.html';
+    };
 
     scope:any = {
       inputUid: '@',

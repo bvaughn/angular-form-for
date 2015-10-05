@@ -64,7 +64,9 @@ module formFor {
 
     require:string = '^formFor';
     restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/submit-button.html';
+    templateUrl:string = ($element, $attributes) => {
+        return $attributes['template'] || 'form-for/templates/submit-button.html';
+    };
 
     scope:any = {
       disable: '=',

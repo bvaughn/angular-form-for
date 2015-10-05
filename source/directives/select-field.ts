@@ -204,7 +204,9 @@ module formFor {
 
     require:string = '^formFor';
     restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/select-field.html';
+    templateUrl:string = ($element, $attributes) => {
+        return $attributes['template'] || 'form-for/templates/select-field.html';
+    };
 
     scope:any = {
       attribute: '@',
