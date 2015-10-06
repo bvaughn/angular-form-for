@@ -211,6 +211,7 @@ module formFor {
       disable: '=',
       help: '@?',
       multiple: '=?',
+      showPlaceholderForEmptyValues: '=?',
       options: '='
     };
 
@@ -315,9 +316,9 @@ module formFor {
         $scope.bindableOptions.push.apply($scope.bindableOptions, $scope.options);
 
         // Once a value has been selected, clear the placeholder prompt.
-        if ($scope.model.bindable) {
+        if ($scope.model.bindable && !$scope.showPlaceholderForEmptyValues) {
           $scope.emptyOption[$scope.labelAttribute] = '';
-        } else if ($scope.model.bindable === undefined) {
+        } else if ($scope.showPlaceholderForEmptyValues && $scope.model.bindable === undefined) {
           $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
         }
       };
