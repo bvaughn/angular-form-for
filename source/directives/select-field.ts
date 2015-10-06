@@ -317,6 +317,8 @@ module formFor {
         // Once a value has been selected, clear the placeholder prompt.
         if ($scope.model.bindable) {
           $scope.emptyOption[$scope.labelAttribute] = '';
+        } else if ($scope.model.bindable === undefined) {
+          $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
         }
       };
 
