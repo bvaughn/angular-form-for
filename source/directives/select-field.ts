@@ -204,14 +204,15 @@ module formFor {
 
     require:string = '^formFor';
     restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/select-field.html';
+    templateUrl:string = ($element, $attributes) => {
+        return $attributes['template'] || 'form-for/templates/select-field.html';
+    };
 
     scope:any = {
       attribute: '@',
       disable: '=',
       help: '@?',
       multiple: '=?',
-      showPlaceholderForEmptyValues: '=?',
       options: '='
     };
 
@@ -316,10 +317,8 @@ module formFor {
         $scope.bindableOptions.push.apply($scope.bindableOptions, $scope.options);
 
         // Once a value has been selected, clear the placeholder prompt.
-        if ($scope.model.bindable && !$scope.showPlaceholderForEmptyValues) {
+        if ($scope.model.bindable) {
           $scope.emptyOption[$scope.labelAttribute] = '';
-        } else if ($scope.showPlaceholderForEmptyValues && $scope.model.bindable === undefined) {
-          $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
         }
       };
 
