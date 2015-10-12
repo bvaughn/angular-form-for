@@ -51,7 +51,9 @@ module formFor {
 
     require:string = '^formFor';
     restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/collection-label.html';
+    templateUrl:string = ($element, $attributes) => {
+        return $attributes['template'] || 'form-for/templates/collection-label.html';
+    };
 
     scope:any = {
       attribute: '@',

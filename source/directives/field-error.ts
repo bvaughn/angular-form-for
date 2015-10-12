@@ -29,7 +29,9 @@ module formFor {
   export class FieldErrorDirective implements ng.IDirective {
 
     restrict:string = 'EA';
-    templateUrl:string = 'form-for/templates/field-error.html';
+    templateUrl:string = ($element, $attributes) => {
+        return $attributes['template'] || 'form-for/templates/field-error.html';
+    };
 
     scope:any = {
       error: '=',
