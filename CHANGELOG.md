@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.6
+Form controller passed as 2nd argument to default/global form-submit and form-error handlers.
+
 ## 4.1.5
 Fixed a small oversight in `text-field` that made the `controller` scope property required (when it should be optional).
 
