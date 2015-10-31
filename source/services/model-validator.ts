@@ -42,7 +42,7 @@ module formFor {
      * @param validationRuleSet Map of field names to validation rules
      */
     public isCollectionRequired(fieldName:string, validationRuleSet:ValidationRuleSet):boolean {
-      var validationRules:ValidationRules = this.getRulesFor_(fieldName, validationRuleSet);
+      var validationRules:ValidationRules = this.getRulesForField(fieldName, validationRuleSet);
 
       if (validationRules &&
         validationRules.collection &&
@@ -65,7 +65,7 @@ module formFor {
      * @param validationRuleSet Map of field names to validation rules
      */
     public isFieldRequired(fieldName:string, validationRuleSet:ValidationRuleSet):boolean {
-      var validationRules:ValidationRules = this.getRulesFor_(fieldName, validationRuleSet);
+      var validationRules:ValidationRules = this.getRulesForField(fieldName, validationRuleSet);
 
       if (validationRules && validationRules.required) {
         if (angular.isObject(validationRules.required)) {
@@ -103,7 +103,7 @@ module formFor {
      * @return Promise to be resolved or rejected based on validation success or failure.
      */
     public validateCollection(formData:Object, fieldName:string, validationRuleSet:ValidationRuleSet):ng.IPromise<any> {
-      var validationRules:ValidationRules = this.getRulesFor_(fieldName, validationRuleSet);
+      var validationRules:ValidationRules = this.getRulesForField(fieldName, validationRuleSet);
       var collection:Array<any> = this.nestedObjectHelper_.readAttribute(formData, fieldName);
 
       if (validationRules && validationRules.collection) {
@@ -128,7 +128,7 @@ module formFor {
      * @return Promise to be resolved or rejected based on validation success or failure.
      */
     public validateField(formData:Object, fieldName:string, validationRuleSet:ValidationRuleSet):ng.IPromise<any> {
-      var validationRules:ValidationRules = this.getRulesFor_(fieldName, validationRuleSet);
+      var validationRules:ValidationRules = this.getRulesForField(fieldName, validationRuleSet);
       var value:any = this.nestedObjectHelper_.readAttribute(formData, fieldName);
 
       if (validationRules) {
@@ -167,7 +167,7 @@ module formFor {
       var errorMap:ValidationErrorMap = {};
 
       angular.forEach(fieldNames, (fieldName:string) => {
-        var validationRules:ValidationRules = this.getRulesFor_(fieldName, validationRuleSet);
+        var validationRules:ValidationRules = this.getRulesForField(fieldName, validationRuleSet);
 
         if (validationRules) {
           var promise:ng.IPromise<any>;
@@ -203,10 +203,8 @@ module formFor {
     /**
      * Strip array brackets from field names so that model values can be mapped to rules.
      * e.g. "foo[0].bar" should be validated against "foo.collection.fields.bar"
-     *
-     * @private
      */
-    private getRulesFor_(fieldName:string, validationRuleSet:ValidationRuleSet):ValidationRules {
+    public getRulesForField(fieldName:string, validationRuleSet:ValidationRuleSet):ValidationRules {
       var expandedFieldName:string = fieldName.replace(/\[[^\]]+\]/g, '.collection.fields');
 
       return this.nestedObjectHelper_.readAttribute(validationRuleSet, expandedFieldName);

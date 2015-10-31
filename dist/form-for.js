@@ -1010,6 +1010,12 @@ var formFor;
         /**
          * @inheritDocs
          */
+        target.getValidationRulesForAttribute = function (fieldName) {
+            return modelValidator.getRulesForField(fieldName, $scope.$validationRuleset);
+        };
+        /**
+         * @inheritDocs
+         */
         target.registerCollectionLabel = function (fieldName) {
             var bindableFieldName = nestedObjectHelper.flattenAttribute(fieldName);
             var bindableWrapper = {
@@ -1824,7 +1830,26 @@ var formFor;
         return new SubmitButtonDirective($sce);
     }]);
 })(formFor || (formFor = {}));
+var formFor;
+(function (formFor) {
+    /**
+     * Constraints that can be applied to a form field.
+     * These constraints can be combined (e.g. "positive integer").
+     */
+    (function (ValidationFieldType) {
+        ValidationFieldType[ValidationFieldType["EMAIL"] = "email"] = "EMAIL";
+        ValidationFieldType[ValidationFieldType["INTEGER"] = "integer"] = "INTEGER";
+        ValidationFieldType[ValidationFieldType["NEGATIVE"] = "negative"] = "NEGATIVE";
+        ValidationFieldType[ValidationFieldType["NON_NEGATIVE"] = "nonNegative"] = "NON_NEGATIVE";
+        ValidationFieldType[ValidationFieldType["NUMBER"] = "number"] = "NUMBER";
+        ValidationFieldType[ValidationFieldType["POSITIVE"] = "positive"] = "POSITIVE";
+    })(formFor.ValidationFieldType || (formFor.ValidationFieldType = {}));
+    var ValidationFieldType = formFor.ValidationFieldType;
+    ;
+})(formFor || (formFor = {}));
+;
 /// <reference path="../services/field-helper.ts" />
+/// <reference path="../enums/validation-field-type.ts" />
 var formFor;
 (function (formFor) {
     var $log_;
@@ -1908,6 +1933,14 @@ var formFor;
             }
             fieldHelper_.manageLabel($scope, $attributes, false);
             fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+            // Expose certain validation rules (such as min/max) so that the view layer can pass them along
+            var validationRules = formForController.getValidationRulesForAttribute($scope.attribute);
+            if (validationRules) {
+                $scope.validationRules = {
+                    maximum: validationRules.maximum,
+                    minimum: validationRules.minimum
+                };
+            }
             // Update $scope.iconAfter based on the field state (see class-level documentation for more)
             if ($attributes['iconAfter']) {
                 var updateIconAfter = function () {
@@ -2284,24 +2317,6 @@ var formFor;
 var formFor;
 (function (formFor) {
     /**
-     * Constraints that can be applied to a form field.
-     * These constraints can be combined (e.g. "positive integer").
-     */
-    (function (ValidationFieldType) {
-        ValidationFieldType[ValidationFieldType["EMAIL"] = "email"] = "EMAIL";
-        ValidationFieldType[ValidationFieldType["INTEGER"] = "integer"] = "INTEGER";
-        ValidationFieldType[ValidationFieldType["NEGATIVE"] = "negative"] = "NEGATIVE";
-        ValidationFieldType[ValidationFieldType["NON_NEGATIVE"] = "nonNegative"] = "NON_NEGATIVE";
-        ValidationFieldType[ValidationFieldType["NUMBER"] = "number"] = "NUMBER";
-        ValidationFieldType[ValidationFieldType["POSITIVE"] = "positive"] = "POSITIVE";
-    })(formFor.ValidationFieldType || (formFor.ValidationFieldType = {}));
-    var ValidationFieldType = formFor.ValidationFieldType;
-    ;
-})(formFor || (formFor = {}));
-;
-var formFor;
-(function (formFor) {
-    /**
      * Wrapper object for a form-field attribute that exposes field-state to field directives.
      *
      * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
@@ -2346,7 +2361,7 @@ var formFor;
          * @param validationRuleSet Map of field names to validation rules
          */
         ModelValidator.prototype.isCollectionRequired = function (fieldName, validationRuleSet) {
-            var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+            var validationRules = this.getRulesForField(fieldName, validationRuleSet);
             if (validationRules && validationRules.collection && validationRules.collection.min) {
                 if (angular.isObject(validationRules.collection.min)) {
                     return validationRules.collection.min.rule > 0;
@@ -2364,7 +2379,7 @@ var formFor;
          * @param validationRuleSet Map of field names to validation rules
          */
         ModelValidator.prototype.isFieldRequired = function (fieldName, validationRuleSet) {
-            var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+            var validationRules = this.getRulesForField(fieldName, validationRuleSet);
             if (validationRules && validationRules.required) {
                 if (angular.isObject(validationRules.required)) {
                     return validationRules.required.rule;
@@ -2398,7 +2413,7 @@ var formFor;
          * @return Promise to be resolved or rejected based on validation success or failure.
          */
         ModelValidator.prototype.validateCollection = function (formData, fieldName, validationRuleSet) {
-            var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+            var validationRules = this.getRulesForField(fieldName, validationRuleSet);
             var collection = this.nestedObjectHelper_.readAttribute(formData, fieldName);
             if (validationRules && validationRules.collection) {
                 collection = collection || [];
@@ -2417,7 +2432,7 @@ var formFor;
          * @return Promise to be resolved or rejected based on validation success or failure.
          */
         ModelValidator.prototype.validateField = function (formData, fieldName, validationRuleSet) {
-            var validationRules = this.getRulesFor_(fieldName, validationRuleSet);
+            var validationRules = this.getRulesForField(fieldName, validationRuleSet);
             var value = this.nestedObjectHelper_.readAttribute(formData, fieldName);
             if (validationRules) {
                 if (value === undefined || value === null) {
@@ -2444,7 +2459,7 @@ var formFor;
             var promises = [];
             var errorMap = {};
             angular.forEach(fieldNames, function (fieldName) {
-                var validationRules = _this.getRulesFor_(fieldName, validationRuleSet);
+                var validationRules = _this.getRulesForField(fieldName, validationRuleSet);
                 if (validationRules) {
                     var promise;
                     if (validationRules.collection) {
@@ -2469,10 +2484,8 @@ var formFor;
         /**
          * Strip array brackets from field names so that model values can be mapped to rules.
          * e.g. "foo[0].bar" should be validated against "foo.collection.fields.bar"
-         *
-         * @private
          */
-        ModelValidator.prototype.getRulesFor_ = function (fieldName, validationRuleSet) {
+        ModelValidator.prototype.getRulesForField = function (fieldName, validationRuleSet) {
             var expandedFieldName = fieldName.replace(/\[[^\]]+\]/g, '.collection.fields');
             return this.nestedObjectHelper_.readAttribute(validationRuleSet, expandedFieldName);
         };

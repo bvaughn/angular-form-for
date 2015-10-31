@@ -662,7 +662,7 @@ describe('ModelValidator', function() {
     });
   });
 
-  describe('getRulesFor_', function() {
+  describe('getRulesForField', function() {
     beforeEach(function() {
       model.rules = {
         things: {
@@ -683,11 +683,11 @@ describe('ModelValidator', function() {
     });
 
     it('should strip array brackets from collection field names', function() {
-      expect(ModelValidator.getRulesFor_('things[0].name', model.rules)).toEqual(model.rules.things.collection.fields.name);
+      expect(ModelValidator.getRulesForField('things[0].name', model.rules)).toEqual(model.rules.things.collection.fields.name);
     });
 
     it('should not modify field anmes without array brackets', function() {
-      expect(ModelValidator.getRulesFor_('thing.name', model.rules)).toEqual(model.rules.thing.name);
+      expect(ModelValidator.getRulesForField('thing.name', model.rules)).toEqual(model.rules.thing.name);
     });
   });
 

@@ -11,4 +11,7 @@
         ng-model="model.bindable"
         form-for-debounce="{{debounce}}"
         ng-click="onFocus()"
-        ng-blur="onBlur()" />
+        ng-blur="onBlur()"
+
+        min="{{validationRules.minimum}}"
+        max="{{validationRules.maximum}}" />

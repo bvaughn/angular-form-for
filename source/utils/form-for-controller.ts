@@ -6,6 +6,14 @@ module formFor {
   export interface FormForController {
 
     /**
+     * Returns the validation rules for a specific field.
+     *
+     * @param fieldName Unique identifier of collection within model
+     * @return Validations rules for field (if any have been provided)
+     */
+    getValidationRulesForAttribute(fieldName:string):ValidationRules;
+
+    /**
      * Collection headers should register themselves using this function in order to be notified of validation errors.
      *
      * @param fieldName Unique identifier of collection within model
@@ -115,6 +123,13 @@ module formFor {
 
     var nestedObjectHelper = new NestedObjectHelper($parse);
     var promiseUtils = new PromiseUtils($q);
+
+    /**
+     * @inheritDocs
+     */
+    target.getValidationRulesForAttribute= (fieldName:string):Object => {
+      return modelValidator.getRulesForField(fieldName, $scope.$validationRuleset);
+    };
 
     /**
      * @inheritDocs

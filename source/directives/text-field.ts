@@ -1,4 +1,5 @@
 /// <reference path="../services/field-helper.ts" />
+/// <reference path="../enums/validation-field-type.ts" />
 
 module formFor {
 
@@ -28,6 +29,11 @@ module formFor {
      * Optional function to be invoked on text input blur.
      */
     blurred?:Function;
+
+    /**
+     * NgModelController of the input.
+     */
+    controller:any;
 
     /**
      * Debounce duration (in ms) before input text is applied to model and evaluated.
@@ -150,9 +156,9 @@ module formFor {
     uid?:string;
 
     /**
-     * NgModelController of the input.
+     * Exposes special validation rules to the view layer to be passed on to the <input> control.
      */
-    controller:any;
+    validationRules:Object;
   }
 
   var $log_:ng.ILogService;
@@ -252,6 +258,18 @@ module formFor {
 
       fieldHelper_.manageLabel($scope, $attributes, false);
       fieldHelper_.manageFieldRegistration($scope, $attributes, formForController);
+
+      // Expose certain validation rules (such as min/max) so that the view layer can pass them along
+      var validationRules:ValidationRules = formForController.getValidationRulesForAttribute($scope.attribute);
+      if (validationRules) {
+        $scope.validationRules = {
+          maximum: validationRules.maximum,
+          minimum: validationRules.minimum
+        }
+
+        // TODO We could pull the text field :type from validation rules as well
+        // But that would be a non-backwards-compatible change.
+      }
 
       // Update $scope.iconAfter based on the field state (see class-level documentation for more)
       if ($attributes['iconAfter']) {
