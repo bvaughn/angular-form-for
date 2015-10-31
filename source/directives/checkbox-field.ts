@@ -97,7 +97,7 @@ module formFor {
       attribute: '@',
       disable: '=',
       help: '@?',
-      changed: '@?'
+      changed: '&?'
     };
 
     /* @ngInject */
