@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.1.7
+Fixed `checkbox-field` issue where `changed` property had the wrong type ("@" instead of "&").
+Added new numeric validation rule: `increment`.
+Numeric validation rules `minimum`, `maximum`, and (new) `increment` are automatically passed through to <input type="number"> for `text-field`s.
+
 ## 4.1.6
 Form controller passed as 2nd argument to default/global form-submit and form-error handlers.
 
