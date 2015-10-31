@@ -263,6 +263,7 @@ module formFor {
       var validationRules:ValidationRules = formForController.getValidationRulesForAttribute($scope.attribute);
       if (validationRules) {
         $scope.validationRules = {
+          increment: validationRules.increment,
           maximum: validationRules.maximum,
           minimum: validationRules.minimum
         }

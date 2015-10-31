@@ -49,6 +49,7 @@ var formFor;
             this.requiredLabel = null;
             this.validationFailedForCustomMessage_ = "Failed custom validation";
             this.validationFailedForEmailTypeMessage_ = "Invalid email format";
+            this.validationFailedForIncrementMessage_ = "Value must be in increments of {{num}}";
             this.validationFailedForIntegerTypeMessage_ = "Must be an integer";
             this.validationFailedForMaxCollectionSizeMessage_ = "Must be fewer than {{num}} items";
             this.validationFailedForMaximumMessage_ = "Must be no more than {{num}}";
@@ -102,6 +103,8 @@ var formFor;
                     return this.validationFailedForMaxCollectionSizeMessage_;
                 case formFor.ValidationFailureType.COLLECTION_MIN_SIZE:
                     return this.validationFailedForMinCollectionSizeMessage_;
+                case formFor.ValidationFailureType.INCREMENT:
+                    return this.validationFailedForIncrementMessage_;
                 case formFor.ValidationFailureType.MINIMUM:
                     return this.validationFailedForMinimumMessage_;
                 case formFor.ValidationFailureType.MAX_LENGTH:
@@ -200,6 +203,13 @@ var formFor;
          */
         FormForConfiguration.prototype.setValidationFailedForCustomMessage = function (value) {
             this.validationFailedForCustomMessage_ = value;
+        };
+        /**
+         * Override the default error message for failed numeric increment validations.
+         * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+         */
+        FormForConfiguration.prototype.setValidationFailedForIncrementMessage = function (value) {
+            this.validationFailedForIncrementMessage_ = value;
         };
         /**
          * Override the default error message for failed max collection size validations.
@@ -1937,6 +1947,7 @@ var formFor;
             var validationRules = formForController.getValidationRulesForAttribute($scope.attribute);
             if (validationRules) {
                 $scope.validationRules = {
+                    increment: validationRules.increment,
                     maximum: validationRules.maximum,
                     minimum: validationRules.minimum
                 };
@@ -2297,6 +2308,7 @@ var formFor;
         ValidationFailureType[ValidationFailureType["COLLECTION_MAX_SIZE"] = "COLLECTION_MAX_SIZE"] = "COLLECTION_MAX_SIZE";
         ValidationFailureType[ValidationFailureType["COLLECTION_MIN_SIZE"] = "COLLECTION_MIN_SIZE"] = "COLLECTION_MIN_SIZE";
         ValidationFailureType[ValidationFailureType["CUSTOM"] = "CUSTOM"] = "CUSTOM";
+        ValidationFailureType[ValidationFailureType["INCREMENT"] = "INCREMENT"] = "INCREMENT";
         ValidationFailureType[ValidationFailureType["MAXIMUM"] = "MAXIMUM"] = "MAXIMUM";
         ValidationFailureType[ValidationFailureType["MAX_LENGTH"] = "MAX_LENGTH"] = "MAX_LENGTH";
         ValidationFailureType[ValidationFailureType["MINIMUM"] = "MINIMUM"] = "MINIMUM";
@@ -2438,7 +2450,7 @@ var formFor;
                 if (value === undefined || value === null) {
                     value = ""; // Escape falsy values liked null or undefined, but not ones like 0
                 }
-                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules, fieldName) || this.promiseUtils_.resolve();
+                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldIncrement_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules, fieldName) || this.promiseUtils_.resolve();
             }
             return this.promiseUtils_.resolve();
         };
@@ -2564,6 +2576,24 @@ var formFor;
                 }
                 else {
                     return this.promiseUtils_.reject(defaultErrorMessage);
+                }
+            }
+            return null;
+        };
+        ModelValidator.prototype.validateFieldIncrement_ = function (value, validationRules) {
+            if (validationRules.increment) {
+                var stringValue = value.toString();
+                var numericValue = Number(value);
+                var increment = angular.isObject(validationRules.increment) ? validationRules.increment.rule : angular.isFunction(validationRules.increment) ? validationRules.increment.call(this, value) : validationRules.increment;
+                if (stringValue && !isNaN(numericValue) && numericValue % increment > 0) {
+                    var failureMessage;
+                    if (angular.isObject(validationRules.increment)) {
+                        failureMessage = validationRules.increment.message;
+                    }
+                    else {
+                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.INCREMENT))({ num: increment });
+                    }
+                    return this.promiseUtils_.reject(failureMessage);
                 }
             }
             return null;

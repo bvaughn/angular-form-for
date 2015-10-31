@@ -139,6 +139,7 @@ module formFor {
         return this.validateFieldRequired_(value, validationRules) ||
           this.validateFieldMinimum_(value, validationRules) ||
           this.validateFieldMinLength_(value, validationRules) ||
+          this.validateFieldIncrement_(value, validationRules) ||
           this.validateFieldMaximum_(value, validationRules) ||
           this.validateFieldMaxLength_(value, validationRules) ||
           this.validateFieldType_(value, validationRules) ||
@@ -316,6 +317,36 @@ module formFor {
           return this.promiseUtils_.resolve(returnValue);
         } else {
           return this.promiseUtils_.reject(defaultErrorMessage);
+        }
+      }
+
+      return null;
+    }
+
+    private validateFieldIncrement_(value:any, validationRules:ValidationRules):any {
+      if (validationRules.increment) {
+        var stringValue:string = value.toString();
+        var numericValue:number = Number(value);
+
+        var increment:number = angular.isObject(validationRules.increment)
+          ? (<ValidationRuleNumber> validationRules.increment).rule
+          : angular.isFunction(validationRules.increment)
+            ? validationRules.increment.call(this, value)
+            : <number> validationRules.increment;
+
+        if (stringValue && !isNaN(numericValue) && numericValue % increment > 0) {
+          var failureMessage:string;
+
+          if (angular.isObject(validationRules.increment)) {
+            failureMessage = (<ValidationRuleNumber> validationRules.increment).message;
+          } else {
+            failureMessage =
+              this.$interpolate_(
+                this.formForConfiguration_.getFailedValidationMessage(
+                  ValidationFailureType.INCREMENT))({num: increment});
+          }
+
+          return this.promiseUtils_.reject(failureMessage);
         }
       }
 

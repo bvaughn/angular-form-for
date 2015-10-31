@@ -182,6 +182,49 @@ describe('ModelValidator', function() {
     });
   });
 
+  describe('validateField increment', function() {
+    beforeEach(function () {
+      model.rules = {
+        incrementField: {
+          increment: 2
+        }
+      };
+    });
+
+    it('should not reject null or undefined value', function () {
+      expect(ModelValidator.validateField({incrementField: null}, 'incrementField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({incrementField: undefined}, 'incrementField', model.rules)).toBeResolved();
+    });
+
+    it('should not reject an empty string', function () {
+      expect(ModelValidator.validateField({incrementField: ''}, 'incrementField', model.rules)).toBeResolved();
+    });
+
+    it('should reject a number that is not an increment', function () {
+      expect(ModelValidator.validateField({incrementField: 3}, 'incrementField', model.rules)).toBeRejected();
+    });
+
+    it('should allow a number that is an increment', function () {
+      expect(ModelValidator.validateField({incrementField: 0}, 'incrementField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({incrementField: 2}, 'incrementField', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({incrementField: 4}, 'incrementField', model.rules)).toBeResolved();
+    });
+
+    it('should allow custom error messages for failed validations', function() {
+      model.rules = {
+        incrementField: {
+          increment: {
+            rule: 2,
+            message: 'foobar'
+          }
+        }
+      };
+
+      verifyPromiseRejectedWithMessage(
+        ModelValidator.validateField({incrementField: 3}, 'incrementField', model.rules), 'foobar');
+    });
+  });
+
   describe('validateField maxlength', function() {
     beforeEach(function() {
       model.rules = {

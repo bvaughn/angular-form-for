@@ -21,6 +21,7 @@ module formFor {
 
     private validationFailedForCustomMessage_:string = "Failed custom validation";
     private validationFailedForEmailTypeMessage_:string = "Invalid email format";
+    private validationFailedForIncrementMessage_:string = "Value must be in increments of {{num}}";
     private validationFailedForIntegerTypeMessage_:string = "Must be an integer";
     private validationFailedForMaxCollectionSizeMessage_:string = "Must be fewer than {{num}} items";
     private validationFailedForMaximumMessage_:string = "Must be no more than {{num}}";
@@ -79,6 +80,8 @@ module formFor {
           return this.validationFailedForMaxCollectionSizeMessage_;
         case ValidationFailureType.COLLECTION_MIN_SIZE:
           return this.validationFailedForMinCollectionSizeMessage_;
+        case ValidationFailureType.INCREMENT:
+          return this.validationFailedForIncrementMessage_;
         case ValidationFailureType.MINIMUM:
           return this.validationFailedForMinimumMessage_;
         case ValidationFailureType.MAX_LENGTH:
@@ -187,6 +190,14 @@ module formFor {
      */
     public setValidationFailedForCustomMessage(value:string):void {
       this.validationFailedForCustomMessage_ = value;
+    }
+
+    /**
+     * Override the default error message for failed numeric increment validations.
+     * This setting applies to all instances of formFor unless otherwise overridden on a per-rule basis.
+     */
+    public setValidationFailedForIncrementMessage(value:string):void {
+      this.validationFailedForIncrementMessage_ = value;
     }
 
     /**

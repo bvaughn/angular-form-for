@@ -24,6 +24,14 @@ module formFor {
     custom?:CustomValidationFunction|ValidationRuleCustom;
 
     /**
+     * Numeric values can be further defined with an increment.
+     * Values not matching this increment will not be accepted.
+     * For example, for an increment of 2, values 0, 2, and 4 would be considered valid but 1 or 3 would not.
+     * This field can be either a number or an instance of {@link ValidationRuleNumber}.
+     */
+    increment?:number|ValidationRuleNumber;
+
+    /**
      * Field's numeric value must be lesser than or equal to this value.
      * This field can be either a number or an instance of {@link ValidationRuleNumber}.
      */

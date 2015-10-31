@@ -7,6 +7,7 @@ module formFor {
     COLLECTION_MAX_SIZE = <any>"COLLECTION_MAX_SIZE",
     COLLECTION_MIN_SIZE = <any>"COLLECTION_MIN_SIZE",
     CUSTOM = <any>"CUSTOM",
+    INCREMENT = <any>"INCREMENT",
     MAXIMUM = <any>"MAXIMUM",
     MAX_LENGTH = <any>"MAX_LENGTH",
     MINIMUM = <any>"MINIMUM",
