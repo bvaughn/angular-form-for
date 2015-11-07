@@ -90,9 +90,7 @@ module formFor {
                                            value-attribute="${viewField.valueAttribute || ''}">
                              </select-field>`;
               break;
-            case BuilderFieldType.NUMBER:
-            case BuilderFieldType.PASSWORD:
-            case BuilderFieldType.TEXT:
+            default:
               var placeholderAttribute:string;
 
               if (viewField.hasOwnProperty('placeholder')) {

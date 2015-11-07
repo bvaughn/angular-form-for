@@ -338,10 +338,14 @@ var formFor;
          */
         FieldHelper.prototype.manageLabel = function ($scope, $attributes, humanizeValueAttribute) {
             if (this.formForConfiguration_.autoGenerateLabels) {
-                $scope['label'] = humanizeValueAttribute ? formFor.StringUtil.humanize($scope['value']) : formFor.StringUtil.humanize($scope['attribute']);
+                $scope['label'] =
+                    humanizeValueAttribute ?
+                        formFor.StringUtil.humanize($scope['value']) :
+                        formFor.StringUtil.humanize($scope['attribute']);
             }
             if (this.formForConfiguration_.labelClass) {
-                $scope['labelClass'] = this.formForConfiguration_.labelClass;
+                $scope['labelClass'] =
+                    this.formForConfiguration_.labelClass;
             }
             if ($attributes.hasOwnProperty('label')) {
                 $attributes.$observe('label', function (label) {
@@ -638,9 +642,7 @@ var formFor;
                             values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
                             htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                           " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                           " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                           help=\"" + help + "\"\n                                           " + labelAttribute + "\n                                           multiple=\"" + !!viewField.multipleSelection + "\"\n                                           options=\"" + values + "\"\n                                           " + placeholderAttribute + "\n                                           uid=\"" + uid + "\"\n                                           value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                             </select-field>";
                             break;
-                        case formFor.BuilderFieldType.NUMBER:
-                        case formFor.BuilderFieldType.PASSWORD:
-                        case formFor.BuilderFieldType.TEXT:
+                        default:
                             var placeholderAttribute;
                             if (viewField.hasOwnProperty('placeholder')) {
                                 placeholderAttribute = "placeholder=\"" + viewField.placeholder + "\"";
@@ -821,9 +823,9 @@ var formFor;
         NestedObjectHelper.prototype.flattenObjectKeys = function (object) {
             var keys = [];
             var queue = [{
-                object: object,
-                prefix: null
-            }];
+                    object: object,
+                    prefix: null
+                }];
             while (true) {
                 if (queue.length === 0) {
                     break;
@@ -1097,7 +1099,9 @@ var formFor;
                 // An asynchronous formFor data source should reset any dirty flags.
                 // A user tabbing in and out of a field also shouldn't be counted as dirty.
                 // Easiest way to guard against this is to reset the initialization flag.
-                if (newValue !== fieldDatum.bindableWrapper.bindable || oldValue === undefined && newValue === '' || newValue === undefined) {
+                if (newValue !== fieldDatum.bindableWrapper.bindable ||
+                    oldValue === undefined && newValue === '' ||
+                    newValue === undefined) {
                     formDataWatcherInitialized = false;
                 }
                 fieldDatum.bindableWrapper.bindable = newValue;
@@ -1223,13 +1227,15 @@ var formFor;
                 angular.forEach($scope.fields, function (fieldDatum) {
                     validationKeys.push(fieldDatum.fieldName);
                 });
-                validateFieldsPromise = modelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRuleset);
+                validateFieldsPromise =
+                    modelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRuleset);
                 validateFieldsPromise.then(angular.noop, target.updateFieldErrors);
                 validationKeys = []; // Reset for below re-use
                 angular.forEach($scope.collectionLabels, function (bindableWrapper, bindableFieldName) {
                     validationKeys.push(bindableFieldName);
                 });
-                validateCollectionsPromise = modelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRuleset);
+                validateCollectionsPromise =
+                    modelValidator.validateFields($scope.formFor, validationKeys, $scope.$validationRuleset);
                 validateCollectionsPromise.then(angular.noop, target.updateCollectionErrors);
             }
             else {
@@ -1369,7 +1375,8 @@ var formFor;
         FormForDirective.prototype.controller.$inject = ["$scope"];
         /* @ngInject */
         FormForDirective.prototype.link = function ($scope, $element, $attributes) {
-            $element.on('submit', function () {
+            $element.on('submit', // Override form submit to trigger overall validation.
+            function () {
                 $scope.formForStateHelper.setFormSubmitted(true);
                 $scope.disable = true;
                 var validationPromise;
@@ -1684,7 +1691,9 @@ var formFor;
                 // In this case, the placeholder (empty) option needs to match the falsy selected value,
                 // Otherwise the Angular select directive will generate an additional empty <option> ~ see #110
                 // Angular 1.2.x-1.3.x may generate an empty <option> regardless, unless the non-selection is undefined.
-                if ($scope.model.bindable === null || $scope.model.bindable === undefined || $scope.model.bindable === '') {
+                if ($scope.model.bindable === null ||
+                    $scope.model.bindable === undefined ||
+                    $scope.model.bindable === '') {
                     // Rather than sanitizing `$scope.model.bindable` to undefined, update the empty option's value.
                     // This way users are able to choose between undefined, null, and empty string ~ see #141
                     $scope.model.bindable = formForConfiguration_.defaultSelectEmptyOptionValue;
@@ -1770,7 +1779,7 @@ var formFor;
                             $scope.open();
                         }
                         break;
-                    case 9:
+                    case 9: // Tabbing (in or out) should close the menu.
                     case 16:
                         $scope.close();
                         break;
@@ -1958,7 +1967,9 @@ var formFor;
                     if (!$scope.model) {
                         return;
                     }
-                    var iconAfter = $attributes['iconAfter'].charAt(0) === '{' ? $scope.$eval($attributes['iconAfter']) : $attributes['iconAfter'];
+                    var iconAfter = $attributes['iconAfter'].charAt(0) === '{' ?
+                        $scope.$eval($attributes['iconAfter']) :
+                        $attributes['iconAfter'];
                     if (angular.isObject(iconAfter)) {
                         if ($scope.model.error) {
                             $scope.iconAfter = iconAfter['invalid'];
@@ -1984,7 +1995,9 @@ var formFor;
                     if (!$scope.model) {
                         return;
                     }
-                    var iconBefore = $attributes['iconBefore'].charAt(0) === '{' ? $scope.$eval($attributes['iconBefore']) : $attributes['iconBefore'];
+                    var iconBefore = $attributes['iconBefore'].charAt(0) === '{' ?
+                        $scope.$eval($attributes['iconBefore']) :
+                        $attributes['iconBefore'];
                     if (angular.isObject(iconBefore)) {
                         if ($scope.model.error) {
                             $scope.iconBefore = iconBefore['invalid'];
@@ -2253,7 +2266,7 @@ var formFor;
                             $scope.open();
                         }
                         break;
-                    case 9:
+                    case 9: // Tabbing (in or out) should close the menu.
                     case 16:
                         $scope.close();
                         break;
@@ -2374,7 +2387,9 @@ var formFor;
          */
         ModelValidator.prototype.isCollectionRequired = function (fieldName, validationRuleSet) {
             var validationRules = this.getRulesForField(fieldName, validationRuleSet);
-            if (validationRules && validationRules.collection && validationRules.collection.min) {
+            if (validationRules &&
+                validationRules.collection &&
+                validationRules.collection.min) {
                 if (angular.isObject(validationRules.collection.min)) {
                     return validationRules.collection.min.rule > 0;
                 }
@@ -2429,7 +2444,9 @@ var formFor;
             var collection = this.nestedObjectHelper_.readAttribute(formData, fieldName);
             if (validationRules && validationRules.collection) {
                 collection = collection || [];
-                return this.validateCollectionMinLength_(collection, validationRules.collection) || this.validateCollectionMaxLength_(collection, validationRules.collection) || this.promiseUtils_.resolve();
+                return this.validateCollectionMinLength_(collection, validationRules.collection) ||
+                    this.validateCollectionMaxLength_(collection, validationRules.collection) ||
+                    this.promiseUtils_.resolve();
             }
             return this.promiseUtils_.resolve();
         };
@@ -2450,7 +2467,16 @@ var formFor;
                 if (value === undefined || value === null) {
                     value = ""; // Escape falsy values liked null or undefined, but not ones like 0
                 }
-                return this.validateFieldRequired_(value, validationRules) || this.validateFieldMinimum_(value, validationRules) || this.validateFieldMinLength_(value, validationRules) || this.validateFieldIncrement_(value, validationRules) || this.validateFieldMaximum_(value, validationRules) || this.validateFieldMaxLength_(value, validationRules) || this.validateFieldType_(value, validationRules) || this.validateFieldPattern_(value, validationRules) || this.validateFieldCustom_(value, formData, validationRules, fieldName) || this.promiseUtils_.resolve();
+                return this.validateFieldRequired_(value, validationRules) ||
+                    this.validateFieldMinimum_(value, validationRules) ||
+                    this.validateFieldMinLength_(value, validationRules) ||
+                    this.validateFieldIncrement_(value, validationRules) ||
+                    this.validateFieldMaximum_(value, validationRules) ||
+                    this.validateFieldMaxLength_(value, validationRules) ||
+                    this.validateFieldType_(value, validationRules) ||
+                    this.validateFieldPattern_(value, validationRules) ||
+                    this.validateFieldCustom_(value, formData, validationRules, fieldName) ||
+                    this.promiseUtils_.resolve();
             }
             return this.promiseUtils_.resolve();
         };
@@ -2502,7 +2528,9 @@ var formFor;
             return this.nestedObjectHelper_.readAttribute(validationRuleSet, expandedFieldName);
         };
         ModelValidator.prototype.getFieldTypeFailureMessage_ = function (validationRules, failureType) {
-            return angular.isObject(validationRules.type) ? validationRules.type.message : this.formForConfiguration_.getFailedValidationMessage(failureType);
+            return angular.isObject(validationRules.type) ?
+                validationRules.type.message :
+                this.formForConfiguration_.getFailedValidationMessage(failureType);
         };
         /**
          * Determining if numeric input has been provided.
@@ -2515,14 +2543,17 @@ var formFor;
         // Validation helper methods /////////////////////////////////////////////////////////////////////////////////////////
         ModelValidator.prototype.validateCollectionMinLength_ = function (collection, validationRuleCollection) {
             if (validationRuleCollection.min) {
-                var min = angular.isObject(validationRuleCollection.min) ? validationRuleCollection.min.rule : validationRuleCollection.min;
+                var min = angular.isObject(validationRuleCollection.min) ?
+                    validationRuleCollection.min.rule :
+                    validationRuleCollection.min;
                 if (collection.length < min) {
                     var failureMessage;
                     if (angular.isObject(validationRuleCollection.min)) {
                         failureMessage = validationRuleCollection.min.message;
                     }
                     else {
-                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.COLLECTION_MIN_SIZE))({ num: min });
+                        failureMessage =
+                            this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.COLLECTION_MIN_SIZE))({ num: min });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2531,14 +2562,17 @@ var formFor;
         };
         ModelValidator.prototype.validateCollectionMaxLength_ = function (collection, validationRuleCollection) {
             if (validationRuleCollection.max) {
-                var max = angular.isObject(validationRuleCollection.max) ? validationRuleCollection.max.rule : validationRuleCollection.max;
+                var max = angular.isObject(validationRuleCollection.max) ?
+                    validationRuleCollection.max.rule :
+                    validationRuleCollection.max;
                 if (collection.length > max) {
                     var failureMessage;
                     if (angular.isObject(validationRuleCollection.max)) {
                         failureMessage = validationRuleCollection.max.message;
                     }
                     else {
-                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.COLLECTION_MAX_SIZE))({ num: max });
+                        failureMessage =
+                            this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.COLLECTION_MAX_SIZE))({ num: max });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2558,6 +2592,10 @@ var formFor;
                     defaultErrorMessage = validationRules.custom.message;
                     validationFunction = validationRules.custom.rule;
                 }
+                // Validations can fail in 3 ways:
+                // A promise that gets rejected (potentially with an error message)
+                // An error that gets thrown (potentially with a message)
+                // A falsy value
                 try {
                     var returnValue = validationFunction(value, formData, fieldName);
                 }
@@ -2584,14 +2622,19 @@ var formFor;
             if (validationRules.increment) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
-                var increment = angular.isObject(validationRules.increment) ? validationRules.increment.rule : angular.isFunction(validationRules.increment) ? validationRules.increment.call(this, value) : validationRules.increment;
+                var increment = angular.isObject(validationRules.increment)
+                    ? validationRules.increment.rule
+                    : angular.isFunction(validationRules.increment)
+                        ? validationRules.increment.call(this, value)
+                        : validationRules.increment;
                 if (stringValue && !isNaN(numericValue) && numericValue % increment > 0) {
                     var failureMessage;
                     if (angular.isObject(validationRules.increment)) {
                         failureMessage = validationRules.increment.message;
                     }
                     else {
-                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.INCREMENT))({ num: increment });
+                        failureMessage =
+                            this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.INCREMENT))({ num: increment });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2602,14 +2645,19 @@ var formFor;
             if (validationRules.maximum) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
-                var maximum = angular.isObject(validationRules.maximum) ? validationRules.maximum.rule : angular.isFunction(validationRules.maximum) ? validationRules.maximum.call(this, value) : validationRules.maximum;
+                var maximum = angular.isObject(validationRules.maximum)
+                    ? validationRules.maximum.rule
+                    : angular.isFunction(validationRules.maximum)
+                        ? validationRules.maximum.call(this, value)
+                        : validationRules.maximum;
                 if (stringValue && !isNaN(numericValue) && numericValue > maximum) {
                     var failureMessage;
                     if (angular.isObject(validationRules.maximum)) {
                         failureMessage = validationRules.maximum.message;
                     }
                     else {
-                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MAXIMUM))({ num: maximum });
+                        failureMessage =
+                            this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MAXIMUM))({ num: maximum });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2618,14 +2666,17 @@ var formFor;
         };
         ModelValidator.prototype.validateFieldMaxLength_ = function (value, validationRules) {
             if (validationRules.maxlength) {
-                var maxlength = angular.isObject(validationRules.maxlength) ? validationRules.maxlength.rule : validationRules.maxlength;
+                var maxlength = angular.isObject(validationRules.maxlength) ?
+                    validationRules.maxlength.rule :
+                    validationRules.maxlength;
                 if (value.length > maxlength) {
                     var failureMessage;
                     if (angular.isObject(validationRules.maxlength)) {
                         failureMessage = validationRules.maxlength.message;
                     }
                     else {
-                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MAX_LENGTH))({ num: maxlength });
+                        failureMessage =
+                            this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MAX_LENGTH))({ num: maxlength });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2636,14 +2687,19 @@ var formFor;
             if (validationRules.minimum) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
-                var minimum = angular.isObject(validationRules.minimum) ? validationRules.minimum.rule : angular.isFunction(validationRules.minimum) ? validationRules.minimum.call(this, value) : validationRules.minimum;
+                var minimum = angular.isObject(validationRules.minimum)
+                    ? validationRules.minimum.rule
+                    : angular.isFunction(validationRules.minimum)
+                        ? validationRules.minimum.call(this, value)
+                        : validationRules.minimum;
                 if (stringValue && !isNaN(numericValue) && numericValue < minimum) {
                     var failureMessage;
                     if (angular.isObject(validationRules.minimum)) {
                         failureMessage = validationRules.minimum.message;
                     }
                     else {
-                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MINIMUM))({ num: minimum });
+                        failureMessage =
+                            this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MINIMUM))({ num: minimum });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2652,14 +2708,17 @@ var formFor;
         };
         ModelValidator.prototype.validateFieldMinLength_ = function (value, validationRules) {
             if (validationRules.minlength) {
-                var minlength = angular.isObject(validationRules.minlength) ? validationRules.minlength.rule : validationRules.minlength;
+                var minlength = angular.isObject(validationRules.minlength) ?
+                    validationRules.minlength.rule :
+                    validationRules.minlength;
                 if (value && value.length < minlength) {
                     var failureMessage;
                     if (angular.isObject(validationRules.minlength)) {
                         failureMessage = validationRules.minlength.message;
                     }
                     else {
-                        failureMessage = this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MIN_LENGTH))({ num: minlength });
+                        failureMessage =
+                            this.$interpolate_(this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.MIN_LENGTH))({ num: minlength });
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2668,7 +2727,9 @@ var formFor;
         };
         ModelValidator.prototype.validateFieldRequired_ = function (value, validationRules) {
             if (validationRules.required) {
-                var required = angular.isObject(validationRules.required) ? validationRules.required.rule : validationRules.required;
+                var required = angular.isObject(validationRules.required) ?
+                    validationRules.required.rule :
+                    validationRules.required;
                 // Compare both string and numeric values to avoid rejecting non-empty but falsy values (e.g. 0).
                 var stringValue = value.toString().replace(/\s+$/, ''); // Disallow an all-whitespace string
                 var numericValue = Number(value);
@@ -2678,7 +2739,8 @@ var formFor;
                         failureMessage = validationRules.required.message;
                     }
                     else {
-                        failureMessage = this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.REQUIRED);
+                        failureMessage =
+                            this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.REQUIRED);
                     }
                     return this.promiseUtils_.reject(failureMessage);
                 }
@@ -2688,9 +2750,13 @@ var formFor;
         ModelValidator.prototype.validateFieldPattern_ = function (value, validationRules) {
             if (validationRules.pattern) {
                 var isRegExp = validationRules.pattern instanceof RegExp;
-                var regExp = isRegExp ? validationRules.pattern : validationRules.pattern.rule;
+                var regExp = isRegExp ?
+                    validationRules.pattern :
+                    validationRules.pattern.rule;
                 if (value && !regExp.exec(value)) {
-                    var failureMessage = isRegExp ? this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.PATTERN) : validationRules.pattern.message;
+                    var failureMessage = isRegExp ?
+                        this.formForConfiguration_.getFailedValidationMessage(formFor.ValidationFailureType.PATTERN) :
+                        validationRules.pattern.message;
                     return this.promiseUtils_.reject(failureMessage);
                 }
             }
@@ -2699,7 +2765,9 @@ var formFor;
         ModelValidator.prototype.validateFieldType_ = function (value, validationRules) {
             if (validationRules.type) {
                 // String containing 0+ ValidationRuleFieldType enums
-                var typesString = angular.isObject(validationRules.type) ? validationRules.type.rule : validationRules.type;
+                var typesString = angular.isObject(validationRules.type) ?
+                    validationRules.type.rule :
+                    validationRules.type;
                 var stringValue = value.toString();
                 var numericValue = Number(value);
                 if (typesString) {
@@ -2746,7 +2814,9 @@ var formFor;
         return ModelValidator;
     })();
     formFor.ModelValidator = ModelValidator;
-    angular.module('formFor').service('ModelValidator', ["$interpolate", "$parse", "$q", "FormForConfiguration", function ($interpolate, $parse, $q, FormForConfiguration) { return new ModelValidator($interpolate, $parse, $q, FormForConfiguration); }]);
+    angular.module('formFor').service('ModelValidator', ["$interpolate", "$parse", "$q", "FormForConfiguration", function ($interpolate, $parse, $q, FormForConfiguration) {
+        return new ModelValidator($interpolate, $parse, $q, FormForConfiguration);
+    }]);
 })(formFor || (formFor = {}));
 /// <reference path="nested-object-helper.ts" />
 var formFor;
