@@ -210,6 +210,24 @@ describe('ModelValidator', function() {
       expect(ModelValidator.validateField({incrementField: 4}, 'incrementField', model.rules)).toBeResolved();
     });
 
+    it('should work with floating point increments', function () {
+      model.rules.foo = { increment: .1 }
+      expect(ModelValidator.validateField({foo: .1}, 'foo', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({foo: 1}, 'foo', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({foo: 1.1}, 'foo', model.rules)).toBeResolved();
+
+      model.rules.foo = { increment: .01 }
+      expect(ModelValidator.validateField({foo: .01}, 'foo', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({foo: .1}, 'foo', model.rules)).toBeResolved();
+      expect(ModelValidator.validateField({foo: 1.01}, 'foo', model.rules)).toBeResolved();
+    });
+
+    it('should reject a float value that is not an increment', function () {
+      model.rules.foo = { increment: .1 }
+
+      expect(ModelValidator.validateField({foo: 1.11}, 'foo', model.rules)).toBeRejected();
+    });
+
     it('should allow custom error messages for failed validations', function() {
       model.rules = {
         incrementField: {

@@ -334,19 +334,28 @@ module formFor {
             ? validationRules.increment.call(this, value)
             : <number> validationRules.increment;
 
-        if (stringValue && !isNaN(numericValue) && numericValue % increment > 0) {
-          var failureMessage:string;
-
-          if (angular.isObject(validationRules.increment)) {
-            failureMessage = (<ValidationRuleNumber> validationRules.increment).message;
-          } else {
-            failureMessage =
-              this.$interpolate_(
-                this.formForConfiguration_.getFailedValidationMessage(
-                  ValidationFailureType.INCREMENT))({num: increment});
+        if (stringValue && !isNaN(numericValue)) {
+          // Convert floating point values to integers before comparing to avoid rounding errors
+          if (validationRules.increment < 1) {
+            let ratio = validationRules.increment / 1;
+            numericValue /= ratio;
+            increment /= ratio;
           }
 
-          return this.promiseUtils_.reject(failureMessage);
+          if (numericValue % increment > 0) {
+            var failureMessage:string;
+
+            if (angular.isObject(validationRules.increment)) {
+              failureMessage = (<ValidationRuleNumber> validationRules.increment).message;
+            } else {
+              failureMessage =
+                this.$interpolate_(
+                  this.formForConfiguration_.getFailedValidationMessage(
+                    ValidationFailureType.INCREMENT))({num: increment});
+            }
+
+            return this.promiseUtils_.reject(failureMessage);
+          }
         }
       }
 
