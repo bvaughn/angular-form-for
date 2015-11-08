@@ -75,8 +75,8 @@ module formFor {
                                           uid="${uid}">
                              </radio-field>`;
               break;
-        case BuilderFieldType.SELECT:
-          values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
+            case BuilderFieldType.SELECT:
+              values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
 
               htmlString += `<select-field attribute="${fieldName}"
                                            ${viewField.allowBlank ? 'allow-blank' : ''}
@@ -93,6 +93,7 @@ module formFor {
             case BuilderFieldType.NUMBER:
             case BuilderFieldType.PASSWORD:
             case BuilderFieldType.TEXT:
+            default: // Defaeult to text field to support HTML 5 field types
               var placeholderAttribute:string;
 
               if (viewField.hasOwnProperty('placeholder')) {

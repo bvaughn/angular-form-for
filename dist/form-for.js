@@ -645,6 +645,7 @@ var formFor;
                         case formFor.BuilderFieldType.NUMBER:
                         case formFor.BuilderFieldType.PASSWORD:
                         case formFor.BuilderFieldType.TEXT:
+                        default:
                             var placeholderAttribute;
                             if (viewField.hasOwnProperty('placeholder')) {
                                 placeholderAttribute = "placeholder=\"" + viewField.placeholder + "\"";
