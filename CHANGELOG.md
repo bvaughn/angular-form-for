@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.8
+Form builder now supports HTML 5 input types.
+Field increment validation properly handles floating point values.
+
 ## 4.1.7
 Fixed `checkbox-field` issue where `changed` property had the wrong type ("@" instead of "&").
 Added new numeric validation rule: `increment`.
