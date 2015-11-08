@@ -31,6 +31,11 @@ angular.module('formForDocumentation').controller('FormBuilderMarkupDemoControll
           {value: 'male', label: 'Male'}
         ]
       },
+      birthday: {
+        inputType: 'date',
+        label: 'Birthday',
+        required: true
+      },
       referralSource: {
         allowBlank: true,
         inputType: 'select',
