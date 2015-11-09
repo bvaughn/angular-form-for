@@ -318,8 +318,10 @@ module formFor {
         // Once a value has been selected, clear the placeholder prompt.
         if ($scope.model.bindable && !$scope.showPlaceholderForEmptyValues) {
           $scope.emptyOption[$scope.labelAttribute] = '';
+          $scope.emptyOption.hide = false;
         } else if ($scope.showPlaceholderForEmptyValues && $scope.model.bindable === undefined) {
           $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
+          $scope.emptyOption.hide = true;
         }
       };
 
