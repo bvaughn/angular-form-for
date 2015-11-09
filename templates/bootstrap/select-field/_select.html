@@ -2,6 +2,7 @@
         id="{{model.uid}}"
         name="{{attribute}}"
         class="form-control"
+        ng-class="{{placeholder: !model.bindable}}"
         tabindex="{{tabIndex}}"
         ng-disabled="disable || model.disabled"
         ng-model="model.bindable">
