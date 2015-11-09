@@ -211,7 +211,6 @@ module formFor {
       disable: '=',
       help: '@?',
       multiple: '=?',
-      showPlaceholderForEmptyValues: '=?',
       options: '='
     };
 
@@ -242,7 +241,8 @@ module formFor {
 
       $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
       $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
-
+      $scope.showPlaceholderForEmptyValues = $attributes.hasOwnProperty('showPlaceholderForEmptyValues');
+      
       // Read from $attributes to avoid getting any interference from $scope.
       $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
       $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
