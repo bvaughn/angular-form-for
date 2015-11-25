@@ -4,10 +4,17 @@
   Automatically creates form markup based on a view ruleset.
 </p>
 
+<p>
+  You can use formForBuilder in conjunction with formFor directive in order to have just one object for your validationRules and viewRules.
+  You can also have two or more builders inside your form, each one with its own rule-set.
+</p>
+
 <usage parser="markup" heading="Example formForBuilder" source="app/snippets/form-for-builder.html"></usage>
 
+<usage parser="markup" heading="Multiple builders" source="app/snippets/form-for-builder-multiple.html"></usage>
+
 <p>
-  Form builder supports a variety of view rules but only one- <code>inputType</code>- is required for each field.
+  Form builder supports a variety of view rules but only one - <code>inputType</code>- is required for each field.
   Without this attribute no form-field will be generated.
 </p>
 
@@ -71,6 +78,12 @@
       optional: true,
       type: 'Number',
       description: 'Specifies the number of rows for a multi-line text input. This of property is only supported for <code>text</code> inputs.'
+    },
+    {
+      name: 'template',
+      optional: true,
+      type: 'String',
+      description: 'Optional custom template URL for the input field.'
     },
     {
       name: 'uid',
