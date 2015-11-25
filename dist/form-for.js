@@ -592,7 +592,7 @@ var formFor;
     var FormForBuilderDirective = (function () {
         /* @ngInject */
         function FormForBuilderDirective($compile, $parse) {
-            this.require = 'formFor';
+            this.require = '^formFor';
             this.restrict = 'A';
             $compile_ = $compile;
             nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
@@ -624,6 +624,7 @@ var formFor;
                     var help = viewField.help || '';
                     var label = viewField.label || '';
                     var placeholderAttribute = '';
+                    var template = viewField.template || '';
                     var uid = viewField.uid || '';
                     var values;
                     var labelAttribute = label ? "label=\"" + label + "\"" : '';
@@ -632,15 +633,15 @@ var formFor;
                     }
                     switch (viewField.inputType) {
                         case formFor.BuilderFieldType.CHECKBOX:
-                            htmlString += "<checkbox-field attribute=\"" + fieldName + "\"\n                                             help=\"" + help + "\"\n                                             " + labelAttribute + "\n                                             uid=\"" + uid + "\">\n                             </checkbox-field>";
+                            htmlString += "<checkbox-field attribute=\"" + fieldName + "\"\n                                             help=\"" + help + "\"\n                                             " + labelAttribute + "\n                                             template=\"" + template + "\"\n                                             uid=\"" + uid + "\">\n                             </checkbox-field>";
                             break;
                         case formFor.BuilderFieldType.RADIO:
                             values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
-                            htmlString += "<radio-field attribute=\"" + fieldName + "\"\n                                          " + labelAttribute + "\n                                          options=\"" + values + "\"\n                                          uid=\"" + uid + "\">\n                             </radio-field>";
+                            htmlString += "<radio-field attribute=\"" + fieldName + "\"\n                                          " + labelAttribute + "\n                                          options=\"" + values + "\"\n                                          template=\"" + template + "\"\n                                          uid=\"" + uid + "\">\n                             </radio-field>";
                             break;
                         case formFor.BuilderFieldType.SELECT:
                             values = JSON.stringify(viewField.values).replace(/"/g, '&quot;');
-                            htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                           " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                           " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                           help=\"" + help + "\"\n                                           " + labelAttribute + "\n                                           multiple=\"" + !!viewField.multipleSelection + "\"\n                                           options=\"" + values + "\"\n                                           " + placeholderAttribute + "\n                                           uid=\"" + uid + "\"\n                                           value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                             </select-field>";
+                            htmlString += "<select-field attribute=\"" + fieldName + "\"\n                                           " + (viewField.allowBlank ? 'allow-blank' : '') + "\n                                           " + (viewField.enableFiltering ? 'enable-filtering' : '') + "\n                                           help=\"" + help + "\"\n                                           " + labelAttribute + "\n                                           multiple=\"" + !!viewField.multipleSelection + "\"\n                                           options=\"" + values + "\"\n                                           " + placeholderAttribute + "\n                                           template=\"" + template + "\"\n                                           uid=\"" + uid + "\"\n                                           value-attribute=\"" + (viewField.valueAttribute || '') + "\">\n                             </select-field>";
                             break;
                         case formFor.BuilderFieldType.NUMBER:
                         case formFor.BuilderFieldType.PASSWORD:
@@ -650,7 +651,7 @@ var formFor;
                             if (viewField.hasOwnProperty('placeholder')) {
                                 placeholderAttribute = "placeholder=\"" + viewField.placeholder + "\"";
                             }
-                            htmlString += "<text-field attribute=\"" + fieldName + "\"\n                                         " + labelAttribute + "\n                                         help=\"" + help + "\"\n                                         ng-attr-multiline=\"" + !!viewField.multiline + "\"\n                                         " + placeholderAttribute + "\n                                         rows=\"" + (viewField.rows || '') + "\"\n                                         type=\"" + viewField.inputType + "\"\n                                         uid=\"" + uid + "\">\n                             </text-field>";
+                            htmlString += "<text-field attribute=\"" + fieldName + "\"\n                                         " + labelAttribute + "\n                                         help=\"" + help + "\"\n                                         ng-attr-multiline=\"" + !!viewField.multiline + "\"\n                                         " + placeholderAttribute + "\n                                         rows=\"" + (viewField.rows || '') + "\"\n                                         type=\"" + viewField.inputType + "\"\n                                         template=\"" + template + "\"\n                                         uid=\"" + uid + "\">\n                             </text-field>";
                             break;
                     }
                 }

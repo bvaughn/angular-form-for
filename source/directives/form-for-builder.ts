@@ -7,7 +7,7 @@ module formFor {
    */
   export class FormForBuilderDirective implements ng.IDirective {
 
-    require:string = 'formFor';
+    require:string = '^formFor';
     restrict:string = 'A';
 
     /* @ngInject */
@@ -49,6 +49,7 @@ module formFor {
           var help:string = viewField.help || '';
           var label:string = viewField.label || '';
           var placeholderAttribute:string = '';
+          var template:string = viewField.template || '';
           var uid:string = viewField.uid || '';
           var values:string;
 
@@ -63,6 +64,7 @@ module formFor {
               htmlString += `<checkbox-field attribute="${fieldName}"
                                              help="${help}"
                                              ${labelAttribute}
+                                             template="${template}"
                                              uid="${uid}">
                              </checkbox-field>`;
               break;
@@ -72,6 +74,7 @@ module formFor {
               htmlString += `<radio-field attribute="${fieldName}"
                                           ${labelAttribute}
                                           options="${values}"
+                                          template="${template}"
                                           uid="${uid}">
                              </radio-field>`;
               break;
@@ -86,6 +89,7 @@ module formFor {
                                            multiple="${!!viewField.multipleSelection}"
                                            options="${values}"
                                            ${placeholderAttribute}
+                                           template="${template}"
                                            uid="${uid}"
                                            value-attribute="${viewField.valueAttribute || ''}">
                              </select-field>`;
@@ -107,6 +111,7 @@ module formFor {
                                          ${placeholderAttribute}
                                          rows="${viewField.rows || ''}"
                                          type="${viewField.inputType}"
+                                         template="${template}"
                                          uid="${uid}">
                              </text-field>`;
               break;
