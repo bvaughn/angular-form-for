@@ -7,7 +7,7 @@ module formFor {
    */
   export class FormForBuilderDirective implements ng.IDirective {
 
-    require:string = 'formFor';
+    require:string = '^formFor';
     restrict:string = 'A';
 
     /* @ngInject */

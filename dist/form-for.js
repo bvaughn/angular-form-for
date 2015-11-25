@@ -592,7 +592,7 @@ var formFor;
     var FormForBuilderDirective = (function () {
         /* @ngInject */
         function FormForBuilderDirective($compile, $parse) {
-            this.require = 'formFor';
+            this.require = '^formFor';
             this.restrict = 'A';
             $compile_ = $compile;
             nestedObjectHelper_ = new formFor.NestedObjectHelper($parse);
