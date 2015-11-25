@@ -474,9 +474,11 @@ module formFor {
 
     private validateFieldRequired_(value:any, validationRules:ValidationRules):any {
       if (validationRules.required) {
-        var required:boolean = angular.isObject(validationRules.required) ?
-          (<ValidationRuleBoolean> validationRules.required).rule :
-          <boolean> validationRules.required;
+        var required:boolean = angular.isObject(validationRules.required)
+          ? (<ValidationRuleBoolean> validationRules.required).rule
+          : angular.isFunction(validationRules.required)
+            ? validationRules.required.call(this, value)
+            : <boolean> validationRules.required;
 
         // Compare both string and numeric values to avoid rejecting non-empty but falsy values (e.g. 0).
         var stringValue:string = value.toString().replace(/\s+$/, ''); // Disallow an all-whitespace string

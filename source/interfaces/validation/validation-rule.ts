@@ -35,7 +35,7 @@ module formFor {
      * Field's numeric value must be lesser than or equal to this value.
      * This field can be either a number or an instance of {@link ValidationRuleNumber}.
      */
-    maximum?:number|ValidationRuleNumber;
+    maximum?:Function|number|ValidationRuleNumber;
 
     /**
      * Field must contain no more than this many characters.
@@ -47,7 +47,7 @@ module formFor {
      * Field's numeric value must be greater than or equal to this value.
      * This field can be either a number or an instance of {@link ValidationRuleNumber}.
      */
-    minimum?:number|ValidationRuleNumber;
+    minimum?:Function|number|ValidationRuleNumber;
 
     /**
      * Field must contain at least this many characters.
@@ -65,7 +65,7 @@ module formFor {
      * Is this field required?
      * This field can be either a boolean or an instance of {@link ValidationRuleBoolean}.
      */
-    required?:boolean|ValidationRuleBoolean;
+    required?:Function|boolean|ValidationRuleBoolean;
 
     /**
      * Enumeration for common validation types.
