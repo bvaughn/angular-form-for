@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.9
+Multiple formForBuilders can now be used within a form. This enables automatic rendering for parts of the form and manual rendering for others. (Or automatic rendering for separate subections of the form.)
+formForBuilder supports `template` attribute per view-field (to be passed to individual form control directives).
+Required field rule can be a function now as well.
+Big thanks to [indrimuska](https://github.com/indrimuska) for this release.
+
 ## 4.1.8
 Form builder now supports HTML 5 input types.
 Field increment validation properly handles floating point values.
