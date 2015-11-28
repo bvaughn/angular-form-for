@@ -6,18 +6,27 @@
   </p>
 
   <dl>
-    <dt>required <code>Boolean</code></dt>
-    <dd>A truthy value must be specified for this field.</dd>
+    <dt>required <code>Boolean</code>/<code>Function</code></dt>
+    <dd>
+      A truthy value must be specified for this field.
+      You can define a function that dynamically returns a truthy value when the field is mandatory.
+    </dd>
     <dt>increment <code>int</code></dt>
     <dd>Numeric value must be in increments of this.</dd>
     <dt>minlength <code>int</code></dt>
     <dd>Field must contain at least this many characters.</dd>
-    <dt>minimum <code>int</code></dt>
-    <dd>Numeric value must be no smaller than this.</dd>
     <dt>maxlength <code>int</code></dt>
     <dd>Field must contain no more than this many characters.</dd>
-    <dt>maximum <code>int</code></dt>
-    <dd>Numeric value must be no larger than this.</dd>
+    <dt>minimum <code>int</code>/<code>Function</code></dt>
+    <dd>
+      Numeric value must be no smaller than this.
+      You can define a function that returns a dynamic minimum value.
+    </dd>
+    <dt>maximum <code>int</code>/<code>Function</code></dt>
+    <dd>
+      Numeric value must be no larger than this.
+      You can define a function that returns a dynamic maximum value.
+    </dd>
     <dt>pattern <code>RegExp</code></dt>
     <dd>Field must match this regular expression.</dd>
     <dt>type <code>String</code></dt>
