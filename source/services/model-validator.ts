@@ -136,11 +136,11 @@ module formFor {
           value = ""; // Escape falsy values liked null or undefined, but not ones like 0
         }
 
-        return this.validateFieldRequired_(value, validationRules) ||
-          this.validateFieldMinimum_(value, validationRules) ||
-          this.validateFieldMinLength_(value, validationRules) ||
+        return this.validateFieldRequired_(value, validationRules, formData, fieldName) ||
+          this.validateFieldMinimum_(value, validationRules, formData, fieldName) ||
+          this.validateFieldMaximum_(value, validationRules, formData, fieldName) ||
           this.validateFieldIncrement_(value, validationRules) ||
-          this.validateFieldMaximum_(value, validationRules) ||
+          this.validateFieldMinLength_(value, validationRules) ||
           this.validateFieldMaxLength_(value, validationRules) ||
           this.validateFieldType_(value, validationRules) ||
           this.validateFieldPattern_(value, validationRules) ||
@@ -362,7 +362,7 @@ module formFor {
       return null;
     }
 
-    private validateFieldMaximum_(value:any, validationRules:ValidationRules):any {
+    private validateFieldMaximum_(value:any, validationRules:ValidationRules, formData:any, fieldName:any):any {
       if (validationRules.maximum) {
         var stringValue:string = value.toString();
         var numericValue:number = Number(value);
@@ -370,7 +370,7 @@ module formFor {
         var maximum:number = angular.isObject(validationRules.maximum)
           ? (<ValidationRuleNumber> validationRules.maximum).rule
           : angular.isFunction(validationRules.maximum)
-            ? validationRules.maximum.call(this, value)
+            ? validationRules.maximum.call(this, value, formData, fieldName)
             : <number> validationRules.maximum;
 
         if (stringValue && !isNaN(numericValue) && numericValue > maximum) {
@@ -417,7 +417,7 @@ module formFor {
       return null;
     }
 
-    private validateFieldMinimum_(value:any, validationRules:ValidationRules):any {
+    private validateFieldMinimum_(value:any, validationRules:ValidationRules, formData:any, fieldName:any):any {
       if (validationRules.minimum) {
         var stringValue:string = value.toString();
         var numericValue:number = Number(value);
@@ -425,7 +425,7 @@ module formFor {
         var minimum:number = angular.isObject(validationRules.minimum)
           ? (<ValidationRuleNumber> validationRules.minimum).rule
           : angular.isFunction(validationRules.minimum)
-            ? validationRules.minimum.call(this, value)
+            ? validationRules.minimum.call(this, value, formData, fieldName)
             : <number> validationRules.minimum;
 
         if (stringValue && !isNaN(numericValue) && numericValue < minimum) {
@@ -472,12 +472,12 @@ module formFor {
       return null;
     }
 
-    private validateFieldRequired_(value:any, validationRules:ValidationRules):any {
+    private validateFieldRequired_(value:any, validationRules:ValidationRules, formData:any, fieldName:any):any {
       if (validationRules.required) {
         var required:boolean = angular.isObject(validationRules.required)
           ? (<ValidationRuleBoolean> validationRules.required).rule
           : angular.isFunction(validationRules.required)
-            ? validationRules.required.call(this, value)
+            ? validationRules.required.call(this, value, formData, fieldName)
             : <boolean> validationRules.required;
 
         // Compare both string and numeric values to avoid rejecting non-empty but falsy values (e.g. 0).

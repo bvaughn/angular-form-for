@@ -2343,6 +2343,22 @@ var formFor;
     ;
 })(formFor || (formFor = {}));
 ;
+var formFor;
+(function (formFor) {
+    /**
+     * Wrapper object for a form-field attribute that exposes field-state to field directives.
+     *
+     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
+     */
+    var BindableFieldWrapper = (function () {
+        function BindableFieldWrapper() {
+        }
+        return BindableFieldWrapper;
+    })();
+    formFor.BindableFieldWrapper = BindableFieldWrapper;
+    ;
+})(formFor || (formFor = {}));
+;
 /// <reference path="../../definitions/angular.d.ts" />
 /// <reference path="form-for-configuration.ts" />
 /// <reference path="../utils/nested-object-helper.ts" />
@@ -2455,11 +2471,11 @@ var formFor;
                 if (value === undefined || value === null) {
                     value = ""; // Escape falsy values liked null or undefined, but not ones like 0
                 }
-                return this.validateFieldRequired_(value, validationRules) ||
-                    this.validateFieldMinimum_(value, validationRules) ||
-                    this.validateFieldMinLength_(value, validationRules) ||
+                return this.validateFieldRequired_(value, validationRules, formData, fieldName) ||
+                    this.validateFieldMinimum_(value, validationRules, formData, fieldName) ||
+                    this.validateFieldMaximum_(value, validationRules, formData, fieldName) ||
                     this.validateFieldIncrement_(value, validationRules) ||
-                    this.validateFieldMaximum_(value, validationRules) ||
+                    this.validateFieldMinLength_(value, validationRules) ||
                     this.validateFieldMaxLength_(value, validationRules) ||
                     this.validateFieldType_(value, validationRules) ||
                     this.validateFieldPattern_(value, validationRules) ||
@@ -2637,14 +2653,14 @@ var formFor;
             }
             return null;
         };
-        ModelValidator.prototype.validateFieldMaximum_ = function (value, validationRules) {
+        ModelValidator.prototype.validateFieldMaximum_ = function (value, validationRules, formData, fieldName) {
             if (validationRules.maximum) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
                 var maximum = angular.isObject(validationRules.maximum)
                     ? validationRules.maximum.rule
                     : angular.isFunction(validationRules.maximum)
-                        ? validationRules.maximum.call(this, value)
+                        ? validationRules.maximum.call(this, value, formData, fieldName)
                         : validationRules.maximum;
                 if (stringValue && !isNaN(numericValue) && numericValue > maximum) {
                     var failureMessage;
@@ -2679,14 +2695,14 @@ var formFor;
             }
             return null;
         };
-        ModelValidator.prototype.validateFieldMinimum_ = function (value, validationRules) {
+        ModelValidator.prototype.validateFieldMinimum_ = function (value, validationRules, formData, fieldName) {
             if (validationRules.minimum) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
                 var minimum = angular.isObject(validationRules.minimum)
                     ? validationRules.minimum.rule
                     : angular.isFunction(validationRules.minimum)
-                        ? validationRules.minimum.call(this, value)
+                        ? validationRules.minimum.call(this, value, formData, fieldName)
                         : validationRules.minimum;
                 if (stringValue && !isNaN(numericValue) && numericValue < minimum) {
                     var failureMessage;
@@ -2721,12 +2737,12 @@ var formFor;
             }
             return null;
         };
-        ModelValidator.prototype.validateFieldRequired_ = function (value, validationRules) {
+        ModelValidator.prototype.validateFieldRequired_ = function (value, validationRules, formData, fieldName) {
             if (validationRules.required) {
                 var required = angular.isObject(validationRules.required)
                     ? validationRules.required.rule
                     : angular.isFunction(validationRules.required)
-                        ? validationRules.required.call(this, value)
+                        ? validationRules.required.call(this, value, formData, fieldName)
                         : validationRules.required;
                 // Compare both string and numeric values to avoid rejecting non-empty but falsy values (e.g. 0).
                 var stringValue = value.toString().replace(/\s+$/, ''); // Disallow an all-whitespace string
@@ -2916,20 +2932,4 @@ var formFor;
     })();
     formFor.StringUtil = StringUtil;
 })(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    /**
-     * Wrapper object for a form-field attribute that exposes field-state to field directives.
-     *
-     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
-     */
-    var BindableFieldWrapper = (function () {
-        function BindableFieldWrapper() {
-        }
-        return BindableFieldWrapper;
-    })();
-    formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
 /// <reference path="../../../definitions/angular.d.ts" />
