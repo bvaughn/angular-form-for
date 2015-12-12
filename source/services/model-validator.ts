@@ -363,7 +363,7 @@ module formFor {
     }
 
     private validateFieldMaximum_(value:any, validationRules:ValidationRules):any {
-      if (validationRules.maximum) {
+      if (validationRules.maximum || validationRules.maximum === 0) {
         var stringValue:string = value.toString();
         var numericValue:number = Number(value);
 
@@ -418,7 +418,7 @@ module formFor {
     }
 
     private validateFieldMinimum_(value:any, validationRules:ValidationRules):any {
-      if (validationRules.minimum) {
+      if (validationRules.minimum || validationRules.minimum === 0) {
         var stringValue:string = value.toString();
         var numericValue:number = Number(value);
 
