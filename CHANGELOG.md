@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.10
+Validation now properly handles `minimum` and `maximum` values of 0 instead of filtering them out as falsy.
+
 ## 4.1.9
 Multiple formForBuilders can now be used within a form. This enables automatic rendering for parts of the form and manual rendering for others. (Or automatic rendering for separate subections of the form.)
 formForBuilder supports `template` attribute per view-field (to be passed to individual form control directives).
