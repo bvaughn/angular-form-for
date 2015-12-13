@@ -2343,6 +2343,22 @@ var formFor;
     ;
 })(formFor || (formFor = {}));
 ;
+var formFor;
+(function (formFor) {
+    /**
+     * Wrapper object for a form-field attribute that exposes field-state to field directives.
+     *
+     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
+     */
+    var BindableFieldWrapper = (function () {
+        function BindableFieldWrapper() {
+        }
+        return BindableFieldWrapper;
+    })();
+    formFor.BindableFieldWrapper = BindableFieldWrapper;
+    ;
+})(formFor || (formFor = {}));
+;
 /// <reference path="../../definitions/angular.d.ts" />
 /// <reference path="form-for-configuration.ts" />
 /// <reference path="../utils/nested-object-helper.ts" />
@@ -2638,7 +2654,7 @@ var formFor;
             return null;
         };
         ModelValidator.prototype.validateFieldMaximum_ = function (value, validationRules) {
-            if (validationRules.maximum) {
+            if (validationRules.maximum || validationRules.maximum === 0) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
                 var maximum = angular.isObject(validationRules.maximum)
@@ -2680,7 +2696,7 @@ var formFor;
             return null;
         };
         ModelValidator.prototype.validateFieldMinimum_ = function (value, validationRules) {
-            if (validationRules.minimum) {
+            if (validationRules.minimum || validationRules.minimum === 0) {
                 var stringValue = value.toString();
                 var numericValue = Number(value);
                 var minimum = angular.isObject(validationRules.minimum)
@@ -2916,20 +2932,4 @@ var formFor;
     })();
     formFor.StringUtil = StringUtil;
 })(formFor || (formFor = {}));
-var formFor;
-(function (formFor) {
-    /**
-     * Wrapper object for a form-field attribute that exposes field-state to field directives.
-     *
-     * <p>Note that this interface exists for type-checking only; nothing actually implements this interface.
-     */
-    var BindableFieldWrapper = (function () {
-        function BindableFieldWrapper() {
-        }
-        return BindableFieldWrapper;
-    })();
-    formFor.BindableFieldWrapper = BindableFieldWrapper;
-    ;
-})(formFor || (formFor = {}));
-;
 /// <reference path="../../../definitions/angular.d.ts" />
