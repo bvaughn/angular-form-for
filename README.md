@@ -1,3 +1,11 @@
+# This repository is no longer actively maintained.
+
+Issue reports and pull requests will probably not be attended.
+
+I am no longer working with Angular on a regular basis. My day job has switched to React and it's too much effort to context switch between the frameworks. Given the upcoming Angular 2.0 release it seems like a reasonable time to end support for this library.
+
+Thanks to all of you for using, supporting, and contributing to this project.
+
 # angular-form-for [![Build Status](https://travis-ci.org/bvaughn/angular-form-for.svg)](https://travis-ci.org/bvaughn/angular-form-for) [![Join the chat at https://gitter.im/bvaughn/angular-form-for](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bvaughn/angular-form-for?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *formFor* is a quick and easy way to declare complex HTML forms with client and server-side validations.
