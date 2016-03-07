@@ -325,12 +325,15 @@ module formFor {
      */
     target.unregisterFormField = (fieldName:string) => {
       var bindableFieldName = nestedObjectHelper.flattenAttribute(fieldName);
+      var formField = $scope.fields[bindableFieldName];
 
-      angular.forEach(
-        $scope.fields[bindableFieldName].unwatchers,
-        function (unwatch) {
-          unwatch();
-        });
+      if(formField){
+        angular.forEach(
+          formField.unwatchers,
+          function (unwatch) {
+            unwatch();
+          });
+      }
 
       delete $scope.fields[bindableFieldName];
     };
