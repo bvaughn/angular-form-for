@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.11
+Fixed `TypeError: Cannot read property 'unwatchers' of undefined` bug reported in issue #186.
+Special thanks to @baconcutter for submitting this PR.
+
 ## 4.1.10
 Validation now properly handles `minimum` and `maximum` values of 0 instead of filtering them out as falsy.
 
