@@ -23,7 +23,6 @@
   text-align: center;
   vertical-align: middle;
   display: inline-block;
-  background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border: 1px solid #aaa;
   position: relative;
@@ -157,7 +156,6 @@ field-label {
   text-align: center;
   vertical-align: middle;
   display: inline-block;
-  background-image: -webkit-linear-gradient(bottom, #f9f9f9, #fff);
   background-image: linear-gradient(to top, #f9f9f9, #fff);
   border: 1px solid #aaa;
   position: relative;
@@ -233,7 +231,6 @@ select-field {
 }
 /************************* Select *************************/
 .form-for-field select {
-  background: -webkit-linear-gradient(top, #fff, #efefef);
   background: linear-gradient(top, #fff, #efefef);
   padding-right: 30px;
 }
@@ -339,7 +336,6 @@ submit-field {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-transition: all;
   transition: all;
   border-radius: 6px;
   border-style: none;
@@ -361,7 +357,6 @@ submit-field {
   color: #fff;
 }
 .submit-button:active {
-  -webkit-transition: none;
   transition: none;
   box-shadow: inset 0 4px 2px rgba(0,0,0,0.1);
 }
@@ -449,11 +444,9 @@ text-field {
 }
 
 .form-for-tooltip {
-  display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
@@ -464,7 +457,6 @@ text-field {
   display: inline-block;
   width: 15px;
   height: 15px;
-  -webkit-box-flex: 0;
   -webkit-flex: 0 0 15px;
       -ms-flex: 0 0 15px;
           flex: 0 0 15px;
@@ -485,7 +477,6 @@ text-field {
   display: none;
   position: relative;
   z-index: 2;
-  -webkit-box-flex: 0;
   -webkit-flex: 0 0 350px;
       -ms-flex: 0 0 350px;
           flex: 0 0 350px;

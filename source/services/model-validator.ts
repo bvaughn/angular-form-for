@@ -136,7 +136,7 @@ module formFor {
           value = ""; // Escape falsy values liked null or undefined, but not ones like 0
         }
 
-        return this.validateFieldRequired_(value, validationRules) ||
+        return this.validateFieldRequired_(value, validationRules, formData, fieldName) ||
           this.validateFieldMinimum_(value, validationRules) ||
           this.validateFieldMinLength_(value, validationRules) ||
           this.validateFieldIncrement_(value, validationRules) ||
@@ -472,12 +472,12 @@ module formFor {
       return null;
     }
 
-    private validateFieldRequired_(value:any, validationRules:ValidationRules):any {
+    private validateFieldRequired_(value:any, validationRules:ValidationRules, formData:any, fieldName:any):any {
       if (validationRules.required) {
         var required:boolean = angular.isObject(validationRules.required)
           ? (<ValidationRuleBoolean> validationRules.required).rule
           : angular.isFunction(validationRules.required)
-            ? validationRules.required.call(this, value)
+            ? validationRules.required.apply(this, [value, formData, fieldName])
             : <boolean> validationRules.required;
 
         // Compare both string and numeric values to avoid rejecting non-empty but falsy values (e.g. 0).
