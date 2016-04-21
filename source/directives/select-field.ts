@@ -243,7 +243,8 @@ module formFor {
 
       $scope.allowBlank = $attributes.hasOwnProperty('allowBlank');
       $scope.preventDefaultOption = $attributes.hasOwnProperty('preventDefaultOption');
-
+      $scope.showPlaceholderForEmptyValues = $attributes.hasOwnProperty('showPlaceholderForEmptyValues');
+      
       // Read from $attributes to avoid getting any interference from $scope.
       $scope.labelAttribute = $attributes['labelAttribute'] || 'label';
       $scope.valueAttribute = $attributes['valueAttribute'] || 'value';
@@ -317,8 +318,12 @@ module formFor {
         $scope.bindableOptions.push.apply($scope.bindableOptions, $scope.options);
 
         // Once a value has been selected, clear the placeholder prompt.
-        if ($scope.model.bindable) {
+        if ($scope.model.bindable && !$scope.showPlaceholderForEmptyValues) {
           $scope.emptyOption[$scope.labelAttribute] = '';
+          $scope.emptyOption.hide = false;
+        } else if ($scope.showPlaceholderForEmptyValues && $scope.model.bindable === undefined) {
+          $scope.emptyOption[$scope.labelAttribute] = $scope.placeholder;
+          $scope.emptyOption.hide = true;
         }
       };
 
